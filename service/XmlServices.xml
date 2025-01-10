@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+This software is in the public domain under CC0 1.0 Universal plus a 
+Grant of Patent License.
+
+To the extent possible under law, the author(s) have dedicated all
+copyright and related and neighboring rights to this software to the
+public domain worldwide. This software is distributed without any
+warranty.
+
+You should have received a copy of the CC0 Public Domain Dedication
+along with this software (see the LICENSE.md file). If not, see
+<http://creativecommons.org/publicdomain/zero/1.0/>.
+-->
+<services xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://moqui.org/xsd/service-definition-3.xsd">
+
+    <!-- getXml & Related Services -->
+    <!-- Entities -->
+    <service verb="get" noun="AllEntityList">
+        <in-parameters>
+            <parameter name="orderByField" default-value="fullEntityName" required="true"/>
+            <parameter name="filterRegexp"/>
+            <parameter name="masterEntitiesOnly" type="Boolean" required="true" default="false"/>
+            <parameter name="excludeViewEntities" type="Boolean" required="true" default="true"/>
+        </in-parameters>
+        <out-parameters>
+<!--            <parameter name="entityXml"/>-->
+            <parameter name="entityList" type="List"/>
+        </out-parameters>
+        <actions>
+            <set field="inEntityList" from="ec.entity.getAllEntitiesInfo(orderByField?:'fullEntityName', filterRegexp, masterEntitiesOnly, excludeViewEntities)"/>
+<!--            <script><![CDATA[entityXml="""<?xml version="1.0" encoding="UTF-8"?><entities xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"-->
+<!--                xsi:noNamespaceSchemaLocation="http://moqui.org/xsd/entity-definition-3.xsd">"""]]></script>-->
+            <iterate list="inEntityList" entry="inEntity">
+<!--                <log level="warn" message="entity: ${entity}"/>-->
+                <set field="entityDefinition" from="ec.entity.getEntityDefinition(inEntity.fullEntityName)"/>
+                <set field="entityInfo" from="entityDefinition.entityInfo"/>
+                <set field="entityNode" from="entityDefinition.getEntityNode()"/>
+                <set field="fieldInfos" from="entityInfo.allFieldInfoArray"/>
+                <set field="relationshipInfoList" from="entityDefinition.getRelationshipsInfo(false)"/>
+                <set field="dependents" from="entityDefinition.getDependentsTree()"/>
+                <script><![CDATA[
+                    eecas = ec.entity.eecaRulesByEntityName.get(entityDefinition.fullEntityName)
+                    secas = []
+                    for (verb in org.moqui.impl.service.runner.EntityAutoServiceRunner.verbSet) {
+                        serviceName = verb + entityDefinition.fullEntityName
+                        rules = ec.service.secaRulesByServiceName.get(serviceName)
+                        if (rules) secas.addAll(rules)
+                    }
+                    ]]></script>
+                <set field="entityDescription" from="entityNode.first('description')?.text"/>
+                <set field="outEntityNode" from="entityNode.remove('seed-data')"/>
+<!--                <set field="entityXml" from="entityXml+entityNode"/>-->
+                <set field="entityList" from="entityList+[name:inEntity.fullEntityName,xml:entityNode.toString()]"/>
+<!--                <log level="warn" message="entityDefinition: ${entityDefinition} entityInfo ${entityInfo} entityNode ${entityNode} fieldInfos ${fieldInfos} relationshipInfoList ${relationshipInfoList} dependents ${dependents} eecas ${eecas} secas ${secas} entityDescription ${entityDescription}"/>-->
+            </iterate>
+<!--            <script><![CDATA[entityXml=entityXml+"</entities>"]]></script>-->
+        </actions>
+    </service>
+    <service verb="get" noun="EntityList">
+        <in-parameters>
+            <parameter name="entityList" type="List" required="true"/>
+        </in-parameters>
+        <out-parameters>
+            <parameter name="entityXml"/>
+        </out-parameters>
+        <actions>
+            <script><![CDATA[entityXml="""<?xml version="1.0" encoding="UTF-8"?><entities xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                xsi:noNamespaceSchemaLocation="http://moqui.org/xsd/entity-definition-3.xsd">"""]]></script>
+            <iterate list="entityList" entry="inEntity">
+                <set field="entityDefinition" from="ec.entity.getEntityDefinition(inEntity)"/>
+                <if condition="!entityDefinition">
+                    <log level="warn" message="No entity definition found for entity name ${inEntity}"/>
+                    <continue/></if>
+                <set field="entityInfo" from="entityDefinition.entityInfo"/>
+                <set field="entityNode" from="entityDefinition.getEntityNode()"/>
+                <set field="fieldInfos" from="entityInfo.allFieldInfoArray"/>
+                <set field="relationshipInfoList" from="entityDefinition.getRelationshipsInfo(false)"/>
+                <set field="dependents" from="entityDefinition.getDependentsTree()"/>
+                <script><![CDATA[
+                    eecas = ec.entity.eecaRulesByEntityName.get(entityDefinition.fullEntityName)
+                    secas = []
+                    for (verb in org.moqui.impl.service.runner.EntityAutoServiceRunner.verbSet) {
+                        serviceName = verb + entityDefinition.fullEntityName
+                        rules = ec.service.secaRulesByServiceName.get(serviceName)
+                        if (rules) secas.addAll(rules)
+                    }
+                    ]]></script>
+                <set field="entityDescription" from="entityNode.first('description')?.text"/>
+                <set field="outEntityNode" from="entityNode.remove('seed-data')"/>
+                <set field="entityXml" from="entityXml+entityNode"/>
+            </iterate>
+            <script><![CDATA[entityXml=entityXml+"</entities>"]]></script>
+        </actions>
+    </service>
+    <service verb="find" noun="Entity">
+        <in-parameters>
+            <parameter name="name"><description>A way to find the nearest neighbor to the name as a real entity in the system.</description></parameter>
+        </in-parameters>
+        <out-parameters>
+            <parameter name="name"/>
+            <parameter name="xml"/>
+        </out-parameters>
+        <actions>
+            <!-- TODO: Actually use an embedding in OpenSearch to find the nearest neighbor to the name as a real entity in the system -->
+            <service-call name="XmlServices.get#AllEntityList" in-map="[filterRegexp:name, excludeViewEntities:false]" out-map="context"/>
+            <set field="entity" from="entityList?.getFirst()"/>
+            <set field="name" from="entity?.name"/>
+            <set field="xml" from="entity?.xml"/>
+        </actions>
+    </service>
+
+</services>
