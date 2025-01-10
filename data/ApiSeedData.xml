@@ -22,4 +22,7 @@ along with this software (see the LICENSE.md file). If not, see
     <moqui.security.ArtifactAuthz artifactAuthzId="getXmlAPI_AUTHZ_ALL" userGroupId="ADMIN" artifactGroupId="getXml_API"
             authzTypeEnumId="AUTHZT_ALWAYS" authzActionEnumId="AUTHZA_ALL"/>
 
+    <userGroups userGroupId="GET_XML_USERS" description="Get Xml Users"/>
+    <moqui.security.ArtifactAuthz artifactAuthzId="getXmlAPI_AUTHZ_ALL" userGroupId="GET_XML_USERS" artifactGroupId="getXml_API"
+            authzTypeEnumId="AUTHZT_ALWAYS" authzActionEnumId="AUTHZA_ALL"/>
 </entity-facade-xml>

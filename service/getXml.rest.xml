@@ -20,7 +20,7 @@ along with this software (see the LICENSE.md file). If not, see
 
     <!-- getXml & Related Rest API -->
     <resource name="entity">
-        <method type="get"><service name="XmlServices.get#EntityList"/></method>
+        <method type="get"><service name="XmlServices.find#Entity"/></method>
     </resource>
 
 </resource>
