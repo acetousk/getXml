@@ -31,6 +31,7 @@ along with this software (see the LICENSE.md file). If not, see
             <set field="inEntityList" from="ec.entity.getAllEntitiesInfo(orderByField?:'fullEntityName', filterRegexp, masterEntitiesOnly, excludeViewEntities)"/>
 <!--            <script><![CDATA[entityXml="""<?xml version="1.0" encoding="UTF-8"?><entities xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"-->
 <!--                xsi:noNamespaceSchemaLocation="http://moqui.org/xsd/entity-definition-3.xsd">"""]]></script>-->
+            <set field="entityList" from="[]"/>
             <iterate list="inEntityList" entry="inEntity">
 <!--                <log level="warn" message="entity: ${entity}"/>-->
                 <set field="entityDefinition" from="ec.entity.getEntityDefinition(inEntity.fullEntityName)"/>
@@ -100,11 +101,13 @@ along with this software (see the LICENSE.md file). If not, see
         <out-parameters>
             <parameter name="name"/>
             <parameter name="xml"/>
+            <parameter name="entityList"/>
         </out-parameters>
         <actions>
             <!-- TODO: Actually use an embedding in OpenSearch to find the nearest neighbor to the name as a real entity in the system -->
             <service-call name="XmlServices.get#AllEntityList" in-map="[filterRegexp:name, excludeViewEntities:false]" out-map="context"/>
-            <set field="entity" from="entityList?.getFirst()"/>
+            <if condition="!entityList"><return/></if>
+            <set field="entity" from="entityList[0]"/>
             <set field="name" from="entity?.name"/>
             <set field="xml" from="entity?.xml"/>
         </actions>
