@@ -49,10 +49,10 @@ along with this software (see the LICENSE.md file). If not, see
                         if (rules) secas.addAll(rules)
                     }
                     ]]></script>
-                <set field="entityDescription" from="entityNode.first('description')?.text"/>
+<!--                <set field="entityDescription" from="entityNode.first('description')?.text"/>-->
                 <set field="outEntityNode" from="entityNode.remove('seed-data')"/>
 <!--                <set field="entityXml" from="entityXml+entityNode"/>-->
-                <set field="entityList" from="entityList+[name:inEntity.fullEntityName,xml:entityNode.toString()]"/>
+                <set field="entityList" from="entityList+[name:inEntity.fullEntityName,prettyName:entityDefinition.getPrettyName(null, null),xml:entityNode.toString()]"/>
 <!--                <log level="warn" message="entityDefinition: ${entityDefinition} entityInfo ${entityInfo} entityNode ${entityNode} fieldInfos ${fieldInfos} relationshipInfoList ${relationshipInfoList} dependents ${dependents} eecas ${eecas} secas ${secas} entityDescription ${entityDescription}"/>-->
             </iterate>
 <!--            <script><![CDATA[entityXml=entityXml+"</entities>"]]></script>-->
@@ -69,7 +69,8 @@ along with this software (see the LICENSE.md file). If not, see
             <script><![CDATA[entityXml="""<?xml version="1.0" encoding="UTF-8"?><entities xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
                 xsi:noNamespaceSchemaLocation="http://moqui.org/xsd/entity-definition-3.xsd">"""]]></script>
             <iterate list="entityList" entry="inEntity">
-                <set field="entityDefinition" from="ec.entity.getEntityDefinition(inEntity)"/>
+                <log level="warn" message="inEntity: ${inEntity}"/>
+                <set field="entityDefinition" from="ec.entity.getEntityDefinition(inEntity.name)"/>
                 <if condition="!entityDefinition">
                     <log level="warn" message="No entity definition found for entity name ${inEntity}"/>
                     <continue/></if>
@@ -88,10 +89,25 @@ along with this software (see the LICENSE.md file). If not, see
                     }
                     ]]></script>
                 <set field="entityDescription" from="entityNode.first('description')?.text"/>
-                <set field="outEntityNode" from="entityNode.remove('seed-data')"/>
+<!--                <set field="outEntityNode" from="entityNode.remove('seed-data')"/>-->
                 <set field="entityXml" from="entityXml+entityNode"/>
             </iterate>
             <script><![CDATA[entityXml=entityXml+"</entities>"]]></script>
+        </actions>
+    </service>
+    <service verb="get" noun="AllEntityListXml">
+        <in-parameters>
+            <parameter name="orderByField" default-value="fullEntityName" required="true"/>
+            <parameter name="filterRegexp"/>
+            <parameter name="masterEntitiesOnly" type="Boolean" required="true" default="false"/>
+            <parameter name="excludeViewEntities" type="Boolean" required="true" default="true"/>
+        </in-parameters>
+        <out-parameters>
+            <parameter name="entityXml"/>
+        </out-parameters>
+        <actions>
+            <service-call name="XmlServices.getAllEntityList" in-map="context" out-map="context"/>
+            <service-call name="XmlServices.getEntityList" in-map="[entityList:entityList]" out-map="context"/>
         </actions>
     </service>
     <service verb="find" noun="Entity">
@@ -113,4 +129,339 @@ along with this software (see the LICENSE.md file). If not, see
         </actions>
     </service>
 
+    <service verb="call" noun="EntityOpenAi" transaction-timeout="86400">
+        <in-parameters>
+
+        </in-parameters>
+        <out-parameters>
+
+        </out-parameters>
+        <actions>
+            <service-call name="XmlServices.get#AllEntityList" in-map="[filterRegexp:'']" out-map="context"/>
+
+<!--            <set field="entityList" from="[entityList[0]]"/>-->
+
+<!--            <log level="warn" message="entityList: ${entityList}"/>-->
+            <log level="warn" message="entityList size: ${entityList.size()}"/>
+
+            <script><![CDATA[
+                import com.openai.models.ChatCompletion;
+                import com.openai.models.ChatCompletionCreateParams;
+                import com.openai.models.ChatModel;
+                import com.openai.client.OpenAIClient;
+                import com.openai.client.okhttp.OpenAIOkHttpClient;
+                import com.openai.models.ChatCompletion.Choice;
+                import com.openai.models.ChatCompletionMessage;
+
+                OpenAIClient client = OpenAIOkHttpClient.builder()
+                        .apiKey("sk-proj-")
+                        .build();
+            ]]></script>
+            <iterate list="entityList" entry="entity">
+                <set field="model" from="ChatModel.GPT_4O_MINI_2024_07_18"/>
+                <entity-find entity-name="ai.Model" list="modelList">
+                    <econdition field-name="fullName" from="model.value()"/>
+                </entity-find>
+                <service-call name="create#ai.ModelChat" in-map="[modelId:modelList?.getFirst()?.modelId]" out-map="context"/>
+                <set field="systemMessageContent" value="Given the Moqui entity xml included, generate an expert summary that answers the question: What is ${entity.prettyName}?"/>
+                <set field="userMessageContent" value="Entity Name ${entity.prettyName} xml ${entity.xml}"/>
+                <service-call name="create#ai.ModelChatMessage" in-map="[modelChatId:modelChatId, roleTypeEnumId:'MCMR_System', content:systemMessageContent,time:ec.user.nowTimestamp]" out-map="systemMessage"/>
+                <service-call name="create#ai.ModelChatMessage" in-map="[modelChatId:modelChatId, roleTypeEnumId:'MCMR_User', content:userMessageContent,time:ec.user.nowTimestamp]" out-map="userMessage"/>
+<!--                <log level="warn" message="context.toString(): ${context.toString()}"/>-->
+                <script><![CDATA[
+//                    ec.logger.warn("ChatModel.GPT_4O_MINI_2024_07_18.value() " + ChatModel.GPT_4O_MINI_2024_07_18.value());
+                    ChatCompletionCreateParams params = ChatCompletionCreateParams.builder()
+                            .addSystemMessage(systemMessageContent)
+                            .addUserMessage(userMessageContent)
+                            .model(model)
+                            .build();
+                    ChatCompletion chatCompletion = client.chat().completions().create(params);
+
+                    // Just get the response from chatCompletion
+                    ChatCompletion.Choice choice = chatCompletion.choices().get(0)
+                    ChatCompletionMessage message = choice.message();
+                    context.content = message.content().get();
+                    ec.logger.warn("content: " + content);
+                    String finishReason = choice.finishReason();
+                    ec.logger.warn("finishReason: " + finishReason);
+                ]]></script>
+                <service-call name="create#ai.ModelChatMessage" in-map="[modelChatId:modelChatId, roleTypeEnumId:'MCMR_Assistant', content:content,time:ec.user.nowTimestamp]" out-map="assistantMessage"/>
+            </iterate>
+        </actions>
+    </service>
+
+    <service verb="get" noun="AllServiceList">
+        <in-parameters>
+            <parameter name="filterServiceName"/>
+        </in-parameters>
+        <out-parameters>
+            <parameter name="serviceXml"/>
+            <parameter name="serviceList" type="List"/>
+        </out-parameters>
+        <actions>
+            <set field="knownServiceNames" from="ec.service.knownServiceNames"/>
+
+<!--            <script><![CDATA[serviceXml="""<services xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://moqui.org/xsd/service-definition-3.xsd">"""]]></script>-->
+            <script>
+                if (filterServiceName) {
+                    Iterator theIterator = knownServiceNames.iterator()
+                    while (theIterator.hasNext()) {
+                        String curSn = (String) theIterator.next()
+                        if (!curSn.toUpperCase().contains(filterServiceName.toUpperCase())) theIterator.remove()
+                    }
+                }
+            </script>
+
+            <set field="serviceList" from="[]"/>
+
+            <log level="warn" message="knownServiceNames: ${knownServiceNames}"/>
+            <iterate list="knownServiceNames" entry="inService">
+                <set field="sd" from="ec.service.getServiceDefinition(inService)"/>
+                <set field="serviceNode" from="sd.serviceNode"/>
+<!--                <set field="inParameterNodes" from="serviceNode.first('in-parameters')?.children('parameter')"/>-->
+<!--                <set field="outParameterNodes" from="serviceNode.first('out-parameters')?.children('parameter')"/>-->
+                <set field="secas" from="ec.service.secaRulesByServiceName.get(sd.serviceNameNoHash)"/>
+
+<!--                <log level="warn" message="context.toString(): ${context.toString()}"/>-->
+
+<!--                <set field="serviceXml" from="serviceXml+serviceNode"/>-->
+                <set field="serviceList" from="serviceList+[name:inService,xml:serviceNode.toString()]"/>
+            </iterate>
+<!--            <script><![CDATA[serviceXml=serviceXml+"</services>"]]></script>-->
+        </actions>
+    </service>
+    <service verb="call" noun="ServiceOpenAi" transaction-timeout="86400">
+        <in-parameters>
+
+        </in-parameters>
+        <out-parameters>
+
+        </out-parameters>
+        <actions>
+            <service-call name="XmlServices.get#AllServiceList" in-map="[filterServiceName:'']" out-map="context"/>
+
+            <!--            <log level="warn" message="serviceList: ${serviceList}"/>-->
+            <log level="warn" message="serviceList size: ${serviceList.size()}"/>
+
+            <script><![CDATA[
+                import com.openai.models.ChatCompletion;
+                import com.openai.models.ChatCompletionCreateParams;
+                import com.openai.models.ChatModel;
+                import com.openai.client.OpenAIClient;
+                import com.openai.client.okhttp.OpenAIOkHttpClient;
+                import com.openai.models.ChatCompletion.Choice;
+                import com.openai.models.ChatCompletionMessage;
+
+                OpenAIClient client = OpenAIOkHttpClient.builder()
+                        .apiKey("sk-proj-")
+                        .build();
+                ]]></script>
+            <iterate list="serviceList" entry="service">
+                <set field="model" from="ChatModel.GPT_4O_MINI_2024_07_18"/>
+                <entity-find entity-name="ai.Model" list="modelList">
+                    <econdition field-name="fullName" from="model.value()"/>
+                </entity-find>
+                <entity-find entity-name="ai.ModelChat" list="modelChatList">
+                    <econdition field-name="chatTypeName" from="service.name"/>
+                    <econdition field-name="chatTypeEnumId" value="MCT_Service"/>
+                </entity-find>
+                <if condition="modelChatList.size() &gt; 0">
+                    <log level="warn" message="Already have a model chat for service ${service.name}"/>
+                    <continue/></if>
+                <service-call name="create#ai.ModelChat" in-map="[modelId:modelList?.getFirst()?.modelId,chatTypeEnumId:'MCT_Service', chatTypeName:service.name]" out-map="context" transaction="force-new"/>
+                <set field="systemMessageContent" value="Given the Moqui service xml included, answer the question: How can ${service.name} be used? and generate an expert summary"/>
+                <set field="userMessageContent" value="Service Name ${service.name} xml ${service.xml}"/>
+                <service-call name="create#ai.ModelChatMessage" in-map="[modelChatId:modelChatId, roleTypeEnumId:'MCMR_System', content:systemMessageContent,time:ec.user.nowTimestamp]" out-map="systemMessage" transaction="force-new"/>
+                <service-call name="create#ai.ModelChatMessage" in-map="[modelChatId:modelChatId, roleTypeEnumId:'MCMR_User', content:userMessageContent,time:ec.user.nowTimestamp]" out-map="userMessage" transaction="force-new"/>
+                <script><![CDATA[
+                    ChatCompletionCreateParams params = ChatCompletionCreateParams.builder()
+                            .addSystemMessage(systemMessageContent)
+                            .addUserMessage(userMessageContent)
+                            .model(model)
+                            .build();
+                    ChatCompletion chatCompletion = client.chat().completions().create(params);
+
+                    // Just get the response from chatCompletion
+                    ChatCompletion.Choice choice = chatCompletion.choices().get(0)
+                    ChatCompletionMessage message = choice.message();
+                    context.content = message.content().get();
+                    ec.logger.warn("content: " + content);
+                    String finishReason = choice.finishReason();
+                    ec.logger.warn("finishReason: " + finishReason);
+                    ]]></script>
+                <service-call name="create#ai.ModelChatMessage" in-map="[modelChatId:modelChatId, roleTypeEnumId:'MCMR_Assistant',content:content,time:ec.user.nowTimestamp]" out-map="assistantMessage" transaction="force-new"/>
+            </iterate>
+        </actions>
+    </service>
+
+    <service verb="walk" noun="ScreenTree">
+        <in-parameters>
+            <parameter name="screenNameList" type="List"/>
+            <parameter name="rootScreenLocation"/>
+        </in-parameters>
+        <out-parameters>
+            <parameter name="screenNameList" type="List"/>
+        </out-parameters>
+        <actions>
+            <set field="rootScreenDefinition" from="ec.screen.getScreenDefinition(rootScreenLocation)"/>
+            <set field="subscreenList" from="rootScreenDefinition?.getSubscreensItemsSorted()"/>
+            <iterate list="subscreenList" entry="subscreen">
+                <if condition="subscreen.location == null">
+                    <continue/></if>
+                <service-call name="XmlServices.walk#ScreenTree" in-map="[rootScreenLocation:subscreen.location,screenNameList:screenNameList]" out-map="context"/>
+            </iterate>
+            <set field="screenNameList" from="screenNameList+[rootScreenLocation]"/>
+        </actions>
+    </service>
+    <service verb="get" noun="AllScreenList">
+        <in-parameters>
+            <parameter name="filterScreenName"/>
+        </in-parameters>
+        <out-parameters>
+<!--            <parameter name="outScreenXml"/>-->
+            <parameter name="screenList" type="List"/>
+        </out-parameters>
+        <actions>
+            <script><![CDATA[
+                import org.jsoup.Jsoup;
+                import org.jsoup.nodes.Document;
+                import org.jsoup.nodes.Element;
+                import org.jsoup.select.Elements;
+                ]]></script>
+            <set field="rootScreenLocationList" from="ec.screen.getAllRootScreenLocations()"/>
+
+            <if condition="rootScreenLocationList.size() &gt; 0">
+                <service-call name="XmlServices.walk#ScreenTree" in-map="[screenNameList:[], rootScreenLocation:rootScreenLocationList[0]]" out-map="context"/>
+            </if>
+
+            <log level="warn" message="screenNameList: ${screenNameList.size()}"/>
+            <set field="screenNameList" from="screenNameList.unique()"/>
+            <log level="warn" message="screenNameList after: ${screenNameList.size()}"/>
+
+
+            <set field="screenList" from="[]"/>
+            <script>
+                if (filterScreenName) {
+                    Iterator theIterator = screenNameList.iterator()
+                    while (theIterator.hasNext()) {
+                        String curSn = (String) theIterator.next()
+                        if (!curSn.toUpperCase().contains(filterScreenName.toUpperCase())) theIterator.remove()
+                    }
+                }
+            </script>
+<!--            <log level="warn" message="screenNameList: ${screenNameList.size()}"/>-->
+
+<!--            <set field="screenNameList" from="screenNameList?.subList(0, 1)"/>-->
+
+            <set field="outScreenXml" value=""/>
+            <iterate list="screenNameList" entry="inScreen">
+                <set field="sd" from="ec.screen.getScreenDefinition(inScreen)"/>
+                <set field="screenNode" from="sd.screenNode"/>
+
+<!--                <log level="warn" message="screenNode: ${screenNode.toString()}"/>-->
+
+                <!--                <log level="warn" message="context.toString(): ${context.toString()}"/>-->
+
+                <script><![CDATA[
+                    String minified = screenNode.toString()
+                            .replaceAll(">\\s+<", "><")
+                            .trim();
+                    ]]></script>
+
+                <set field="screenList" from="screenList+[name:inScreen,prettyName:sd.defaultMenuName,xml:minified]"/>
+            </iterate>
+<!--            <set field="outScreenXml" from="screenList*.xml"/>-->
+        </actions>
+    </service>
+
+    <service verb="call" noun="OpenAi" transaction-timeout="86400">
+        <in-parameters>
+            <parameter name="screen" type="Map">
+                <parameter name="name"/>
+                <parameter name="prettyName"/>
+                <parameter name="xml" allow-html="any"/>
+            </parameter>
+        </in-parameters>
+        <out-parameters>
+            <parameter name="content"/>
+            <parameter name="finishReason"/>
+            <parameter name="modelString" default="model.value()"/>
+            <parameter name="systemMessage" type="Map"/>
+            <parameter name="userMessage" type="Map"/>
+            <parameter name="assistantMessage" type="Map"/>
+        </out-parameters>
+        <actions>
+            <script><![CDATA[
+                import com.openai.models.ChatCompletion;
+                import com.openai.models.ChatCompletionCreateParams;
+                import com.openai.models.ChatModel;
+                import com.openai.client.OpenAIClient;
+                import com.openai.client.okhttp.OpenAIOkHttpClient;
+                import com.openai.models.ChatCompletion.Choice;
+                import com.openai.models.ChatCompletionMessage;
+
+                OpenAIClient client = OpenAIOkHttpClient.builder()
+                        .apiKey("sk-proj-")
+                        .build();
+                ]]></script>
+
+            <set field="model" from="ChatModel.GPT_4O_MINI_2024_07_18"/>
+            <entity-find entity-name="ai.Model" list="modelList">
+                <econdition field-name="fullName" from="model.value()"/>
+            </entity-find>
+            <entity-find entity-name="ai.ModelChat" list="modelChatList">
+                <econdition field-name="chatTypeName" from="screen.name"/>
+                <econdition field-name="chatTypeEnumId" value="MCT_Screen"/>
+            </entity-find>
+            <if condition="modelChatList.size() &gt; 0">
+                <log level="warn" message="Already have a model chat for screen ${screen.name}"/>
+                <return/></if>
+
+            <service-call name="create#ai.ModelChat" in-map="[modelId:modelList?.getFirst()?.modelId,chatTypeEnumId:'MCT_Screen', chatTypeName:screen.name]" out-map="context" transaction="force-new"/>
+            <set field="systemMessageContent" value="Given the Moqui screen xml included, answer the question: What does ${screen.prettyName} do through an expert summary"/>
+            <set field="userMessageContent" value="Screen Name ${screen.name} xml ${screen.xml}"/>
+            <service-call name="create#ai.ModelChatMessage" in-map="[modelChatId:modelChatId, roleTypeEnumId:'MCMR_System', content:systemMessageContent,time:ec.user.nowTimestamp]" out-map="systemMessage" transaction="force-new"/>
+            <service-call name="create#ai.ModelChatMessage" in-map="[modelChatId:modelChatId, roleTypeEnumId:'MCMR_User', content:userMessageContent,time:ec.user.nowTimestamp]" out-map="userMessage" transaction="force-new"/>
+            <script><![CDATA[
+                ChatCompletionCreateParams params = ChatCompletionCreateParams.builder()
+                        .addSystemMessage(systemMessageContent)
+                        .addUserMessage(userMessageContent)
+                        .model(model)
+                        .build();
+                ChatCompletion chatCompletion = client.chat().completions().create(params);
+
+                // Just get the response from chatCompletion
+                ChatCompletion.Choice choice = chatCompletion.choices().get(0)
+                ChatCompletionMessage message = choice.message();
+                context.content = message.content().get();
+                ec.logger.warn("--- content: " + content);
+                String finishReason = choice.finishReason();
+                ec.logger.warn("--- finishReason: " + finishReason);
+                ]]></script>
+            <service-call name="create#ai.ModelChatMessage" in-map="[modelChatId:modelChatId, roleTypeEnumId:'MCMR_Assistant',content:content,time:ec.user.nowTimestamp]" out-map="assistantMessage" transaction="force-new"/>
+        </actions>
+    </service>
+    <service verb="call" noun="ScreenOpenAi" transaction-timeout="86400">
+        <in-parameters>
+
+        </in-parameters>
+        <out-parameters>
+
+        </out-parameters>
+        <actions>
+            <service-call name="XmlServices.get#AllScreenList" in-map="[filterScreenName:'']" out-map="context"/>
+            <log level="warn" message="screenList size: ${screenList.size()}"/>
+<!--            <set field="screenList" from="screenList.subList(301, 600)"/>-->
+
+<!--            <log level="warn" message="screenList size: ${screenList}"/>-->
+
+            <iterate list="screenList" entry="screen">
+                <service-call name="XmlServices.call#OpenAi" in-map="[screen:screen]" out-map="context" async="true"/>
+
+                <script><![CDATA[
+                    Thread.sleep(100);
+                ]]></script>
+            </iterate>
+        </actions>
+    </service>
 </services>
