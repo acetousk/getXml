@@ -236,7 +236,7 @@ along with this software (see the LICENSE.md file). If not, see
                     </if>
                 </iterate>
                 <if condition="serviceDescriptionNode">
-                    <log level="warn" message="${inService} serviceDescriptionNode: ${serviceDescriptionNode} inParameterDescriptionNodes: ${inParameterDescriptionNodes} outParameterDescriptionNodes: ${outParameterDescriptionNodes}"/>
+<!--                    <log level="warn" message="${inService} serviceDescriptionNode: ${serviceDescriptionNode} inParameterDescriptionNodes: ${inParameterDescriptionNodes} outParameterDescriptionNodes: ${outParameterDescriptionNodes}"/>-->
                 </if>
 <!--                <set field="inParameterNodes" from="serviceNode.first('in-parameters')?.children('parameter')"/>-->
 <!--                <set field="outParameterNodes" from="serviceNode.first('out-parameters')?.children('parameter')"/>-->
@@ -245,7 +245,7 @@ along with this software (see the LICENSE.md file). If not, see
 <!--                <log level="warn" message="context.toString(): ${context.toString()}"/>-->
 
 <!--                <set field="serviceXml" from="serviceXml+serviceNode"/>-->
-                <set field="serviceList" from="serviceList+[name:inService,xml:serviceNode.toString()]"/>
+                <set field="serviceList" from="serviceList+[name:inService,xml:serviceNode.toString(),description:serviceDescriptionNode?.first('description')?.text,inParameterDescriptionNodes:inParameterDescriptionNodes,outParameterDescriptionNodes:outParameterDescriptionNodes]"/>
             </iterate>
 <!--            <script><![CDATA[serviceXml=serviceXml+"</services>"]]></script>-->
         </actions>
@@ -525,7 +525,7 @@ along with this software (see the LICENSE.md file). If not, see
             <entity-find-one entity-name="Enumeration" value-field="assistantRoleEnum" auto-field-map="[enumId:'MCMR_Assistant']"/>
             <if condition="!assistantRoleEnum?.optionValue"><log level="error" message="No role enum optionValue found for assistantRoleEnum ${assistantRoleEnum?.enumId}"/></if>
 
-            <entity-find entity-name="ai.ModelChat" list="modelChatList" limit="25">
+            <entity-find entity-name="ai.ModelChat" list="modelChatList">
                 <econdition field-name="chatTypeEnumId" value="MCT_Entity"/>
             </entity-find>
             <iterate list="modelChatList" entry="modelChat">
@@ -536,13 +536,16 @@ along with this software (see the LICENSE.md file). If not, see
                 <set field="messageSystem" from="modelChatMessageList.find({ it.roleTypeEnumId == 'MCMR_System' })"/>
                 <set field="messageUser" from="modelChatMessageList.find({ it.roleTypeEnumId == 'MCMR_User' })"/>
                 <set field="messageAssistant" from="modelChatMessageList.find({ it.roleTypeEnumId == 'MCMR_Assistant' })"/>
+                <if condition="!messageSystem || !messageUser || !messageAssistant">
+                    <log level="warn" message="continuing on modelChat.chatTypeName ${modelChat.chatTypeName}"/>
+                    <continue/></if>
                 <set field="contentFirst" from="messageSystem.content.find(/What is (.+?)\?/, { match, term -> term })"/>
                 <set field="messages" from="messages+[role:userRoleEnum?.optionValue,content:'What is the '+contentFirst+' entity?']"/>
-                <set field="messages" from="messages+[role:assistantRoleEnum?.optionValue,content:messageAssistant.content+' '+messageUser.content]"/>
+                <set field="messages" from="messages+[role:assistantRoleEnum?.optionValue,content:messageAssistant?.content+' '+messageUser?.content]"/>
                 <set field="trainingList" from="trainingList+[messages:messages]"/>
             </iterate>
 
-            <entity-find entity-name="ai.ModelChat" list="modelChatList" limit="25">
+            <entity-find entity-name="ai.ModelChat" list="modelChatList">
                 <econdition field-name="chatTypeEnumId" value="MCT_Service"/>
             </entity-find>
             <iterate list="modelChatList" entry="modelChat">
@@ -553,13 +556,16 @@ along with this software (see the LICENSE.md file). If not, see
                 <set field="messageSystem" from="modelChatMessageList.find({ it.roleTypeEnumId == 'MCMR_System' })"/>
                 <set field="messageUser" from="modelChatMessageList.find({ it.roleTypeEnumId == 'MCMR_User' })"/>
                 <set field="messageAssistant" from="modelChatMessageList.find({ it.roleTypeEnumId == 'MCMR_Assistant' })"/>
+                <if condition="!messageSystem || !messageUser || !messageAssistant">
+                    <log level="warn" message="continuing on modelChat.chatTypeName ${modelChat.chatTypeName}"/>
+                    <continue/></if>
                 <set field="contentFirst" from="messageSystem.content.find(/How can (.+?) be used\?/, { match, term -> term.replaceAll(' be used$', '') })"/>
                 <set field="messages" from="messages+[role:userRoleEnum?.optionValue,content:'What is the '+contentFirst+' service?']"/>
                 <set field="messages" from="messages+[role:assistantRoleEnum?.optionValue,content:messageAssistant.content+' '+messageUser.content]"/>
                 <set field="trainingList" from="trainingList+[messages:messages]"/>
             </iterate>
 
-            <entity-find entity-name="ai.ModelChat" list="modelChatList" limit="25">
+            <entity-find entity-name="ai.ModelChat" list="modelChatList">
                 <econdition field-name="chatTypeEnumId" value="MCT_Screen"/>
             </entity-find>
             <iterate list="modelChatList" entry="modelChat">
@@ -570,6 +576,10 @@ along with this software (see the LICENSE.md file). If not, see
                 <set field="messageSystem" from="modelChatMessageList.find({ it.roleTypeEnumId == 'MCMR_System' })"/>
                 <set field="messageUser" from="modelChatMessageList.find({ it.roleTypeEnumId == 'MCMR_User' })"/>
                 <set field="messageAssistant" from="modelChatMessageList.find({ it.roleTypeEnumId == 'MCMR_Assistant' })"/>
+                <if condition="!messageSystem || !messageUser || !messageAssistant">
+                    <log level="warn" message="continuing on modelChat.chatTypeName ${modelChat.chatTypeName}"/>
+                    <log level="warn" message="messageSystem ${messageSystem} messageUser ${messageUser} messageAssistant ${messageAssistant}"/>
+                    <continue/></if>
                 <set field="contentFirst" from="messageSystem.content.minus('Given the Moqui screen xml included, answer the question: What does ').minus(' do through an expert summary')"/>
                 <set field="messages" from="messages+[role:userRoleEnum?.optionValue,content:'What is the '+contentFirst+' screen?']"/>
                 <set field="messages" from="messages+[role:assistantRoleEnum?.optionValue,content:messageAssistant.content+' '+messageUser.content+' '+modelChat.chatTypeName]"/>
