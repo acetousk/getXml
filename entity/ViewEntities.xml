@@ -19,10 +19,9 @@ along with this software (see the LICENSE.md file). If not, see
         <member-entity entity-alias="MCT" entity-name="ai.ModelChat"/>
         <member-entity entity-alias="MCTM" entity-name="ai.ModelChatMessage" join-from-alias="MCT">
             <key-map field-name="modelChatId"/>
-            <entity-condition><econdition field-name="roleTypeEnumId" value="MCMR_System"/></entity-condition>
         </member-entity>
 
         <alias-all entity-alias="MCT"/>
-        <alias-all entity-alias="MCTM"></alias-all>
+        <alias-all entity-alias="MCTM"/>
     </view-entity>
 </entities>

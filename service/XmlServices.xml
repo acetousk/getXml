@@ -195,7 +195,7 @@ along with this software (see the LICENSE.md file). If not, see
             <parameter name="filterServiceName"/>
         </in-parameters>
         <out-parameters>
-            <parameter name="serviceXml"/>
+<!--            <parameter name="serviceXml"/>-->
             <parameter name="serviceList" type="List"/>
         </out-parameters>
         <actions>
@@ -218,6 +218,26 @@ along with this software (see the LICENSE.md file). If not, see
             <iterate list="knownServiceNames" entry="inService">
                 <set field="sd" from="ec.service.getServiceDefinition(inService)"/>
                 <set field="serviceNode" from="sd.serviceNode"/>
+                <set field="serviceDescriptionNode" from="serviceNode.first('description')"/>
+                <set field="inParameterNodes" from="serviceNode.first('in-parameters')?.children('parameter')"/>
+                <set field="inParameterDescriptionNodes" from="[]"/>
+                <iterate list="inParameterNodes" entry="inParameter">
+                    <set field="inParameterDescriptionNode" from="inParameter.first('description')"/>
+                    <if condition="inParameterDescriptionNode">
+                        <set field="inParameterDescriptionNodes" from="inParameterDescriptionNodes+[inParameter]"/>
+                    </if>
+                </iterate>
+                <set field="outParameterNodes" from="serviceNode.first('out-parameters')?.children('parameter')"/>
+                <set field="outParameterDescriptionNodes" from="[]"/>
+                <iterate list="outParameterNodes" entry="outParameter">
+                    <set field="outParameterDescriptionNode" from="outParameter.first('description')"/>
+                    <if condition="outParameterDescriptionNode">
+                        <set field="outParameterDescriptionNodes" from="outParameterDescriptionNodes+[outParameter]"/>
+                    </if>
+                </iterate>
+                <if condition="serviceDescriptionNode">
+                    <log level="warn" message="${inService} serviceDescriptionNode: ${serviceDescriptionNode} inParameterDescriptionNodes: ${inParameterDescriptionNodes} outParameterDescriptionNodes: ${outParameterDescriptionNodes}"/>
+                </if>
 <!--                <set field="inParameterNodes" from="serviceNode.first('in-parameters')?.children('parameter')"/>-->
 <!--                <set field="outParameterNodes" from="serviceNode.first('out-parameters')?.children('parameter')"/>-->
                 <set field="secas" from="ec.service.secaRulesByServiceName.get(sd.serviceNameNoHash)"/>
@@ -451,17 +471,118 @@ along with this software (see the LICENSE.md file). If not, see
         <actions>
             <service-call name="XmlServices.get#AllScreenList" in-map="[filterScreenName:'']" out-map="context"/>
             <log level="warn" message="screenList size: ${screenList.size()}"/>
-<!--            <set field="screenList" from="screenList.subList(301, 600)"/>-->
+<!--            <set field="screenList" from="screenList.subList(0, 3)"/>-->
 
 <!--            <log level="warn" message="screenList size: ${screenList}"/>-->
 
             <iterate list="screenList" entry="screen">
                 <service-call name="XmlServices.call#OpenAi" in-map="[screen:screen]" out-map="context" async="true"/>
-
-                <script><![CDATA[
-                    Thread.sleep(100);
-                ]]></script>
             </iterate>
+        </actions>
+    </service>
+    
+    <service verb="get" noun="OpenAiTokenLength">
+        <in-parameters>
+            <parameter name="text" allow-html="any" required="true"/>
+            <parameter name="encoding" default-value="cl100k_base" required="true"/>
+        </in-parameters>
+        <out-parameters>
+            <parameter name="tokenCount" type="Integer"/>
+        </out-parameters>
+        <actions>
+            <script>import com.knuddels.jtokkit.Encodings</script>
+            <set field="registry" from="Encodings.newLazyEncodingRegistry()"/>
+            <set field="encodingOptional" from="registry?.getEncoding(encoding)"/>
+
+            <set field="tokenCount" from="encodingOptional?.get()?.countTokens(text)"/>
+        </actions>
+    </service>
+    <service verb="get" noun="EstimatedTrainingCost">
+        <in-parameters>
+            <parameter name="modelToTrain" default-value="gpt-4o-mini-2024-07-18"/>
+
+        </in-parameters>
+        <out-parameters>
+
+        </out-parameters>
+        <actions>
+
+        </actions>
+    </service>
+    <service verb="train" noun="OpenAiMessages">
+        <in-parameters>
+            <parameter name="modelToTrain" default-value="gpt-4o-mini-2024-07-18"/>
+        </in-parameters>
+        <out-parameters>
+
+        </out-parameters>
+        <actions>
+            <set field="trainingList" from="[]"/>
+            <entity-find-one entity-name="Enumeration" value-field="systemRoleEnum" auto-field-map="[enumId:'MCMR_System']"/>
+            <if condition="!systemRoleEnum?.optionValue"><log level="error" message="No role enum optionValue found for systemRoleEnum ${systemRoleEnum?.enumId}"/></if>
+            <entity-find-one entity-name="Enumeration" value-field="userRoleEnum" auto-field-map="[enumId:'MCMR_User']"/>
+            <if condition="!userRoleEnum?.optionValue"><log level="error" message="No role enum optionValue found for userRoleEnum ${userRoleEnum?.enumId}"/></if>
+            <entity-find-one entity-name="Enumeration" value-field="assistantRoleEnum" auto-field-map="[enumId:'MCMR_Assistant']"/>
+            <if condition="!assistantRoleEnum?.optionValue"><log level="error" message="No role enum optionValue found for assistantRoleEnum ${assistantRoleEnum?.enumId}"/></if>
+
+            <entity-find entity-name="ai.ModelChat" list="modelChatList" limit="25">
+                <econdition field-name="chatTypeEnumId" value="MCT_Entity"/>
+            </entity-find>
+            <iterate list="modelChatList" entry="modelChat">
+                <entity-find entity-name="ai.ModelChatMessage" list="modelChatMessageList">
+                    <econdition field-name="modelChatId" from="modelChat.modelChatId"/>
+                </entity-find>
+                <set field="messages" from="[]"/>
+                <set field="messageSystem" from="modelChatMessageList.find({ it.roleTypeEnumId == 'MCMR_System' })"/>
+                <set field="messageUser" from="modelChatMessageList.find({ it.roleTypeEnumId == 'MCMR_User' })"/>
+                <set field="messageAssistant" from="modelChatMessageList.find({ it.roleTypeEnumId == 'MCMR_Assistant' })"/>
+                <set field="contentFirst" from="messageSystem.content.find(/What is (.+?)\?/, { match, term -> term })"/>
+                <set field="messages" from="messages+[role:userRoleEnum?.optionValue,content:'What is the '+contentFirst+' entity?']"/>
+                <set field="messages" from="messages+[role:assistantRoleEnum?.optionValue,content:messageAssistant.content+' '+messageUser.content]"/>
+                <set field="trainingList" from="trainingList+[messages:messages]"/>
+            </iterate>
+
+            <entity-find entity-name="ai.ModelChat" list="modelChatList" limit="25">
+                <econdition field-name="chatTypeEnumId" value="MCT_Service"/>
+            </entity-find>
+            <iterate list="modelChatList" entry="modelChat">
+                <entity-find entity-name="ai.ModelChatMessage" list="modelChatMessageList">
+                    <econdition field-name="modelChatId" from="modelChat.modelChatId"/>
+                </entity-find>
+                <set field="messages" from="[]"/>
+                <set field="messageSystem" from="modelChatMessageList.find({ it.roleTypeEnumId == 'MCMR_System' })"/>
+                <set field="messageUser" from="modelChatMessageList.find({ it.roleTypeEnumId == 'MCMR_User' })"/>
+                <set field="messageAssistant" from="modelChatMessageList.find({ it.roleTypeEnumId == 'MCMR_Assistant' })"/>
+                <set field="contentFirst" from="messageSystem.content.find(/How can (.+?) be used\?/, { match, term -> term.replaceAll(' be used$', '') })"/>
+                <set field="messages" from="messages+[role:userRoleEnum?.optionValue,content:'What is the '+contentFirst+' service?']"/>
+                <set field="messages" from="messages+[role:assistantRoleEnum?.optionValue,content:messageAssistant.content+' '+messageUser.content]"/>
+                <set field="trainingList" from="trainingList+[messages:messages]"/>
+            </iterate>
+
+            <entity-find entity-name="ai.ModelChat" list="modelChatList" limit="25">
+                <econdition field-name="chatTypeEnumId" value="MCT_Screen"/>
+            </entity-find>
+            <iterate list="modelChatList" entry="modelChat">
+                <entity-find entity-name="ai.ModelChatMessage" list="modelChatMessageList">
+                    <econdition field-name="modelChatId" from="modelChat.modelChatId"/>
+                </entity-find>
+                <set field="messages" from="[]"/>
+                <set field="messageSystem" from="modelChatMessageList.find({ it.roleTypeEnumId == 'MCMR_System' })"/>
+                <set field="messageUser" from="modelChatMessageList.find({ it.roleTypeEnumId == 'MCMR_User' })"/>
+                <set field="messageAssistant" from="modelChatMessageList.find({ it.roleTypeEnumId == 'MCMR_Assistant' })"/>
+                <set field="contentFirst" from="messageSystem.content.minus('Given the Moqui screen xml included, answer the question: What does ').minus(' do through an expert summary')"/>
+                <set field="messages" from="messages+[role:userRoleEnum?.optionValue,content:'What is the '+contentFirst+' screen?']"/>
+                <set field="messages" from="messages+[role:assistantRoleEnum?.optionValue,content:messageAssistant.content+' '+messageUser.content+' '+modelChat.chatTypeName]"/>
+                <set field="trainingList" from="trainingList+[messages:messages]"/>
+            </iterate>
+
+            <set field="json" from="ec.elastic.objectToJsonl(trainingList)"/>
+<!--            <log level="warn" message="trainingList: ${json}"/>-->
+
+            <service-call name="XmlServices.get#OpenAiTokenLength" in-map="[text:json]" out-map="context"/>
+            <log level="warn" message="tokenCount: ${tokenCount}"/>
+
+            <script>ec.resource.getLocationReference('component://getXml/output.jsonl').putText(json)</script>
         </actions>
     </service>
 </services>

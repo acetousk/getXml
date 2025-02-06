@@ -49,15 +49,15 @@ along with this software (see the LICENSE.md file). If not, see
         <field name="roleTypeEnumId" type="id"/>
         <field name="content" type="text-very-long"/>
         <field name="time" type="date-time"/>
+        <field name="sequenceNum" type="number-integer"/>
         <relationship type="one" related="ai.ModelChat" short-alias="chat">
             <key-map field-name="modelChatId" related="modelChatId"/>
         </relationship>
         <seed-data>
-
             <moqui.basic.EnumerationType description="Model Chat Message Role" enumTypeId="ModelChatMessageRole"/>
-            <moqui.basic.Enumeration description="System" enumId="MCMR_System" enumTypeId="ModelChatMessageRole"/>
-            <moqui.basic.Enumeration description="User" enumId="MCMR_User" enumTypeId="ModelChatMessageRole"/>
-            <moqui.basic.Enumeration description="Assistant" enumId="MCMR_Assistant" enumTypeId="ModelChatMessageRole"/>
+            <moqui.basic.Enumeration optionValue="system" description="System" enumId="MCMR_System" enumTypeId="ModelChatMessageRole"/>
+            <moqui.basic.Enumeration optionValue="user" description="User" enumId="MCMR_User" enumTypeId="ModelChatMessageRole"/>
+            <moqui.basic.Enumeration optionValue="assistant" description="Assistant" enumId="MCMR_Assistant" enumTypeId="ModelChatMessageRole"/>
         </seed-data>
     </entity>
 </entities>
