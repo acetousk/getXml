@@ -15,6 +15,13 @@ along with this software (see the LICENSE.md file). If not, see
 <services xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://moqui.org/xsd/service-definition-3.xsd">
 
     <!-- getXml & Related Services -->
+    <service verb="refresh" noun="AllDataTypeFiles">
+        <actions>
+            <service-call name="XmlServices.get#AllEntityList" in-map="[outputFile:true]" out-map="context"/>
+            <service-call name="XmlServices.get#AllServiceList" in-map="[outputFile:true]" out-map="context"/>
+            <service-call name="XmlServices.get#AllScreenList" in-map="[outputFile:true]" out-map="context"/>
+        </actions>
+    </service>
     <!-- Entities -->
     <service verb="get" noun="AllEntityList">
         <in-parameters>
@@ -22,6 +29,7 @@ along with this software (see the LICENSE.md file). If not, see
             <parameter name="filterRegexp"/>
             <parameter name="masterEntitiesOnly" type="Boolean" required="true" default="false"/>
             <parameter name="excludeViewEntities" type="Boolean" required="true" default="true"/>
+            <parameter name="outputFile" type="Boolean" required="true" default="false"/>
         </in-parameters>
         <out-parameters>
 <!--            <parameter name="entityXml"/>-->
@@ -29,8 +37,10 @@ along with this software (see the LICENSE.md file). If not, see
         </out-parameters>
         <actions>
             <set field="inEntityList" from="ec.entity.getAllEntitiesInfo(orderByField?:'fullEntityName', filterRegexp, masterEntitiesOnly, excludeViewEntities)"/>
-<!--            <script><![CDATA[entityXml="""<?xml version="1.0" encoding="UTF-8"?><entities xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"-->
-<!--                xsi:noNamespaceSchemaLocation="http://moqui.org/xsd/entity-definition-3.xsd">"""]]></script>-->
+            <if condition="outputFile">
+            <script><![CDATA[entityXml="""<?xml version="1.0" encoding="UTF-8"?><entities xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                xsi:noNamespaceSchemaLocation="http://moqui.org/xsd/entity-definition-3.xsd">"""]]></script>
+            </if>
             <set field="entityList" from="[]"/>
             <iterate list="inEntityList" entry="inEntity">
 <!--                <log level="warn" message="entity: ${entity}"/>-->
@@ -51,11 +61,20 @@ along with this software (see the LICENSE.md file). If not, see
                     ]]></script>
 <!--                <set field="entityDescription" from="entityNode.first('description')?.text"/>-->
                 <set field="outEntityNode" from="entityNode.remove('seed-data')"/>
-<!--                <set field="entityXml" from="entityXml+entityNode"/>-->
-                <set field="entityList" from="entityList+[name:inEntity.fullEntityName,prettyName:entityDefinition.getPrettyName(null, null),xml:entityNode.toString()]"/>
+                <if condition="outputFile">
+                    <script><![CDATA[entityXml+="\n<!-- Entity Name: ${inEntity.fullEntityName} sql table: ${inEntity.tableName} -->"]]></script>
+                    <set field="entityXml" from="entityXml+entityNode"/>
+                </if>
+<!--                <log level="warn" message="name ${inEntity.fullEntityName} prettyName ${entityDefinition.getPrettyName(null, null)} sqlTableName ${inEntity.tableName}"/>-->
+                <set field="entityList" from="entityList+[name:inEntity.fullEntityName,prettyName:entityDefinition.getPrettyName(null, null),tableName:inEntity.tableName,xml:entityNode.toString()]"/>
 <!--                <log level="warn" message="entityDefinition: ${entityDefinition} entityInfo ${entityInfo} entityNode ${entityNode} fieldInfos ${fieldInfos} relationshipInfoList ${relationshipInfoList} dependents ${dependents} eecas ${eecas} secas ${secas} entityDescription ${entityDescription}"/>-->
             </iterate>
-<!--            <script><![CDATA[entityXml=entityXml+"</entities>"]]></script>-->
+
+            <if condition="outputFile">
+                <script><![CDATA[entityXml+="</entities>"]]></script>
+                <script>ec.resource.getLocationReference('component://getXml/allEntities.xml').putText(entityXml)</script>
+                <script>ec.resource.getLocationReference('component://getXml/allEntities.txt').putText(entityXml)</script>
+            </if>
         </actions>
     </service>
     <service verb="get" noun="EntityList">
@@ -193,15 +212,20 @@ along with this software (see the LICENSE.md file). If not, see
     <service verb="get" noun="AllServiceList">
         <in-parameters>
             <parameter name="filterServiceName"/>
+
+            <parameter name="outputFile" type="Boolean" required="true" default="false"/>
         </in-parameters>
         <out-parameters>
 <!--            <parameter name="serviceXml"/>-->
-            <parameter name="serviceList" type="List"/>
+<!--            <parameter name="serviceList" type="List"/>-->
         </out-parameters>
         <actions>
             <set field="knownServiceNames" from="ec.service.knownServiceNames"/>
 
-<!--            <script><![CDATA[serviceXml="""<services xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://moqui.org/xsd/service-definition-3.xsd">"""]]></script>-->
+            <set field="serviceXml" value=""/>
+            <if condition="outputFile">
+                <script><![CDATA[serviceXml+="""<services xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://moqui.org/xsd/service-definition-3.xsd">"""]]></script>
+            </if>
             <script>
                 if (filterServiceName) {
                     Iterator theIterator = knownServiceNames.iterator()
@@ -214,7 +238,7 @@ along with this software (see the LICENSE.md file). If not, see
 
             <set field="serviceList" from="[]"/>
 
-            <log level="warn" message="knownServiceNames: ${knownServiceNames}"/>
+<!--            <log level="warn" message="knownServiceNames: ${knownServiceNames}"/>-->
             <iterate list="knownServiceNames" entry="inService">
                 <set field="sd" from="ec.service.getServiceDefinition(inService)"/>
                 <set field="serviceNode" from="sd.serviceNode"/>
@@ -244,10 +268,18 @@ along with this software (see the LICENSE.md file). If not, see
 
 <!--                <log level="warn" message="context.toString(): ${context.toString()}"/>-->
 
-<!--                <set field="serviceXml" from="serviceXml+serviceNode"/>-->
+                <if condition="outputFile">
+                    <script><![CDATA[serviceXml+="""\n<!-- Service Location ${inService} -->"""]]></script>
+                    <set field="serviceXml" from="serviceXml+serviceNode"/>
+                </if>
+<!--                <log level="warn" message="inService: ${inService}"/>-->
                 <set field="serviceList" from="serviceList+[name:inService,xml:serviceNode.toString(),description:serviceDescriptionNode?.first('description')?.text,inParameterDescriptionNodes:inParameterDescriptionNodes,outParameterDescriptionNodes:outParameterDescriptionNodes]"/>
             </iterate>
-<!--            <script><![CDATA[serviceXml=serviceXml+"</services>"]]></script>-->
+            <if condition="outputFile">
+                <script><![CDATA[serviceXml=serviceXml+"</services>"]]></script>
+                <script>ec.resource.getLocationReference('component://getXml/allServices.xml').putText(serviceXml)</script>
+                <script>ec.resource.getLocationReference('component://getXml/allServices.txt').putText(serviceXml)</script>
+            </if>
         </actions>
     </service>
     <service verb="call" noun="ServiceOpenAi" transaction-timeout="86400">
@@ -324,6 +356,7 @@ along with this software (see the LICENSE.md file). If not, see
         </out-parameters>
         <actions>
             <set field="rootScreenDefinition" from="ec.screen.getScreenDefinition(rootScreenLocation)"/>
+<!--            <log level="warn" message="rootScreenDefinition.location: ${rootScreenDefinition.location}"/>-->
             <set field="subscreenList" from="rootScreenDefinition?.getSubscreensItemsSorted()"/>
             <iterate list="subscreenList" entry="subscreen">
                 <if condition="subscreen.location == null">
@@ -336,10 +369,12 @@ along with this software (see the LICENSE.md file). If not, see
     <service verb="get" noun="AllScreenList">
         <in-parameters>
             <parameter name="filterScreenName"/>
+
+            <parameter name="outputFile" type="Boolean" required="true" default="false"/>
         </in-parameters>
         <out-parameters>
 <!--            <parameter name="outScreenXml"/>-->
-            <parameter name="screenList" type="List"/>
+<!--            <parameter name="screenList" type="List"/>-->
         </out-parameters>
         <actions>
             <script><![CDATA[
@@ -354,7 +389,7 @@ along with this software (see the LICENSE.md file). If not, see
                 <service-call name="XmlServices.walk#ScreenTree" in-map="[screenNameList:[], rootScreenLocation:rootScreenLocationList[0]]" out-map="context"/>
             </if>
 
-            <log level="warn" message="screenNameList: ${screenNameList.size()}"/>
+<!--            <log level="warn" message="screenNameList: ${screenNameList.size()}"/>-->
             <set field="screenNameList" from="screenNameList.unique()"/>
             <log level="warn" message="screenNameList after: ${screenNameList.size()}"/>
 
@@ -388,9 +423,17 @@ along with this software (see the LICENSE.md file). If not, see
                             .trim();
                     ]]></script>
 
+                <if condition="outputFile">
+                    <script><![CDATA[outScreenXml+="\n<!-- Screen Location ${inScreen}  -->"]]></script>
+                    <set field="outScreenXml" from="outScreenXml+minified"/>
+                </if>
+
                 <set field="screenList" from="screenList+[name:inScreen,prettyName:sd.defaultMenuName,xml:minified]"/>
             </iterate>
-<!--            <set field="outScreenXml" from="screenList*.xml"/>-->
+            <if condition="outputFile">
+                <script>ec.resource.getLocationReference('component://getXml/allScreens.xml').putText(outScreenXml)</script>
+                <script>ec.resource.getLocationReference('component://getXml/allScreens.txt').putText(outScreenXml)</script>
+            </if>
         </actions>
     </service>
 
