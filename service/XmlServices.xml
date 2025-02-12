@@ -114,39 +114,6 @@ along with this software (see the LICENSE.md file). If not, see
             <script><![CDATA[entityXml=entityXml+"</entities>"]]></script>
         </actions>
     </service>
-    <service verb="get" noun="AllEntityListXml">
-        <in-parameters>
-            <parameter name="orderByField" default-value="fullEntityName" required="true"/>
-            <parameter name="filterRegexp"/>
-            <parameter name="masterEntitiesOnly" type="Boolean" required="true" default="false"/>
-            <parameter name="excludeViewEntities" type="Boolean" required="true" default="true"/>
-        </in-parameters>
-        <out-parameters>
-            <parameter name="entityXml"/>
-        </out-parameters>
-        <actions>
-            <service-call name="XmlServices.getAllEntityList" in-map="context" out-map="context"/>
-            <service-call name="XmlServices.getEntityList" in-map="[entityList:entityList]" out-map="context"/>
-        </actions>
-    </service>
-    <service verb="find" noun="Entity">
-        <in-parameters>
-            <parameter name="name"><description>A way to find the nearest neighbor to the name as a real entity in the system.</description></parameter>
-        </in-parameters>
-        <out-parameters>
-            <parameter name="name"/>
-            <parameter name="xml"/>
-            <parameter name="entityList"/>
-        </out-parameters>
-        <actions>
-            <!-- TODO: Actually use an embedding in OpenSearch to find the nearest neighbor to the name as a real entity in the system -->
-            <service-call name="XmlServices.get#AllEntityList" in-map="[filterRegexp:name, excludeViewEntities:false]" out-map="context"/>
-            <if condition="!entityList"><return/></if>
-            <set field="entity" from="entityList[0]"/>
-            <set field="name" from="entity?.name"/>
-            <set field="xml" from="entity?.xml"/>
-        </actions>
-    </service>
 
     <service verb="call" noun="EntityOpenAi" transaction-timeout="86400">
         <in-parameters>
