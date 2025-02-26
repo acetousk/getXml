@@ -145,7 +145,8 @@ along with this software (see the LICENSE.md file). If not, see
                 <set field="sd" from="ec.service.getServiceDefinition(inService)"/>
                 <set field="serviceNode" from="sd.serviceNode"/>
                 <set field="serviceDescriptionNode" from="serviceNode.first('description')"/>
-                <set field="inParameterNodes" from="serviceNode.first('in-parameters')?.children('parameter')"/>
+                <set field="inParameterNode" from="serviceNode.first('in-parameters')"/>
+                <set field="inParameterNodes" from="inParameterNode?.children('parameter')"/>
                 <set field="inParameterDescriptionNodes" from="[]"/>
                 <iterate list="inParameterNodes" entry="inParameter">
                     <set field="inParameterDescriptionNode" from="inParameter.first('description')"/>
@@ -153,7 +154,8 @@ along with this software (see the LICENSE.md file). If not, see
                         <set field="inParameterDescriptionNodes" from="inParameterDescriptionNodes+[inParameter]"/>
                     </if>
                 </iterate>
-                <set field="outParameterNodes" from="serviceNode.first('out-parameters')?.children('parameter')"/>
+                <set field="outParameterNode" from="serviceNode.first('out-parameters')"/>
+                <set field="outParameterNodes" from="outParameterNode?.children('parameter')"/>
                 <set field="outParameterDescriptionNodes" from="[]"/>
                 <iterate list="outParameterNodes" entry="outParameter">
                     <set field="outParameterDescriptionNode" from="outParameter.first('description')"/>
@@ -161,30 +163,49 @@ along with this software (see the LICENSE.md file). If not, see
                         <set field="outParameterDescriptionNodes" from="outParameterDescriptionNodes+[outParameter]"/>
                     </if>
                 </iterate>
-                <if condition="serviceDescriptionNode">
-<!--                    <log level="warn" message="${inService} serviceDescriptionNode: ${serviceDescriptionNode} inParameterDescriptionNodes: ${inParameterDescriptionNodes} outParameterDescriptionNodes: ${outParameterDescriptionNodes}"/>-->
-                </if>
+                <set field="actionsNode" from="serviceNode.first('actions')"/>
 <!--                <set field="inParameterNodes" from="serviceNode.first('in-parameters')?.children('parameter')"/>-->
 <!--                <set field="outParameterNodes" from="serviceNode.first('out-parameters')?.children('parameter')"/>-->
                 <set field="secas" from="ec.service.secaRulesByServiceName.get(sd.serviceNameNoHash)"/>
-                <log level="info" message="inService ${inService}"/>
-                <if condition="inService.contains('DropShip')">
-                    <log level="warn" message="inService ${inService} secas ${secas}"/>
+<!--                <log level="info" message="inService ${inService}"/>-->
+
+                <if condition="secas">
+<!--                    <log level="warn" message="secas: ${secas}"/>-->
                 </if>
 
 <!--                <log level="warn" message="context.toString(): ${context.toString()}"/>-->
-                <set field="xml" value=""/>
-                <script><![CDATA[xml="\n<!-- Service Location ${inService} -->"+serviceNode.toString()]]></script>
-
-                <set field="xml" from="xml-'&lt;/service&gt;'"/>
-<!--                <log level="warn" message="xml before: ${xml}"/>-->
-                <iterate list="secas" entry="seca">
-                    <set field="xml" from="xml+'\n&lt;!--'+seca+'--&gt;'"/>
+                <set field="serviceVerb" from="serviceNode.attribute('verb')"/>
+                <set field="serviceNoun" from="serviceNode.attribute('noun')"/>
+                <if condition="!serviceNoun">
+<!--                    <log level="warn" message="inService ${inService} serviceVerb ${serviceVerb} serviceNoun ${serviceNoun}"/>-->
+                </if>
+                <set field="serviceAttributes" from="serviceNode.attributes"/>
+                <iterate list="serviceAttributes" entry="attribute">
+                    <if condition="!attribute.key || !attribute.value">
+<!--                        <log level="warn" message="inService ${inService} attribute ${attribute}"/>-->
+                    </if>
                 </iterate>
-                <set field="xml" from="xml+'\n&lt;/service&gt;'"/>
-<!--                <log level="warn" message="xml after: ${xml}"/>-->
+<!--                <log level="warn" message="inService ${inService} serviceAttributes ${serviceAttributes}"/>-->
+                <set field="serviceDescription" from="serviceNode.attribute('description')"/>
+                <set field="inParameters" from="inParameterNode.toString()"/>
+                <set field="outParameters" from="outParameterNode.toString()"/>
+                <set field="actions" from="actionsNode.toString()"/>
+                <if condition="actionsNode">
+                    <service-call name="XmlServices.fillIn#ServiceDefinitionXmlVariables" in-map="[actionsNode:actionsNode,sd:sd]" out-map="context"/>
+                </if>
+<!--                <iterate list="actionsNode.descendants('service-call')" entry="action">-->
+<!--                    <log level="warn" message="action: ${action}"/>-->
+<!--                </iterate>-->
+
+                <set field="xml" from="ec.resource.template('component://getXml/template/serviceRender.xml.ftl', '.ftl')"/>
+<!--                <log level="warn" message="xml: ${xml}"/>-->
+
+                <if condition="inService.contains('OrderBillingShippingInfo')">
+<!--                    <log level="warn" message="xml after: ${xml}"/>-->
+                </if>
+                <set field="xml" from="xml.replaceAll('&gt;\\s+&lt;', '&gt;&lt;').trim()"/>
                 <if condition="outputFile">
-                    <set field="serviceXml" from="serviceXml+xml"/>
+                    <set field="serviceXml" from="serviceXml+'\n'+xml"/>
                 </if>
                 <if condition="outputFilesToFolder">
                     <script><![CDATA[
@@ -309,12 +330,26 @@ along with this software (see the LICENSE.md file). If not, see
             </if>
         </actions>
     </service>
-
-    <service verb="get" noun="AllScreenList">
+    <service verb="find" noun="ParentScreenInfo">
+        <in-parameters>
+            <parameter name="screenInfoParentList" type="List" default="[]"/>
+            <parameter name="screenInfo" type="org.moqui.impl.screen.ScreenFacadeImpl.ScreenInfo" required="true"/>
+        </in-parameters>
+        <out-parameters>
+            <parameter name="screenInfoParentList" type="List"/>
+        </out-parameters>
+        <actions>
+            <set field="screenInfoParentList" from="screenInfoParentList+[screenInfo]"/>
+            <service-call name="XmlServices.find#ParentScreenInfo" in-map="[screenInfoParentList:screenInfoParentList, screenInfo:screenInfo.parentScreenInfo]" out-map="context"/>
+        </actions>
+    </service>
+    <service verb="get" noun="AllTransitionList">
         <in-parameters>
             <parameter name="filterScreenName"/>
 
             <parameter name="outputFile" type="Boolean" required="true" default="false"/>
+            <parameter name="outputFilesToFolder" type="Boolean" required="true" default="false"/>
+            <parameter name="outputFolder" default-value="component://getXml/dataset/transition"/>
         </in-parameters>
         <out-parameters>
             <!--            <parameter name="outScreenXml"/>-->
@@ -330,53 +365,161 @@ along with this software (see the LICENSE.md file). If not, see
             <set field="rootScreenLocationList" from="ec.screen.getAllRootScreenLocations()"/>
 
             <if condition="rootScreenLocationList.size() &gt; 0">
-                <service-call name="XmlServices.walk#ScreenTree" in-map="[screenNameList:[], rootScreenLocation:rootScreenLocationList[0]]" out-map="context"/>
+                <set field="screenInfoList" from="ec.screen.getScreenInfoList(rootScreenLocationList[0], 100)"/>
             </if>
 
-            <!--            <log level="warn" message="screenNameList: ${screenNameList.size()}"/>-->
-            <set field="screenNameList" from="screenNameList.unique()"/>
-            <log level="warn" message="screenNameList after: ${screenNameList.size()}"/>
-
-
-            <set field="screenList" from="[]"/>
             <script>
                 if (filterScreenName) {
-                    Iterator theIterator = screenNameList.iterator()
+                    Iterator theIterator = screenInfoList.iterator()
                     while (theIterator.hasNext()) {
-                        String curSn = (String) theIterator.next()
+                        String curSn = (String) theIterator.next().sd.location
                         if (!curSn.toUpperCase().contains(filterScreenName.toUpperCase())) theIterator.remove()
                     }
                 }
             </script>
+
             <!--            <log level="warn" message="screenNameList: ${screenNameList.size()}"/>-->
+<!--            <log level="warn" message="screenInfoList after: ${screenInfoList*.name}"/>-->
 
-            <!--            <set field="screenNameList" from="screenNameList?.subList(0, 1)"/>-->
+            <if condition="outputFilesToFolder">
+                <set field="outputFolder" from="ec.resource.getLocationReference(outputFolder)"/>
+            </if>
 
-            <set field="outScreenXml" value=""/>
-            <iterate list="screenNameList" entry="inScreen">
-                <set field="sd" from="ec.screen.getScreenDefinition(inScreen)"/>
+            <set field="outTransitionXml" value=""/>
+            <iterate list="screenInfoList" entry="screenInfo">
+                <set field="sd" from="screenInfo.sd"/>
+                <set field="inScreen" from="sd.location"/>
                 <set field="screenNode" from="sd.screenNode"/>
+
+                <set field="parameterList" from="screenNode.children('parameter')*.toString()"/>
+                <set field="screenActionList" from="[]"/>
+
+<!--                <service-call name="XmlServices.find#ParentScreenInfo" in-map="[screenInfo:screenInfo]" out-map="context"/>-->
+                <log level="warn" message="screenInfoParentList: ${screenInfoParentList}"/>
+
+
+                <set field="screenLevel" from="screenInfo.level"/>
+                <set field="usedScreenInfo" from="screenInfo"/>
+<!--                <log level="warn" message="usedScreenInfo: ${usedScreenInfo.level}"/>-->
+                <while condition="screenLevel &gt;= -1">
+<!--                    <log level="warn" message="screenLevel start: ${screenLevel} ${usedScreenInfo.name}"/>-->
+                    <set field="alwaysActionsNodeList" from="usedScreenInfo.sd.screenNode.children('always-actions')"/>
+                    <if condition="!alwaysActionsNodeList">
+<!--                        <log level="warn" message="No alwaysscreenActionList for screenInfo: ${usedScreenInfo.name}"/>-->
+                        <set field="beforeLevel" from="usedScreenInfo.level"/>
+                        <set field="usedScreenInfo" from="usedScreenInfo.parentInfo?:usedScreenInfo.rootInfo"/>
+<!--                        <log level="warn" message="usedScreenInfo: ${usedScreenInfo?.level} ${usedScreenInfo?.name}"/>-->
+<!--                        <log level="warn" message="new in: ${usedScreenInfo?.level} ${usedScreenInfo.name}"/>-->
+                        <if condition="!beforeLevel == usedScreenInfo?.level">
+                            <log level="warn" message="break"/>
+                            <break/></if>
+<!--                        <log -->
+                        <set field="screenLevel" from="usedScreenInfo.level"/>
+                        <continue/></if>
+                    <set field="alwaysscreenActionList" from="alwaysActionsNodeList.get(0).children*.toString().reverse()"/>
+                    <if condition="alwaysscreenActionList"><then>
+                        <script><![CDATA[screenActionList +=alwaysscreenActionList+["""<!--always-actions at ${usedScreenInfo.sd.location}-->"""]]]></script>
+                    </then><else>
+                    </else></if>
+                    <set field="usedScreenInfo" from="usedScreenInfo?.parentInfo"/>
+                    <set field="screenLevel" from="usedScreenInfo?.level"/>
+                </while>
+                <script><![CDATA[screenActionList = screenActionList.reverse()]]></script>
+
+<!--                <iterate list ="screenInfoParentList" entry="screenInfoParent">-->
+<!--                    -->
+<!--                </iterate>-->
+
+<!--                <log level="warn" message="screenActionList: ${screenActionList}"/>-->
+
+                <!--                &lt;!&ndash; TODO: Remove placeholder screens &ndash;&gt;-->
+<!--                <log level="warn" message="${inScreen} screenInfo.transitionInfoByName.keySet() ${screenInfo.transitionInfoByName.keySet()}"/>-->
+
+                <set field="transitionInfoNameList" from="screenInfo.transitionInfoByName.keySet()"/>
+                <set field="transitionNameExcludeList" from="['formSelectColumns','screenDoc','formSaveFind']"/>
+                <iterate list="sd.getAllTransitions()" entry="transitionItem">
+                    <set field="transitionName" from="transitionItem.name"/>
+                    <if condition="transitionNameExcludeList.contains(transitionName)"><continue/></if>
+
+                    <!--                    <set field="transitionInfo" from="screenInfo.transitionInfoByName[transitionName]"/>-->
+                    <set field="transitionNode" from="transitionItem.transitionNode"/>
+
+                    <if condition="transitionNode == null">
+<!--                        <log level="warn" message="transitionItem.location ${transitionItem.location} transitionName ${transitionName}"/>-->
+                    <else>
+<!--                        <log level="warn" message="transitionNode.toString(): ${transitionNode.toString()}"/>-->
+                    </else></if>
+
+                    <set field="actionList" from="screenActionList"/>
+
+<!--                    <log level="warn" message="parameterList: ${parameterList}"/>-->
+
+                    <if condition="!transitionNode &amp;&amp; transitionItem.name == 'actions'">
+                        <log level="warn" message="transitionItem.location ${transitionItem.location} transitionName ${transitionName}"/>
+                        <set field="preActionList" from="screenNode.children('pre-actions')"/>
+                        <if condition="preActionList.size() &gt; 0">
+                            <script><![CDATA[actionList += ["""<!--pre-actions-->"""]+preActionList.get(0).children*.toString()]]></script>
+                        </if>
+
+                        <set field="actionsList" from="screenNode.children('actions')"/>
+                        <if condition="actionsList.size() &gt; 0">
+                            <script><![CDATA[actionList += ["""<!--actions-->"""]+actionsList.get(0).children*.toString()]]></script>
+                        </if>
+                    </if>
+                    <if condition="transitionNode &amp;&amp; transitionItem.name != 'actions'">
+                        <set field="parameterList" from="parameterList+transitionNode.children('parameter')*.toString()"/>
+                        <set field="parameterList" from="parameterList+transitionNode.children('path-parameter')*.toString()"/>
+
+                        <set field="transitionServiceCallList" from="transitionNode.children('service-call')"/>
+                        <if condition="transitionServiceCallList.size() &gt; 0">
+                            <script><![CDATA[actionList += ["""<!--transition service-call-->"""]+transitionServiceCallList.get(0).toString()]]></script>
+                        </if>
+
+                        <set field="actionsList" from="transitionNode.children('actions')"/>
+                        <if condition="actionsList.size() &gt; 0">
+                            <script><![CDATA[actionList += ["""<!--transition actions-->"""]+actionsList.get(0).children*.toString()]]></script>
+                        </if>
+                    </if>
+
+                    <set field="xml" from="ec.resource.template('component://getXml/template/transitionRender.xml.ftl', '.ftl')"/>
+<!--                    <if condition="transitionItem.name == 'actions'">-->
+                        <log level="warn" message="xml: ${xml}"/>
+                    <set field="xml" from="xml.replaceAll('&gt;\\s+&lt;', '&gt;&lt;').trim()"/>
+
+                    <if condition="outputFile">
+                        <set field="outTransitionXml" from="outTransitionXml+'\n'+xml"/>
+                    </if>
+
+                    <if condition="outputFilesToFolder">
+                        <script><![CDATA[
+                            outputFolder.makeFile((inScreen+'$'+transitionName).replaceAll('/', '-')).putText(xml)
+                            ]]></script>
+                    </if>
+
+                    <!--                    </if>-->
+                </iterate>
+
+                <!--                <log level="warn" message="inScreen ${inScreen} screenInfo.isNonPlaceholder ${screenInfo.isNonPlaceholder}"/>-->
+
 
                 <!--                <log level="warn" message="screenNode: ${screenNode.toString()}"/>-->
 
                 <!--                <log level="warn" message="context.toString(): ${context.toString()}"/>-->
 
-                <script><![CDATA[
-                    String minified = screenNode.toString()
-                            .replaceAll(">\\s+<", "><")
-                            .trim();
-                    ]]></script>
+<!--                <set field="xml" from="screenNode.toString()"/>-->
+<!--                <script><![CDATA[-->
+<!--                    xml = "&lt;!&ndash; Screen Location ${inScreen} &ndash;&gt;" + xml-->
+<!--                    xml = xml-->
+<!--                            .replaceAll(">\\s+<", "><")-->
+<!--                            .trim();-->
+<!--                    ]]></script>-->
 
-                <if condition="outputFile">
-                    <script><![CDATA[outScreenXml+="\n<!-- Screen Location ${inScreen}  -->"]]></script>
-                    <set field="outScreenXml" from="outScreenXml+minified"/>
-                </if>
 
-                <set field="screenList" from="screenList+[name:inScreen,prettyName:sd.defaultMenuName,xml:minified]"/>
+<!--                <set field="screenList" from="screenList+[name:inScreen,prettyName:sd.defaultMenuName,xml:minified]"/>-->
             </iterate>
             <if condition="outputFile">
-                <script>ec.resource.getLocationReference('component://getXml/dataset/allScreens.xml').putText(outScreenXml)</script>
-                <script>ec.resource.getLocationReference('component://getXml/dataset/allScreens.txt').putText(outScreenXml)</script>
+                <script>ec.resource.getLocationReference('component://getXml/dataset/allTransitions.xml').putText(outScreenXml)</script>
+                <script>ec.resource.getLocationReference('component://getXml/dataset/allTransitions.txt').putText(outScreenXml)</script>
             </if>
         </actions>
     </service>
@@ -623,13 +766,58 @@ along with this software (see the LICENSE.md file). If not, see
     <service verb="fillIn" noun="ServiceDefinitionXmlVariables">
         <description>Ensure that no context is never used and for each service call the in and out parameters are fully defined. Ideally use the auto-parameters from the entity with the parameters fully defined.</description>
         <in-parameters>
-
+            <parameter name="actionsNode" type="MNode" required="true"/>
+<!--            <parameter name="sd" type="org.moqui.impl.service.ServiceDefinition" required="true"/>-->
         </in-parameters>
         <out-parameters>
-
+            <parameter name="actionsNode" type="MNode"/>
+            <parameter name="actions"/>
         </out-parameters>
         <actions>
+            <iterate list="actionsNode.descendants('service-call')" entry="action">
+                <!-- if action.attribute('out-map') has a , or [ print it -->
+                <if condition="action.attribute('out-map')?.contains(',') || action.attribute('out-map')?.contains('[')">
+<!--                    <log level="warn" message="action: ${action}"/>-->
+                </if>
+                <if condition="action.attribute('out-map')">
+                    <set field="outMap" value="["/>
+                    <!-- TODO: Support enumerating a list type of out-map values -->
+                    <set field="sd" from="ec.service.getServiceDefinition(action.attribute('name'))"/>
+                    <if condition="!sd"><then>
+                        <!-- if ! action.attribute('name') starts with any of org.moqui.impl.service.runner.EntityAutoServiceRunner.verbSet continue with warning -->
+                        <if condition="!action.attribute('name').contains('#') &amp;&amp; !org.moqui.impl.service.runner.EntityAutoServiceRunner.verbSet.any { action.attribute('name').startsWith(it) }">
+                            <log level="warn" message="No service or entity definition found for name ${action.attribute('name')}"/>
+                            <continue/>
+                        </if>
+                        <set field="entityName" from="action.attribute('name').split('#')[1]"/>
+                        <set field="entityDefinition" from="ec.entity.getEntityDefinition(entityName)"/>
+                        <if condition="!entityDefinition">
+                            <log level="warn" message="No entity definition found for name ${action.attribute('name')}"/> <continue/>
+                        </if>
 
+                        <iterate list="entityDefinition.allFieldNames" entry="fieldName">
+                            <if condition="!entityDefinition.isField(fieldName)">
+                                <log level="warn" message="Field ${fieldName} is not a field of entity ${entityDefinition.entityName}"/>
+                                <continue/>
+                            </if>
+                            <set field="fieldInfo" from="entityDefinition.getFieldInfo(fieldName)"/>
+                            <set field="outMap" from="outMap+fieldInfo.name+':'+action.attribute('out-map')+'.'+fieldInfo.name"/>
+                            <if condition="_fieldNameIterator.hasNext()"><set field="outMap" from="outMap+','"/></if>
+                        </iterate>
+<!--                        <log level="warn" message="outMap: ${outMap}"/>-->
+                    </then><else>
+                        <iterate list="sd.outParameterInfoMap" entry="outParameterInfoMap">
+                            <set field="outMap" from="outMap+outParameterInfoMap.key+':'+action.attribute('out-map')+'.'+outParameterInfoMap.value.name"/>
+                            <if condition="_outParameterInfoMapIterator.hasNext()"><set field="outMap" from="outMap+','"/></if>
+                        </iterate>
+                    </else></if>
+
+                    <set field="outMap" value="${outMap}]"/>
+                    <script>action.getAttributes().put("out-map", outMap as String);</script>
+                </if>
+            </iterate>
+            <set field="actions" from="actionsNode.toString()"/>
+<!--            <log level="warn" message="actions: ${actions}"/>-->
         </actions>
     </service>
 
