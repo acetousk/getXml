@@ -1,6 +1,7 @@
 # runtime added files
 build
 lib/getXml-*.jar
+lib
 
 # IntelliJ IDEA files
 .idea/
@@ -44,3 +45,11 @@ Desktop.ini
 
 # Linux auto files
 *~
+#/allEntities.txt
+#/allEntities.xml
+#/allScreens.txt
+#/allScreens.xml
+#/allServices.txt
+#/allServices.xml
+#/output.jsonl
+#/dataset/

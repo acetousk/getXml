@@ -1,0 +1,185 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+This software is in the public domain under CC0 1.0 Universal plus a
+Grant of Patent License.
+
+To the extent possible under law, the author(s) have dedicated all
+copyright and related and neighboring rights to this software to the
+public domain worldwide. This software is distributed without any
+warranty.
+
+You should have received a copy of the CC0 Public Domain Dedication
+along with this software (see the LICENSE.md file). If not, see
+<http://creativecommons.org/publicdomain/zero/1.0/>.
+-->
+<entity-facade-xml type="seed-initial">
+
+    <!-- Initial Text:
+        # top level objectives
+
+        the primary goal is to give people the tools that they need to accomplish their job because they are the
+
+        experts in the business domain we are experts in the technology domain. the technology needs to enable the users to do what needs to get done. the best possible way to communicate what needs to get done and then actually doing it is through language and so if everything is grounded in language then what could possibly be better?
+
+        start at the lower end of the market giving tools to small businesses that could never afford it but are like the big boy tools the enterprises get to use with thousands of people maintaining them
+
+        ## Week 1-2
+
+        Take be able to take handwritten business requirements and convert them into a series of logical steps, and generate a reasonably good output for a screen flow / application with users, roles,  charts, business processes, and forms (not actually working just feasible llm output and general structure).
+
+        ## Week 3-5
+
+        is going to be actually gathering the necessary top level business concepts, business processes etc that are needed correctly running a company in general this includes tax filing, organizational structure, profit and loss, all the generic reporting that is done.
+
+        then gathered market specific data with a more specific organizational chart with specific roles, a business understanding, general accounting practices, etc
+
+        then it will be a let's gather the existing standard operating procedures, documents, emails, audit logs, etc all the data that you can find about a company and generates the business process book that will then be used to generate the application that is used by the users etc
+
+        ## week 6-8
+
+        each individual logical step is a business process that is for a specific purpose. that purpose is then measured in one to many ways. producing a visual output and a report that can be sent to a manager
+
+        for example a software engineer will get or create a series of tasks of various types that will be a thing to work on. each thing that is worked on will have some sort of output. the simple output is number of tasks completed in a certain time period. this would mean that a developer could see how many tasks are being completed
+
+        so a phrase like a developer will complete tasks implies a developer role, a a task table that has various fields, and an objective and key result of tasks produced overtime per user
+
+        some users will have multiple roles and will need to manage things accordingly. such as if you have a developer and a marketer then the developer tasks and the marketer tasks will need to be clearly distinguished
+
+        the general patterns that are needed for this business process to application or logical steps is you take a generic set of business processes that are standard practice in every mba program. this would include analysis etc etc. once you have that then you tailor that business process towards a specific market and that market will be market dependent this will include a market-based business model for example a services versus product base business. and then you to an individual company level with this you add in the secret sauce if that company provides you have the data model industry the business practices from the mba program.
+
+        now the business processes must include is a this is what happens. this is how to track it. this person needs this to be done. and errors that can occur.
+
+        now as different things happen they could be chained together. the tracking needs to be as detailed as possible while not being overly burdensome to general employees. the person that it gets assigned to must be dynamically allocated for example if the person that is assigned to loses their job then must be assigned to another person with skill set similar probably through a manager. and then errors and anomalies also need to be handled such as the shipment not arriving at the customer address or a task taking too long or a spike in leads that are not converting.
+
+        what is laid out here is an initial idea of what needs to be written but this will need to iterate over time and the ground truth here is helping real people in the company to do their jobs effectively and maybe even humanely and maybe even in a flow state.
+
+        what is happening here is given a business process it is attached to one service and that service is associated with entities, screens, whatever. now the service will also need to include tasks being assigned to the given person, llm, or on demand contractor
+
+        this will also must have versions as well as a version history and go back to a previous version and if a code or business level error happens then notify someone or automatically revert to the previous version.
+
+        everything needs to be self-monitoring and validating. this is both for the AI and a continual improvements to the processes in the application as a whole.
+
+        on user sign up there will be a selection of the industry you're part of as well as initially customizing it for the business with your business process documents. the industries could just be generic government business types or application types that have or haven't been integrated?
+
+        ## week 9-12
+
+        then converting each of these into executable processes as a mix of code and humans work. with an application to go along with it with proper use a rose permission authorization authentication speed functionality good user interface good user experience and integration with external tools to start out with.
+
+        initially this would be a screen or series of screens and forms in those screens with transitions that allow the user to go through various processes. this may primarily just be a wizard to start out with and progressively get more complicated as needed as the UI needs to do more.
+
+        what's the business process has a rough estimate of what needs to happen in the service a screenflow is generated. the screenflow will have a title and all of the text that is in the ground truth business process and must have versions as things are going to be changed as well as a published version and go back into time and publish a previous version. each version will have to keep track of both code errors and business level errors and over time they will be able to automatically revert to a previous version if there is an error Spike.
+
+        there were also need to be charts and reports sent to an upper level of management/yourself for some sort of kpi/okr/goal/metric. on a certain time interval. this needs to be associated with the business process but not necessarily part of it actual thing that the business is doing
+
+        another thing to keep in mind is that there are going to be meeting set up on the organization that could and should be tracked and should have some sort of integration and tracking and business process assigned to it
+
+        the application will initially just be very bare Bones just get anything working. over time there will be components that are used and those components may be used with rive and custom animations and just make them beautiful eventually as an ideal.
+
+        the application will be somewhat dashboard based for general metrics on first load and being able to see tasks that need to get done immediately and just start doing them.
+
+        here is probably where a basic integration with basic tools will need to be figured out this would include a data model to data model transformer with accounting for one to many or many to one of the fields.
+
+        the initial sell is you can start using this tool with your existing data platforms and processes put over time you will want to move to it because it is so much easier to do everything. it is not a toy. I believe that in the modern day this is required for any platform, or at least a good data integration
+    -->
+
+    <!-- Query:
+             Given this, plan out a workeffort tree with projects and tasks to do every day for 3 months with time estimates.
+        Include all the text of the input in a WorkEffort.description with the name being a summary of the text in the description.
+
+        Given each of the 4 sections, generate a project that is the summary of the text included and each of the tasks that are the sentences in the text have this project as it's parent work effort
+        Given this text. Seperate each sentence into a WorkEffort with a description and a name as a summary of the text. Each of those are tasks
+
+        and a response like (with the top level project being Ai Startup):
+-->
+    <mantle.work.effort.WorkEffort workEffortId="AiProject" visibilityEnumId="WevAllUsers" workEffortName="Ai Startup Project" workEffortTypeEnumId="WetProject" description="the primary goal is to give people the tools that they need to accomplish their job because they are the
+
+experts in the business domain we are experts in the technology domain. the technology needs to enable the users to do what needs to get done. the best possible way to communicate what needs to get done and then actually doing it is through language and so if everything is grounded in language then what could possibly be better?
+
+start at the lower end of the market giving tools to small businesses that could never afford it but are like the big boy tools the enterprises get to use with thousands of people maintaining them" estimatedStartDate="2025-02-20 00:00:00" estimatedCompletionDate="2025-05-22 00:00:00"/>
+    <mantle.work.effort.WorkEffort workEffortId="AiProofOfConcept" visibilityEnumId="WevAllUsers" workEffortName="Proof of concept (business requirement -> steps -> screens)" rootWorkEffortId="AiProject"  workEffortTypeEnumId="WetProject" estimatedStartDate="2025-02-20 00:00:00" estimatedCompletionDate="2025-03-06 00:00:00" description="Take be able to take handwritten business requirements and convert them into a series of logical steps, and generate a reasonably good output for a screen flow / application with users, roles,  charts, business processes, and forms (not actually working just feasible llm output and general structure)."/>
+    <!-- Generate tasks for this Proof of concept project for week 1-2 for every day with time estimates based on the description -->
+    <mantle.work.effort.WorkEffort workEffortId="AiPoc1" statusId="WeInPlanning" workEffortName="Gather Business Requirements" rootWorkEffortId="AiProject" parentWorkEffortId="AiProofOfConcept" workEffortTypeEnumId="WetTask" estimatedStartDate="2025-02-20 00:00:00" estimatedCompletionDate="2025-02-21 00:00:00" description="Initial meetings with stakeholders to gather business requirements. Estimated Time: 8 hours."/>
+    <mantle.work.effort.WorkEffort workEffortId="AiPoc2" statusId="WeInPlanning" workEffortName="Analyze Business Requirements" rootWorkEffortId="AiProject" parentWorkEffortId="AiProofOfConcept" workEffortTypeEnumId="WetTask" estimatedStartDate="2025-02-22 00:00:00" estimatedCompletionDate="2025-02-23 00:00:00" description="Analyzing gathered requirements to identify key steps and functions. Estimated Time: 8 hours."/>
+    <mantle.work.effort.WorkEffort workEffortId="AiPoc3" statusId="WeInPlanning" workEffortName="Draft Logical Steps" rootWorkEffortId="AiProject" parentWorkEffortId="AiProofOfConcept" workEffortTypeEnumId="WetTask" estimatedStartDate="2025-02-24 00:00:00" estimatedCompletionDate="2025-02-25 00:00:00" description="Creating a draft logical flow based on the analysis. Estimated Time: 8 hours."/>
+    <mantle.work.effort.WorkEffort workEffortId="AiPoc4" statusId="WeInPlanning" workEffortName="Create Screen Flow" rootWorkEffortId="AiProject" parentWorkEffortId="AiProofOfConcept" workEffortTypeEnumId="WetTask" estimatedStartDate="2025-02-26 00:00:00" estimatedCompletionDate="2025-02-27 00:00:00" description="Designing the screen flow based on logical steps drafted. Estimated Time: 8 hours."/>
+    <mantle.work.effort.WorkEffort workEffortId="AiPoc5" statusId="WeInPlanning" workEffortName="Define User Roles" rootWorkEffortId="AiProject" parentWorkEffortId="AiProofOfConcept" workEffortTypeEnumId="WetTask" estimatedStartDate="2025-02-28 00:00:00" estimatedCompletionDate="2025-03-01 00:00:00" description="Identifying and defining user roles for the application. Estimated Time: 4 hours."/>
+    <mantle.work.effort.WorkEffort workEffortId="AiPoc6" statusId="WeInPlanning" workEffortName="List Business Processes" rootWorkEffortId="AiProject" parentWorkEffortId="AiProofOfConcept" workEffortTypeEnumId="WetTask" estimatedStartDate="2025-03-01 00:00:00" estimatedCompletionDate="2025-03-02 00:00:00" description="Listing necessary business processes to be included in the application output. Estimated Time: 4 hours."/>
+    <mantle.work.effort.WorkEffort workEffortId="AiPoc7" statusId="WeInPlanning" workEffortName="Create Charts and Forms" rootWorkEffortId="AiProject" parentWorkEffortId="AiProofOfConcept" workEffortTypeEnumId="WetTask" estimatedStartDate="2025-03-03 00:00:00" estimatedCompletionDate="2025-03-04 00:00:00" description="Designing the charts and forms needed for the application output. Estimated Time: 8 hours."/>
+    <mantle.work.effort.WorkEffort workEffortId="AiPoc8" statusId="WeInPlanning" workEffortName="Compile All Outputs" rootWorkEffortId="AiProject" parentWorkEffortId="AiProofOfConcept" workEffortTypeEnumId="WetTask" estimatedStartDate="2025-03-05 00:00:00" estimatedCompletionDate="2025-03-06 00:00:00" description="Compiling all the outputs into a feasible structure for the proof of concept presentation. Estimated Time: 8 hours."/>
+    <mantle.work.effort.WorkEffort workEffortId="AiPoc9" statusId="WeInPlanning" workEffortName="Review and Confirm Outputs" rootWorkEffortId="AiProject" parentWorkEffortId="AiProofOfConcept" workEffortTypeEnumId="WetTask" estimatedStartDate="2025-03-07 00:00:00" estimatedCompletionDate="2025-03-07 00:00:00" description="Final review of outputs with stakeholders for confirmation. Estimated Time: 4 hours."/>
+    <mantle.work.effort.WorkEffort workEffortId="AiPoc10" statusId="WeInPlanning" workEffortName="Prepare Presentation" rootWorkEffortId="AiProject" parentWorkEffortId="AiProofOfConcept" workEffortTypeEnumId="WetTask" estimatedStartDate="2025-03-07 00:00:00" estimatedCompletionDate="2025-03-07 00:00:00" description="Preparing a presentation for stakeholders summarizing the proof of concept. Estimated Time: 4 hours."/>
+
+    <mantle.work.effort.WorkEffort workEffortId="AiBusinessProcessBook" visibilityEnumId="WevAllUsers" workEffortName="Business Process Book Creation" rootWorkEffortId="AiProject" parentWorkEffortId="AiProject" workEffortTypeEnumId="WetProject" estimatedStartDate="2025-03-06 00:00:00" estimatedCompletionDate="2025-03-27 00:00:00" description="is going to be actually gathering the necessary top level business concepts, business processes etc that are needed correctly running a company in general this includes tax filing, organizational structure, profit and loss, all the generic reporting that is done.
+
+then gathered market specific data with a more specific organizational chart with specific roles, a business understanding, general accounting practices, etc
+
+then it will be a let's gather the existing standard operating procedures, documents, emails, audit logs, etc all the data that you can find about a company and generates the business process book that will then be used to generate the application that is used by the users etc"/>
+    <!-- Generate tasks for this Business Process Book Creation for week 3-5 for every day with time estimates based on the description -->
+    <mantle.work.effort.WorkEffort workEffortId="AiProcessBook1" statusId="WeInPlanning" workEffortName="Gather Top-Level Business Concepts" rootWorkEffortId="AiProject" parentWorkEffortId="AiBusinessProcessBook" workEffortTypeEnumId="WetTask" estimatedStartDate="2025-03-06 00:00:00" estimatedCompletionDate="2025-03-07 00:00:00" description="Conduct research and interviews to gather key business concepts for the business process book. Estimated Time: 16 hours."/>
+    <mantle.work.effort.WorkEffort workEffortId="AiProcessBook2" statusId="WeInPlanning" workEffortName="Compile Business Processes" rootWorkEffortId="AiProject" parentWorkEffortId="AiBusinessProcessBook" workEffortTypeEnumId="WetTask" estimatedStartDate="2025-03-08 00:00:00" estimatedCompletionDate="2025-03-09 00:00:00" description="Compile a list of current business processes needed for company operations including tax filing, organization structure, etc. Estimated Time: 16 hours."/>
+    <mantle.work.effort.WorkEffort workEffortId="AiProcessBook3" statusId="WeInPlanning" workEffortName="Market Specific Data Gathering" rootWorkEffortId="AiProject" parentWorkEffortId="AiBusinessProcessBook" workEffortTypeEnumId="WetTask" estimatedStartDate="2025-03-10 00:00:00" estimatedCompletionDate="2025-03-13 00:00:00" description="Gather detailed market-specific data and refine the organizational chart based on specific roles. Estimated Time: 24 hours."/>
+    <mantle.work.effort.WorkEffort workEffortId="AiProcessBook4" statusId="WeInPlanning" workEffortName="Analyze General Accounting Practices" rootWorkEffortId="AiProject" parentWorkEffortId="AiBusinessProcessBook" workEffortTypeEnumId="WetTask" estimatedStartDate="2025-03-14 00:00:00" estimatedCompletionDate="2025-03-15 00:00:00" description="Analyze existing accounting practices that apply to the business environment and document them. Estimated Time: 8 hours."/>
+    <mantle.work.effort.WorkEffort workEffortId="AiProcessBook5" statusId="WeInPlanning" workEffortName="Gather Existing Standard Operating Procedures" rootWorkEffortId="AiProject" parentWorkEffortId="AiBusinessProcessBook" workEffortTypeEnumId="WetTask" estimatedStartDate="2025-03-16 00:00:00" estimatedCompletionDate="2025-03-18 00:00:00" description="Collect existing standard operating procedures and other documentary evidence such as emails and audit logs. Estimated Time: 24 hours."/>
+    <mantle.work.effort.WorkEffort workEffortId="AiProcessBook6" statusId="WeInPlanning" workEffortName="Generate Draft of Business Process Book" rootWorkEffortId="AiProject" parentWorkEffortId="AiBusinessProcessBook" workEffortTypeEnumId="WetTask" estimatedStartDate="2025-03-19 00:00:00" estimatedCompletionDate="2025-03-20 00:00:00" description="Compile all the gathered information into a draft version of the business process book. Estimated Time: 16 hours."/>
+    <mantle.work.effort.WorkEffort workEffortId="AiProcessBook7" statusId="WeInPlanning" workEffortName="Review &amp; Revise Business Process Book" rootWorkEffortId="AiProject" parentWorkEffortId="AiBusinessProcessBook" workEffortTypeEnumId="WetTask" estimatedStartDate="2025-03-21 00:00:00" estimatedCompletionDate="2025-03-23 00:00:00" description="Review the draft with stakeholders and revise accordingly. Estimated Time: 16 hours."/>
+    <mantle.work.effort.WorkEffort workEffortId="AiProcessBook8" statusId="WeInPlanning" workEffortName="Final Analysis &amp; Approvals" rootWorkEffortId="AiProject" parentWorkEffortId="AiBusinessProcessBook" workEffortTypeEnumId="WetTask" estimatedStartDate="2025-03-24 00:00:00" estimatedCompletionDate="2025-03-27 00:00:00" description="Conduct final analysis and obtain approvals from relevant stakeholders for the business process book. Estimated Time: 16 hours."/>
+
+    <mantle.work.effort.WorkEffort workEffortId="AiLogicalStep" visibilityEnumId="WevAllUsers" workEffortName="Logical Step Engine" rootWorkEffortId="AiProject" parentWorkEffortId="AiProject" workEffortTypeEnumId="WetProject" estimatedStartDate="2025-03-27 00:00:00" estimatedCompletionDate="2025-04-17 00:00:00" description="each individual logical step is a business process that is for a specific purpose. that purpose is then measured in one to many ways. producing a visual output and a report that can be sent to a manager
+
+for example a software engineer will get or create a series of tasks of various types that will be a thing to work on. each thing that is worked on will have some sort of output. the simple output is number of tasks completed in a certain time period. this would mean that a developer could see how many tasks are being completed
+
+so a phrase like a developer will complete tasks implies a developer role, a a task table that has various fields, and an objective and key result of tasks produced overtime per user
+
+some users will have multiple roles and will need to manage things accordingly. such as if you have a developer and a marketer then the developer tasks and the marketer tasks will need to be clearly distinguished
+
+the general patterns that are needed for this business process to application or logical steps is you take a generic set of business processes that are standard practice in every mba program. this would include analysis etc etc. once you have that then you tailor that business process towards a specific market and that market will be market dependent this will include a market-based business model for example a services versus product base business. and then you to an individual company level with this you add in the secret sauce if that company provides you have the data model industry the business practices from the mba program.
+
+now the business processes must include is a this is what happens. this is how to track it. this person needs this to be done. and errors that can occur.
+
+now as different things happen they could be chained together. the tracking needs to be as detailed as possible while not being overly burdensome to general employees. the person that it gets assigned to must be dynamically allocated for example if the person that is assigned to loses their job then must be assigned to another person with skill set similar probably through a manager. and then errors and anomalies also need to be handled such as the shipment not arriving at the customer address or a task taking too long or a spike in leads that are not converting.
+
+what is laid out here is an initial idea of what needs to be written but this will need to iterate over time and the ground truth here is helping real people in the company to do their jobs effectively and maybe even humanely and maybe even in a flow state.
+
+what is happening here is given a business process it is attached to one service and that service is associated with entities, screens, whatever. now the service will also need to include tasks being assigned to the given person, llm, or on demand contractor
+
+this will also must have versions as well as a version history and go back to a previous version and if a code or business level error happens then notify someone or automatically revert to the previous version.
+
+everything needs to be self-monitoring and validating. this is both for the AI and a continual improvements to the processes in the application as a whole.
+
+on user sign up there will be a selection of the industry you're part of as well as initially customizing it for the business with your business process documents. the industries could just be generic government business types or application types that have or haven't been integrated?"/>
+    <!-- Generate tasks for this Logical Step Engine for week 6-8 for every day with time estimates based on the description -->
+    <mantle.work.effort.WorkEffort workEffortId="AiLogicSteps1" statusId="WeInPlanning" workEffortName="Define Logical Steps" rootWorkEffortId="AiProject" parentWorkEffortId="AiLogicalStep" workEffortTypeEnumId="WetTask" estimatedStartDate="2025-03-27 00:00:00" estimatedCompletionDate="2025-03-29 00:00:00" description="Identify and define individual logical steps that represent business processes for the application. Estimated Time: 24 hours."/>
+    <mantle.work.effort.WorkEffort workEffortId="AiLogicSteps2" statusId="WeInPlanning" workEffortName="Establish Measurement Methods" rootWorkEffortId="AiProject" parentWorkEffortId="AiLogicalStep" workEffortTypeEnumId="WetTask" estimatedStartDate="2025-03-30 00:00:00" estimatedCompletionDate="2025-04-01 00:00:00" description="Determine various methods to measure the output and effectiveness of each logical step. Estimated Time: 16 hours."/>
+    <mantle.work.effort.WorkEffort workEffortId="AiLogicSteps3" statusId="WeInPlanning" workEffortName="Develop Visual Output Specifications" rootWorkEffortId="AiProject" parentWorkEffortId="AiLogicalStep" workEffortTypeEnumId="WetTask" estimatedStartDate="2025-04-02 00:00:00" estimatedCompletionDate="2025-04-04 00:00:00" description="Outline specifications for the visual outputs generated from each logical step. Estimated Time: 16 hours."/>
+    <mantle.work.effort.WorkEffort workEffortId="AiLogicSteps4" statusId="WeInPlanning" workEffortName="Create Report Formats" rootWorkEffortId="AiProject" parentWorkEffortId="AiLogicalStep" workEffortTypeEnumId="WetTask" estimatedStartDate="2025-04-05 00:00:00" estimatedCompletionDate="2025-04-07 00:00:00" description="Design report formats that will be used to communicate task results to managers. Estimated Time: 8 hours."/>
+    <mantle.work.effort.WorkEffort workEffortId="AiLogicSteps5" statusId="WeInPlanning" workEffortName="Task Assignment Mechanism" rootWorkEffortId="AiProject" parentWorkEffortId="AiLogicalStep" workEffortTypeEnumId="WetTask" estimatedStartDate="2025-04-08 00:00:00" estimatedCompletionDate="2025-04-10 00:00:00" description="Develop a mechanism for dynamically assigning tasks to appropriate personnel based on skill sets. Estimated Time: 24 hours."/>
+    <mantle.work.effort.WorkEffort workEffortId="AiLogicSteps6" statusId="WeInPlanning" workEffortName="Implement Error Management" rootWorkEffortId="AiProject" parentWorkEffortId="AiLogicalStep" workEffortTypeEnumId="WetTask" estimatedStartDate="2025-04-11 00:00:00" estimatedCompletionDate="2025-04-13 00:00:00" description="Create methods for managing errors and anomalies that occur during task execution. Estimated Time: 24 hours."/>
+    <mantle.work.effort.WorkEffort workEffortId="AiLogicSteps7" statusId="WeInPlanning" workEffortName="Build Feedback Loop" rootWorkEffortId="AiProject" parentWorkEffortId="AiLogicalStep" workEffortTypeEnumId="WetTask" estimatedStartDate="2025-04-14 00:00:00" estimatedCompletionDate="2025-04-16 00:00:00" description="Develop feedback mechanisms to improve logical steps based on real-world data. Estimated Time: 16 hours."/>
+    <mantle.work.effort.WorkEffort workEffortId="AiLogicSteps8" statusId="WeInPlanning" workEffortName="Finalize Documentation" rootWorkEffortId="AiProject" parentWorkEffortId="AiLogicalStep" workEffortTypeEnumId="WetTask" estimatedStartDate="2025-04-17 00:00:00" estimatedCompletionDate="2025-04-17 00:00:00" description="Compile and finalize all documentation related to the logical steps and their implementations. Estimated Time: 8 hours."/>
+
+    <mantle.work.effort.WorkEffort workEffortId="AiAppGen" visibilityEnumId="WevAllUsers" workEffortName="Application Generation Engine" rootWorkEffortId="AiProject" parentWorkEffortId="AiProject" workEffortTypeEnumId="WetProject" estimatedStartDate="2025-04-17 00:00:00" estimatedCompletionDate="2025-05-22 00:00:00" description="then converting each of these into executable processes as a mix of code and humans work. with an application to go along with it with proper use a rose permission authorization authentication speed functionality good user interface good user experience and integration with external tools to start out with.
+
+initially this would be a screen or series of screens and forms in those screens with transitions that allow the user to go through various processes. this may primarily just be a wizard to start out with and progressively get more complicated as needed as the UI needs to do more.
+
+        what's the business process has a rough estimate of what needs to happen in the service a screenflow is generated. the screenflow will have a title and all of the text that is in the ground truth business process and must have versions as things are going to be changed as well as a published version and go back into time and publish a previous version. each version will have to keep track of both code errors and business level errors and over time they will be able to automatically revert to a previous version if there is an error Spike.
+
+there were also need to be charts and reports sent to an upper level of management/yourself for some sort of kpi/okr/goal/metric. on a certain time interval. this needs to be associated with the business process but not necessarily part of it actual thing that the business is doing
+
+another thing to keep in mind is that there are going to be meeting set up on the organization that could and should be tracked and should have some sort of integration and tracking and business process assigned to it
+
+the application will initially just be very bare Bones just get anything working. over time there will be components that are used and those components may be used with rive and custom animations and just make them beautiful eventually as an ideal.
+
+the application will be somewhat dashboard based for general metrics on first load and being able to see tasks that need to get done immediately and just start doing them.
+
+here is probably where a basic integration with basic tools will need to be figured out this would include a data model to data model transformer with accounting for one to many or many to one of the fields.
+
+the initial sell is you can start using this tool with your existing data platforms and processes put over time you will want to move to it because it is so much easier to do everything. it is not a toy. I believe that in the modern day this is required for any platform, or at least a good data integration"/>
+    <!-- Generate tasks for this Logical Step Engine for week 6-8 for every day with time estimates based on the description -->
+    <mantle.work.effort.WorkEffort workEffortId="AiAppGen1" statusId="WeInPlanning" workEffortName="Requirements Gathering for Application" rootWorkEffortId="AiProject" parentWorkEffortId="AiAppGen" workEffortTypeEnumId="WetTask" estimatedStartDate="2025-04-17 00:00:00" estimatedCompletionDate="2025-04-19 00:00:00" description="Gathering detailed requirements from stakeholders regarding application functionality, user interface expectations, and integration needs. Estimated Time: 24 hours."/>
+    <mantle.work.effort.WorkEffort workEffortId="AiAppGen2" statusId="WeInPlanning" workEffortName="Design UI/UX Prototypes" rootWorkEffortId="AiProject" parentWorkEffortId="AiAppGen" workEffortTypeEnumId="WetTask" estimatedStartDate="2025-04-20 00:00:00" estimatedCompletionDate="2025-04-24 00:00:00" description="Creating initial UI/UX prototypes and wireframes for user interaction flows and screens. Estimated Time: 32 hours."/>
+    <mantle.work.effort.WorkEffort workEffortId="AiAppGen3" statusId="WeInPlanning" workEffortName="Develop Application Architecture" rootWorkEffortId="AiProject" parentWorkEffortId="AiAppGen" workEffortTypeEnumId="WetTask" estimatedStartDate="2025-04-25 00:00:00" estimatedCompletionDate="2025-04-29 00:00:00" description="Defining the architecture of the application along with the necessary back-end services and data integration strategies. Estimated Time: 24 hours."/>
+    <mantle.work.effort.WorkEffort workEffortId="AiAppGen4" statusId="WeInPlanning" workEffortName="Implement Initial Application Features" rootWorkEffortId="AiProject" parentWorkEffortId="AiAppGen" workEffortTypeEnumId="WetTask" estimatedStartDate="2025-04-30 00:00:00" estimatedCompletionDate="2025-05-10 00:00:00" description="Coding and implementing essential application features based on gathered requirements. This involves creating screen flows, forms, and transitions. Estimated Time: 80 hours."/>
+    <mantle.work.effort.WorkEffort workEffortId="AiAppGen5" statusId="WeInPlanning" workEffortName="Test Application Features" rootWorkEffortId="AiProject" parentWorkEffortId="AiAppGen" workEffortTypeEnumId="WetTask" estimatedStartDate="2025-05-11 00:00:00" estimatedCompletionDate="2025-05-15 00:00:00" description="Conduct comprehensive testing of implemented features to ensure proper functionality and user experience. Estimated Time: 40 hours."/>
+    <mantle.work.effort.WorkEffort workEffortId="AiAppGen6" statusId="WeInPlanning" workEffortName="Develop Reporting and KPI Dashboards" rootWorkEffortId="AiProject" parentWorkEffortId="AiAppGen" workEffortTypeEnumId="WetTask" estimatedStartDate="2025-05-16 00:00:00" estimatedCompletionDate="2025-05-20 00:00:00" description="Creating reporting and KPI dashboards to provide insights into application performance and user metrics. Estimated Time: 32 hours."/>
+    <mantle.work.effort.WorkEffort workEffortId="AiAppGen7" statusId="WeInPlanning" workEffortName="Version Control and Error Management Implementation" rootWorkEffortId="AiProject" parentWorkEffortId="AiAppGen" workEffortTypeEnumId="WetTask" estimatedStartDate="2025-05-21 00:00:00" estimatedCompletionDate="2025-05-22 00:00:00" description="Implementing version control mechanisms and establishing error handling protocols within the application. Estimated Time: 16 hours."/>
+</entity-facade-xml>
