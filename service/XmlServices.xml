@@ -100,8 +100,8 @@ along with this software (see the LICENSE.md file). If not, see
 
             <if condition="outputFile">
                 <script><![CDATA[entityXml+="</entities>"]]></script>
-                <script>ec.resource.getLocationReference('component://getXml/allEntities.xml').putText(entityXml)</script>
-                <script>ec.resource.getLocationReference('component://getXml/allEntities.txt').putText(entityXml)</script>
+                <script>ec.resource.getLocationReference('component://getXml/dataset/allEntities.xml').putText(entityXml)</script>
+                <script>ec.resource.getLocationReference('component://getXml/dataset/allEntities.txt').putText(entityXml)</script>
             </if>
         </actions>
     </service>
@@ -196,8 +196,8 @@ along with this software (see the LICENSE.md file). If not, see
             </iterate>
             <if condition="outputFile">
                 <script><![CDATA[serviceXml=serviceXml+"</services>"]]></script>
-                <script>ec.resource.getLocationReference('component://getXml/allServices.xml').putText(serviceXml)</script>
-                <script>ec.resource.getLocationReference('component://getXml/allServices.txt').putText(serviceXml)</script>
+                <script>ec.resource.getLocationReference('component://getXml/dataset/allServices.xml').putText(serviceXml)</script>
+                <script>ec.resource.getLocationReference('component://getXml/dataset/allServices.txt').putText(serviceXml)</script>
             </if>
         </actions>
     </service>
@@ -304,8 +304,8 @@ along with this software (see the LICENSE.md file). If not, see
                 <set field="screenList" from="screenList+[name:inScreen,prettyName:sd.defaultMenuName,xml:minified]"/>
             </iterate>
             <if condition="outputFile">
-                <script>ec.resource.getLocationReference('component://getXml/allScreens.xml').putText(outScreenXml)</script>
-                <script>ec.resource.getLocationReference('component://getXml/allScreens.txt').putText(outScreenXml)</script>
+                <script>ec.resource.getLocationReference('component://getXml/dataset/allScreens.xml').putText(outScreenXml)</script>
+                <script>ec.resource.getLocationReference('component://getXml/dataset/allScreens.txt').putText(outScreenXml)</script>
             </if>
         </actions>
     </service>
@@ -375,8 +375,8 @@ along with this software (see the LICENSE.md file). If not, see
                 <set field="screenList" from="screenList+[name:inScreen,prettyName:sd.defaultMenuName,xml:minified]"/>
             </iterate>
             <if condition="outputFile">
-                <script>ec.resource.getLocationReference('component://getXml/allScreens.xml').putText(outScreenXml)</script>
-                <script>ec.resource.getLocationReference('component://getXml/allScreens.txt').putText(outScreenXml)</script>
+                <script>ec.resource.getLocationReference('component://getXml/dataset/allScreens.xml').putText(outScreenXml)</script>
+                <script>ec.resource.getLocationReference('component://getXml/dataset/allScreens.txt').putText(outScreenXml)</script>
             </if>
         </actions>
     </service>
@@ -560,7 +560,7 @@ along with this software (see the LICENSE.md file). If not, see
             <service-call name="XmlServices.get#OpenAiTokenLength" in-map="[text:json]" out-map="context"/>
             <log level="warn" message="tokenCount: ${tokenCount}"/>
 
-            <script>ec.resource.getLocationReference('component://getXml/output.jsonl').putText(json)</script>
+            <script>ec.resource.getLocationReference('component://getXml/dataset/output.jsonl').putText(json)</script>
         </actions>
     </service>
 
@@ -604,20 +604,19 @@ along with this software (see the LICENSE.md file). If not, see
         <actions>
 <!--            <log level="warn" message="json: ${json}"/>-->
             <set field="inputOutputList" from="[]"/>
-            <iterate entry="service_call" list="json.services">
+            <iterate entry="node" list="json.services">
                 <!-- Find the service call name -->
-                <set field="inputOutputList" from="inputOutputList+[type:'service-call',name:service_call.name,inMapList:service_call.in_map,outMapList:service_call.out_map]"/>
+                <set field="inputOutputList" from="inputOutputList+[type:'service-call',name:node.name,inMapList:node.in_map,outMapList:node.out_map]"/>
             </iterate>
             <service-call name="XmlServices.evaluate#InputOutputList" in-map="[inputOutputList:inputOutputList]" out-map="context"/>
 
 <!--            <log level="warn" message="inputOutputList: ${inputOutputList}"/>-->
 
-
-            <set field="serviceList" from="json.services"/>
+            <set field="nodeList" from="inputOutputList"/>
 
             <!-- Call ftl renderer for component://getXml/template/serviceDeinition.xml.ftl -->
-<!--            <set field="xml" from="ec.resource.template('component://getXml/template/serviceDefinition.xml.ftl', '.ftl')"/>-->
-<!--            <log level="warn" message="xml: ${xml}"/>-->
+            <set field="xml" from="ec.resource.template('component://getXml/template/nodeList.xml.ftl', '.ftl')"/>
+            <log level="warn" message="xml: ${xml}"/>
         </actions>
     </service>
 
@@ -641,6 +640,7 @@ along with this software (see the LICENSE.md file). If not, see
             </parameter>
         </in-parameters>
         <out-parameters>
+            <parameter name="inputOutputList" type="List"/>
         </out-parameters>
         <actions>
             <set field="knownServiceNames" from="ec.service.knownServiceNames"/>
@@ -672,11 +672,16 @@ along with this software (see the LICENSE.md file). If not, see
                     </if>
 
 <!--                    <log level="warn" message="inputOutput.inMapList: ${inputOutput.inMapList}"/>-->
+                    <set field="validatePreviousOutMap" from="inputOutput_index != 0"/>
                     <iterate list="inputOutput.inMapList" entry="inMap">
-                        <if condition="!sd.inParameterNames.contains(inMap.key)">
+                        <if condition="!sd.inParameterNames.contains(inMap.key)"><then>
                             <set field="inMap.error" value="in_map ${inMap.key} does not exist for service ${inputOutput.name}!"/>
                             <log level="warn" message="${inMap.error}"/>
-                        </if>
+                        </then><else-if condition="validatePreviousOutMap">
+                            <set field="previousInputOutput" from="inputOutputList[inputOutput_index-1]"/>
+                            <set field="previousOutMapList" from="previousInputOutput.outMapList"/>
+
+                        </else-if></if>
                     </iterate>
 
 <!--                    <log level="warn" message="inParameterIntersectionList: ${inParameterIntersectionList} sd.inParameterNames: ${sd.inParameterNames} inputOutput.inMapList: ${inputOutput.inMapList}"/>-->
@@ -691,7 +696,7 @@ along with this software (see the LICENSE.md file). If not, see
                         <log level="warn" message="Must have an out_map for service ${inputOutput.name} when there is another node!"/>
                     </if>
                     <iterate list="inputOutput.outMapList" entry="outMap">
-                        <log level="warn" message="outMap: ${outMap}"/>
+<!--                        <log level="warn" message="outMap: ${outMap}"/>-->
                         <if condition="outMap.getClass().getName() == 'java.lang.String'">
                             <set field="outMapKey" from="outMap"/>
                             <set field="outMap" from="[key:outMapKey,value:outMapKey]"/>
@@ -700,12 +705,6 @@ along with this software (see the LICENSE.md file). If not, see
                             <set field="outMap.error" value="out_map ${outMap.key} does not exist for service ${inputOutput.name}!"/>
                             <log level="warn" message="${outMap.error}"/>
                         </if>
-                    </iterate>
-                    <if condition="inputOutput.outMapList.getClass().getName() != 'java.lang.String'">
-                        <set field="outParameterHallucinationList" from="inputOutput.outMapList - sd.outParameterNames"/>
-                    </if>
-                    <iterate list="outParameterHallucinationList" entry="outMapHallucination">
-                        <log level="warn" message="out_map ${outMapHallucination} does not exist for service ${inputOutput.name}!"/>
                     </iterate>
 <!--                    <log level="warn" message="outParameterIntersectionList: ${outParameterIntersectionList} sd.outParameterNames: ${sd.outParameterNames} inputOutput.outMapList: ${inputOutput.outMapList}"/>-->
                 </then><else-if condition="type == 'entity-find'">
