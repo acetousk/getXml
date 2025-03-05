@@ -1,0 +1,15 @@
+
+<!-- Entity Name: mantle.facility.ProductFacilityLocation sql table: PRODUCT_FACILITY_LOCATION --><entity entity-name="ProductFacilityLocation" package="mantle.facility" cache="never">
+    <field name="productId" type="id" is-pk="true"/>
+    <field name="facilityId" type="id" is-pk="true"/>
+    <field name="locationSeqId" type="id" is-pk="true"/>
+    <field name="minimumStock" type="number-decimal"/>
+    <field name="moveQuantity" type="number-decimal"/>
+    <relationship type="one" related="mantle.product.Product" short-alias="product"/>
+    <relationship type="one" related="mantle.facility.FacilityLocation" short-alias="location">
+        <key-map field-name="facilityId"/>
+        <key-map field-name="locationSeqId"/>
+    </relationship>
+    <field name="lastUpdatedStamp" type="date-time"/>
+
+</entity>

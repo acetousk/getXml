@@ -1,0 +1,8 @@
+
+<!-- Entity Name: moqui.basic.LocalizedMessage sql table: LOCALIZED_MESSAGE --><entity entity-name="LocalizedMessage" package="moqui.basic" use="configuration" authorize-skip="view" cache="true">
+    <field name="original" type="text-medium" is-pk="true"/>
+    <field name="locale" type="text-short" is-pk="true"/>
+    <field name="localized" type="text-long"/>
+    <field name="lastUpdatedStamp" type="date-time"/>
+
+</entity>

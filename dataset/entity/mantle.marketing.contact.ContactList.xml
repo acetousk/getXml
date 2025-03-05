@@ -1,0 +1,42 @@
+
+<!-- Entity Name: mantle.marketing.contact.ContactList sql table: CONTACT_LIST --><entity entity-name="ContactList" package="mantle.marketing.contact" has-dependents="true">
+    <field name="contactListId" type="id" is-pk="true"/>
+    <field name="contactListTypeEnumId" type="id"/>
+    <field name="contactMechTypeEnumId" type="id"/>
+    <field name="marketingCampaignId" type="id"/>
+    <field name="contactListName" type="text-medium"/>
+    <field name="description" type="text-medium"/>
+    <field name="comments" type="text-medium"/>
+    <field name="isPublic" type="text-indicator"/>
+    <field name="singleUse" type="text-indicator">
+        <description><![CDATA[Parties in the list should be contacted only once.]]></description></field>
+    <field name="ownerPartyId" type="id"/>
+    <field name="verifyEmailFrom" type="text-medium"/>
+    <field name="verifyEmailScreen" type="text-medium"/>
+    <field name="verifyEmailSubject" type="text-long"/>
+    <field name="verifyEmailWebSiteId" type="id"/>
+    <field name="optOutScreen" type="text-medium"/>
+    <relationship type="one" related="mantle.marketing.campaign.MarketingCampaign"/>
+    <relationship type="one" title="ContactListType" related="moqui.basic.Enumeration">
+        <key-map field-name="contactListTypeEnumId"/></relationship>
+    <relationship type="one" title="ContactMechType" related="moqui.basic.Enumeration">
+        <key-map field-name="contactMechTypeEnumId"/></relationship>
+    <relationship type="one" title="Owner" related="mantle.party.Party">
+        <key-map field-name="ownerPartyId"/></relationship>
+    <seed-data>
+        <moqui.basic.EnumerationType description="Contact List Type" enumTypeId="ContactListType"/>
+        <moqui.basic.Enumeration enumId="MARKETING" description="Marketing" enumTypeId="ContactListType"/>
+        <moqui.basic.Enumeration enumId="NEWSLETTER" description="Newsletter" enumTypeId="ContactListType"/>
+        <moqui.basic.Enumeration enumId="ANNOUNCEMENT" description="Announcement" enumTypeId="ContactListType"/>
+    </seed-data>
+    <field name="lastUpdatedStamp" type="date-time"/>
+    <relationship related="mantle.marketing.contact.ContactListCommStatus" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="contactListId" related="contactListId"/></relationship>
+    <relationship related="mantle.marketing.contact.ContactListEmail" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="contactListId" related="contactListId"/></relationship>
+    <relationship related="mantle.marketing.contact.ContactListParty" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="contactListId" related="contactListId"/></relationship>
+    <relationship related="mantle.party.communication.CommunicationEvent" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="contactListId" related="contactListId"/></relationship>
+
+</entity>

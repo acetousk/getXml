@@ -1,0 +1,1 @@
+<!--Service Location wm.TaskServices.get#MyUserAccount--><service verb="get" noun="MyUserAccount"><in-parameters/><out-parameters><parameter name="loggedInUser"/></out-parameters><actions><entity-find-one entity-name="moqui.security.UserAccount" value-field="loggedInUser"><field-map field-name="userId" from="ec.user.userId"/></entity-find-one></actions></service>

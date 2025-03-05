@@ -1,0 +1,11 @@
+
+<!-- Entity Name: mantle.work.effort.WorkEffortCommEvent sql table: WORK_EFFORT_COMM_EVENT --><entity entity-name="WorkEffortCommEvent" package="mantle.work.effort" cache="never">
+    <field name="workEffortId" type="id" is-pk="true"/>
+    <field name="communicationEventId" type="id" is-pk="true"/>
+    <field name="description" type="text-medium"/>
+    <field name="sequenceNum" type="number-integer"/>
+    <relationship type="one" related="mantle.work.effort.WorkEffort" short-alias="workEffort"/>
+    <relationship type="one" related="mantle.party.communication.CommunicationEvent" short-alias="communicationEvent"/>
+    <field name="lastUpdatedStamp" type="date-time"/>
+
+</entity>

@@ -1,0 +1,14 @@
+
+<!-- Entity Name: mantle.product.store.ProductStoreParty sql table: PRODUCT_STORE_PARTY --><entity entity-name="ProductStoreParty" package="mantle.product.store">
+    <field name="productStoreId" type="id" is-pk="true"/>
+    <field name="partyId" type="id" is-pk="true"/>
+    <field name="roleTypeId" type="id" is-pk="true"/>
+    <field name="fromDate" type="date-time" is-pk="true"/>
+    <field name="thruDate" type="date-time"/>
+    <field name="sequenceNum" type="number-integer"/>
+    <relationship type="one" related="mantle.product.store.ProductStore" short-alias="store"/>
+    <relationship type="one" related="mantle.party.Party" short-alias="party"/>
+    <relationship type="one" related="mantle.party.RoleType" short-alias="role"/>
+    <field name="lastUpdatedStamp" type="date-time"/>
+
+</entity>

@@ -1,0 +1,29 @@
+
+<!-- Entity Name: mantle.party.PartyBadgeScan sql table: PARTY_BADGE_SCAN --><entity entity-name="PartyBadgeScan" package="mantle.party">
+    <field name="partyBadgeId" type="id" is-pk="true"/>
+    <field name="scanDate" type="date-time" is-pk="true"/>
+    <field name="scanValue" type="text-short"/>
+    <field name="scanPurposeEnumId" type="id"/>
+    <field name="scanResultEnumId" type="id"/>
+    <field name="facilityId" type="id"/>
+    <field name="timeEntryId" type="id"/>
+    <relationship type="one" related="mantle.party.PartyBadge"/>
+    <relationship type="one" title="PartyBadgeScanPurpose" related="moqui.basic.Enumeration">
+        <key-map field-name="scanPurposeEnumId"/></relationship>
+    <relationship type="one" title="PartyBadgeScanResult" related="moqui.basic.Enumeration">
+        <key-map field-name="scanResultEnumId"/></relationship>
+    <relationship type="one" related="mantle.facility.Facility"/>
+    <relationship type="one" related="mantle.work.time.TimeEntry"/>
+    <seed-data>
+        <moqui.basic.EnumerationType description="Party Badge Scan Purpose" enumTypeId="PartyBadgeScanPurpose"/>
+        <moqui.basic.Enumeration description="Access" enumId="PbspAccess" enumTypeId="PartyBadgeScanPurpose"/>
+        <moqui.basic.Enumeration description="Clock In" enumId="PbspClockIn" enumTypeId="PartyBadgeScanPurpose"/>
+        <moqui.basic.Enumeration description="Clock Out" enumId="PbspClockOut" enumTypeId="PartyBadgeScanPurpose"/>
+        <moqui.basic.EnumerationType description="Party Badge Scan Result" enumTypeId="PartyBadgeScanResult"/>
+        <moqui.basic.Enumeration description="Success" enumId="PbsrSuccess" enumTypeId="PartyBadgeScanResult"/>
+        <moqui.basic.Enumeration description="Not Yet Valid" enumId="PbsrNotYetValid" enumTypeId="PartyBadgeScanResult"/>
+        <moqui.basic.Enumeration description="Expired" enumId="PbsrExpired" enumTypeId="PartyBadgeScanResult"/>
+    </seed-data>
+    <field name="lastUpdatedStamp" type="date-time"/>
+
+</entity>

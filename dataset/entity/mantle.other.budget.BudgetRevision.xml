@@ -1,0 +1,14 @@
+
+<!-- Entity Name: mantle.other.budget.BudgetRevision sql table: BUDGET_REVISION --><entity entity-name="BudgetRevision" package="mantle.other.budget" has-dependents="true">
+    <field name="budgetId" type="id" is-pk="true"/>
+    <field name="revisionSeqId" type="id" is-pk="true"/>
+    <field name="dateRevised" type="date-time"/>
+    <field name="description" type="text-medium"/>
+    <relationship type="one" related="mantle.other.budget.Budget"/>
+    <field name="lastUpdatedStamp" type="date-time"/>
+    <relationship related="mantle.other.budget.BudgetRevisionImpact" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="budgetId" related="budgetId"/>
+        <key-map field-name="revisionSeqId" related="revisionSeqId"/>
+    </relationship>
+
+</entity>

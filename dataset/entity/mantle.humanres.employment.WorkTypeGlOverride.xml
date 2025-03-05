@@ -1,0 +1,17 @@
+
+<!-- Entity Name: mantle.humanres.employment.WorkTypeGlOverride sql table: WORK_TYPE_GL_OVERRIDE --><entity entity-name="WorkTypeGlOverride" package="mantle.humanres.employment" use="configuration">
+    <field name="organizationPartyId" type="id" is-pk="true"/>
+    <field name="workTypeEnumId" type="id" is-pk="true"/>
+    <field name="itemTypeEnumId" type="id" is-pk="true"/>
+    <field name="overrideGlAccountId" type="id"/>
+    <relationship type="one" title="Organization" related="mantle.party.Party" short-alias="organizationParty">
+        <key-map field-name="organizationPartyId"/></relationship>
+    <relationship type="one" title="WorkType" related="moqui.basic.Enumeration">
+        <key-map field-name="workTypeEnumId"/></relationship>
+    <relationship type="one" title="ItemType" related="moqui.basic.Enumeration" short-alias="itemTypeEnum">
+        <key-map field-name="itemTypeEnumId"/></relationship>
+    <relationship type="one" title="Override" related="mantle.ledger.account.GlAccount">
+        <key-map field-name="overrideGlAccountId"/></relationship>
+    <field name="lastUpdatedStamp" type="date-time"/>
+
+</entity>

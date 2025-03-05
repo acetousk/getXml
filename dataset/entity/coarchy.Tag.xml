@@ -1,0 +1,10 @@
+
+<!-- Entity Name: coarchy.Tag sql table: TAG --><entity entity-name="Tag" package="coarchy">
+    <field name="tagId" type="id" is-pk="true"/>
+    <field name="description" type="text-intermediate"/>
+    <field name="organizationId" type="id"/>
+    <relationship type="many" related="coarchy.ValueStatementTag" short-alias="valueStatements">
+        <key-map field-name="tagId"/></relationship>
+    <field name="lastUpdatedStamp" type="date-time"/>
+
+</entity>

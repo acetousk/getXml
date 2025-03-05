@@ -1,0 +1,18 @@
+<!--Service Location mantle.work.EventServices.get#NextBusinessDay--><service verb="get" noun="NextBusinessDay"><in-parameters><parameter name="startDate" type="Date" required="true"/><parameter name="skipSaturday" type="Boolean" default="true"/><parameter name="skipSunday" type="Boolean" default="true"/><parameter name="organizationPartyId"><description><![CDATA[If specified matches against WorkEffort.ownerPartId to find holidays]]></description></parameter><parameter name="workEffortCategoryIds" type="List"><description><![CDATA[If specified matches against WorkEffort records in
+                these categories to find holidays, such as HolidayUsaBank or HolidayUsaFed]]></description></parameter></in-parameters><out-parameters><parameter name="nextDayDate" type="Date"/><parameter name="calendarDays" type="Integer"/><parameter name="skipWeekends" type="Integer"/><parameter name="skipHolidays" type="Integer"/></out-parameters><actions><script><![CDATA[Calendar nextDayCal = ec.user.nowCalendar
+                nextDayCal.setTime(startDate)
+                nextDayCal.add(Calendar.DAY_OF_MONTH, 1)
+                calendarDays = 1
+                skipWeekends = 0
+                skipHolidays = 0
+                if (skipSaturday && nextDayCal.get(Calendar.DAY_OF_WEEK) == Calendar.SATURDAY) {
+                    nextDayCal.add(Calendar.DAY_OF_MONTH, 1)
+                    calendarDays += 1
+                    skipWeekends += 1
+                }
+                if (skipSunday && nextDayCal.get(Calendar.DAY_OF_WEEK) == Calendar.SUNDAY) {
+                    nextDayCal.add(Calendar.DAY_OF_MONTH, 1)
+                    calendarDays += 1
+                    skipWeekends += 1
+                }
+                nextDayDate = new java.sql.Date(nextDayCal.getTimeInMillis())]]></script><if condition="organizationPartyId || workEffortCategoryIds"><entity-find-count entity-name="mantle.work.effort.WorkEffortAndCategoryAppl" count-field="holidayCount"><econdition field-name="purposeEnumId" value="WepHoliday"/><econdition field-name="allDayStart" from="nextDayDate"/><econditions combine="or"><econdition field-name="ownerPartyId" from="organizationPartyId" ignore-if-empty="true"/><econdition field-name="workEffortCategoryId" operator="in" from="workEffortCategoryIds" ignore-if-empty="true"/></econditions></entity-find-count><if condition="holidayCount"><service-call name="mantle.work.EventServices.get#NextBusinessDay" out-map="[nextDayDate:nextOut.nextDayDate,calendarDays:nextOut.calendarDays,skipWeekends:nextOut.skipWeekends,skipHolidays:nextOut.skipHolidays]" in-map="context + [startDate:nextDayDate]"/><set field="nextDayDate" from="nextOut.nextDayDate"/><set field="calendarDays" from="calendarDays + nextOut.calendarDays"/><set field="skipWeekends" from="skipWeekends + nextOut.skipWeekends"/><set field="skipHolidays" from="skipHolidays + nextOut.skipHolidays + 1"/></if></if></actions></service>

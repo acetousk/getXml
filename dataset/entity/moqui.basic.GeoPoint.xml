@@ -1,0 +1,36 @@
+
+<!-- Entity Name: moqui.basic.GeoPoint sql table: GEO_POINT --><entity entity-name="GeoPoint" package="moqui.basic" use="configuration" short-alias="geoPoints" cache="true" has-dependents="true">
+    <field name="geoPointId" type="id" is-pk="true"/>
+    <field name="geoPointTypeEnumId" type="id"/>
+    <field name="description" type="text-medium"/>
+    <field name="dataSourceId" type="id"/>
+    <field name="latitude" type="number-float"/>
+    <field name="longitude" type="number-float"/>
+    <field name="elevation" type="number-float"/>
+    <field name="elevationUomId" type="id"/>
+    <field name="information" type="text-medium"/>
+    <relationship type="one" title="GeoPointType" related="moqui.basic.Enumeration" short-alias="type">
+        <key-map field-name="geoPointTypeEnumId"/></relationship>
+    <relationship type="one" related="moqui.basic.DataSource" short-alias="dataSource"/>
+    <relationship type="one" title="Elevation" related="moqui.basic.Uom" short-alias="elevationUom">
+        <key-map field-name="elevationUomId"/></relationship>
+    <seed-data>
+        <moqui.basic.EnumerationType description="Geo Point Type" enumTypeId="GeoPointType"/></seed-data>
+    <master>
+        <detail relationship="type"/>
+        <detail relationship="dataSource"/>
+        <detail relationship="elevationUom"/>
+    </master>
+    <field name="lastUpdatedStamp" type="date-time"/>
+    <relationship related="mantle.facility.Facility" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="geoPointId" related="geoPointId"/></relationship>
+    <relationship related="mantle.facility.FacilityLocation" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="geoPointId" related="geoPointId"/></relationship>
+    <relationship related="mantle.party.PartyGeoPoint" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="geoPointId" related="geoPointId"/></relationship>
+    <relationship related="mantle.party.contact.PostalAddress" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="geoPointId" related="geoPointId"/></relationship>
+    <relationship related="mantle.product.asset.Asset" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="geoPointId" related="geoPointId"/></relationship>
+
+</entity>

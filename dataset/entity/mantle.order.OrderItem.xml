@@ -1,0 +1,181 @@
+
+<!-- Entity Name: mantle.order.OrderItem sql table: ORDER_ITEM --><entity entity-name="OrderItem" package="mantle.order" short-alias="orderItems" cache="never" has-dependents="true">
+    <field name="orderId" type="id" is-pk="true"/>
+    <field name="orderItemSeqId" type="id" is-pk="true"/>
+    <field name="orderPartSeqId" type="id"/>
+    <field name="parentItemSeqId" type="id"/>
+    <field name="itemTypeEnumId" type="id"/>
+    <field name="productId" type="id" enable-audit-log="update"/>
+    <field name="productFeatureId" type="id"/>
+    <field name="otherPartyProductId" type="text-short"/>
+    <field name="productParameterSetId" type="id">
+        <description><![CDATA[For a set of Product Parameters to personalize a Product and/or record details specific to a purchase of the Product.
+                If used represents a distinct Product instance (OrderItem, etc records should not be combined unless matches).]]></description></field>
+    <field name="itemDescription" type="text-medium"/>
+    <field name="comments" type="text-medium"/>
+    <field name="quantity" type="number-decimal" enable-audit-log="true"/>
+    <field name="quantityUomId" type="id"/>
+    <field name="quantityCancelled" type="number-decimal"/>
+    <field name="selectedAmount" type="number-decimal"/>
+    <field name="priority" type="number-integer">
+        <description><![CDATA[NOTE: this may be deprecated in favor of OrderPart.priority]]></description></field>
+    <field name="requiredByDate" type="date-time" enable-audit-log="update"/>
+    <field name="unitAmount" type="currency-precise" enable-audit-log="true">
+        <description><![CDATA[The purchase or sales price. For barter/exchange orders this represents the market value of the item at
+                the time of the exchange in terms of the OrderHeader.currencyUomId.]]></description></field>
+    <field name="unitListPrice" type="currency-precise"/>
+    <field name="isModifiedPrice" type="text-indicator"/>
+    <field name="standardCost" type="currency-precise" enable-audit-log="true">
+        <description><![CDATA[For purchase orders the cost for accounting purposes if different from unitAmount. Used to set Asset.acquireCost on receipt.]]></description></field>
+    <field name="externalItemSeqId" type="id"/>
+    <field name="fromAssetId" type="id">
+        <description><![CDATA[Order for a particular Asset, not just any associated with the Product.]]></description></field>
+    <field name="productPriceId" type="id"/>
+    <field name="productCategoryId" type="id"/>
+    <field name="isPromo" type="text-indicator"/>
+    <field name="promoQuantity" type="number-decimal">
+        <description><![CDATA[For promo items. The quantity of the parent order item
+            'consumed' by the promotion, excluding from use in other promotions if promotion set to limit by this.]]></description></field>
+    <field name="promoTimesUsed" type="number-decimal">
+        <description><![CDATA[For promo items. The number of times the promo was used for use limits.]]></description></field>
+    <field name="storePromotionId" type="id"/>
+    <field name="promoCodeId" type="id"/>
+    <field name="promoCodeText" type="text-medium">
+        <description><![CDATA[Promo code(s) entered by customer used for the item, may be from external system]]></description></field>
+    <field name="subscriptionId" type="id"/>
+    <field name="finAccountId" type="id">
+        <description><![CDATA[Populate along with finAccountTransId for gift card/certificate/etc purchase and replenishment]]></description></field>
+    <field name="finAccountTransId" type="id"/>
+    <field name="overrideGlAccountId" type="id">
+        <description><![CDATA[Used to specify the override or actual glAccountId used for the item.]]></description></field>
+    <field name="salesOpportunityId" type="id"/>
+    <field name="sourceReferenceId" type="text-short"/>
+    <field name="sourcePercentage" type="number-decimal">
+        <description><![CDATA[The percentage used for tax, promo, etc items]]></description></field>
+    <field name="amountAlreadyIncluded" type="currency-precise">
+        <description><![CDATA[The amount here is already represented in the item price, such as VAT taxes.]]></description></field>
+    <field name="exemptAmount" type="currency-amount">
+        <description><![CDATA[An amount that would normally apply, but not to
+            this order; for tax exemption represents the what the tax would have been.]]></description></field>
+    <field name="customerReferenceId" type="text-short">
+        <description><![CDATA[For tax entries this is partyTaxId]]></description></field>
+    <field name="taxAuthorityId" type="id"/>
+    <relationship type="one" related="mantle.order.OrderHeader" short-alias="header"/>
+    <relationship type="one" title="ItemType" related="moqui.basic.Enumeration" short-alias="itemType">
+        <key-map field-name="itemTypeEnumId"/></relationship>
+    <relationship type="one" related="mantle.order.OrderPart" short-alias="part">
+        <key-map field-name="orderId"/>
+        <key-map field-name="orderPartSeqId"/>
+    </relationship>
+    <relationship type="one-nofk" title="Parent" related="mantle.order.OrderItem" short-alias="parent">
+        <key-map field-name="orderId"/>
+        <key-map field-name="parentItemSeqId" related="orderItemSeqId"/>
+    </relationship>
+    <relationship type="many" title="Child" related="mantle.order.OrderItem" short-alias="children">
+        <key-map field-name="orderId"/>
+        <key-map field-name="orderItemSeqId" related="parentItemSeqId"/>
+    </relationship>
+    <relationship type="one" related="mantle.product.Product" short-alias="product"/>
+    <relationship type="one" related="mantle.product.feature.ProductFeature" short-alias="feature"/>
+    <relationship type="one" related="mantle.product.ProductParameterSet" short-alias="productParameterSet"/>
+    <relationship type="one" title="Quantity" related="moqui.basic.Uom" short-alias="quantityUom">
+        <key-map field-name="quantityUomId"/></relationship>
+    <relationship type="one" title="From" related="mantle.product.asset.Asset" short-alias="fromAsset">
+        <key-map field-name="fromAssetId"/></relationship>
+    <relationship type="one" related="mantle.product.ProductPrice" short-alias="price"/>
+    <relationship type="one" related="mantle.product.category.ProductCategory" short-alias="category"/>
+    <relationship type="one" related="mantle.product.store.ProductStorePromotion" short-alias="storePromotion"/>
+    <relationship type="one" related="mantle.product.store.ProductStorePromoCode" short-alias="storePromoCode"/>
+    <relationship type="one" related="mantle.product.subscription.Subscription" short-alias="subscription"/>
+    <relationship type="one" related="mantle.account.financial.FinancialAccount" short-alias="financialAccount"/>
+    <relationship type="one" related="mantle.account.financial.FinancialAccountTrans" short-alias="financialAccountTrans"/>
+    <relationship type="one" title="Override" related="mantle.ledger.account.GlAccount" short-alias="overrideGlAccount">
+        <key-map field-name="overrideGlAccountId"/></relationship>
+    <relationship type="one" related="mantle.sales.opportunity.SalesOpportunity" short-alias="opportunity"/>
+    <relationship type="one" related="mantle.other.tax.TaxAuthority" short-alias="taxAuthority"/>
+    <relationship type="many" related="mantle.product.issuance.AssetReservation" short-alias="reservations">
+        <key-map field-name="orderId"/>
+        <key-map field-name="orderItemSeqId"/>
+    </relationship>
+    <relationship type="many" related="mantle.product.issuance.AssetIssuance" short-alias="issuances">
+        <key-map field-name="orderId"/>
+        <key-map field-name="orderItemSeqId"/>
+    </relationship>
+    <relationship type="many" related="mantle.product.receipt.AssetReceipt" short-alias="receipts">
+        <key-map field-name="orderId"/>
+        <key-map field-name="orderItemSeqId"/>
+    </relationship>
+    <relationship type="many" related="mantle.shipment.ShipmentItemSource" short-alias="shipmentSources">
+        <key-map field-name="orderId"/>
+        <key-map field-name="orderItemSeqId"/>
+    </relationship>
+    <relationship type="many" related="mantle.order.OrderItemBilling" short-alias="billings">
+        <key-map field-name="orderId"/>
+        <key-map field-name="orderItemSeqId"/>
+    </relationship>
+    <index name="ORDITMEXT_ID_IDX">
+        <index-field name="externalItemSeqId"/></index>
+    <seed-data>
+        <moqui.basic.EnumerationType description="Order Item Quantity Change Reason" enumTypeId="OrderItemQuantityReason"/>
+        <moqui.basic.Enumeration enumId="OiqrInventory" description="Insufficient Inventory" enumTypeId="OrderItemQuantityReason"/>
+        <moqui.basic.Enumeration enumId="OiqrSingleLot" description="Single Lot Unavailable" enumTypeId="OrderItemQuantityReason"/>
+        <moqui.basic.Enumeration enumId="OiqrCustomer" description="Customer Request" enumTypeId="OrderItemQuantityReason"/>
+    </seed-data>
+    <field name="lastUpdatedStamp" type="date-time"/>
+    <relationship related="mantle.account.method.GiftCardFulfillment" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="orderId" related="orderId"/>
+        <key-map field-name="orderItemSeqId" related="orderItemSeqId"/>
+    </relationship>
+    <relationship related="mantle.account.payment.Payment" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="orderId" related="orderId"/>
+        <key-map field-name="orderItemSeqId" related="orderItemSeqId"/>
+    </relationship>
+    <relationship related="mantle.order.OrderContent" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="orderId" related="orderId"/>
+        <key-map field-name="orderItemSeqId" related="orderItemSeqId"/>
+    </relationship>
+    <relationship related="mantle.order.OrderItemFormResponse" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="orderId" related="orderId"/>
+        <key-map field-name="orderItemSeqId" related="orderItemSeqId"/>
+    </relationship>
+    <relationship related="mantle.order.OrderItemParty" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="orderId" related="orderId"/>
+        <key-map field-name="orderItemSeqId" related="orderItemSeqId"/>
+    </relationship>
+    <relationship related="mantle.order.OrderItemWorkEffort" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="orderId" related="orderId"/>
+        <key-map field-name="orderItemSeqId" related="orderItemSeqId"/>
+    </relationship>
+    <relationship related="mantle.order.return.ReturnItem" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="orderId" related="orderId"/>
+        <key-map field-name="orderItemSeqId" related="orderItemSeqId"/>
+    </relationship>
+    <relationship related="mantle.product.asset.Asset" type="many" is-auto-reverse="true" mutable="true" title="Acquire">
+        <key-map field-name="orderId" related="acquireOrderId"/>
+        <key-map field-name="orderItemSeqId" related="acquireOrderItemSeqId"/>
+    </relationship>
+    <relationship related="mantle.product.asset.AssetDetail" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="orderId" related="orderId"/>
+        <key-map field-name="orderItemSeqId" related="orderItemSeqId"/>
+    </relationship>
+    <relationship related="mantle.product.maintenance.AssetMaintenanceOrderItem" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="orderId" related="orderId"/>
+        <key-map field-name="orderItemSeqId" related="orderItemSeqId"/>
+    </relationship>
+    <relationship related="mantle.request.RequestItemOrder" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="orderId" related="orderId"/>
+        <key-map field-name="orderItemSeqId" related="orderItemSeqId"/>
+    </relationship>
+    <relationship related="mantle.request.requirement.RequirementOrderItem" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="orderId" related="orderId"/>
+        <key-map field-name="orderItemSeqId" related="orderItemSeqId"/>
+    </relationship>
+
+<!-- seca <seca id="OrderItemCreateCheckReserve" service="create#mantle.order.OrderItem" when="post-service">
+    <actions>
+        <service-call name="mantle.product.AssetServices.checkReserve#AssetForOrderItem" in-map="context"/></actions></seca>-->
+<!-- seca <seca id="OrderItemUpdateCheckReserve" service="update#mantle.order.OrderItem" when="post-service">
+    <actions>
+        <service-call name="mantle.product.AssetServices.checkReserve#AssetForOrderItem" in-map="context"/></actions></seca>-->
+<!-- eeca org.moqui.impl.entity.EntityEcaRule@241c92e0-->
+</entity>

@@ -1,0 +1,9 @@
+
+<!-- Entity Name: mantle.shipment.ShipmentEmailMessage sql table: SHIPMENT_EMAIL_MESSAGE --><entity entity-name="ShipmentEmailMessage" package="mantle.shipment" cache="never">
+    <field name="shipmentId" type="id" is-pk="true"/>
+    <field name="emailMessageId" type="id" is-pk="true"/>
+    <relationship type="one" related="mantle.shipment.Shipment"/>
+    <relationship type="one" related="moqui.basic.email.EmailMessage"/>
+    <field name="lastUpdatedStamp" type="date-time"/>
+
+</entity>

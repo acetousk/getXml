@@ -1,0 +1,36 @@
+
+<!-- Entity Name: mantle.party.communication.CommunicationEventParty sql table: COMMUNICATION_EVENT_PARTY --><entity entity-name="CommunicationEventParty" package="mantle.party.communication" cache="never">
+    <field name="communicationEventId" type="id" is-pk="true"/>
+    <field name="partyId" type="id" is-pk="true"/>
+    <field name="roleTypeId" type="id" is-pk="true"/>
+    <field name="contactMechId" type="id"/>
+    <field name="statusId" type="id"/>
+    <relationship type="one" related="mantle.party.communication.CommunicationEvent" short-alias="communicationEvent"/>
+    <relationship type="one" related="mantle.party.Party" short-alias="party"/>
+    <relationship type="one-nofk" related="mantle.party.Person" short-alias="person"/>
+    <relationship type="one" related="mantle.party.RoleType" short-alias="role"/>
+    <relationship type="one" related="mantle.party.contact.ContactMech" short-alias="contactMech"/>
+    <relationship type="one" title="CommunicationEventParty" related="moqui.basic.StatusItem" short-alias="status"/>
+    <relationship type="many" related="moqui.security.UserAccount" short-alias="userAccounts">
+        <key-map field-name="partyId"/></relationship>
+    <seed-data>
+        <moqui.basic.StatusType description="Communication Event Party" statusTypeId="CommunicationEventParty"/>
+        <moqui.basic.StatusItem description="Sent" sequenceNum="1" statusId="CepSent" statusTypeId="CommunicationEventParty"/>
+        <moqui.basic.StatusItem description="Received" sequenceNum="2" statusId="CepReceived" statusTypeId="CommunicationEventParty"/>
+        <moqui.basic.StatusItem description="Assigned" sequenceNum="5" statusId="CepAssigned" statusTypeId="CommunicationEventParty"/>
+        <moqui.basic.StatusItem description="Resolved" sequenceNum="6" statusId="CepResolved" statusTypeId="CommunicationEventParty"/>
+        <moqui.basic.StatusItem description="Referred" sequenceNum="7" statusId="CepReferred" statusTypeId="CommunicationEventParty"/>
+        <moqui.basic.StatusItem description="Closed" sequenceNum="10" statusId="CepClosed" statusTypeId="CommunicationEventParty"/>
+        <moqui.basic.StatusFlowTransition statusFlowId="Default" statusId="CepSent" toStatusId="CepReceived" transitionName="Receive"/>
+        <moqui.basic.StatusFlowTransition statusFlowId="Default" statusId="CepSent" toStatusId="CepClosed" transitionName="Close"/>
+        <moqui.basic.StatusFlowTransition statusFlowId="Default" statusId="CepReceived" toStatusId="CepClosed" transitionName="Close"/>
+        <moqui.basic.StatusFlowTransition statusFlowId="Default" statusId="CepReceived" toStatusId="CepAssigned" transitionName="Assign"/>
+        <moqui.basic.StatusFlowTransition statusFlowId="Default" statusId="CepReceived" toStatusId="CepResolved" transitionName="Resolve"/>
+        <moqui.basic.StatusFlowTransition statusFlowId="Default" statusId="CepAssigned" toStatusId="CepResolved" transitionName="Resolve"/>
+        <moqui.basic.StatusFlowTransition statusFlowId="Default" statusId="CepAssigned" toStatusId="CepReferred" transitionName="Refer"/>
+        <moqui.basic.StatusFlowTransition statusFlowId="Default" statusId="CepAssigned" toStatusId="CepClosed" transitionName="Close"/>
+        <moqui.basic.StatusFlowTransition statusFlowId="Default" statusId="CepResolved" toStatusId="CepClosed" transitionName="Close"/>
+    </seed-data>
+    <field name="lastUpdatedStamp" type="date-time"/>
+
+</entity>

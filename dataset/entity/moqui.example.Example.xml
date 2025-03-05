@@ -1,0 +1,62 @@
+
+<!-- Entity Name: moqui.example.Example sql table: EXAMPLE --><entity entity-name="Example" package="moqui.example" short-alias="examples">
+    <field name="exampleId" type="id" is-pk="true">
+        <description><![CDATA[primary sequenced ID]]></description></field>
+    <field name="exampleTypeEnumId" type="id"/>
+    <field name="statusId" type="id" enable-audit-log="true"/>
+    <field name="exampleName" type="text-medium"/>
+    <field name="description" type="text-medium"/>
+    <field name="longDescription" type="text-very-long"/>
+    <field name="comments" type="text-long"/>
+    <field name="exampleSize" type="number-integer"/>
+    <field name="exampleDate" type="date-time"/>
+    <field name="testDate" type="date"/>
+    <field name="testTime" type="time"/>
+    <relationship type="one" title="ExampleType" related="moqui.basic.Enumeration" short-alias="type">
+        <key-map field-name="exampleTypeEnumId"/></relationship>
+    <relationship type="many" related="moqui.example.ExampleItem" short-alias="items" mutable="true">
+        <key-map field-name="exampleId"/></relationship>
+    <relationship type="many" related="moqui.example.ExampleContent" short-alias="contents" mutable="true">
+        <key-map field-name="exampleId"/></relationship>
+    <relationship type="many" related="moqui.example.ExampleFeatureAppl" short-alias="featureAppls" mutable="true">
+        <key-map field-name="exampleId"/></relationship>
+    <seed-data>
+        <moqui.basic.EnumerationType description="Example Type" enumTypeId="ExampleType"/>
+        <moqui.basic.Enumeration description="Real World" enumId="EXT_REAL_WORLD" enumTypeId="ExampleType"/>
+        <moqui.basic.Enumeration description="Made Up" enumId="EXT_MADE_UP" enumTypeId="ExampleType"/>
+        <moqui.basic.Enumeration description="Contrived" enumId="EXT_CONTRIVED" parentEnumId="EXT_MADE_UP" enumTypeId="ExampleType"/>
+        <moqui.basic.Enumeration description="Inspired" enumId="EXT_INSPIRED" parentEnumId="EXT_MADE_UP" enumTypeId="ExampleType"/>
+        <moqui.basic.StatusType description="Example" statusTypeId="Example"/>
+        <moqui.basic.StatusItem description="In Design" sequenceNum="1" statusId="EXST_IN_DESIGN" statusTypeId="Example"/>
+        <moqui.basic.StatusItem description="Defined" sequenceNum="2" statusId="EXST_DEFINED" statusTypeId="Example"/>
+        <moqui.basic.StatusItem description="Approved" sequenceNum="3" statusId="EXST_APPROVED" statusTypeId="Example"/>
+        <moqui.basic.StatusItem description="Implemented" sequenceNum="4" statusId="EXST_IMPLEMENTED" statusTypeId="Example"/>
+        <moqui.basic.StatusItem description="Tested" sequenceNum="5" statusId="EXST_TESTED" statusTypeId="Example"/>
+        <moqui.basic.StatusItem description="Complete" sequenceNum="6" statusId="EXST_COMPLETE" statusTypeId="Example"/>
+        <moqui.basic.StatusItem description="Cancelled" sequenceNum="99" statusId="EXST_CANCELLED" statusTypeId="Example"/>
+        <moqui.basic.StatusFlowTransition statusFlowId="Default" statusId="EXST_IN_DESIGN" toStatusId="EXST_DEFINED" transitionName="Definition Complete"/>
+        <moqui.basic.StatusFlowTransition statusFlowId="Default" statusId="EXST_DEFINED" toStatusId="EXST_APPROVED" transitionName="Approve"/>
+        <moqui.basic.StatusFlowTransition statusFlowId="Default" statusId="EXST_APPROVED" toStatusId="EXST_IMPLEMENTED" transitionName="Implementation Complete"/>
+        <moqui.basic.StatusFlowTransition statusFlowId="Default" statusId="EXST_IMPLEMENTED" toStatusId="EXST_TESTED" transitionName="Testing Complete"/>
+        <moqui.basic.StatusFlowTransition statusFlowId="Default" statusId="EXST_TESTED" toStatusId="EXST_COMPLETE" transitionName="Example Completed"/>
+        <moqui.basic.StatusFlowTransition statusFlowId="Default" statusId="EXST_IN_DESIGN" toStatusId="EXST_CANCELLED" transitionName="Cancel Example"/>
+        <moqui.basic.StatusFlowTransition statusFlowId="Default" statusId="EXST_DEFINED" toStatusId="EXST_CANCELLED" transitionName="Cancel Example"/>
+        <moqui.basic.StatusFlowTransition statusFlowId="Default" statusId="EXST_APPROVED" toStatusId="EXST_CANCELLED" transitionName="Cancel Example"/>
+        <moqui.basic.StatusFlowTransition statusFlowId="Default" statusId="EXST_IMPLEMENTED" toStatusId="EXST_CANCELLED" transitionName="Cancel Example"/>
+        <moqui.basic.StatusFlowTransition statusFlowId="Default" statusId="EXST_TESTED" toStatusId="EXST_CANCELLED" transitionName="Cancel Example"/>
+    </seed-data>
+    <master>
+        <detail relationship="type"/>
+        <detail relationship="status"/>
+        <detail relationship="items"/>
+        <detail relationship="contents"/>
+        <detail relationship="featureAppls"/>
+    </master>
+    <field name="auditedField" type="text-medium" enable-audit-log="true"/>
+    <field name="encryptedField" type="text-medium" encrypt="true"/>
+    <field name="exampleEmail" type="text-medium"/>
+    <field name="exampleUrl" type="text-medium"/>
+    <relationship type="one" title="Example" related="moqui.basic.StatusItem" short-alias="status"/>
+    <field name="lastUpdatedStamp" type="date-time"/>
+
+</entity>

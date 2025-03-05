@@ -1,0 +1,28 @@
+
+<!-- Entity Name: mantle.work.effort.WorkEffortAssetAssign sql table: WORK_EFFORT_ASSET_ASSIGN --><entity entity-name="WorkEffortAssetAssign" package="mantle.work.effort" cache="never">
+    <field name="workEffortId" type="id" is-pk="true"/>
+    <field name="assetId" type="id" is-pk="true"/>
+    <field name="fromDate" type="date-time" is-pk="true"/>
+    <field name="thruDate" type="date-time"/>
+    <field name="statusId" type="id" enable-audit-log="true"/>
+    <field name="allocatedCost" type="currency-amount"/>
+    <field name="comments" type="text-medium"/>
+    <relationship type="one" related="mantle.work.effort.WorkEffort" short-alias="workEffort"/>
+    <relationship type="one" related="mantle.product.asset.Asset" short-alias="asset"/>
+    <relationship type="one" title="WorkEffortAssetAssign" related="moqui.basic.StatusItem" short-alias="status"/>
+    <seed-data>
+        <moqui.basic.StatusType description="Work Effort Asset Assignment Status" statusTypeId="WorkEffortAssetAssign"/>
+        <moqui.basic.StatusItem description="Requested" sequenceNum="1" statusId="WeaaRequested" statusTypeId="WorkEffortAssetAssign"/>
+        <moqui.basic.StatusItem description="Assigned" sequenceNum="2" statusId="WeaaAssigned" statusTypeId="WorkEffortAssetAssign"/>
+        <moqui.basic.StatusItem description="Arrived" sequenceNum="3" statusId="WeaaArrived" statusTypeId="WorkEffortAssetAssign"/>
+        <moqui.basic.StatusItem description="Departed" sequenceNum="4" statusId="WeaaDeparted" statusTypeId="WorkEffortAssetAssign"/>
+        <moqui.basic.StatusItem description="Request Denied" sequenceNum="9" statusId="WeaaRequestDenied" statusTypeId="WorkEffortAssetAssign"/>
+        <moqui.basic.StatusFlowTransition statusFlowId="Default" statusId="WeaaRequested" toStatusId="WeaaAssigned" transitionName="Assign"/>
+        <moqui.basic.StatusFlowTransition statusFlowId="Default" statusId="WeaaRequested" toStatusId="WeaaRequestDenied" transitionName="Deny Request"/>
+        <moqui.basic.StatusFlowTransition statusFlowId="Default" statusId="WeaaAssigned" toStatusId="WeaaArrived" transitionName="Arrive"/>
+        <moqui.basic.StatusFlowTransition statusFlowId="Default" statusId="WeaaArrived" toStatusId="WeaaDeparted" transitionName="Depart"/>
+        <moqui.basic.StatusFlowTransition statusFlowId="Default" statusId="WeaaDeparted" toStatusId="WeaaArrived" transitionName="Arrive"/>
+    </seed-data>
+    <field name="lastUpdatedStamp" type="date-time"/>
+
+</entity>

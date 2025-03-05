@@ -1,0 +1,10 @@
+
+<!-- Entity Name: mantle.marketing.segment.MarketSegmentClassification sql table: MARKET_SEGMENT_CLASSIFICATION --><entity entity-name="MarketSegmentClassification" package="mantle.marketing.segment">
+    <description><![CDATA[Define the segment by PartyClassification]]></description>
+    <field name="marketSegmentId" type="id" is-pk="true"/>
+    <field name="partyClassificationId" type="id" is-pk="true"/>
+    <relationship type="one" related="mantle.marketing.segment.MarketSegment"/>
+    <relationship type="one" related="mantle.party.PartyClassification"/>
+    <field name="lastUpdatedStamp" type="date-time"/>
+
+</entity>

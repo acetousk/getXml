@@ -1,0 +1,7 @@
+
+<!-- Entity Name: moqui.test.Foo sql table: FOO --><entity entity-name="Foo" package="moqui.test" sequence-bank-size="100">
+    <field name="fooId" type="id" is-pk="true"/>
+    <field name="fooText" type="text-medium"/>
+    <field name="lastUpdatedStamp" type="date-time"/>
+
+</entity>

@@ -1,0 +1,13 @@
+
+<!-- Entity Name: moqui.security.UserScreenTheme sql table: USER_SCREEN_THEME --><entity entity-name="UserScreenTheme" package="moqui.security" use="configuration" cache="true">
+    <field name="userId" type="id" is-pk="true"/>
+    <field name="screenThemeTypeEnumId" type="id" is-pk="true"/>
+    <field name="screenThemeId" type="id"/>
+    <relationship type="one-nofk" related="moqui.security.UserAccount" short-alias="user">
+        <description><![CDATA[No FK in order to allow externally authenticated users.]]></description></relationship>
+    <relationship type="one" title="ScreenThemeType" related="moqui.basic.Enumeration">
+        <key-map field-name="screenThemeTypeEnumId"/></relationship>
+    <relationship type="one" related="moqui.screen.ScreenTheme"/>
+    <field name="lastUpdatedStamp" type="date-time"/>
+
+</entity>

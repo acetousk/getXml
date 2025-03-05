@@ -1,0 +1,25 @@
+
+<!-- Entity Name: mantle.work.effort.WorkEffortContent sql table: WORK_EFFORT_CONTENT --><entity entity-name="WorkEffortContent" package="mantle.work.effort" cache="never">
+    <field name="workEffortContentId" type="id" is-pk="true"/>
+    <field name="workEffortId" type="id"/>
+    <field name="contentLocation" type="text-medium"/>
+    <field name="contentTypeEnumId" type="id"/>
+    <field name="description" type="text-long"/>
+    <field name="contentDate" type="date-time" default="ec.user.nowTimestamp"/>
+    <field name="userId" type="id" default="ec.user.userId"/>
+    <relationship type="one" related="mantle.work.effort.WorkEffort"/>
+    <relationship type="one" title="WorkEffortContentType" related="moqui.basic.Enumeration" short-alias="type">
+        <key-map field-name="contentTypeEnumId"/></relationship>
+    <seed-data>
+        <moqui.basic.EnumerationType description="Work Effort Content Type" enumTypeId="WorkEffortContentType"/>
+        <moqui.basic.Enumeration enumId="WectProjectUpdate" description="Project Update" enumTypeId="WorkEffortContentType"/>
+        <moqui.basic.Enumeration enumId="WectDiscussion" description="Discussion" enumTypeId="WorkEffortContentType"/>
+        <moqui.basic.Enumeration enumId="WectRequirement" description="Requirement" enumTypeId="WorkEffortContentType"/>
+        <moqui.basic.Enumeration enumId="WectDesign" description="Design" enumTypeId="WorkEffortContentType"/>
+        <moqui.basic.Enumeration enumId="WectProposal" description="Proposal" enumTypeId="WorkEffortContentType"/>
+        <moqui.basic.Enumeration enumId="WectSupportingMedia" description="Supporting Media" enumTypeId="WorkEffortContentType"/>
+        <moqui.basic.Enumeration enumId="WectCreatedMedia" description="Created Media" enumTypeId="WorkEffortContentType"/>
+    </seed-data>
+    <field name="lastUpdatedStamp" type="date-time"/>
+
+</entity>

@@ -1,0 +1,12 @@
+
+<!-- Entity Name: coarchy.ClipboardActor sql table: CLIPBOARD_ACTOR --><entity entity-name="ClipboardActor" package="coarchy">
+    <field name="clipboardEntryId" type="id" is-pk="true"/>
+    <field name="actorSeqId" type="id" is-pk="true"/>
+    <field name="activitySeqId" type="id"/>
+    <field name="name" type="text-short"/>
+    <field name="description" type="text-medium"/>
+    <relationship type="one" title="Clipboard" related="coarchy.ClipboardEntry" short-alias="clipboard">
+        <key-map field-name="clipboardEntryId"/></relationship>
+    <field name="lastUpdatedStamp" type="date-time"/>
+
+</entity>

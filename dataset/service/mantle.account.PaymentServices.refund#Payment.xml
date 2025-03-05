@@ -1,0 +1,3 @@
+<!--Service Location mantle.account.PaymentServices.refund#Payment--><service verb="refund" noun="Payment"><in-parameters><parameter name="paymentId" required="true" entity-name="mantle.account.payment.Payment" field-name="paymentId"/><parameter name="paymentGatewayConfigId" required="true" entity-name="mantle.account.payment.Payment" field-name="paymentGatewayConfigId"/><parameter name="amount" type="BigDecimal" entity-name="mantle.account.payment.Payment" field-name="amount"/></in-parameters><out-parameters><parameter name="paymentGatewayResponseId"/></out-parameters>
+    null
+</service>

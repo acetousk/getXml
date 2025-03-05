@@ -1,0 +1,25 @@
+
+<!-- Entity Name: moqui.screen.SubscreensItem sql table: SUBSCREENS_ITEM --><entity entity-name="SubscreensItem" package="moqui.screen" use="configuration" cache="true">
+    <field name="screenLocation" type="text-medium" is-pk="true"/>
+    <field name="subscreenName" type="text-medium" is-pk="true"/>
+    <field name="userGroupId" type="id" is-pk="true" default="'ALL_USERS'">
+        <description><![CDATA[DEPRECATED. While still supported, to control access to subscreens use ArtifactAuthz and
+                related records instead.]]></description></field>
+    <field name="subscreenLocation" type="text-medium"/>
+    <field name="menuTitle" type="text-medium">
+        <description><![CDATA[The title to show for this subscreen in the menu. Can be used to override subscreen titles in the
+                screen.default-menu-title attribute and the subscreens-item.menu-title attribute.]]></description></field>
+    <field name="menuIndex" type="number-integer">
+        <description><![CDATA[Insert this item in subscreens menu at this index (1-based).]]></description></field>
+    <field name="menuInclude" type="text-indicator">
+        <description><![CDATA[Defaults to Y. Set to N to not include in the menu for the subscreens. This can be used to hide
+                subscreens from the directory structure or even explicitly declared in the Screen XML file.]]></description></field>
+    <field name="makeDefault" type="text-indicator">
+        <description><![CDATA[If Y will be set at the default subscreen (replacing screen.subscreens.@default-item)]]></description></field>
+    <field name="noSubPath" type="text-indicator">
+        <description><![CDATA[If Y the sub-screens of the sub-screen may be referenced directly under this screen, skipping the
+                screen path element for the sub-screen]]></description></field>
+    <relationship type="one" related="moqui.security.UserGroup"/>
+    <field name="lastUpdatedStamp" type="date-time"/>
+
+</entity>

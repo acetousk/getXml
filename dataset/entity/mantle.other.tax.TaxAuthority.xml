@@ -1,0 +1,54 @@
+
+<!-- Entity Name: mantle.other.tax.TaxAuthority sql table: TAX_AUTHORITY --><entity entity-name="TaxAuthority" package="mantle.other.tax" has-dependents="true">
+    <description><![CDATA[For tax and other government authorities in any domain (sales/VAT, income, labor, etc)]]></description>
+    <field name="taxAuthorityId" type="id" is-pk="true"/>
+    <field name="taxAuthorityTypeEnumId" type="id"/>
+    <field name="description" type="text-medium"/>
+    <field name="taxAuthGeoId" type="id"/>
+    <field name="taxAuthPartyId" type="id"/>
+    <field name="requireTaxIdForExemption" type="text-indicator"/>
+    <field name="taxIdFormatPattern" type="text-medium"/>
+    <field name="includeTaxInPrice" type="text-indicator">
+        <description><![CDATA[This is mainly for VAT tax authorities]]></description></field>
+    <relationship type="one" title="TaxAuthorityType" related="moqui.basic.Enumeration">
+        <key-map field-name="taxAuthorityTypeEnumId"/></relationship>
+    <relationship type="one" title="TaxAuth" related="moqui.basic.Geo">
+        <key-map field-name="taxAuthGeoId"/></relationship>
+    <relationship type="one" title="TaxAuth" related="mantle.party.Party">
+        <key-map field-name="taxAuthPartyId"/></relationship>
+    <seed-data>
+        <moqui.basic.EnumerationType description="Tax Authority Type" enumTypeId="TaxAuthorityType"/>
+        <moqui.basic.Enumeration enumId="TatFederal" description="Federal/Country" enumTypeId="TaxAuthorityType"/>
+        <moqui.basic.Enumeration enumId="TatState" description="State/Province" enumTypeId="TaxAuthorityType"/>
+        <moqui.basic.Enumeration enumId="TatCounty" description="County/Parish/Borough" enumTypeId="TaxAuthorityType"/>
+        <moqui.basic.Enumeration enumId="TatCity" description="City" enumTypeId="TaxAuthorityType"/>
+    </seed-data>
+    <field name="lastUpdatedStamp" type="date-time"/>
+    <relationship related="mantle.account.invoice.InvoiceItem" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="taxAuthorityId" related="taxAuthorityId"/></relationship>
+    <relationship related="mantle.humanres.employment.EmploymentPayDetail" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="taxAuthorityId" related="taxAuthorityId"/></relationship>
+    <relationship related="mantle.humanres.employment.PayrollAdjustment" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="taxAuthorityId" related="taxAuthorityId"/></relationship>
+    <relationship related="mantle.humanres.employment.PayrollAllowance" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="taxAuthorityId" related="taxAuthorityId"/></relationship>
+    <relationship related="mantle.humanres.employment.PayrollStdDeduction" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="taxAuthorityId" related="taxAuthorityId"/></relationship>
+    <relationship related="mantle.ledger.config.TaxAuthorityGlAccount" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="taxAuthorityId" related="taxAuthorityId"/></relationship>
+    <relationship related="mantle.order.OrderItem" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="taxAuthorityId" related="taxAuthorityId"/></relationship>
+    <relationship related="mantle.other.tax.TaxAuthorityAssoc" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="taxAuthorityId" related="taxAuthorityId"/></relationship>
+    <relationship related="mantle.other.tax.TaxAuthorityAssoc" type="many" is-auto-reverse="true" mutable="true" title="To">
+        <key-map field-name="taxAuthorityId" related="toTaxAuthorityId"/></relationship>
+    <relationship related="mantle.other.tax.TaxAuthorityCategory" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="taxAuthorityId" related="taxAuthorityId"/></relationship>
+    <relationship related="mantle.other.tax.TaxAuthorityParty" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="taxAuthorityId" related="taxAuthorityId"/></relationship>
+    <relationship related="mantle.other.tax.TaxStatement" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="taxAuthorityId" related="taxAuthorityId"/></relationship>
+    <relationship related="mantle.product.ProductPrice" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="taxAuthorityId" related="taxAuthorityId"/></relationship>
+
+</entity>

@@ -1,0 +1,27 @@
+
+<!-- Entity Name: mantle.product.ProductIdentification sql table: PRODUCT_IDENTIFICATION --><entity entity-name="ProductIdentification" package="mantle.product">
+    <field name="productId" type="id" is-pk="true"/>
+    <field name="productIdTypeEnumId" type="id" is-pk="true"/>
+    <field name="idValue" type="text-medium"/>
+    <relationship type="one" title="ProductIdentificationType" related="moqui.basic.Enumeration" short-alias="type">
+        <key-map field-name="productIdTypeEnumId"/></relationship>
+    <relationship type="one" related="mantle.product.Product" short-alias="product"/>
+    <index name="PRODUCT_ID_VALUE" unique="false">
+        <index-field name="idValue"/></index>
+    <seed-data>
+        <moqui.basic.EnumerationType description="Product Identification Type" enumTypeId="ProductIdentificationType"/>
+        <moqui.basic.Enumeration description="ISBN" enumId="PidtIsbn" enumTypeId="ProductIdentificationType"/>
+        <moqui.basic.Enumeration description="Mfg Model Number" enumId="PidtMfgModelNum" enumTypeId="ProductIdentificationType"/>
+        <moqui.basic.Enumeration description="Other" enumId="PidtOther" enumTypeId="ProductIdentificationType"/>
+        <moqui.basic.Enumeration description="SKU" enumId="PidtSku" enumTypeId="ProductIdentificationType"/>
+        <moqui.basic.Enumeration description="UPC-A" enumId="PidtUpca" enumTypeId="ProductIdentificationType"/>
+        <moqui.basic.Enumeration description="UPC-E" enumId="PidtUpce" enumTypeId="ProductIdentificationType"/>
+        <moqui.basic.Enumeration description="EAN" enumId="PidtEan" enumTypeId="ProductIdentificationType"/>
+        <moqui.basic.Enumeration description="GTIN" enumId="PidtGtin" enumTypeId="ProductIdentificationType"/>
+        <moqui.basic.Enumeration description="Library of Congress" enumId="PidtLoc" enumTypeId="ProductIdentificationType"/>
+        <moqui.basic.Enumeration description="URL Slug" enumId="PidtUrlSlug" enumTypeId="ProductIdentificationType"/>
+        <moqui.basic.Enumeration description="HTS (Tariff)" enumId="PidtHts" enumTypeId="ProductIdentificationType"/>
+    </seed-data>
+    <field name="lastUpdatedStamp" type="date-time"/>
+
+</entity>

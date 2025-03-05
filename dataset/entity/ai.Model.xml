@@ -1,0 +1,13 @@
+
+<!-- Entity Name: ai.Model sql table: MODEL --><entity entity-name="Model" package="ai" short-alias="models" has-dependents="true">
+    <field name="modelId" type="id" is-pk="true"/>
+    <field name="name" type="text-short"/>
+    <field name="creator" type="text-short"/>
+    <field name="fullName" type="text-short"/>
+    <seed-data>
+        <ai.Model fullName="GPT_4O_MINI_2024_07_18" name="GPT 4o mini 2024-07-18" creator="OpenAI" modelId="GPT-4o-mini"/></seed-data>
+    <field name="lastUpdatedStamp" type="date-time"/>
+    <relationship related="ai.ModelChat" type="many" is-auto-reverse="true" mutable="true" title="Model">
+        <key-map field-name="modelId" related="modelId"/></relationship>
+
+</entity>

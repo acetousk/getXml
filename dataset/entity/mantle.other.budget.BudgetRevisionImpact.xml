@@ -1,0 +1,20 @@
+
+<!-- Entity Name: mantle.other.budget.BudgetRevisionImpact sql table: BUDGET_REVISION_IMPACT --><entity entity-name="BudgetRevisionImpact" package="mantle.other.budget">
+    <field name="budgetId" type="id" is-pk="true"/>
+    <field name="budgetItemSeqId" type="id" is-pk="true"/>
+    <field name="revisionSeqId" type="id" is-pk="true"/>
+    <field name="revisedAmount" type="currency-amount"/>
+    <field name="addDeleteFlag" type="text-indicator"/>
+    <field name="revisionReason" type="text-medium"/>
+    <relationship type="one" related="mantle.other.budget.Budget"/>
+    <relationship type="one" related="mantle.other.budget.BudgetItem">
+        <key-map field-name="budgetId"/>
+        <key-map field-name="budgetItemSeqId"/>
+    </relationship>
+    <relationship type="one" related="mantle.other.budget.BudgetRevision">
+        <key-map field-name="budgetId"/>
+        <key-map field-name="revisionSeqId"/>
+    </relationship>
+    <field name="lastUpdatedStamp" type="date-time"/>
+
+</entity>

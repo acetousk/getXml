@@ -1,0 +1,9 @@
+
+<!-- Entity Name: mantle.work.estimate.ProductionEstimateWorkEff sql table: PRODUCTION_ESTIMATE_WORK_EFF --><entity entity-name="ProductionEstimateWorkEff" package="mantle.work.estimate" cache="never">
+    <field name="productionEstimateId" type="id" is-pk="true"/>
+    <field name="workEffortId" type="id" is-pk="true"/>
+    <relationship type="one" related="mantle.work.estimate.ProductionEstimate"/>
+    <relationship type="one" related="mantle.work.effort.WorkEffort"/>
+    <field name="lastUpdatedStamp" type="date-time"/>
+
+</entity>

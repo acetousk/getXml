@@ -1,0 +1,18 @@
+
+<!-- Entity Name: mantle.ledger.config.PaymentTypeGlAccount sql table: PAYMENT_TYPE_GL_ACCOUNT --><entity entity-name="PaymentTypeGlAccount" package="mantle.ledger.config" use="configuration">
+    <field name="paymentTypeEnumId" type="id" is-pk="true"/>
+    <field name="organizationPartyId" type="id" is-pk="true"/>
+    <field name="isPayable" type="text-indicator" is-pk="true">
+        <description><![CDATA[If Y is Payable, N is Receivable.]]></description></field>
+    <field name="isApplied" type="text-indicator" is-pk="true">
+        <description><![CDATA[If Y is for Applied Payment, N for
+            Unapplied Payment, E for either.]]></description></field>
+    <field name="glAccountId" type="id"/>
+    <relationship type="one" title="PaymentType" related="moqui.basic.Enumeration">
+        <key-map field-name="paymentTypeEnumId"/></relationship>
+    <relationship type="one" title="Organization" related="mantle.party.Party">
+        <key-map field-name="organizationPartyId"/></relationship>
+    <relationship type="one" related="mantle.ledger.account.GlAccount"/>
+    <field name="lastUpdatedStamp" type="date-time"/>
+
+</entity>

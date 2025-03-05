@@ -1,0 +1,15 @@
+
+<!-- Entity Name: mantle.work.effort.Deliverable sql table: DELIVERABLE --><entity entity-name="Deliverable" package="mantle.work.effort" has-dependents="true">
+    <field name="deliverableId" type="id" is-pk="true"/>
+    <field name="deliverableTypeEnumId" type="id"/>
+    <field name="deliverableName" type="text-medium"/>
+    <field name="description" type="text-medium"/>
+    <relationship type="one" title="DeliverableType" related="moqui.basic.Enumeration">
+        <key-map field-name="deliverableTypeEnumId"/></relationship>
+    <field name="lastUpdatedStamp" type="date-time"/>
+    <relationship related="mantle.request.requirement.Requirement" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="deliverableId" related="deliverableId"/></relationship>
+    <relationship related="mantle.work.effort.WorkEffortDeliverableProd" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="deliverableId" related="deliverableId"/></relationship>
+
+</entity>

@@ -1,0 +1,18 @@
+
+<!-- Entity Name: moqui.basic.UomDimTypeGroupMember sql table: UOM_DIM_TYPE_GROUP_MEMBER --><entity entity-name="UomDimTypeGroupMember" package="moqui.basic" use="configuration" cache="true">
+    <field name="uomDimTypeGroupEnumId" type="id" is-pk="true"/>
+    <field name="uomDimensionTypeId" type="id" is-pk="true"/>
+    <field name="sequenceNum" type="number-integer"/>
+    <relationship type="one" title="UomDimTypeGroup" related="moqui.basic.Enumeration" short-alias="group">
+        <key-map field-name="uomDimTypeGroupEnumId"/></relationship>
+    <relationship type="one" related="moqui.basic.UomDimensionType" short-alias="type"/>
+    <seed-data>
+        <moqui.basic.EnumerationType description="UOM Dimension Type Group" enumTypeId="UomDimTypeGroup"/>
+        <moqui.basic.Enumeration description="Product" enumId="UdtgProduct" enumTypeId="UomDimTypeGroup"/>
+        <moqui.basic.Enumeration description="Party" enumId="UdtgParty" enumTypeId="UomDimTypeGroup"/>
+        <moqui.basic.Enumeration description="Person" enumId="UdtgPerson" parentEnumId="UdtgParty" enumTypeId="UomDimTypeGroup"/>
+        <moqui.basic.Enumeration description="Organization" enumId="UdtgOrg" parentEnumId="UdtgParty" enumTypeId="UomDimTypeGroup"/>
+    </seed-data>
+    <field name="lastUpdatedStamp" type="date-time"/>
+
+</entity>

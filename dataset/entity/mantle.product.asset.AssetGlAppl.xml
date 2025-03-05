@@ -1,0 +1,10 @@
+
+<!-- Entity Name: mantle.product.asset.AssetGlAppl sql table: ASSET_GL_APPL --><entity entity-name="AssetGlAppl" package="mantle.product.asset">
+    <description><![CDATA[Used to specify relevant GL Accounts for an Asset (expense, revenue, etc); not related to posting conf]]></description>
+    <field name="assetId" type="id" is-pk="true"/>
+    <field name="glAccountId" type="id" is-pk="true"/>
+    <relationship type="one" related="mantle.product.asset.Asset" short-alias="asset"/>
+    <relationship type="one" related="mantle.ledger.account.GlAccount" short-alias="glAccount"/>
+    <field name="lastUpdatedStamp" type="date-time"/>
+
+</entity>

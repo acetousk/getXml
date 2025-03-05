@@ -1,0 +1,9 @@
+
+<!-- Entity Name: mantle.work.effort.WorkEffortCategoryAppl sql table: WORK_EFFORT_CATEGORY_APPL --><entity entity-name="WorkEffortCategoryAppl" package="mantle.work.effort">
+    <field name="workEffortId" type="id" is-pk="true"/>
+    <field name="workEffortCategoryId" type="id" is-pk="true"/>
+    <field name="lastUpdatedStamp" type="date-time"/>
+    <relationship related="mantle.work.effort.WorkEffort" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="workEffortId" related="workEffortId"/></relationship>
+
+</entity>

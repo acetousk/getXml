@@ -1,0 +1,3 @@
+<!--Service Location org.moqui.impl.EmailServices.send#EmailMessage--><service verb="send" noun="EmailMessage"><in-parameters><parameter name="emailMessageId" required="true" entity-name="moqui.basic.email.EmailMessage" field-name="emailMessageId"/></in-parameters><out-parameters/>
+    null
+</service>

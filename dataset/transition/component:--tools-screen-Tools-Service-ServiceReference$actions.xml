@@ -1,0 +1,8 @@
+<!--Transition Screen Location component://tools/screen/Tools/Service/ServiceReference.xml Transition Name actions--><transition name="actions"><actions><!--always-actions at component://webroot/screen/webroot.xml--><set field="html_scripts" from="new LinkedHashSet()"/><set field="footer_scripts" from="new LinkedHashSet()"/><set field="html_stylesheets" from="new LinkedHashSet()"/><!--actions--><set field="pageSize" from="pageSize ?: 40"/><set field="knownServiceNames" from="ec.service.knownServiceNames"/><set field="filteredServiceNames" from="new ArrayList(knownServiceNames)"/><script><![CDATA[if (serviceName) {
+            Iterator theIterator = filteredServiceNames.iterator()
+            while (theIterator.hasNext()) {
+                String curSn = (String) theIterator.next()
+                if (!curSn.toUpperCase().contains(serviceName.toUpperCase())) theIterator.remove()
+            }
+        }
+        paginateList("filteredServiceNames", null, context)]]></script></actions></transition>

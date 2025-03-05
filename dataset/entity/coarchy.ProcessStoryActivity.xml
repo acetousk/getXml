@@ -1,0 +1,21 @@
+
+<!-- Entity Name: coarchy.ProcessStoryActivity sql table: PROCESS_STORY_ACTIVITY --><entity entity-name="ProcessStoryActivity" package="coarchy">
+    <field name="processStoryActivityId" type="id" is-pk="true"/>
+    <field name="processStoryId" type="id"/>
+    <field name="activityId" type="id"/>
+    <field name="sequenceNum" type="number-integer"/>
+    <field name="detailProcessStoryId" type="id"/>
+    <field name="fromDate" type="date-time"/>
+    <field name="thruDate" type="date-time"/>
+    <field name="organizationId" type="id"/>
+    <relationship type="one" related="coarchy.ProcessStory" short-alias="story">
+        <key-map field-name="processStoryId"/></relationship>
+    <relationship type="one" related="coarchy.ProcessStory" short-alias="detailStory">
+        <key-map field-name="detailProcessStoryId"/></relationship>
+    <relationship type="one" related="coarchy.Activity" short-alias="activity">
+        <key-map field-name="activityId"/></relationship>
+    <relationship type="many" related="coarchy.ActivityActor" short-alias="actors">
+        <key-map field-name="activityId"/></relationship>
+    <field name="lastUpdatedStamp" type="date-time"/>
+
+</entity>

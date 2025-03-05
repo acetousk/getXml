@@ -1,0 +1,21 @@
+
+<!-- Entity Name: mantle.humanres.employment.PayrollStdDeduction sql table: PAYROLL_STD_DEDUCTION --><entity entity-name="PayrollStdDeduction" package="mantle.humanres.employment" use="configuration">
+    <field name="payrollStdDeductionId" type="id" is-pk="true"/>
+    <field name="taxAuthorityId" type="id"/>
+    <field name="timePeriodTypeId" type="id"/>
+    <field name="taxFederalStatusEnumId" type="id"/>
+    <field name="taxStateStatusEnumId" type="id"/>
+    <field name="minAllowances" type="number-integer"/>
+    <field name="maxAllowances" type="number-integer"/>
+    <field name="fromDate" type="date-time"/>
+    <field name="thruDate" type="date-time"/>
+    <field name="amount" type="currency-amount"/>
+    <relationship type="one" related="mantle.other.tax.TaxAuthority"/>
+    <relationship type="one" related="mantle.party.time.TimePeriodType"/>
+    <relationship type="one" title="TaxFederalStatus" related="moqui.basic.Enumeration">
+        <key-map field-name="taxFederalStatusEnumId"/></relationship>
+    <relationship type="one" title="TaxStateStatus" related="moqui.basic.Enumeration">
+        <key-map field-name="taxStateStatusEnumId"/></relationship>
+    <field name="lastUpdatedStamp" type="date-time"/>
+
+</entity>

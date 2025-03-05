@@ -1,0 +1,21 @@
+
+<!-- Entity Name: moqui.screen.form.FormListFind sql table: FORM_LIST_FIND --><entity entity-name="FormListFind" package="moqui.screen.form" use="configuration" has-dependents="true">
+    <field name="formListFindId" type="id" is-pk="true"/>
+    <field name="description" type="text-medium"/>
+    <field name="formLocation" type="text-medium"/>
+    <field name="orderByField" type="text-medium"/>
+    <field name="formConfigId" type="id"/>
+    <relationship type="one" related="moqui.screen.form.FormConfig" short-alias="formConfig"/>
+    <relationship type="many" related="moqui.screen.form.FormListFindField" short-alias="fields">
+        <key-map field-name="formListFindId"/></relationship>
+    <relationship type="many" related="moqui.screen.form.FormListFindUser" short-alias="users">
+        <key-map field-name="formListFindId"/></relationship>
+    <relationship type="many" related="moqui.screen.form.FormListFindUserGroup" short-alias="userGroups">
+        <key-map field-name="formListFindId"/></relationship>
+    <field name="lastUpdatedStamp" type="date-time"/>
+    <relationship related="moqui.screen.ScreenScheduled" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="formListFindId" related="formListFindId"/></relationship>
+    <relationship related="moqui.screen.form.FormListFindUserDefault" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="formListFindId" related="formListFindId"/></relationship>
+
+</entity>

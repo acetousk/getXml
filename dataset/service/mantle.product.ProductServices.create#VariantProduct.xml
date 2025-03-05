@@ -1,0 +1,65 @@
+<!--Service Location mantle.product.ProductServices.create#VariantProduct--><service verb="create" noun="VariantProduct"><in-parameters><parameter name="product" type="EntityValue" required="true"/><parameter name="productTypeEnumId"/><parameter name="assetTypeEnumId"/><parameter name="assetClassEnumId"/><parameter name="featureList" type="List"/><parameter name="copyStandardFeatures" type="Boolean" default="true"/><parameter name="copyCategoryMembers" type="Boolean" default="false"/></in-parameters><out-parameters><parameter name="productId"/></out-parameters><actions><if condition="copyStandardFeatures"><entity-find entity-name="mantle.product.feature.ProductFeatureAppl" list="standardFeatureList"><date-filter/><econdition field-name="productId" from="product.productId"/><econdition field-name="applTypeEnumId" value="PfatStandard"/></entity-find></if><if condition="copyCategoryMembers"><entity-find entity-name="mantle.product.category.ProductCategoryMember" list="pcmList"><date-filter/><econdition field-name="productId" from="product.productId"/></entity-find></if><script><![CDATA[import org.moqui.entity.EntityCondition
+
+                productId = product.pseudoId ?: product.productId
+                String productName = product.productName
+                for (EntityValue feature in featureList) {
+                    // get the feature type Enumeration record for the description
+                    EntityValue typeEnum = ec.entity.find("moqui.basic.Enumeration")
+                            .condition("enumId", feature.productFeatureTypeEnumId).useCache(true).one()
+                    productId = productId + "_" + (feature.abbrev ?: feature.productFeatureId)
+                    productName = productName + " " + feature.description
+                }
+
+                // see if product exists (by ID) before creating
+                EntityValue existingProduct = ec.entity.find("mantle.product.Product")
+                        .condition("productId", productId).one()
+                if (existingProduct) return
+
+                // see if variant with the same features exists
+                EntityList allVariants = ec.entity.find("mantle.product.ProductAssoc")
+                        .condition([productId: product.productId, productAssocTypeEnumId: "PatVariant"])
+                        .conditionDate(null, null, null).list()
+                Set checkProductIds = new HashSet((Collection) allVariants.toProductId)
+                for (EntityValue feature in featureList) {
+                    if (!checkProductIds) break
+                    EntityList remainingWithFeature = ec.entity.find("mantle.product.feature.ProductFeatureAppl")
+                            .condition("productId", EntityCondition.IN, checkProductIds)
+                            .condition("productFeatureId", feature.productFeatureId).list()
+                    checkProductIds = new HashSet((Collection) remainingWithFeature.productId)
+                }
+                if (checkProductIds) {
+                    productId = checkProductIds.iterator().next()
+                    return
+                }
+
+                EntityValue newProduct = product.cloneValue()
+                newProduct.productName = productName; newProduct.productId = productId
+                if (productTypeEnumId) newProduct.productTypeEnumId = productTypeEnumId
+                if (assetTypeEnumId) newProduct.assetTypeEnumId = assetTypeEnumId
+                if (assetClassEnumId) newProduct.assetClassEnumId = assetClassEnumId
+                newProduct.pseudoId = null
+                newProduct.create()
+
+                ec.service.sync().name("create", "mantle.product.ProductAssoc")
+                        .parameters([productId:product.productId, toProductId:newProduct.productId,
+                                     productAssocTypeEnumId:"PatVariant", fromDate:ec.user.nowTimestamp]).call()
+
+                for (EntityValue feature in featureList) {
+                    ec.service.sync().name("create", "mantle.product.feature.ProductFeatureAppl")
+                            .parameters([productId:newProduct.productId, productFeatureId:feature.productFeatureId,
+                                         fromDate:ec.user.nowTimestamp, applTypeEnumId:"PfatDistinguishing"]).call()
+                }
+
+                for (EntityValue feature in standardFeatureList) {
+                    ec.service.sync().name("create", "mantle.product.feature.ProductFeatureAppl")
+                            .parameters([productId:newProduct.productId, productFeatureId:feature.productFeatureId,
+                                         fromDate:ec.user.nowTimestamp, applTypeEnumId:"PfatStandard"]).call()
+                }
+
+                for (EntityValue pcm in pcmList) {
+                    ec.service.sync().name("create", "mantle.product.category.ProductCategoryMember")
+                            .parameters([productId:newProduct.productId, productCategoryId:pcm.productCategoryId,
+                                         fromDate:ec.user.nowTimestamp]).call()
+                }
+
+                ec.logger.info("Created variant of ${product.productId}: ${newProduct.productId}:${newProduct.productName}")]]></script></actions></service>

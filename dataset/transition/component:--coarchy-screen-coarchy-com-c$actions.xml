@@ -1,0 +1,51 @@
+<!--Transition Screen Location component://coarchy/screen/coarchy-com/c.xml Transition Name actions--><transition name="actions"><actions><!--always-actions at component://webroot/screen/webroot.xml--><set field="html_scripts" from="new LinkedHashSet()"/><set field="footer_scripts" from="new LinkedHashSet()"/><set field="html_stylesheets" from="new LinkedHashSet()"/><!--pre-actions--><set field="baseLinkUrl" from="!'production'.equals(System.getProperty('instance_purpose')) ? 'http://localhost:8080' : 'https://coarchy.com'"/><set field="imageUrl" value="/cstatic/background.jpg"/><set field="html_keywords" value="coarchy software organization"/><set field="html_title" value="Coarchy: YOUR Software for YOUR Organization (and more)"/><set field="html_description" value="Explore Coarchy.com for organizational design through process stories, streamlining team roles and collaboration for improved team collaboration."/><set field="html_image" from="baseLinkUrl + imageUrl"/><set field="html_type" value="website"/><set field="html_site_name" value="Coarchy"/><script><![CDATA[// if user not logged in save current path and params then redirect to Login
+//        html_scripts.add('/libs/moment.js/moment-with-locales.min.js')
+//        html_scripts.add('/libs/jquery/jquery.min.js')
+
+        html_stylesheets.add('/libs/quasar/quasar.min.css')
+        html_stylesheets.add('/cstatic/style.css')
+        html_stylesheets.add('/cstatic/aos.css')
+
+        String instancePurpose = System.getProperty("instance_purpose")
+        if (!instancePurpose || instancePurpose == 'production') {
+            /* ========== Production Mode ========== */
+//            // jQuery
+            html_scripts.add('/libs/jquery/jquery.min.js')
+//            // Bootstrap
+//            html_scripts.add('/libs/twitter-bootstrap/js/bootstrap.min.js')
+//            // Form Validation and AJAX (jquery-validation, jquery-form)
+//            html_scripts.add('/libs/jquery-validate/jquery.validate.min.js')
+
+            // Vue JS
+            footer_scripts.add('/libs/vue/vue.min.js')
+            // http-vue-loader
+//            footer_scripts.add('/js/http-vue-loader/httpVueLoader.js')
+            // Quasar
+            footer_scripts.add("/libs/quasar/quasar.umd.min.js")
+
+            html_scripts.add('/js/MoquiLib.min.js')
+            // Webroot Quasar-Vue instance, in footer so runs after page loaded
+            footer_scripts.add('/cstatic/CoarchyComVue.qvt.js')
+            footer_scripts.add('/cstatic/aos.js')
+
+        } else {
+            /* ========== Dev Mode ========== */
+//            // jQuery
+            html_scripts.add('/libs/jquery/jquery.min.js')
+//            // Bootstrap
+//            html_scripts.add('/libs/twitter-bootstrap/js/bootstrap.min.js')
+//            // Form Validation and AJAX (jquery-validation, jquery-form)
+//            html_scripts.add('/libs/jquery-validate/jquery.validate.min.js')
+
+            // Vue JS
+            footer_scripts.add('/libs/vue/vue.js')
+            // http-vue-loader
+//            footer_scripts.add('/js/http-vue-loader/httpVueLoader.js')
+            // Quasar
+            footer_scripts.add("/libs/quasar/quasar.umd.min.js")
+
+            html_scripts.add('/js/MoquiLib.js')
+            // Webroot Quasar-Vue instance, in footer so runs after page loaded
+            footer_scripts.add('/cstatic/CoarchyComVue.qvt.js')
+            footer_scripts.add('/cstatic/aos.js')
+        }]]></script></actions></transition>

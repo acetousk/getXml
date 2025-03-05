@@ -1,0 +1,17 @@
+
+<!-- Entity Name: moqui.security.user.NotificationMessageUser sql table: NOTIFICATION_MESSAGE_USER --><entity entity-name="NotificationMessageUser" package="moqui.security.user" use="nontransactional" cache="never">
+    <field name="notificationMessageId" type="id" is-pk="true"/>
+    <field name="userId" type="id" is-pk="true"/>
+    <field name="sentDate" type="date-time"/>
+    <field name="viewedDate" type="date-time"/>
+    <field name="emailMessageId" type="id"/>
+    <relationship type="one" related="moqui.security.user.NotificationMessage" short-alias="notification"/>
+    <relationship type="one-nofk" related="moqui.security.UserAccount" short-alias="user"/>
+    <relationship type="one" related="moqui.basic.email.EmailMessage" short-alias="emailMessage"/>
+    <index name="NOTMSGUSR_UID_VD" unique="false">
+        <index-field name="userId"/>
+        <index-field name="viewedDate"/>
+    </index>
+    <field name="lastUpdatedStamp" type="date-time"/>
+
+</entity>

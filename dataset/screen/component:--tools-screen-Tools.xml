@@ -1,0 +1,1 @@
+<!-- Screen Location component://tools/screen/Tools.xml --><screen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://moqui.org/xsd/xml-screen-3.xsd" include-child-content="true" menu-image="fa fa-wrench" menu-image-type="icon"><subscreens default-item="dashboard"/><widgets><subscreens-panel id="tools-app" type="popup"/></widgets></screen>

@@ -1,0 +1,13 @@
+
+<!-- Entity Name: moqui.resource.DbResourceFile sql table: DB_RESOURCE_FILE --><entity entity-name="DbResourceFile" package="moqui.resource" use="nontransactional">
+    <field name="resourceId" type="id" is-pk="true"/>
+    <field name="mimeType" type="text-medium"/>
+    <field name="versionName" type="text-short"/>
+    <field name="rootVersionName" type="text-short"/>
+    <field name="fileData" type="binary-very-long"/>
+    <relationship type="one" related="moqui.resource.DbResource" short-alias="dbResource"/>
+    <relationship type="many" related="moqui.resource.DbResourceFileHistory" short-alias="histories">
+        <key-map field-name="resourceId"/></relationship>
+    <field name="lastUpdatedStamp" type="date-time"/>
+
+</entity>

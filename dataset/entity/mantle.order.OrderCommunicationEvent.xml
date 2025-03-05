@@ -1,0 +1,9 @@
+
+<!-- Entity Name: mantle.order.OrderCommunicationEvent sql table: ORDER_COMMUNICATION_EVENT --><entity entity-name="OrderCommunicationEvent" package="mantle.order" cache="never">
+    <field name="orderId" type="id" is-pk="true"/>
+    <field name="communicationEventId" type="id" is-pk="true"/>
+    <relationship type="one" related="mantle.order.OrderHeader"/>
+    <relationship type="one" related="mantle.party.communication.CommunicationEvent"/>
+    <field name="lastUpdatedStamp" type="date-time"/>
+
+</entity>

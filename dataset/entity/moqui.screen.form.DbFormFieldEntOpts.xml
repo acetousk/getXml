@@ -1,0 +1,22 @@
+
+<!-- Entity Name: moqui.screen.form.DbFormFieldEntOpts sql table: DB_FORM_FIELD_ENT_OPTS --><entity entity-name="DbFormFieldEntOpts" package="moqui.screen.form" use="configuration" has-dependents="true">
+    <field name="formId" type="id" is-pk="true"/>
+    <field name="fieldName" type="text-medium" is-pk="true"/>
+    <field name="sequenceNum" type="number-integer" is-pk="true"/>
+    <field name="entityName" type="text-medium"/>
+    <field name="text" type="text-medium"/>
+    <relationship type="one" related="moqui.screen.form.DbFormField" short-alias="dbFormField"/>
+    <field name="lastUpdatedStamp" type="date-time"/>
+    <relationship related="moqui.screen.form.DbFormFieldEntOptsCond" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="formId" related="formId"/>
+        <key-map field-name="fieldName" related="fieldName"/>
+        <key-map field-name="sequenceNum" related="sequenceNum"/>
+    </relationship>
+    <relationship related="moqui.screen.form.DbFormFieldEntOptsOrder" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="formId" related="formId"/>
+        <key-map field-name="fieldName" related="fieldName"/>
+        <key-map field-name="sequenceNum" related="sequenceNum"/>
+    </relationship>
+
+<!-- eeca org.moqui.impl.entity.EntityEcaRule@61ae49f4-->
+</entity>

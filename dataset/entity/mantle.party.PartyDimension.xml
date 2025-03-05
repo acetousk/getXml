@@ -1,0 +1,13 @@
+
+<!-- Entity Name: mantle.party.PartyDimension sql table: PARTY_DIMENSION --><entity entity-name="PartyDimension" package="mantle.party">
+    <field name="partyId" type="id" is-pk="true"/>
+    <field name="uomDimensionTypeId" type="id" is-pk="true"/>
+    <field name="dimensionDate" type="date-time" is-pk="true" default="ec.user.nowTimestamp"/>
+    <field name="value" type="number-decimal"/>
+    <field name="uomId" type="id"/>
+    <relationship type="one" related="mantle.party.Party"/>
+    <relationship type="one" related="moqui.basic.UomDimensionType" short-alias="type"/>
+    <relationship type="one" related="moqui.basic.Uom" short-alias="uom"/>
+    <field name="lastUpdatedStamp" type="date-time"/>
+
+</entity>

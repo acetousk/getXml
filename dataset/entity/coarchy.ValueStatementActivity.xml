@@ -1,0 +1,15 @@
+
+<!-- Entity Name: coarchy.ValueStatementActivity sql table: VALUE_STATEMENT_ACTIVITY --><entity entity-name="ValueStatementActivity" package="coarchy">
+    <field name="valueStatementActivityId" type="id" is-pk="true"/>
+    <field name="valueStatementId" type="id"/>
+    <field name="activityId" type="id"/>
+    <field name="fromDate" type="date-time"/>
+    <field name="thruDate" type="date-time"/>
+    <field name="organizationId" type="id"/>
+    <relationship type="one" related="ValueStatement" short-alias="valueStatement">
+        <key-map field-name="valueStatementId"/></relationship>
+    <relationship type="one" related="Activity" short-alias="activity">
+        <key-map field-name="activityId"/></relationship>
+    <field name="lastUpdatedStamp" type="date-time"/>
+
+</entity>

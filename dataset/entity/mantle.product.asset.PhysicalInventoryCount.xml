@@ -1,0 +1,21 @@
+
+<!-- Entity Name: mantle.product.asset.PhysicalInventoryCount sql table: PHYSICAL_INVENTORY_COUNT --><entity entity-name="PhysicalInventoryCount" package="mantle.product.asset" cache="never" has-dependents="true">
+    <field name="physicalInventoryCountId" type="id" is-pk="true"/>
+    <field name="physicalInventoryId" type="id"/>
+    <field name="facilityId" type="id"/>
+    <field name="locationSeqId" type="id"/>
+    <field name="productId" type="id"/>
+    <field name="lotId" type="id"/>
+    <field name="countDate" type="date-time"/>
+    <field name="quantityOnHand" type="number-decimal"/>
+    <field name="comments" type="text-medium"/>
+    <relationship type="one" related="mantle.product.asset.PhysicalInventory" short-alias="physicalInventory"/>
+    <relationship type="one" related="mantle.facility.Facility" short-alias="facility"/>
+    <relationship type="one-nofk" related="mantle.facility.FacilityLocation" short-alias="facilityLocation"/>
+    <relationship type="one" related="mantle.product.Product" short-alias="product"/>
+    <relationship type="one" related="mantle.product.asset.Lot" short-alias="lot"/>
+    <field name="lastUpdatedStamp" type="date-time"/>
+    <relationship related="mantle.product.asset.AssetDetail" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="physicalInventoryCountId" related="physicalInventoryCountId"/></relationship>
+
+</entity>

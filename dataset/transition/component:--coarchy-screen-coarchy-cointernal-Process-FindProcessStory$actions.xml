@@ -1,0 +1,21 @@
+<!--Transition Screen Location component://coarchy/screen/coarchy/cointernal/Process/FindProcessStory.xml Transition Name actions--><transition name="actions"><actions><!--always-actions at component://webroot/screen/webroot.xml--><set field="html_scripts" from="new LinkedHashSet()"/><set field="footer_scripts" from="new LinkedHashSet()"/><set field="html_stylesheets" from="new LinkedHashSet()"/><!--always-actions at component://coarchy/screen/coarchy/cointernal.xml--><service-call name="mantle.party.PartyServices.setup#UserOrganizationInfo" out-map="context"/><!--always-actions at component://coarchy/screen/coarchy/cointernal/Process/FindProcessStory.xml--><if condition="!activeOrgId"><message><![CDATA[${ec.resource.expand('CoarchySelectAnOrg', null)}]]></message><script><![CDATA[sri.sendRedirectAndStopRender('/settings/Organizations')]]></script></if><entity-find-count entity-name="mantle.party.PartyRelationship" count-field="partyRelationshipCount"><date-filter/><econdition field-name="relationshipTypeEnumId" value="PrtMember"/><econdition field-name="toRoleTypeId" value="OrgInternal"/><econdition field-name="fromPartyId" from="ec.user.userAccount.partyId"/><econdition field-name="toPartyId" from="activeOrgId"/></entity-find-count><!--actions--><if condition="disabled==null"><set field="disabled" from="'N'"/></if><entity-find entity-name="coarchy.ProcessStoryActivityAndDetail" list="processStoryInputList" distinct="true"><econdition field-name="name" operator="like" value="%${name}%" ignore-case="true" ignore="!name"/><econdition field-name="organizationId" from="activeOrgId"/><select-field field-name="processStoryId,detailProcessStoryId,detail2ProcessStoryId,detail3ProcessStoryId,                 name,detailName,detail2Name,detail3Name,disabled"/></entity-find><script><![CDATA[// Function to validate parent hierarchy before adding to sorted list
+            def isValidParentHierarchy(story, currentBranch) {
+                if (story.detailProcessStoryId != currentBranch.processStoryId) return false
+                if (story.detail2ProcessStoryId != null &&
+                        story.detail2ProcessStoryId != currentBranch.detailProcessStoryId) return false
+                if (story.detail3ProcessStoryId != null &&
+                        story.detail3ProcessStoryId != currentBranch.detail2ProcessStoryId) return false
+                return true
+            }
+
+            // Function to find and sort children recursively
+            def sortProcessStories(processStories, currentBranch) {
+                def sortedStories = []
+                processStories.findAll { isValidParentHierarchy(it, currentBranch) }.sort { it.name }.each { story ->
+//                    ec.logger.warn("story: ${story}")
+                    if (story.disabled == disabled) sortedStories.add(story)
+                    sortedStories.addAll(sortProcessStories(processStories, story))
+                }
+                return sortedStories
+            }
+            def rootBranch = [processStoryId: null, detailProcessStoryId: null, detail2ProcessStoryId: null, detail3ProcessStoryId: null]]]></script><set field="processStoryList" from="sortProcessStories(processStoryInputList, rootBranch)"/></actions></transition>

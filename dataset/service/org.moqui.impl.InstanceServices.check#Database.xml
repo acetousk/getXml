@@ -1,0 +1,3 @@
+<!--Service Location org.moqui.impl.InstanceServices.check#Database--><service verb="check" noun="Database"><in-parameters><parameter name="appInstanceId" required="true"/></in-parameters><out-parameters><parameter name="dbConnectSuccess" type="Boolean"/><parameter name="databaseExists" type="Boolean"/><parameter name="dbUserExists" type="Boolean"/></out-parameters>
+    null
+</service>

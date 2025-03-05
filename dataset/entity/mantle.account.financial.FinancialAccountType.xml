@@ -1,0 +1,46 @@
+
+<!-- Entity Name: mantle.account.financial.FinancialAccountType sql table: FINANCIAL_ACCOUNT_TYPE --><entity entity-name="FinancialAccountType" package="mantle.account.financial" use="configuration" cache="true" has-dependents="true">
+    <field name="finAccountTypeId" type="id" is-pk="true"/>
+    <field name="parentTypeId" type="id"/>
+    <field name="description" type="text-medium"/>
+    <field name="isRefundable" type="text-indicator"/>
+    <field name="accountCodeLength" type="number-integer"/>
+    <field name="requirePinCode" type="text-indicator"/>
+    <field name="pinCodeLength" type="number-integer"/>
+    <field name="accountValidDays" type="number-integer"/>
+    <field name="authValidDays" type="number-integer"/>
+    <field name="replenishMinBalance" type="currency-amount"/>
+    <field name="replenishThreshold" type="currency-amount"/>
+    <field name="replenishMethodEnumId" type="id"/>
+    <field name="replenishTypeEnumId" type="id"/>
+    <relationship type="one" title="Parent" related="mantle.account.financial.FinancialAccountType">
+        <key-map field-name="parentTypeId" related="finAccountTypeId"/></relationship>
+    <relationship type="one" title="FinancialAccountReplenishMethod" related="moqui.basic.Enumeration">
+        <key-map field-name="replenishMethodEnumId"/></relationship>
+    <relationship type="one" title="FinancialAccountReplenishType" related="moqui.basic.Enumeration">
+        <key-map field-name="replenishTypeEnumId"/></relationship>
+    <seed-data>
+        <moqui.basic.EnumerationType description="Financial Account Replenish Type" enumTypeId="FinancialAccountReplenishType"/>
+        <moqui.basic.Enumeration description="Automatic Replenish" enumId="FarpAutomatic" enumTypeId="FinancialAccountReplenishType"/>
+        <moqui.basic.Enumeration description="Manual Replenish" enumId="FarpManual" enumTypeId="FinancialAccountReplenishType"/>
+        <moqui.basic.Enumeration description="No Replenish" enumId="FarpNone" enumTypeId="FinancialAccountReplenishType"/>
+        <moqui.basic.EnumerationType description="Financial Account Replenish Method" enumTypeId="FinancialAccountReplenishMethod"/>
+        <moqui.basic.Enumeration description="Top-off" enumId="FarmTopOff" enumTypeId="FinancialAccountReplenishMethod"/>
+        <moqui.basic.Enumeration description="Replenish-level" enumId="FarmLevel" enumTypeId="FinancialAccountReplenishMethod"/>
+        <mantle.account.financial.FinancialAccountType description="Gift Card" finAccountTypeId="GiftCard" replenishTypeEnumId="FarpManual" isRefundable="Y"/>
+        <mantle.account.financial.FinancialAccountType description="Gift Certificate" finAccountTypeId="GiftCertificate" replenishTypeEnumId="FarpManual" isRefundable="N"/>
+        <mantle.account.financial.FinancialAccountType description="Deposit" finAccountTypeId="DepositAccount" replenishTypeEnumId="FarpManual" isRefundable="Y"/>
+        <mantle.account.financial.FinancialAccountType description="Customer Credit" finAccountTypeId="CustomerCredit" replenishTypeEnumId="FarpManual" isRefundable="Y" parentTypeId="DepositAccount"/>
+        <mantle.account.financial.FinancialAccountType description="Deposit Replenish" finAccountTypeId="Replenish" replenishTypeEnumId="FarpAutomatic" isRefundable="Y" parentTypeId="DepositAccount"/>
+        <mantle.account.financial.FinancialAccountType description="Service Credit" finAccountTypeId="ServiceCredit" replenishTypeEnumId="FarpManual" isRefundable="N"/>
+        <mantle.account.financial.FinancialAccountType description="Loan" finAccountTypeId="LoanAccount" replenishTypeEnumId="FarpManual" isRefundable="Y"/>
+        <mantle.account.financial.FinancialAccountType description="Employee Advance" finAccountTypeId="EmployeeAdvance" replenishTypeEnumId="FarpManual" isRefundable="Y" parentTypeId="LoanAccount"/>
+        <mantle.account.financial.FinancialAccountType description="Supplier Deposit" finAccountTypeId="SupplierDeposit" replenishTypeEnumId="FarpManual" isRefundable="Y"/>
+    </seed-data>
+    <field name="lastUpdatedStamp" type="date-time"/>
+    <relationship related="mantle.account.financial.FinancialAccount" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="finAccountTypeId" related="finAccountTypeId"/></relationship>
+    <relationship related="mantle.ledger.config.FinancialAccountTypeGlAccount" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="finAccountTypeId" related="finAccountTypeId"/></relationship>
+
+</entity>

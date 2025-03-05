@@ -1,0 +1,16 @@
+
+<!-- Entity Name: mantle.humanres.employment.UnemploymentClaim sql table: UNEMPLOYMENT_CLAIM --><entity entity-name="UnemploymentClaim" package="mantle.humanres.employment" use="nontransactional">
+    <field name="unemploymentClaimId" type="id" is-pk="true"/>
+    <field name="unemploymentClaimDate" type="date-time"/>
+    <field name="partyRelationshipId" type="id"/>
+    <field name="statusId" type="id"/>
+    <field name="description" type="text-medium"/>
+    <field name="fromDate" type="date-time"/>
+    <field name="thruDate" type="date-time"/>
+    <relationship type="one" related="mantle.humanres.employment.Employment"/>
+    <relationship type="one" title="UnemploymentClaim" related="moqui.basic.StatusItem"/>
+    <seed-data>
+        <moqui.basic.StatusType description="Unemployment Claim Status" statusTypeId="UnemploymentClaim"/></seed-data>
+    <field name="lastUpdatedStamp" type="date-time"/>
+
+</entity>

@@ -1,0 +1,14 @@
+
+<!-- Entity Name: mantle.work.effort.WorkEffortBilling sql table: WORK_EFFORT_BILLING --><entity entity-name="WorkEffortBilling" package="mantle.work.effort" cache="never">
+    <field name="workEffortId" type="id" is-pk="true"/>
+    <field name="invoiceId" type="id" is-pk="true"/>
+    <field name="invoiceItemSeqId" type="id" is-pk="true"/>
+    <field name="percentage" type="number-decimal"/>
+    <relationship type="one" related="mantle.work.effort.WorkEffort" short-alias="workEffort"/>
+    <relationship type="one" related="mantle.account.invoice.InvoiceItem" short-alias="invoiceItem">
+        <key-map field-name="invoiceId"/>
+        <key-map field-name="invoiceItemSeqId"/>
+    </relationship>
+    <field name="lastUpdatedStamp" type="date-time"/>
+
+</entity>

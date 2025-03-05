@@ -1,0 +1,11 @@
+
+<!-- Entity Name: moqui.screen.form.DbFormUserGroup sql table: DB_FORM_USER_GROUP --><entity entity-name="DbFormUserGroup" package="moqui.screen.form" use="configuration">
+    <field name="formId" type="id" is-pk="true"/>
+    <field name="userGroupId" type="id" is-pk="true">
+        <description><![CDATA[These settings are for a UserGroup. To apply to
+            all users just use the ALL_USERS UserGroup.]]></description></field>
+    <relationship type="one" related="moqui.screen.form.DbForm" short-alias="dbForm"/>
+    <relationship type="one" related="moqui.security.UserGroup" short-alias="userGroup"/>
+    <field name="lastUpdatedStamp" type="date-time"/>
+
+</entity>

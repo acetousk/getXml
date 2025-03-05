@@ -1,0 +1,18 @@
+
+<!-- Entity Name: mantle.product.maintenance.AssetMeter sql table: ASSET_METER --><entity entity-name="AssetMeter" package="mantle.product.maintenance" cache="never">
+    <field name="assetId" type="id" is-pk="true"/>
+    <field name="readingDate" type="date-time" is-pk="true"/>
+    <field name="productMeterTypeId" type="id"/>
+    <field name="productMeterId" type="id"/>
+    <field name="meterValue" type="number-decimal" enable-audit-log="update"/>
+    <field name="readingReasonEnumId" type="id"/>
+    <field name="assetMaintenanceId" type="id"/>
+    <field name="workEffortId" type="id"/>
+    <field name="userId" type="id" default="ec.user.userId"/>
+    <relationship type="one" related="mantle.product.asset.Asset"/>
+    <relationship type="one" related="mantle.product.maintenance.AssetMaintenance"/>
+    <relationship type="one" related="mantle.product.maintenance.ProductMeterType"/>
+    <relationship type="one" related="moqui.security.UserAccount"/>
+    <field name="lastUpdatedStamp" type="date-time"/>
+
+</entity>

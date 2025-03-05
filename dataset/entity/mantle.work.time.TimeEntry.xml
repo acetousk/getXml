@@ -1,0 +1,88 @@
+
+<!-- Entity Name: mantle.work.time.TimeEntry sql table: TIME_ENTRY --><entity entity-name="TimeEntry" package="mantle.work.time" short-alias="timeEntries" cache="never" has-dependents="true">
+    <field name="timeEntryId" type="id" is-pk="true"/>
+    <field name="parentEntryId" type="id"/>
+    <field name="timesheetId" type="id"/>
+    <field name="partyId" type="id">
+        <description><![CDATA[The party performing work (worker, may be the vendor or work for the vendor)]]></description></field>
+    <field name="teamPartyId" type="id"/>
+    <field name="vendorPartyId" type="id">
+        <description><![CDATA[The vendor (employer, etc) who pays the worker.
+            With workEffortId (task or project) the party in the Vendor role, with facilityId the party in the Manager role]]></description></field>
+    <field name="clientPartyId" type="id">
+        <description><![CDATA[The client who pays the vendor for bill through.
+            May get through timesheetId, workEffortId (with Customer or CustomerBillTo role), or facilityId (Facility.ownerPartyId)]]></description></field>
+    <field name="rateTypeEnumId" type="id"/>
+    <field name="rateModifierEnumId" type="id"/>
+    <field name="workTypeEnumId" type="id"/>
+    <field name="emplPositionClassId" type="id"/>
+    <field name="hasModifiedRates" type="text-indicator">
+        <description><![CDATA[Set to Y when *Rate fields are manually set and not from RateAmount lookups]]></description></field>
+    <field name="rateAmountId" type="id">
+        <description><![CDATA[Client/customer hourly RateAmount reference]]></description></field>
+    <field name="clientHourRate" type="number-decimal"/>
+    <field name="vendorRateAmountId" type="id">
+        <description><![CDATA[Vendor/worker hourly RateAmount reference]]></description></field>
+    <field name="vendorHourRate" type="number-decimal"/>
+    <field name="fromDate" type="date-time"/>
+    <field name="thruDate" type="date-time"/>
+    <field name="hours" type="number-decimal"/>
+    <field name="breakHours" type="number-decimal">
+        <description><![CDATA[Non-paid break hours e.g. Lunch]]></description></field>
+    <field name="pieceCount" type="number-decimal"/>
+    <field name="pieceRateTypeEnumId" type="id"/>
+    <field name="pieceRateAmountId" type="id">
+        <description><![CDATA[Client/customer piece RateAmount reference]]></description></field>
+    <field name="clientPieceRate" type="number-decimal"/>
+    <field name="vendorPieceRateAmountId" type="id">
+        <description><![CDATA[Vendor/worker piece RateAmount reference]]></description></field>
+    <field name="vendorPieceRate" type="number-decimal"/>
+    <field name="comments" type="text-long"/>
+    <field name="facilityId" type="id">
+        <description><![CDATA[Where the work was done; if null and workEffortId is set get from WorkEffort.facilityId]]></description></field>
+    <field name="workEffortId" type="id"/>
+    <field name="invoiceId" type="id"/>
+    <field name="invoiceItemSeqId" type="id"/>
+    <field name="vendorInvoiceId" type="id"/>
+    <field name="vendorInvoiceItemSeqId" type="id"/>
+    <relationship type="one" related="mantle.work.time.Timesheet" short-alias="timesheet"/>
+    <relationship type="one" title="Parent" related="mantle.work.time.TimeEntry" short-alias="parentEntry">
+        <key-map field-name="parentEntryId"/></relationship>
+    <relationship type="one" related="mantle.party.Party" short-alias="party"/>
+    <relationship type="one-nofk" related="mantle.party.Person" short-alias="person"/>
+    <relationship type="one" title="Team" related="mantle.party.Party" short-alias="teamParty">
+        <key-map field-name="teamPartyId"/></relationship>
+    <relationship type="one" title="Client" related="mantle.party.Party" short-alias="clientParty">
+        <key-map field-name="clientPartyId"/></relationship>
+    <relationship type="one" title="RateType" related="moqui.basic.Enumeration" short-alias="rateType">
+        <key-map field-name="rateTypeEnumId"/></relationship>
+    <relationship type="one" title="RateModifier" related="moqui.basic.Enumeration" short-alias="rateModifier">
+        <key-map field-name="rateModifierEnumId"/></relationship>
+    <relationship type="one" title="WorkType" related="moqui.basic.Enumeration" short-alias="workType">
+        <key-map field-name="workTypeEnumId"/></relationship>
+    <relationship type="one" related="mantle.humanres.position.EmplPositionClass" short-alias="emplPositionClass"/>
+    <relationship type="one" related="mantle.humanres.rate.RateAmount" short-alias="rateAmount"/>
+    <relationship type="one" title="Vendor" related="mantle.humanres.rate.RateAmount" short-alias="vendorRateAmount">
+        <key-map field-name="vendorRateAmountId"/></relationship>
+    <relationship type="one" title="PieceRateType" related="moqui.basic.Enumeration" short-alias="pieceRateType">
+        <key-map field-name="pieceRateTypeEnumId"/></relationship>
+    <relationship type="one" title="Piece" related="mantle.humanres.rate.RateAmount" short-alias="pieceRateAmount">
+        <key-map field-name="pieceRateAmountId"/></relationship>
+    <relationship type="one" title="VendorPiece" related="mantle.humanres.rate.RateAmount" short-alias="vendorPieceRateAmount">
+        <key-map field-name="vendorPieceRateAmountId"/></relationship>
+    <relationship type="one" related="mantle.facility.Facility" short-alias="facility"/>
+    <relationship type="one" related="mantle.work.effort.WorkEffort" short-alias="workEffort"/>
+    <relationship type="one" related="mantle.account.invoice.InvoiceItem" short-alias="invoiceItem">
+        <key-map field-name="invoiceId"/>
+        <key-map field-name="invoiceItemSeqId"/>
+    </relationship>
+    <relationship type="one" title="Vendor" related="mantle.account.invoice.InvoiceItem" short-alias="vendorInvoiceItem">
+        <key-map field-name="vendorInvoiceId" related="invoiceId"/>
+        <key-map field-name="vendorInvoiceItemSeqId" related="invoiceItemSeqId"/>
+    </relationship>
+    <field name="lastUpdatedStamp" type="date-time"/>
+    <relationship related="mantle.party.PartyBadgeScan" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="timeEntryId" related="timeEntryId"/></relationship>
+
+<!-- eeca org.moqui.impl.entity.EntityEcaRule@18cc556d-->
+</entity>

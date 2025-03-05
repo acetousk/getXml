@@ -1,0 +1,58 @@
+<!--Service Location org.moqui.impl.EntitySyncServices.get#EntitySyncData--><service verb="get" noun="EntitySyncData"><in-parameters><parameter name="entityIncludeList" type="List"><parameter name="entryMap" type="Map"><parameter name="entityName"/><parameter name="includeFilterList" type="List"><description><![CDATA[List of Maps to be ORed together]]></description><parameter name="filterMap" type="Map"/></parameter><parameter name="dependents" type="Boolean"/></parameter></parameter><parameter name="lastSuccessfulSyncTime" type="Timestamp"/><parameter name="syncSplitMillis" type="Long" default="1000"/><parameter name="recordThreshold" type="Long" default="1000"/><parameter name="delayBufferMillis" type="Long" default="300000"/></in-parameters><out-parameters><parameter name="entityData"/><parameter name="recordCount" type="Long"/><parameter name="exclusiveFromTime" type="Timestamp"/><parameter name="inclusiveThruTime" type="Timestamp"/></out-parameters><actions><script><![CDATA[import org.moqui.context.ExecutionContext
+                import org.moqui.entity.EntityCondition
+                import org.moqui.entity.EntityFind
+                import org.moqui.entity.EntityList
+                import org.moqui.entity.EntityListIterator
+
+                // TODO: current approach gets data for all time up to now - delayBufferMillis if no lastSuccessfulSyncTime
+                // TODO:    for bootstrapping, consider a better approach, maybe find oldest record and do splits from
+                // TODO:    there to avoid a huge chunk of data? issue: start too early do a LOT of empty splits
+                long maxSyncLong = System.currentTimeMillis() - delayBufferMillis
+                long startingLong = lastSuccessfulSyncTime?.getTime() ?: 0
+                long lastSyncLong = startingLong
+                long splitFromLong = lastSyncLong
+                long splitThruLong = lastSuccessfulSyncTime ? (splitFromLong + syncSplitMillis) : maxSyncLong
+
+                Writer entityWriter = new StringWriter()
+                entityWriter.append("<entity-facade-xml>")
+
+                ExecutionContext ec = context.ec
+
+                recordCount = 0
+                // ec.logger.warn("======== recordThreshold=${recordThreshold}, splitThruLong=${splitThruLong}, maxSyncLong=${maxSyncLong}, beforeMaxSync=${splitThruLong <= maxSyncLong}, entityIncludeList=${entityIncludeList}")
+                while (recordCount < recordThreshold && splitThruLong <= maxSyncLong) {
+                    for (Map entryMap in entityIncludeList) {
+                        EntityFind find = ec.entity.find((String) entryMap.entityName)
+                        find.condition("lastUpdatedStamp", EntityCondition.GREATER_THAN, new Timestamp(splitFromLong))
+                        find.condition("lastUpdatedStamp", EntityCondition.LESS_THAN_EQUAL_TO, new Timestamp(splitThruLong))
+
+                        List includeCondList = []
+                        for (Map filterMap in includeFilterList)
+                            includeCondList.add(ec.entity.conditionFactory.makeCondition(filterMap))
+                        if (includeCondList)
+                            find.condition(ec.entity.conditionFactory.makeCondition(includeCondList, EntityCondition.OR))
+
+                        long currentCount = find.count()
+                        // TODO: see if currentCount is way too big and abort in advance?
+                        recordCount += currentCount
+
+                        // ec.logger.warn("=========== get#EntitySyncData entityName=${entryMap.entityName} count=${currentCount} find=${find}")
+
+                        if (currentCount > 0) {
+                            find.iterator().withCloseable ({resultEli ->
+                                int levels = entryMap.dependents ? 2 : 0
+                                resultEli.writeXmlText((Writer) entityWriter, null, levels)
+                            })
+                        }
+                    }
+
+                    // increment the split times
+                    splitFromLong = splitThruLong
+                    splitThruLong = splitFromLong + syncSplitMillis
+                }
+
+                entityWriter.append("</entity-facade-xml>")
+                entityData = entityWriter.toString()
+
+                exclusiveFromTime = new Timestamp(startingLong)
+                inclusiveThruTime = new Timestamp(splitThruLong)]]></script></actions></service>

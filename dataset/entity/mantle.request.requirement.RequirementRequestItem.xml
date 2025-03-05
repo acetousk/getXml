@@ -1,0 +1,13 @@
+
+<!-- Entity Name: mantle.request.requirement.RequirementRequestItem sql table: REQUIREMENT_REQUEST_ITEM --><entity entity-name="RequirementRequestItem" package="mantle.request.requirement" cache="never">
+    <field name="requirementId" type="id" is-pk="true"/>
+    <field name="requestId" type="id" is-pk="true"/>
+    <field name="requestItemSeqId" type="id" is-pk="true"/>
+    <relationship type="one" related="mantle.request.requirement.Requirement"/>
+    <relationship type="one" related="mantle.request.RequestItem">
+        <key-map field-name="requestId"/>
+        <key-map field-name="requestItemSeqId"/>
+    </relationship>
+    <field name="lastUpdatedStamp" type="date-time"/>
+
+</entity>

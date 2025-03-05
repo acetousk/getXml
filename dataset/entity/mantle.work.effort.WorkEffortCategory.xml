@@ -1,0 +1,11 @@
+
+<!-- Entity Name: mantle.work.effort.WorkEffortCategory sql table: WORK_EFFORT_CATEGORY --><entity entity-name="WorkEffortCategory" package="mantle.work.effort">
+    <description><![CDATA[Categories for WorkEffort, especially events like iCal/VCALENDAR categories]]></description>
+    <field name="workEffortCategoryId" type="id" is-pk="true"/>
+    <field name="description" type="text-medium"/>
+    <field name="ownerPartyId" type="id"/>
+    <relationship type="one" title="Owner" related="mantle.party.Party" short-alias="owner">
+        <key-map field-name="ownerPartyId"/></relationship>
+    <field name="lastUpdatedStamp" type="date-time"/>
+
+</entity>

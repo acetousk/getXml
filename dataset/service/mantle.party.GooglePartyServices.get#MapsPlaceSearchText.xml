@@ -1,0 +1,28 @@
+<!--Service Location mantle.party.GooglePartyServices.get#MapsPlaceSearchText--><service verb="get" noun="MapsPlaceSearchText"><in-parameters><parameter name="query" required="true"/><parameter name="placeType"/><parameter name="location"/><parameter name="radius"/><parameter name="region"><description><![CDATA[for region options see: https://en.wikipedia.org/wiki/Country_code_top-level_domain]]></description></parameter><parameter name="googleCloudKey" default="ec.user.getPreference('google.cloud.api.key')"/></in-parameters><out-parameters><parameter name="resultList" type="List"><parameter name="resultMap" type="Map"><parameter name="formatted_address"/><parameter name="geometry" type="Map"/><parameter name="place_id"/><parameter name="types" type="List"><parameter name="type"/></parameter></parameter></parameter></out-parameters><actions><if condition="!googleCloudKey"><log level="warn" message="In get#MapsPlacesResults no API key found, returning no results"/><return/></if><set field="query" from="query?.trim()"/><if condition="!query"><set field="resultList" from="[]"/><return/></if><script><![CDATA[org.moqui.util.RestClient restClient = ec.service.rest()  // .method(org.moqui.util.RestClient.POST)
+                def uriBuilder = restClient.uri().protocol("https").port(443).host("maps.googleapis.com")
+                        .path("/maps/api/place/textsearch/json")
+                        .parameter("key", (String) googleCloudKey)
+                        .parameter("query", (String) query)
+                if (placeType) uriBuilder.parameter("type", (String) placeType.trim())
+                if (location) uriBuilder.parameter("location", (String) location.trim())
+                if (radius) uriBuilder.parameter("radius", (String) radius.trim())
+                if (region) uriBuilder.parameter("region", (String) region.trim())
+                // if (postalCode || country) uriBuilder.parameter("components", (postalCode ? "postal_code:" + postalCode : "") + (postalCode && country ? "|" : "") +  (country ? "country:" + country : ""))
+                uriBuilder.build()
+                ec.logger.warn("getUriString ${restClient.getUriString()}")
+
+                org.moqui.util.RestClient.RestResponse restResponse = restClient.call()
+                responseMap = (Map) restResponse.jsonObject()
+                // ec.logger.warn("responseMap: ${responseMap}")
+                if (responseMap?.status == 'ZERO_RESULTS') {
+                    resultList = []
+                    return
+                }
+                if (restResponse.statusCode < 200 || restResponse.statusCode >= 300 || responseMap?.status != 'OK') {
+                    ec.logger.warn("Unsuccessful Place Search response for input ${input} http status ${restResponse.statusCode}: ${responseMap}")
+                    ec.message.addPublic("Could not find address", "warning")
+                    resultList = []
+                    return
+                }
+
+                resultList = responseMap.results]]></script></actions></service>

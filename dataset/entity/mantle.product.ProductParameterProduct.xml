@@ -1,0 +1,9 @@
+
+<!-- Entity Name: mantle.product.ProductParameterProduct sql table: PRODUCT_PARAMETER_PRODUCT --><entity entity-name="ProductParameterProduct" package="mantle.product">
+    <field name="productParameterId" type="id" is-pk="true"/>
+    <field name="productId" type="id" is-pk="true"/>
+    <relationship type="one" related="mantle.product.ProductParameter"/>
+    <relationship type="one" related="mantle.product.Product"/>
+    <field name="lastUpdatedStamp" type="date-time"/>
+
+</entity>

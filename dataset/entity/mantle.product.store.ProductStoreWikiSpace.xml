@@ -1,0 +1,25 @@
+
+<!-- Entity Name: mantle.product.store.ProductStoreWikiSpace sql table: PRODUCT_STORE_WIKI_SPACE --><entity entity-name="ProductStoreWikiSpace" package="mantle.product.store">
+    <description><![CDATA[Used to configure a WikiSpace to use for a given store, space type, and locale instead of directly referencing a wikiSpaceId.]]></description>
+    <field name="storeWikiSpaceId" type="id" is-pk="true"/>
+    <field name="productStoreId" type="id"/>
+    <field name="spaceTypeEnumId" type="id"/>
+    <field name="locale" type="text-short"/>
+    <field name="fromDate" type="date-time"/>
+    <field name="thruDate" type="date-time"/>
+    <field name="wikiSpaceId" type="id"/>
+    <relationship type="one" related="mantle.product.store.ProductStore" short-alias="store"/>
+    <relationship type="one" title="ProductStoreWikiSpaceType" related="moqui.basic.Enumeration" short-alias="type">
+        <key-map field-name="spaceTypeEnumId"/></relationship>
+    <relationship type="one" related="moqui.resource.wiki.WikiSpace" short-alias="wikiSpace"/>
+    <seed-data>
+        <moqui.basic.EnumerationType description="Product Store Wiki Space Type" enumTypeId="ProductStoreWikiSpaceType"/>
+        <moqui.basic.Enumeration description="Content - Full Page" enumId="PstFull" enumTypeId="ProductStoreWikiSpaceType"/>
+        <moqui.basic.Enumeration description="Content - Blog Posts" enumId="PstBlog" enumTypeId="ProductStoreWikiSpaceType"/>
+        <moqui.basic.Enumeration description="Content - Snippet" enumId="PstSnip" enumTypeId="ProductStoreWikiSpaceType"/>
+        <moqui.basic.Enumeration description="Template - Information (home, product, etc)" enumId="PstTmpSrv" enumTypeId="ProductStoreWikiSpaceType"/>
+        <moqui.basic.Enumeration description="Template - Interactive (checkout, profile, etc)" enumId="PstTmpClt" enumTypeId="ProductStoreWikiSpaceType"/>
+    </seed-data>
+    <field name="lastUpdatedStamp" type="date-time"/>
+
+</entity>

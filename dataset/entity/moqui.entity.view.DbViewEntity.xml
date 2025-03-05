@@ -1,0 +1,15 @@
+
+<!-- Entity Name: moqui.entity.view.DbViewEntity sql table: DB_VIEW_ENTITY --><entity entity-name="DbViewEntity" package="moqui.entity.view" use="configuration" cache="true" authorize-skip="view" has-dependents="true">
+    <field name="dbViewEntityName" type="text-medium" is-pk="true"/>
+    <field name="packageName" type="text-medium"/>
+    <field name="cache" type="text-indicator"/>
+    <field name="isDataView" type="text-indicator"/>
+    <field name="lastUpdatedStamp" type="date-time"/>
+    <relationship related="moqui.entity.view.DbViewEntityAlias" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="dbViewEntityName" related="dbViewEntityName"/></relationship>
+    <relationship related="moqui.entity.view.DbViewEntityKeyMap" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="dbViewEntityName" related="dbViewEntityName"/></relationship>
+    <relationship related="moqui.entity.view.DbViewEntityMember" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="dbViewEntityName" related="dbViewEntityName"/></relationship>
+
+</entity>

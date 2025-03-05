@@ -1,0 +1,12 @@
+
+<!-- Entity Name: mantle.product.store.ProductStoreGroupMember sql table: PRODUCT_STORE_GROUP_MEMBER --><entity entity-name="ProductStoreGroupMember" package="mantle.product.store">
+    <field name="productStoreGroupId" type="id" is-pk="true"/>
+    <field name="productStoreId" type="id" is-pk="true"/>
+    <field name="fromDate" type="date-time" is-pk="true"/>
+    <field name="thruDate" type="date-time"/>
+    <field name="sequenceNum" type="number-integer"/>
+    <relationship type="one" related="mantle.product.store.ProductStore" short-alias="store"/>
+    <relationship type="one" related="mantle.product.store.ProductStoreGroup" short-alias="group"/>
+    <field name="lastUpdatedStamp" type="date-time"/>
+
+</entity>

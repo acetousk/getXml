@@ -1,0 +1,1 @@
+<!--Service Location org.moqui.impl.UserServices.set#Preference--><service verb="set" noun="Preference"><in-parameters><parameter name="preferenceKey" required="true"/><parameter name="preferenceValue"/></in-parameters><out-parameters/><actions><script><![CDATA[ec.user.setPreference(preferenceKey, preferenceValue)]]></script></actions></service>

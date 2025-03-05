@@ -1,0 +1,11 @@
+
+<!-- Entity Name: mantle.other.budget.BudgetParty sql table: BUDGET_PARTY --><entity entity-name="BudgetParty" package="mantle.other.budget">
+    <field name="budgetId" type="id" is-pk="true"/>
+    <field name="partyId" type="id" is-pk="true"/>
+    <field name="roleTypeId" type="id" is-pk="true"/>
+    <relationship type="one" related="mantle.other.budget.Budget"/>
+    <relationship type="one" related="mantle.party.Party"/>
+    <relationship type="one" related="mantle.party.RoleType"/>
+    <field name="lastUpdatedStamp" type="date-time"/>
+
+</entity>

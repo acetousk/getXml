@@ -1,0 +1,19 @@
+
+<!-- Entity Name: mantle.facility.FacilityContent sql table: FACILITY_CONTENT --><entity entity-name="FacilityContent" package="mantle.facility" cache="never">
+    <field name="facilityContentId" type="id" is-pk="true"/>
+    <field name="facilityId" type="id"/>
+    <field name="contentLocation" type="text-medium"/>
+    <field name="facilityContentTypeEnumId" type="id"/>
+    <field name="contentDate" type="date-time" default="ec.user.nowTimestamp"/>
+    <relationship type="one" related="mantle.facility.Facility"/>
+    <relationship type="one" title="FacilityContentType" related="moqui.basic.Enumeration">
+        <key-map field-name="facilityContentTypeEnumId"/></relationship>
+    <seed-data>
+        <moqui.basic.EnumerationType description="Facility Content Type" enumTypeId="FacilityContentType"/>
+        <moqui.basic.Enumeration description="Internal Content" enumId="FcntInternal" enumTypeId="FacilityContentType"/>
+        <moqui.basic.Enumeration description="User Defined Content" enumId="FcntUserDefined" enumTypeId="FacilityContentType"/>
+        <moqui.basic.Enumeration description="Image URL" enumId="FcntImageUrl" enumTypeId="FacilityContentType"/>
+    </seed-data>
+    <field name="lastUpdatedStamp" type="date-time"/>
+
+</entity>

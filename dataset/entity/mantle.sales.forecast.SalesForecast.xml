@@ -1,0 +1,29 @@
+
+<!-- Entity Name: mantle.sales.forecast.SalesForecast sql table: SALES_FORECAST --><entity entity-name="SalesForecast" package="mantle.sales.forecast" has-dependents="true">
+    <field name="salesForecastId" type="id" is-pk="true"/>
+    <field name="parentSalesForecastId" type="id"/>
+    <field name="organizationPartyId" type="id"/>
+    <field name="internalPartyId" type="id"/>
+    <field name="timePeriodId" type="id"/>
+    <field name="currencyUomId" type="id"/>
+    <field name="quotaAmount" type="currency-amount"/>
+    <field name="forecastAmount" type="currency-amount" enable-audit-log="true"/>
+    <field name="bestCaseAmount" type="currency-amount"/>
+    <field name="closedAmount" type="currency-amount" enable-audit-log="true"/>
+    <field name="percentOfQuotaForecast" type="number-decimal"/>
+    <field name="percentOfQuotaClosed" type="number-decimal"/>
+    <field name="pipelineAmount" type="currency-amount"/>
+    <relationship type="one" title="Parent" related="mantle.sales.forecast.SalesForecast">
+        <key-map field-name="parentSalesForecastId" related="salesForecastId"/></relationship>
+    <relationship type="one" title="Organization" related="mantle.party.Party">
+        <key-map field-name="organizationPartyId"/></relationship>
+    <relationship type="one" title="Internal" related="mantle.party.Party">
+        <key-map field-name="internalPartyId"/></relationship>
+    <relationship type="one" related="mantle.party.time.TimePeriod"/>
+    <relationship type="one" title="Currency" related="moqui.basic.Uom">
+        <key-map field-name="currencyUomId"/></relationship>
+    <field name="lastUpdatedStamp" type="date-time"/>
+    <relationship related="mantle.sales.forecast.SalesForecastDetail" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="salesForecastId" related="salesForecastId"/></relationship>
+
+</entity>

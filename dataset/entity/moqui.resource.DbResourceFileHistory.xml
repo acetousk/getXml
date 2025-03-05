@@ -1,0 +1,16 @@
+
+<!-- Entity Name: moqui.resource.DbResourceFileHistory sql table: DB_RESOURCE_FILE_HISTORY --><entity entity-name="DbResourceFileHistory" package="moqui.resource" use="nontransactional">
+    <field name="resourceId" type="id" is-pk="true"/>
+    <field name="versionName" type="text-short" is-pk="true"/>
+    <field name="previousVersionName" type="text-short"/>
+    <field name="versionDate" type="date-time"/>
+    <field name="userId" type="id"/>
+    <field name="isDiff" type="text-indicator"/>
+    <field name="fileData" type="binary-very-long"/>
+    <relationship type="one" related="moqui.resource.DbResourceFile"/>
+    <relationship type="one-nofk" related="moqui.security.UserAccount" short-alias="user"/>
+    <field name="lastUpdatedStamp" type="date-time"/>
+    <relationship related="moqui.resource.DbResource" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="resourceId" related="resourceId"/></relationship>
+
+</entity>

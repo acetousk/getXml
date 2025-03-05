@@ -1,0 +1,20 @@
+<!--Service Location org.moqui.impl.PrintServices.get#PrintJobDetailsFromServer--><service verb="get" noun="PrintJobDetailsFromServer"><in-parameters><parameter name="printJobId"/></in-parameters><out-parameters><parameter name="statusId" type="java.lang.String" required="false" allow-html="none" entity-name="moqui.basic.print.PrintJob" field-name="statusId"/><parameter name="createdDate" type="java.sql.Timestamp" required="false" allow-html="none" entity-name="moqui.basic.print.PrintJob" field-name="createdDate"/><parameter name="errorMessage" type="java.lang.String" required="false" allow-html="none" entity-name="moqui.basic.print.PrintJob" field-name="errorMessage"/><parameter name="networkPrinterId" type="java.lang.String" required="false" allow-html="none" entity-name="moqui.basic.print.PrintJob" field-name="networkPrinterId"/><parameter name="username" type="java.lang.String" required="false" allow-html="none" entity-name="moqui.basic.print.PrintJob" field-name="username"/><parameter name="jobId" type="java.lang.Long" required="false" allow-html="none" entity-name="moqui.basic.print.PrintJob" field-name="jobId"/><parameter name="jobName" type="java.lang.String" required="false" allow-html="none" entity-name="moqui.basic.print.PrintJob" field-name="jobName"/><parameter name="copies" type="java.lang.Long" required="false" allow-html="none" entity-name="moqui.basic.print.PrintJob" field-name="copies"/><parameter name="duplex" type="java.lang.String" required="false" allow-html="none" entity-name="moqui.basic.print.PrintJob" field-name="duplex"/><parameter name="pageRanges" type="java.lang.String" required="false" allow-html="none" entity-name="moqui.basic.print.PrintJob" field-name="pageRanges"/><parameter name="contentType" type="java.lang.String" required="false" allow-html="none" entity-name="moqui.basic.print.PrintJob" field-name="contentType"/><parameter name="document" type="java.sql.Blob" required="false" allow-html="none" entity-name="moqui.basic.print.PrintJob" field-name="document"/><parameter name="lastUpdatedStamp" type="java.sql.Timestamp" required="false" allow-html="none" entity-name="moqui.basic.print.PrintJob" field-name="lastUpdatedStamp"/><parameter name="completeTime" type="Timestamp"/><parameter name="createTime" type="Timestamp"/><parameter name="jobUrl"/><parameter name="pagesPrinted" type="Integer"/><parameter name="printerUrl"/><parameter name="size" type="Integer"/></out-parameters><actions><service-call name="org.moqui.impl.PrintServices.make#CupsClient" in-map="[printJobId:printJobId]" out-map="[cupsClient:context.cupsClient,printJob:context.printJob,networkPrinter:context.networkPrinter]"/><script><![CDATA[import org.cups4j.CupsClient
+                import org.cups4j.JobStateEnum
+                import org.cups4j.PrintJobAttributes
+
+                Map stateMap = ['aborted':'PtjAborted', 'canceled':'PtjCanceled', 'completed':'PtjCompleted',
+                                'pending':'PtjPending', 'pending-held':'PtjPendingHeld',
+                                'processing':'PtjProcessing', 'processing-stopped':'PtjProcessingStopped']
+
+                context.putAll(printJob)
+
+                CupsClient cupsClient = context.cupsClient
+                PrintJobAttributes pja = cupsClient.getJobAttributes((int) printJob.jobId)
+
+                statusId = stateMap.get(pja.getJobState().toString())
+                if (pja.getJobCompleteTime()) completeTime = new Timestamp(pja.getJobCompleteTime().getTime())
+                if (pja.getJobCreateTime()) createTime = new Timestamp(pja.getJobCreateTime().getTime())
+                jobUrl = pja.getJobURL()
+                pagesPrinted = pja.getPagesPrinted()
+                printerUrl = pja.getPrinterURL()
+                size = pja.getSize()]]></script><if condition="statusId != printJob.statusId"><service-call name="update#moqui.basic.print.PrintJob" in-map="[printJobId:printJob.printJobId, statusId:statusId]"/></if></actions></service>

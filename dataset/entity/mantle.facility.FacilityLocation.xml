@@ -1,0 +1,50 @@
+
+<!-- Entity Name: mantle.facility.FacilityLocation sql table: FACILITY_LOCATION --><entity entity-name="FacilityLocation" package="mantle.facility" has-dependents="true">
+    <field name="facilityId" type="id" is-pk="true"/>
+    <field name="locationSeqId" type="id" is-pk="true"/>
+    <field name="locationTypeEnumId" type="id"/>
+    <field name="description" type="text-medium"/>
+    <field name="areaId" type="id"/>
+    <field name="aisleId" type="id"/>
+    <field name="sectionId" type="id"/>
+    <field name="levelId" type="id"/>
+    <field name="positionId" type="id"/>
+    <field name="geoPointId" type="id" enable-audit-log="true"/>
+    <field name="capacity" type="number-decimal"/>
+    <field name="capacityUomId" type="id"/>
+    <field name="sequenceNum" type="number-integer">
+        <description><![CDATA[For pick, etc sort by this then by area, aisle, section, level, position]]></description></field>
+    <relationship type="one" related="mantle.facility.Facility"/>
+    <relationship type="one" title="FacilityLocationType" related="moqui.basic.Enumeration" short-alias="type">
+        <key-map field-name="locationTypeEnumId"/></relationship>
+    <relationship type="one" related="moqui.basic.GeoPoint" short-alias="geoPoint"/>
+    <relationship type="one" title="Capacity" related="moqui.basic.Uom" short-alias="capacityUom">
+        <key-map field-name="capacityUomId"/></relationship>
+    <seed-data>
+        <moqui.basic.EnumerationType description="Facility Location Type" enumTypeId="FacilityLocationType"/>
+        <moqui.basic.Enumeration description="Pick" enumId="FltPick" enumTypeId="FacilityLocationType"/>
+        <moqui.basic.Enumeration description="Bulk" enumId="FltBulk" enumTypeId="FacilityLocationType"/>
+        <moqui.basic.Enumeration description="Receiving" enumId="FltReceiving" enumTypeId="FacilityLocationType"/>
+        <moqui.basic.Enumeration description="Staging" enumId="FltStaging" enumTypeId="FacilityLocationType"/>
+        <moqui.basic.Enumeration description="Quarantine" enumId="FltQuarantine" enumTypeId="FacilityLocationType"/>
+        <moqui.basic.Enumeration description="Morgue" enumId="FltMorgue" enumTypeId="FacilityLocationType"/>
+    </seed-data>
+    <field name="lastUpdatedStamp" type="date-time"/>
+    <relationship related="mantle.facility.ProductFacilityLocation" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="facilityId" related="facilityId"/>
+        <key-map field-name="locationSeqId" related="locationSeqId"/>
+    </relationship>
+    <relationship related="mantle.product.asset.Asset" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="facilityId" related="facilityId"/>
+        <key-map field-name="locationSeqId" related="locationSeqId"/>
+    </relationship>
+    <relationship related="mantle.product.asset.Container" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="facilityId" related="facilityId"/>
+        <key-map field-name="locationSeqId" related="locationSeqId"/>
+    </relationship>
+    <relationship related="mantle.product.asset.PhysicalInventoryCount" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="facilityId" related="facilityId"/>
+        <key-map field-name="locationSeqId" related="locationSeqId"/>
+    </relationship>
+
+</entity>

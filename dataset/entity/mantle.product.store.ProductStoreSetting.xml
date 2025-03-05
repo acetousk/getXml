@@ -1,0 +1,48 @@
+
+<!-- Entity Name: mantle.product.store.ProductStoreSetting sql table: PRODUCT_STORE_SETTING --><entity entity-name="ProductStoreSetting" package="mantle.product.store">
+    <field name="productStoreId" type="id" is-pk="true"/>
+    <field name="settingTypeEnumId" type="id" is-pk="true"/>
+    <field name="fromDate" type="date-time" is-pk="true"/>
+    <field name="thruDate" type="date-time"/>
+    <field name="settingValue" type="text-medium"/>
+    <relationship type="one" related="mantle.product.store.ProductStore" short-alias="store"/>
+    <relationship type="one" title="ProductStoreSettingType" related="moqui.basic.Enumeration" short-alias="type">
+        <key-map field-name="settingTypeEnumId"/></relationship>
+    <seed-data>
+        <moqui.basic.EnumerationType description="Product Store Setting Type" enumTypeId="ProductStoreSettingType"/>
+        <moqui.basic.Enumeration enumCode="restApiLocation" description="REST API Location" enumId="PsstRestApiLocation" enumTypeId="ProductStoreSettingType"/>
+        <moqui.basic.Enumeration enumCode="contentLocation" description="Content Location" enumId="PsstContentLocation" enumTypeId="ProductStoreSettingType"/>
+        <moqui.basic.Enumeration enumCode="contentAttachmentLocation" description="Content Attachment Location" enumId="PsstContentAttachmentLoc" enumTypeId="ProductStoreSettingType"/>
+        <moqui.basic.Enumeration enumCode="productImageLocation" description="Product Image Location" enumId="PsstProductImageLoc" enumTypeId="ProductStoreSettingType"/>
+        <moqui.basic.Enumeration enumCode="getReturnLabels" description="Get Return Labels (true/false)" enumId="PsstGetReturnLabels" enumTypeId="ProductStoreSettingType"/>
+        <moqui.basic.Enumeration description="Product Detail URL GString" enumId="PsstProductDetailUrl" enumTypeId="ProductStoreSettingType"/>
+        <moqui.basic.Enumeration description="Product Image URL GString" enumId="PsstProductImageUrl" enumTypeId="ProductStoreSettingType"/>
+        <moqui.basic.Enumeration description="Ship Label From Name" enumId="PsstShipLabelName" enumTypeId="ProductStoreSettingType"/>
+        <moqui.basic.Enumeration description="Ship Label From Company" enumId="PsstShipLabelCompany" enumTypeId="ProductStoreSettingType"/>
+        <moqui.basic.Enumeration description="Ship Restrict Carriers (true/false)" enumId="PsstShipRestrictCarriers" enumTypeId="ProductStoreSettingType"/>
+        <moqui.basic.Enumeration description="Shipping Label Cost Markup Percent" enumId="PsstShipLabelMarkup" enumTypeId="ProductStoreSettingType"/>
+        <moqui.basic.Enumeration description="Shipping Order Charge Markup Percent" enumId="PsstShipOrderMarkup" enumTypeId="ProductStoreSettingType"/>
+        <moqui.basic.Enumeration description="Template Location Shipment Insert" enumId="PsstTemplateShipmentInsert" enumTypeId="ProductStoreSettingType"/>
+        <moqui.basic.Enumeration description="Template Location Shipment Pick Sheet" enumId="PsstTemplateShipmentPick" enumTypeId="ProductStoreSettingType"/>
+        <moqui.basic.Enumeration description="Template Location Shipment Pack Sheet" enumId="PsstTemplateShipmentPack" enumTypeId="ProductStoreSettingType"/>
+        <moqui.basic.Enumeration description="Template Location Shipment By Package" enumId="PsstTemplateShipmentByPackage" enumTypeId="ProductStoreSettingType"/>
+        <moqui.basic.Enumeration description="Template Location Invoice Print" enumId="PsstTemplateInvoicePrint" enumTypeId="ProductStoreSettingType"/>
+        <moqui.basic.Enumeration description="Template Location Order Print" enumId="PsstTemplateOrderPrint" enumTypeId="ProductStoreSettingType"/>
+        <moqui.basic.Enumeration description="Order Approve Warn New Customer (false to disable)" enumId="PsstOrdApproveNewCust" enumTypeId="ProductStoreSettingType"/>
+        <moqui.basic.Enumeration description="Order Approve Warn Address not Valid (false to disable)" enumId="PsstOrdApproveAddrNotValid" enumTypeId="ProductStoreSettingType"/>
+        <moqui.basic.Enumeration description="Order Approve Warn Address Missing (false to disable)" enumId="PsstOrdApproveAddrMissing" enumTypeId="ProductStoreSettingType"/>
+        <moqui.basic.Enumeration description="Order Approve Warn Large Order - Total Above (default 0, 0 to disable)" enumId="PsstOrdApproveLargeOrder" enumTypeId="ProductStoreSettingType"/>
+        <moqui.basic.Enumeration description="Order Approve Warn Large Web Order - Total Above (default 0, 0 to disable)" enumId="PsstOrdApproveLargeWebOrder" enumTypeId="ProductStoreSettingType"/>
+        <moqui.basic.Enumeration description="Order Approve Warn Std Devs Over Avg Total (default 3.0, 0 to disable)" enumId="PsstOrdApproveStdDevTotal" enumTypeId="ProductStoreSettingType"/>
+        <moqui.basic.Enumeration description="Order Approve Warn Std Devs Over Avg Product Qty (default 3.0, 0 to disable)" enumId="PsstOrdApproveStdDevProdQty" enumTypeId="ProductStoreSettingType"/>
+        <moqui.basic.Enumeration description="Order Approve Warn Inventory Not Available (false to disable)" enumId="PsstOrdApproveInventoryNotAvail" enumTypeId="ProductStoreSettingType"/>
+        <moqui.basic.Enumeration description="Order Approve Warn Percent Available Inventory (default 20, 0 to disable)" enumId="PsstOrdApprovePercAvailInv" enumTypeId="ProductStoreSettingType"/>
+        <moqui.basic.Enumeration description="Order Approve Warn Similar within 24hrs (false to disable)" enumId="PsstOrdApproveSimilar" enumTypeId="ProductStoreSettingType"/>
+        <moqui.basic.Enumeration description="Order Approve Warn Price Min/Max (false to disable)" enumId="PsstOrdApprovePriceMinMax" enumTypeId="ProductStoreSettingType"/>
+        <moqui.basic.Enumeration description="Order Approve Warn Billing and Shipping Addresses Differ (false to disable)" enumId="PsstOrdApproveBillShipAddrDiff" enumTypeId="ProductStoreSettingType"/>
+        <moqui.basic.Enumeration description="Order Approve Warn Payment Method Name Differs (false to disable)" enumId="PsstOrdApprovePayMethNameDiff" enumTypeId="ProductStoreSettingType"/>
+        <moqui.basic.Enumeration description="Order Approve Warn Contact Mech Grey/Blacklisted (false to disable)" enumId="PsstOrdApproveContactBlacklist" enumTypeId="ProductStoreSettingType"/>
+    </seed-data>
+    <field name="lastUpdatedStamp" type="date-time"/>
+
+</entity>

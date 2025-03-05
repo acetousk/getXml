@@ -1,0 +1,12 @@
+
+<!-- Entity Name: mantle.facility.ProductFacility sql table: PRODUCT_FACILITY --><entity entity-name="ProductFacility" package="mantle.facility" cache="never">
+    <field name="productId" type="id" is-pk="true"/>
+    <field name="facilityId" type="id" is-pk="true"/>
+    <field name="minimumStock" type="number-decimal"/>
+    <field name="reorderQuantity" type="number-decimal"/>
+    <field name="daysToShip" type="number-integer"/>
+    <relationship type="one" related="mantle.product.Product" short-alias="product"/>
+    <relationship type="one" related="mantle.facility.Facility" short-alias="facility"/>
+    <field name="lastUpdatedStamp" type="date-time"/>
+
+</entity>

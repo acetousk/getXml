@@ -1,0 +1,4 @@
+<!--Service Location mantle.account.PaymentServices.get#PaymentGatewayDetails--><service verb="get" noun="PaymentGatewayDetails"><in-parameters><parameter name="paymentId" required="true"/><parameter name="paymentGatewayConfigId" required="true"/></in-parameters><out-parameters><parameter name="paymentGatewayResponseId"/><parameter name="gatewayStatusId"><description><![CDATA[Mantle Payment statusId based on gateway transaction status.
+                If returned and is different from current Payment.statusId calling service will update.]]></description></parameter><parameter name="effectiveDate" type="Timestamp"/><parameter name="settlementDate" type="Timestamp"/></out-parameters>
+    null
+</service>

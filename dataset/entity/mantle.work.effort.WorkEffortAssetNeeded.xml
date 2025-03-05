@@ -1,0 +1,14 @@
+
+<!-- Entity Name: mantle.work.effort.WorkEffortAssetNeeded sql table: WORK_EFFORT_ASSET_NEEDED --><entity entity-name="WorkEffortAssetNeeded" package="mantle.work.effort" cache="never">
+    <description><![CDATA[For equipment, inventory, etc needed in the work effort.]]></description>
+    <field name="workEffortId" type="id" is-pk="true"/>
+    <field name="assetProductId" type="id" is-pk="true"/>
+    <field name="estimatedQuantity" type="number-decimal"/>
+    <field name="estimatedDuration" type="number-decimal"/>
+    <field name="estimatedCost" type="currency-amount"/>
+    <relationship type="one" related="mantle.work.effort.WorkEffort" short-alias="workEffort"/>
+    <relationship type="one" title="Asset" related="mantle.product.Product" short-alias="assetProduct">
+        <key-map field-name="assetProductId"/></relationship>
+    <field name="lastUpdatedStamp" type="date-time"/>
+
+</entity>

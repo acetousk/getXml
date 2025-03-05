@@ -1,0 +1,28 @@
+
+<!-- Entity Name: moqui.screen.ScreenTheme sql table: SCREEN_THEME --><entity entity-name="ScreenTheme" package="moqui.screen" use="configuration" cache="true" has-dependents="true">
+    <field name="screenThemeId" type="id" is-pk="true"/>
+    <field name="screenThemeTypeEnumId" type="id"/>
+    <field name="description" type="text-medium"/>
+    <relationship type="one" title="ScreenThemeType" related="moqui.basic.Enumeration" short-alias="screenThemeTypeEnum">
+        <key-map field-name="screenThemeTypeEnumId"/></relationship>
+    <seed-data>
+        <moqui.basic.EnumerationType description="Screen Theme Type" enumTypeId="ScreenThemeType"/>
+        <moqui.basic.Enumeration description="Internal Applications" enumId="STT_INTERNAL" enumTypeId="ScreenThemeType" enumCode="DEFAULT"/>
+        <moqui.basic.Enumeration description="Public Web Site/etc" enumId="STT_PUBLIC" enumTypeId="ScreenThemeType" enumCode="PUBLIC"/>
+        <moqui.basic.Enumeration description="Error Screens" enumId="STT_ERROR" enumTypeId="ScreenThemeType" enumCode="ERROR"/>
+        <moqui.screen.ScreenTheme screenThemeId="DEFAULT" screenThemeTypeEnumId="STT_INTERNAL" description="Moqui Default Theme: simple, flat, default"/>
+        <moqui.screen.ScreenTheme screenThemeId="ERROR" screenThemeTypeEnumId="STT_ERROR" description="Minimal Error Theme"/>
+    </seed-data>
+    <field name="lastUpdatedStamp" type="date-time"/>
+    <relationship related="moqui.resource.wiki.WikiSpace" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="screenThemeId" related="screenThemeId"/></relationship>
+    <relationship related="moqui.screen.ScreenThemeIcon" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="screenThemeId" related="screenThemeId"/></relationship>
+    <relationship related="moqui.screen.ScreenThemeResource" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="screenThemeId" related="screenThemeId"/></relationship>
+    <relationship related="moqui.security.UserGroupScreenTheme" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="screenThemeId" related="screenThemeId"/></relationship>
+    <relationship related="moqui.security.UserScreenTheme" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="screenThemeId" related="screenThemeId"/></relationship>
+
+</entity>

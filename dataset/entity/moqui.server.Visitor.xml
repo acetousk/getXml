@@ -1,0 +1,9 @@
+
+<!-- Entity Name: moqui.server.Visitor sql table: VISITOR --><entity entity-name="Visitor" package="moqui.server" cache="never" sequence-primary-use-uuid="true" has-dependents="true">
+    <field name="visitorId" type="id" is-pk="true"/>
+    <field name="createdDate" type="date-time"/>
+    <field name="lastUpdatedStamp" type="date-time"/>
+    <relationship related="moqui.server.Visit" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="visitorId" related="visitorId"/></relationship>
+
+</entity>

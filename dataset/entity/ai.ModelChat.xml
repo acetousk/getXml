@@ -1,0 +1,21 @@
+
+<!-- Entity Name: ai.ModelChat sql table: MODEL_CHAT --><entity entity-name="ModelChat" package="ai" short-alias="modelChats" has-dependents="true">
+    <field name="modelChatId" type="id" is-pk="true"/>
+    <field name="modelId" type="id"/>
+    <field name="chatTypeEnumId" type="id"/>
+    <field name="chatTypeName" type="text-medium"/>
+    <relationship type="one" title="Model" related="ai.Model" short-alias="model">
+        <key-map field-name="modelId"/></relationship>
+    <relationship type="many" title="Messages" related="ai.ModelChatMessage" short-alias="messages">
+        <key-map field-name="modelChatId" related="modelChatId"/></relationship>
+    <seed-data>
+        <moqui.basic.EnumerationType description="Model Chat Type" enumTypeId="ModelChatType"/>
+        <moqui.basic.Enumeration description="Entity" enumId="MCT_Entity" enumTypeId="ModelChatType"/>
+        <moqui.basic.Enumeration description="Service" enumId="MCT_Service" enumTypeId="ModelChatType"/>
+        <moqui.basic.Enumeration description="Screen" enumId="MCT_Screen" enumTypeId="ModelChatType"/>
+    </seed-data>
+    <field name="lastUpdatedStamp" type="date-time"/>
+    <relationship related="ai.ModelChatMessage" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="modelChatId" related="modelChatId"/></relationship>
+
+</entity>

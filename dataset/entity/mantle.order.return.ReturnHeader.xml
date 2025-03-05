@@ -1,0 +1,140 @@
+
+<!-- Entity Name: mantle.order.return.ReturnHeader sql table: RETURN_HEADER --><entity entity-name="ReturnHeader" package="mantle.order.return" short-alias="returns" cache="never" has-dependents="true">
+    <field name="returnId" type="id" is-pk="true"/>
+    <field name="statusId" type="id" enable-audit-log="true"/>
+    <field name="customerPartyId" type="id"/>
+    <field name="vendorPartyId" type="id"/>
+    <field name="paymentMethodId" type="id">
+        <description><![CDATA[Customer PaymentMethod to refund to, override original]]></description></field>
+    <field name="useSingleRefundPayment" type="text-indicator">
+        <description><![CDATA[If Y create a single refund Payment, otherwise look for Credit Card order payments and refund first against those]]></description></field>
+    <field name="finAccountId" type="id"/>
+    <field name="entryDate" type="date-time"/>
+    <field name="postalContactMechId" type="id">
+        <description><![CDATA[If customer is internal org is shipment destination, otherwise is origin]]></description></field>
+    <field name="telecomContactMechId" type="id">
+        <description><![CDATA[If customer is internal org is shipment destination, otherwise is origin]]></description></field>
+    <field name="facilityId" type="id">
+        <description><![CDATA[If customer is internal org is shipment origin, otherwise is destination]]></description></field>
+    <field name="shipmentMethodEnumId" type="id">
+        <description><![CDATA[Only needed for generating a return label, can also be specified on return shipment]]></description></field>
+    <field name="carrierPartyId" type="id">
+        <description><![CDATA[Only needed for generating a return label, can also be specified on return shipment]]></description></field>
+    <field name="currencyUomId" type="id"/>
+    <field name="supplierRmaId" type="text-short"/>
+    <field name="visitId" type="id"/>
+    <field name="systemMessageRemoteId" type="id"/>
+    <field name="displayId" type="text-short">
+        <description><![CDATA[ID to display to customers, can be different from returnId and/or externalId]]></description></field>
+    <field name="externalId" type="text-short">
+        <description><![CDATA[ID for the return in the direct upstream system it came from if it came from an external system]]></description></field>
+    <field name="originId" type="text-short">
+        <description><![CDATA[ID for the return in the original system it came from if not the direct upstream system]]></description></field>
+    <relationship type="one" title="Return" related="moqui.basic.StatusItem" short-alias="status"/>
+    <relationship type="one" title="Customer" related="mantle.party.Party" short-alias="customer">
+        <key-map field-name="customerPartyId"/></relationship>
+    <relationship type="one" title="Vendor" related="mantle.party.Party" short-alias="vendor">
+        <key-map field-name="vendorPartyId"/></relationship>
+    <relationship type="one" related="mantle.account.financial.FinancialAccount" short-alias="financialAccount"/>
+    <relationship type="one" related="mantle.account.method.PaymentMethod" short-alias="paymentMethod"/>
+    <relationship type="one" title="Postal" related="mantle.party.contact.ContactMech" short-alias="postal">
+        <key-map field-name="postalContactMechId"/></relationship>
+    <relationship type="one" related="mantle.party.contact.PostalAddress" short-alias="postalAddress">
+        <key-map field-name="postalContactMechId"/></relationship>
+    <relationship type="one" title="Telecom" related="mantle.party.contact.ContactMech" short-alias="telecom">
+        <key-map field-name="telecomContactMechId"/></relationship>
+    <relationship type="one" related="mantle.facility.Facility" short-alias="facility"/>
+    <relationship type="one" title="ShipmentMethod" related="moqui.basic.Enumeration" short-alias="shipmentMethod">
+        <key-map field-name="shipmentMethodEnumId"/></relationship>
+    <relationship type="one" title="Carrier" related="mantle.party.Party" short-alias="carrier">
+        <key-map field-name="carrierPartyId"/></relationship>
+    <relationship type="one" title="Currency" related="moqui.basic.Uom" short-alias="currencyUom">
+        <key-map field-name="currencyUomId"/></relationship>
+    <relationship type="one" related="moqui.server.Visit" short-alias="visit"/>
+    <relationship type="one" related="moqui.service.message.SystemMessageRemote" short-alias="systemMessageRemote"/>
+    <relationship type="many" related="mantle.order.return.ReturnItem" short-alias="items">
+        <key-map field-name="returnId"/></relationship>
+    <index name="RETURN_DISPLAY">
+        <index-field name="displayId"/></index>
+    <index name="RETURN_EXTERNAL">
+        <index-field name="externalId"/></index>
+    <index name="RETURN_ORIGIN">
+        <index-field name="originId"/></index>
+    <seed-data>
+        <moqui.basic.StatusType description="Return Header and Item Status" statusTypeId="Return"/>
+        <moqui.basic.StatusItem description="Created" sequenceNum="0" statusId="ReturnCreated" statusTypeId="Return"/>
+        <moqui.basic.StatusItem description="Requested" sequenceNum="1" statusId="ReturnRequested" statusTypeId="Return"/>
+        <moqui.basic.StatusItem description="Approved" sequenceNum="2" statusId="ReturnApproved" statusTypeId="Return"/>
+        <moqui.basic.StatusItem description="Shipped" sequenceNum="3" statusId="ReturnShipped" statusTypeId="Return"/>
+        <moqui.basic.StatusItem description="Received" sequenceNum="4" statusId="ReturnReceived" statusTypeId="Return"/>
+        <moqui.basic.StatusItem description="Completed" sequenceNum="10" statusId="ReturnCompleted" statusTypeId="Return"/>
+        <moqui.basic.StatusItem description="Manual Response Required" sequenceNum="11" statusId="ReturnManResp" statusTypeId="Return"/>
+        <moqui.basic.StatusItem description="Cancelled" sequenceNum="99" statusId="ReturnCancelled" statusTypeId="Return"/>
+        <moqui.basic.StatusFlowTransition statusFlowId="Default" statusId="ReturnCreated" toStatusId="ReturnRequested" transitionName="Request"/>
+        <moqui.basic.StatusFlowTransition statusFlowId="Default" statusId="ReturnCreated" toStatusId="ReturnApproved" transitionName="Approve"/>
+        <moqui.basic.StatusFlowTransition statusFlowId="Default" statusId="ReturnCreated" toStatusId="ReturnCancelled" transitionName="Cancel"/>
+        <moqui.basic.StatusFlowTransition statusFlowId="Default" statusId="ReturnRequested" toStatusId="ReturnApproved" transitionName="Approve"/>
+        <moqui.basic.StatusFlowTransition statusFlowId="Default" statusId="ReturnRequested" toStatusId="ReturnCancelled" transitionName="Cancel"/>
+        <moqui.basic.StatusFlowTransition statusFlowId="Default" statusId="ReturnApproved" toStatusId="ReturnReceived" transitionName="Receive"/>
+        <moqui.basic.StatusFlowTransition statusFlowId="Default" statusId="ReturnApproved" toStatusId="ReturnShipped" transitionName="Ship"/>
+        <moqui.basic.StatusFlowTransition statusFlowId="Default" statusId="ReturnApproved" toStatusId="ReturnCancelled" transitionName="Cancel"/>
+        <moqui.basic.StatusFlowTransition statusFlowId="Default" statusId="ReturnShipped" toStatusId="ReturnReceived" transitionName="Receive"/>
+        <moqui.basic.StatusFlowTransition statusFlowId="Default" statusId="ReturnShipped" toStatusId="ReturnCompleted" transitionName="Complete"/>
+        <moqui.basic.StatusFlowTransition statusFlowId="Default" statusId="ReturnShipped" toStatusId="ReturnCancelled" transitionName="Cancel"/>
+        <moqui.basic.StatusFlowTransition statusFlowId="Default" statusId="ReturnReceived" toStatusId="ReturnCompleted" transitionName="Complete"/>
+        <moqui.basic.StatusFlowTransition statusFlowId="Default" statusId="ReturnReceived" toStatusId="ReturnCancelled" transitionName="Cancel"/>
+        <moqui.basic.StatusFlowTransition statusFlowId="Default" statusId="ReturnReceived" toStatusId="ReturnManResp" transitionName="Manual Response"/>
+        <moqui.basic.StatusFlowTransition statusFlowId="Default" statusId="ReturnManResp" toStatusId="ReturnCompleted" transitionName="Complete"/>
+        <moqui.basic.StatusFlowTransition statusFlowId="Default" statusId="ReturnManResp" toStatusId="ReturnCancelled" transitionName="Cancel"/>
+        <moqui.basic.StatusFlowTransition statusFlowId="Default" statusId="ReturnCompleted" toStatusId="ReturnCancelled" transitionName="Cancel"/>
+    </seed-data>
+    <master>
+        <detail relationship="status"/>
+        <detail relationship="vendor" use-master="basic"/>
+        <detail relationship="customer" use-master="basic"/>
+        <detail relationship="carrier" use-master="basic"/>
+        <detail relationship="shipmentMethod"/>
+        <detail relationship="postal" use-master="default"/>
+        <detail relationship="telecom" use-master="default"/>
+        <detail relationship="currencyUom"/>
+        <detail relationship="visit"/>
+        <detail relationship="items">
+            <detail relationship="reason"/>
+            <detail relationship="response"/>
+            <detail relationship="itemType"/>
+            <detail relationship="status"/>
+            <detail relationship="product"/>
+            <detail relationship="orderItem"/>
+            <detail relationship="issuances"/>
+            <detail relationship="receipts"/>
+            <detail relationship="shipmentSources"/>
+            <detail relationship="billings"/>
+        </detail>
+    </master>
+    <field name="lastUpdatedStamp" type="date-time"/>
+    <relationship related="mantle.marketing.tracking.TrackingCodeOrderReturn" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="returnId" related="returnId"/></relationship>
+    <relationship related="mantle.order.return.ReturnContactMech" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="returnId" related="returnId"/></relationship>
+    <relationship related="mantle.order.return.ReturnSystemMessage" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="returnId" related="returnId"/></relationship>
+    <relationship related="mantle.shipment.ShipmentItemSource" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="returnId" related="returnId"/></relationship>
+    <relationship related="moqui.service.message.SystemMessage" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="returnId" related="returnId"/></relationship>
+
+<!-- seca <seca id="ReturnReceivedProcess" service="update#mantle.order.return.ReturnHeader" when="post-service">
+    <condition>
+        <expression><![CDATA[statusChanged && statusId == 'ReturnReceived']]></expression></condition>
+    <actions>
+        <service-call name="mantle.order.ReturnServices.process#ReturnItemResponses" in-map="context"/></actions>
+</seca>-->
+<!-- seca <seca id="ReturnApprovedProcess" service="update#mantle.order.return.ReturnHeader" when="post-service">
+    <condition>
+        <expression><![CDATA[statusChanged && statusId == 'ReturnApproved']]></expression></condition>
+    <actions>
+        <service-call name="mantle.order.ReturnServices.create#ReturnShipment" in-map="context"/>
+        <service-call name="mantle.order.ReturnServices.process#ReturnItemResponses" in-map="context"/>
+    </actions>
+</seca>-->
+</entity>

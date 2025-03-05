@@ -1,0 +1,20 @@
+<!--Service Location org.moqui.impl.PrintServices.send#PrintJobInternal--><service verb="send" noun="PrintJobInternal"><in-parameters><parameter name="printJob" type="EntityValue" required="true"/></in-parameters><out-parameters><parameter name="jobId" type="Integer"/></out-parameters><actions><service-call name="org.moqui.impl.PrintServices.make#CupsPrinter" in-map="[networkPrinterId:printJob.networkPrinterId]" out-map="[cupsClient:context.cupsClient,cupsPrinter:context.cupsPrinter,networkPrinter:context.networkPrinter]"/><script><![CDATA[import org.cups4j.CupsPrinter
+                import org.cups4j.PrintJob
+                import org.cups4j.PrintRequestResult
+
+                errMsg = null
+                try {
+                    CupsPrinter cupsPrinter = context.cupsPrinter
+                    PrintJob.Builder pjb = new PrintJob.Builder(printJob.document)
+                    if (printJob.username) pjb.userName((String) printJob.username)
+                    if (printJob.jobName) pjb.jobName((String) printJob.jobName)
+                    if (printJob.copies) pjb.copies(printJob.copies as int)
+                    if (printJob.duplex) pjb.duplex(printJob.duplex == 'Y')
+                    if (printJob.pageRanges) pjb.pageRanges((String) printJob.pageRanges)
+                    PrintJob pj = pjb.build()
+                    PrintRequestResult prr = cupsPrinter.print(pj)
+                    jobId = prr.getJobId()
+                    if (!prr.isSuccessfulResult()) errMsg = prr.getResultDescription()
+                } catch (Exception e) {
+                    errMsg = e.getMessage()
+                }]]></script><if condition="errMsg"><then><service-call name="update#moqui.basic.print.PrintJob" transaction="force-new" in-map="[printJobId:printJob.printJobId, jobId:jobId, statusId:'PtjSendFailed', errorMessage:errMsg]"/><return error="true" message="${errMsg}"/></then><else><service-call name="update#moqui.basic.print.PrintJob" transaction="force-new" in-map="[printJobId:printJob.printJobId, jobId:jobId, statusId:'PtjPending']"/></else></if></actions></service>

@@ -1,0 +1,12 @@
+
+<!-- Entity Name: mantle.ledger.account.GlAccountCategoryMember sql table: GL_ACCOUNT_CATEGORY_MEMBER --><entity entity-name="GlAccountCategoryMember" package="mantle.ledger.account">
+    <field name="glAccountId" type="id" is-pk="true"/>
+    <field name="glAccountCategoryId" type="id" is-pk="true"/>
+    <field name="fromDate" type="date-time" is-pk="true"/>
+    <field name="thruDate" type="date-time"/>
+    <field name="amountPercentage" type="number-decimal"/>
+    <relationship type="one" related="mantle.ledger.account.GlAccount"/>
+    <relationship type="one" related="mantle.ledger.account.GlAccountCategory"/>
+    <field name="lastUpdatedStamp" type="date-time"/>
+
+</entity>

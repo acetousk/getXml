@@ -1,0 +1,1 @@
+<!--Service Location mantle.account.InvoiceServices.autoApplyTo#Invoice--><service verb="autoApplyTo" noun="Invoice"><in-parameters><parameter name="invoiceId" required="true" entity-name="mantle.account.invoice.Invoice" field-name="invoiceId"/></in-parameters><out-parameters><parameter name="paymentIdList" type="List"/></out-parameters><actions/></service>

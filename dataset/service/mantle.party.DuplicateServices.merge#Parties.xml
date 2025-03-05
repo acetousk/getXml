@@ -1,0 +1,143 @@
+<!--Service Location mantle.party.DuplicateServices.merge#Parties--><service verb="merge" noun="Parties"><in-parameters><parameter name="toPartyId" required="true"/><parameter name="fromPartyId" required="true"/></in-parameters><out-parameters/><actions><entity-find-one entity-name="mantle.party.PartyRole" value-field="fromIntRole"><field-map field-name="partyId" from="fromPartyId"/><field-map field-name="roleTypeId" value="OrgInternal"/></entity-find-one><if condition="fromIntRole"><return message="From Party ${fromPartyId} is an internal organization, cannot merge/disable"/></if><if condition="toPartyId == fromPartyId"><return message="From Party ID is the same as To, not merging"/></if><entity-find-one entity-name="mantle.party.Party" value-field="toParty" for-update="true"><field-map field-name="partyId" from="toPartyId"/></entity-find-one><entity-find-one entity-name="mantle.party.Party" value-field="fromParty" for-update="true"><field-map field-name="partyId" from="fromPartyId"/></entity-find-one><if condition="toParty == null"><return message="Cannot merge, To Party ${toPartyId} not found"/></if><if condition="fromParty == null"><return message="Cannot merge, From Party ${fromPartyId} not found"/></if><if condition="toParty.disabled == 'Y'"><return message="To Party ${toPartyId} is disabled, not merging into it"/></if><if condition="fromParty.mergedToPartyId"><return message="From Party ${fromPartyId} already merged to Party ${fromParty.mergedToPartyId}"/></if><log level="info" message="Merging Party ${fromPartyId} to Party ${toPartyId}"/><service-call name="update#mantle.party.Party" in-map="[partyId:fromPartyId, disabled:'Y', mergedToPartyId:toPartyId]"/><entity-find entity-name="mantle.party.contact.PartyContactMechInfo" list="partyContactMechInfoList"><date-filter/><econdition field-name="partyId" from="fromPartyId"/><econdition field-name="contactMechTypeEnumId" operator="not-in" value="CmtPostalAddress,CmtTelecomNumber"/><econdition field-name="infoString" operator="is-not-null"/></entity-find><iterate list="partyContactMechInfoList" entry="pcmInfo"><entity-find entity-name="mantle.party.contact.PartyContactMechInfo" list="existingList"><date-filter/><econdition field-name="partyId" from="toPartyId"/><econdition field-name="contactMechTypeEnumId" from="pcmInfo.contactMechTypeEnumId"/><econdition field-name="infoString" from="pcmInfo.infoString"/></entity-find><if condition="existingList"><continue/></if><service-call name="create#mantle.party.contact.PartyContactMech" in-map="pcmInfo + [partyId:toPartyId, fromDate:ec.user.nowTimestamp, thruDate:null]"/></iterate><entity-find entity-name="mantle.party.contact.PartyContactMechTelecomNumber" list="partyTelecomNumberList"><date-filter/><econdition field-name="partyId" from="fromPartyId"/></entity-find><iterate list="partyTelecomNumberList" entry="ptn"><if condition="!ptn.contactNumber"><continue/></if><service-call name="mantle.party.DuplicateServices.find#TelecomNumbers" out-map="[telecomNumberList:findOut.telecomNumberList]" out-map-add-to-existing="false" in-map="[toPartyId:toPartyId, areaCode:ptn.areaCode, contactNumber:ptn.contactNumber]"/><if condition="findOut.telecomNumberList"><continue/></if><service-call name="create#mantle.party.contact.PartyContactMech" in-map="ptn + [partyId:toPartyId, fromDate:ec.user.nowTimestamp, thruDate:null]"/></iterate><entity-find entity-name="mantle.party.contact.PartyContactMechPostalAddressOnly" list="partyPostalAddressList"><date-filter/><econdition field-name="partyId" from="fromPartyId"/></entity-find><iterate list="partyPostalAddressList" entry="ppa"><if condition="!ppa.address1 || !ppa.postalCode"><continue/></if><service-call name="mantle.party.DuplicateServices.find#PostalAddresses" out-map="[postalAddressList:findOut.postalAddressList]" out-map-add-to-existing="false" in-map="[toPartyId:toPartyId, contactMechPurposeId:ppa.contactMechPurposeId, address1:ppa.address1,                             unitNumber:ppa.unitNumber, postalCode:ppa.postalCode, postalCodeExt:ppa.postalCodeExt, countryGeoId:ppa.countryGeoId]"/><if condition="findOut.postalAddressList"><continue/></if><service-call name="create#mantle.party.contact.PartyContactMech" in-map="ppa + [partyId:toPartyId, fromDate:ec.user.nowTimestamp, thruDate:null]"/></iterate><script><![CDATA[import org.moqui.context.ExecutionContext
+                import org.moqui.entity.EntityValue
+                ExecutionContext ec = context.ec
+                boolean eecaWasDisabled = ec.artifactExecution.disableEntityEca()
+
+                // Party fields
+                if (fromParty.externalId && !toParty.externalId) toParty.externalId = fromParty.externalId
+                if (fromParty.dataSourceId && !toParty.dataSourceId) toParty.dataSourceId = fromParty.dataSourceId
+                if (fromParty.comments && !toParty.comments) toParty.comments = fromParty.comments
+                toParty.update()
+
+                // Person, Organization fields
+                boolean toIsOrg = toParty.partyTypeEnumId == 'PtyOrganization'
+                boolean fromIsOrg = fromParty.partyTypeEnumId == 'PtyOrganization'
+                EntityValue toPerson = !toIsOrg ? ec.entity.find("mantle.party.Person").condition("partyId", toPartyId).one() : null
+                EntityValue fromPerson = !fromIsOrg ? ec.entity.find("mantle.party.Person").condition("partyId", fromPartyId).one() : null
+                EntityValue toOrganization = toIsOrg ? ec.entity.find("mantle.party.Organization").condition("partyId", toPartyId).one() : null
+                EntityValue fromOrganization = fromIsOrg ? ec.entity.find("mantle.party.Organization").condition("partyId", fromPartyId).one() : null
+
+                if (toIsOrg && toOrganization == null) toOrganization = ec.entity.makeValue("mantle.party.Organization").set("partyId", toPartyId).create()
+                if (toPerson != null && fromPerson != null) {
+                    for (Map.Entry entry in fromPerson.entrySet()) {
+                        if (entry.value == null) continue
+                        if (toPerson.get(entry.key) != null) continue
+                        toPerson.put((String) entry.key, entry.value)
+                    }
+                    toPerson.update()
+                } else if (toOrganization != null && fromOrganization != null) {
+                    for (Map.Entry entry in fromOrganization.entrySet()) {
+                        if (entry.value == null) continue
+                        if (toOrganization.get(entry.key) != null) continue
+                        toOrganization.put((String) entry.key, entry.value)
+                    }
+                    toOrganization.update()
+                } else if (fromPerson != null && toOrganization != null) {
+                    if (!toOrganization.organizationName) {
+                        toOrganization.organizationName = "${fromPerson.firstName?:''}${fromPerson.middleName ? ' ' + fromPerson.middleName : ''}${fromPerson.lastName ? ' ' + fromPerson.lastName : ''}"
+                        toOrganization.update()
+                    }
+                }
+
+                // PartyClassificationAppl
+                for (EntityValue value in ec.entity.find("mantle.party.PartyClassificationAppl").condition("partyId", fromPartyId).list()) {
+                    // see if to Party already has a PartyClassification of the same type
+                    EntityValue partyClassification = (EntityValue) value.classification
+                    long pcaCount = ec.entity.find("mantle.party.PartyClassificationAndAppl").condition("partyId", toPartyId)
+                            .condition("classificationTypeEnumId", partyClassification.classificationTypeEnumId)
+                            .conditionDate(null, null, null).count()
+                    if (pcaCount == 0) {
+                        EntityValue newVal = value.cloneValue()
+                        newVal.partyId = toPartyId
+                        if (!newVal.refresh()) newVal.create()
+                        // value.delete()
+                    }
+                }
+
+                // PartyContent
+                contentCount = ec.entity.find("mantle.party.PartyContent").condition("partyId", fromPartyId).updateAll([partyId:toPartyId])
+                if (contentCount) ec.message.addMessage("Moved ${contentCount} Content records from Party ${fromPartyId} to ${toPartyId}")
+
+                // PartyIdentification
+                for (EntityValue value in ec.entity.find("mantle.party.PartyIdentification").condition("partyId", fromPartyId).list()) {
+                    EntityValue newVal = value.cloneValue()
+                    newVal.partyId = toPartyId
+                    if (!newVal.refresh()) newVal.create()
+                    // value.delete()
+                }
+
+                // PartyNote
+                for (EntityValue value in ec.entity.find("mantle.party.PartyNote").condition("partyId", fromPartyId).list()) {
+                    EntityValue newVal = value.cloneValue()
+                    newVal.partyId = toPartyId
+                    if (!newVal.refresh()) newVal.create()
+                    // value.delete()
+                }
+
+                // PartyRelationship
+                relCount = ec.entity.find("mantle.party.PartyRelationship").condition("fromPartyId", fromPartyId).updateAll([fromPartyId:toPartyId])
+                relCount += ec.entity.find("mantle.party.PartyRelationship").condition("toPartyId", fromPartyId).updateAll([toPartyId:toPartyId])
+                if (relCount) ec.message.addMessage("Moved ${relCount} Relationships from Party ${fromPartyId} to ${toPartyId}")
+
+                // PartyRole (add all on to party that it doesn't already have)
+                roleCount = 0
+                for (EntityValue partyRole in ec.entity.find("mantle.party.PartyRole").condition("partyId", fromPartyId).list()) {
+                    if (ec.entity.find("mantle.party.PartyRole").condition("partyId", toPartyId).condition("roleTypeId", partyRole.roleTypeId).one() == null) {
+                        ec.service.sync().name("create#mantle.party.PartyRole").parameter("partyId", toPartyId).parameter("roleTypeId", partyRole.roleTypeId).call()
+                        roleCount++
+                    }
+                }
+
+                // PartySetting
+                for (EntityValue value in ec.entity.find("mantle.party.PartySetting").condition("partyId", fromPartyId).list()) {
+                    EntityValue newVal = value.cloneValue()
+                    newVal.partyId = toPartyId
+                    if (!newVal.refresh()) newVal.create()
+                    // value.delete()
+                }
+
+                // UserAccount
+                ec.entity.find("moqui.security.UserAccount").condition("partyId", fromPartyId).updateAll([partyId:toPartyId])
+
+                // CommunicationEvent
+                commCount = ec.entity.find("mantle.party.communication.CommunicationEvent").condition("fromPartyId", fromPartyId).updateAll([fromPartyId:toPartyId])
+                commCount += ec.entity.find("mantle.party.communication.CommunicationEvent").condition("toPartyId", fromPartyId).updateAll([toPartyId:toPartyId])
+                if (commCount) ec.message.addMessage("Moved ${commCount} Communication Events from Party ${fromPartyId} to ${toPartyId}")
+
+                // PaymentMethod
+                methodCount = ec.entity.find("mantle.account.method.PaymentMethod").condition("ownerPartyId", fromPartyId).updateAll([ownerPartyId:toPartyId])
+                if (methodCount) ec.message.addMessage("Moved ${methodCount} Payment Methods from Party ${fromPartyId} to ${toPartyId}")
+
+                // OrderPart
+                orderCount = ec.entity.find("mantle.order.OrderPart").condition("vendorPartyId", fromPartyId).updateAll([vendorPartyId:toPartyId])
+                orderCount += ec.entity.find("mantle.order.OrderPart").condition("customerPartyId", fromPartyId).updateAll([customerPartyId:toPartyId])
+                for (EntityValue opp in ec.entity.find("mantle.order.OrderPartParty").condition("partyId", fromPartyId).list()) {
+                    EntityValue newOpp = opp.cloneValue()
+                    newOpp.partyId = toPartyId
+                    if (!newOpp.refresh()) newOpp.create()
+                    opp.delete()
+                }
+                if (orderCount) ec.message.addMessage("Moved ${orderCount} Orders from Party ${fromPartyId} to ${toPartyId}")
+
+                // Shipment
+                shipmentCount = ec.entity.find("mantle.shipment.Shipment").condition("fromPartyId", fromPartyId).updateAll([fromPartyId:toPartyId])
+                shipmentCount += ec.entity.find("mantle.shipment.Shipment").condition("toPartyId", fromPartyId).updateAll([toPartyId:toPartyId])
+                if (shipmentCount) ec.message.addMessage("Moved ${shipmentCount} Shipments from Party ${fromPartyId} to ${toPartyId}")
+
+                // Invoice
+                invoiceCount = ec.entity.find("mantle.account.invoice.Invoice").condition("fromPartyId", fromPartyId).updateAll([fromPartyId:toPartyId])
+                invoiceCount += ec.entity.find("mantle.account.invoice.Invoice").condition("toPartyId", fromPartyId).updateAll([toPartyId:toPartyId])
+                for (EntityValue inp in ec.entity.find("mantle.account.invoice.InvoiceParty").condition("partyId", fromPartyId).list()) {
+                    EntityValue newInp = inp.cloneValue()
+                    newInp.partyId = toPartyId
+                    if (!newInp.refresh()) newInp.create()
+                    inp.delete()
+                }
+                if (invoiceCount) ec.message.addMessage("Moved ${invoiceCount} Invoices from Party ${fromPartyId} to ${toPartyId}")
+
+                // Payment
+                paymentCount = ec.entity.find("mantle.account.payment.Payment").condition("fromPartyId", fromPartyId).updateAll([fromPartyId:toPartyId])
+                paymentCount += ec.entity.find("mantle.account.payment.Payment").condition("toPartyId", fromPartyId).updateAll([toPartyId:toPartyId])
+                if (paymentCount) ec.message.addMessage("Moved ${paymentCount} Payments from Party ${fromPartyId} to ${toPartyId}")
+
+                if (!eecaWasDisabled) ec.artifactExecution.enableEntityEca()]]></script><service-call name="mantle.party.DuplicateServices.find#PartyDuplicates" in-map="[partyId:toPartyId]"/></actions></service>

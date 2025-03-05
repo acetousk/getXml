@@ -1,0 +1,14 @@
+
+<!-- Entity Name: moqui.basic.StatusType sql table: STATUS_TYPE --><entity entity-name="StatusType" package="moqui.basic" use="configuration" short-alias="statusTypes" has-dependents="true">
+    <field name="statusTypeId" type="id" is-pk="true"/>
+    <field name="parentTypeId" type="id"/>
+    <field name="description" type="text-medium"/>
+    <relationship type="one" title="Parent" related="moqui.basic.StatusType">
+        <key-map field-name="parentTypeId" related="statusTypeId"/></relationship>
+    <field name="lastUpdatedStamp" type="date-time"/>
+    <relationship related="moqui.basic.StatusFlow" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="statusTypeId" related="statusTypeId"/></relationship>
+    <relationship related="moqui.basic.StatusItem" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="statusTypeId" related="statusTypeId"/></relationship>
+
+</entity>

@@ -1,0 +1,13 @@
+
+<!-- Entity Name: mantle.ledger.config.VarianceReasonGlAccount sql table: VARIANCE_REASON_GL_ACCOUNT --><entity entity-name="VarianceReasonGlAccount" package="mantle.ledger.config" use="configuration">
+    <field name="varianceReasonEnumId" type="id" is-pk="true"/>
+    <field name="organizationPartyId" type="id" is-pk="true"/>
+    <field name="glAccountId" type="id"/>
+    <relationship type="one" title="InventoryVarianceReason" related="moqui.basic.Enumeration">
+        <key-map field-name="varianceReasonEnumId"/></relationship>
+    <relationship type="one" title="Organization" related="mantle.party.Party">
+        <key-map field-name="organizationPartyId"/></relationship>
+    <relationship type="one" related="mantle.ledger.account.GlAccount"/>
+    <field name="lastUpdatedStamp" type="date-time"/>
+
+</entity>

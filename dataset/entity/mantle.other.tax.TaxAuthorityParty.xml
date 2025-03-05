@@ -1,0 +1,15 @@
+
+<!-- Entity Name: mantle.other.tax.TaxAuthorityParty sql table: TAX_AUTHORITY_PARTY --><entity entity-name="TaxAuthorityParty" package="mantle.other.tax">
+    <field name="partyId" type="id" is-pk="true"/>
+    <field name="taxAuthorityId" type="id" is-pk="true"/>
+    <field name="fromDate" type="date-time" is-pk="true"/>
+    <field name="thruDate" type="date-time"/>
+    <field name="partyTaxId" type="text-short"/>
+    <field name="isExempt" type="text-indicator"/>
+    <field name="isNexus" type="text-indicator">
+        <description><![CDATA[If Party has a sufficient presence in the area to have to charge tax set to Y.]]></description></field>
+    <relationship type="one" related="mantle.party.Party"/>
+    <relationship type="one" related="mantle.other.tax.TaxAuthority"/>
+    <field name="lastUpdatedStamp" type="date-time"/>
+
+</entity>

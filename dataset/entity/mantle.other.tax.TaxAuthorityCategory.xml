@@ -1,0 +1,9 @@
+
+<!-- Entity Name: mantle.other.tax.TaxAuthorityCategory sql table: TAX_AUTHORITY_CATEGORY --><entity entity-name="TaxAuthorityCategory" package="mantle.other.tax">
+    <field name="taxAuthorityId" type="id" is-pk="true"/>
+    <field name="productCategoryId" type="id" is-pk="true"/>
+    <relationship type="one" related="mantle.other.tax.TaxAuthority"/>
+    <relationship type="one" related="mantle.product.category.ProductCategory"/>
+    <field name="lastUpdatedStamp" type="date-time"/>
+
+</entity>

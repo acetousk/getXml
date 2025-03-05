@@ -1,0 +1,12 @@
+
+<!-- Entity Name: mantle.account.payment.Deduction sql table: DEDUCTION --><entity entity-name="Deduction" package="mantle.account.payment" cache="never">
+    <field name="deductionId" type="id" is-pk="true"/>
+    <field name="deductionTypeEnumId" type="id"/>
+    <field name="paymentId" type="id"/>
+    <field name="amount" type="currency-amount"/>
+    <relationship type="one" title="DeductionType" related="moqui.basic.Enumeration">
+        <key-map field-name="deductionTypeEnumId"/></relationship>
+    <relationship type="one" related="mantle.account.payment.Payment"/>
+    <field name="lastUpdatedStamp" type="date-time"/>
+
+</entity>

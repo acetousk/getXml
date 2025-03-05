@@ -1,0 +1,11 @@
+
+<!-- Entity Name: mantle.order.OrderPartTerm sql table: ORDER_PART_TERM --><entity entity-name="OrderPartTerm" package="mantle.order" cache="never">
+    <field name="orderId" type="id" is-pk="true"/>
+    <field name="orderPartSeqId" type="id" is-pk="true"/>
+    <field name="settlementTermId" type="id" is-pk="true"/>
+    <relationship type="one" related="mantle.order.OrderPart" short-alias="orderPart"/>
+    <relationship type="one" related="mantle.account.invoice.SettlementTerm" short-alias="term"/>
+    <field name="lastUpdatedStamp" type="date-time"/>
+
+<!-- eeca org.moqui.impl.entity.EntityEcaRule@19995321-->
+</entity>

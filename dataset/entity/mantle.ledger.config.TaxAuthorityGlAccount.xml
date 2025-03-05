@@ -1,0 +1,12 @@
+
+<!-- Entity Name: mantle.ledger.config.TaxAuthorityGlAccount sql table: TAX_AUTHORITY_GL_ACCOUNT --><entity entity-name="TaxAuthorityGlAccount" package="mantle.ledger.config" use="configuration">
+    <field name="taxAuthorityId" type="id" is-pk="true"/>
+    <field name="organizationPartyId" type="id" is-pk="true"/>
+    <field name="glAccountId" type="id"/>
+    <relationship type="one" related="mantle.other.tax.TaxAuthority"/>
+    <relationship type="one" title="Organization" related="mantle.party.Party">
+        <key-map field-name="organizationPartyId"/></relationship>
+    <relationship type="one" related="mantle.ledger.account.GlAccount"/>
+    <field name="lastUpdatedStamp" type="date-time"/>
+
+</entity>

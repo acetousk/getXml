@@ -1,0 +1,326 @@
+
+<!-- Entity Name: mantle.product.asset.Asset sql table: ASSET --><entity entity-name="Asset" package="mantle.product.asset" short-alias="assets" cache="never" has-dependents="true">
+    <field name="assetId" type="id" is-pk="true"/>
+    <field name="parentAssetId" type="id"/>
+    <field name="assetTypeEnumId" type="id"/>
+    <field name="classEnumId" type="id"/>
+    <field name="statusId" type="id" enable-audit-log="true"/>
+    <field name="ownerPartyId" type="id" enable-audit-log="update"/>
+    <field name="assetPoolId" type="id" enable-audit-log="update"/>
+    <field name="productId" type="id" enable-audit-log="update">
+        <description><![CDATA[The Asset is an Instance of this Product (for inventory, maintenance
+                schedules/etc, content about what sort of thing the Asset is, etc)]]></description></field>
+    <field name="hasQuantity" type="text-indicator">
+        <description><![CDATA[If Y asset has a quantity and QOH/ATP may be
+            greater than one. If N (default) asset is a single item and may have a serial number, etc.]]></description></field>
+    <field name="quantityOnHandTotal" type="number-decimal"/>
+    <field name="availableToPromiseTotal" type="number-decimal"/>
+    <field name="originalQuantity" type="number-decimal"/>
+    <field name="originalQuantityUomId" type="id">
+        <description><![CDATA[QOHT and ATPT are in units of the Product (amountUomId).
+            This field specifies the original UOM (along with originalQuantity) when it differs from Product.amountUomId.]]></description></field>
+    <field name="assetName" type="text-medium"/>
+    <field name="comments" type="text-long"/>
+    <field name="serialNumber" type="text-medium" enable-audit-log="update"/>
+    <field name="softIdentifier" type="text-medium"/>
+    <field name="activationNumber" type="text-medium"/>
+    <field name="activationValidThru" type="date-time"/>
+    <field name="receivedDate" type="date-time"/>
+    <field name="acquiredDate" type="date-time"/>
+    <field name="manufacturedDate" type="date-time"/>
+    <field name="expectedEndOfLife" type="date"/>
+    <field name="actualEndOfLife" type="date"/>
+    <field name="capacity" type="number-decimal"/>
+    <field name="capacityUomId" type="id"/>
+    <field name="facilityId" type="id" enable-audit-log="update">
+        <description><![CDATA[Current Facility, where stored.]]></description></field>
+    <field name="locationSeqId" type="id" enable-audit-log="update"/>
+    <field name="containerId" type="id" enable-audit-log="update">
+        <description><![CDATA[Container stored in, if specified the current facilityId and locationSeqId should come from the container
+            and not from this record or with standard EECA rule in place facilityId and locationSeqId will be set and
+            maintained from the Container values.]]></description></field>
+    <field name="shipmentBoxTypeId" type="id"/>
+    <field name="lotId" type="id" enable-audit-log="update"/>
+    <field name="geoPointId" type="id" enable-audit-log="update"/>
+    <field name="originId" type="id">
+        <description><![CDATA[Origin ID, the ID used wherever this came from.]]></description></field>
+    <field name="originFacilityId" type="id">
+        <description><![CDATA[Origin Facility, where manufactured or came from.]]></description></field>
+    <field name="acquireOrderId" type="id"/>
+    <field name="acquireOrderItemSeqId" type="id"/>
+    <field name="acquireWorkEffortId" type="id">
+        <description><![CDATA[For assets created from production runs, etc.]]></description></field>
+    <field name="acquireShipmentId" type="id"/>
+    <field name="acquireCost" type="currency-amount" enable-audit-log="update"/>
+    <field name="acquireCostUomId" type="id" enable-audit-log="update"/>
+    <field name="salvageValue" type="currency-amount" enable-audit-log="update"/>
+    <field name="depreciation" type="currency-amount" enable-audit-log="update">
+        <description><![CDATA[History in AssetDepreciation]]></description></field>
+    <field name="depreciationTypeEnumId" type="id" enable-audit-log="update"/>
+    <field name="yearBeginDepreciation" type="currency-amount" enable-audit-log="update">
+        <description><![CDATA[History in AssetDepreciation]]></description></field>
+    <field name="taxDepreciation" type="currency-amount" enable-audit-log="update"/>
+    <field name="taxDepreciationTypeEnumId" type="id"/>
+    <relationship type="one" title="Parent" related="mantle.product.asset.Asset" short-alias="parent">
+        <key-map field-name="parentAssetId" related="assetId"/></relationship>
+    <relationship type="one" title="AssetType" related="moqui.basic.Enumeration" short-alias="type">
+        <key-map field-name="assetTypeEnumId"/></relationship>
+    <relationship type="one" title="AssetClass" related="moqui.basic.Enumeration" short-alias="class">
+        <key-map field-name="classEnumId"/></relationship>
+    <relationship type="one" title="Asset" related="moqui.basic.StatusItem" short-alias="status"/>
+    <relationship type="one" title="Owner" related="mantle.party.Party" short-alias="owner">
+        <key-map field-name="ownerPartyId"/></relationship>
+    <relationship type="one" related="mantle.product.asset.AssetPool" short-alias="pool"/>
+    <relationship type="one" related="mantle.product.Product" short-alias="product"/>
+    <relationship type="one" title="OriginalQuantity" related="moqui.basic.Uom" short-alias="originalQuantityUom">
+        <key-map field-name="originalQuantityUomId"/></relationship>
+    <relationship type="one" title="Origin" related="mantle.facility.Facility" short-alias="originFacility">
+        <key-map field-name="originFacilityId"/></relationship>
+    <relationship type="one" related="mantle.facility.Facility" short-alias="facility"/>
+    <relationship type="one-nofk" related="mantle.facility.FacilityLocation" short-alias="location"/>
+    <relationship type="one" related="mantle.product.asset.Container" short-alias="container"/>
+    <relationship type="one" related="mantle.shipment.ShipmentBoxType" short-alias="boxType"/>
+    <relationship type="one" related="mantle.product.asset.Lot" short-alias="lot"/>
+    <relationship type="one" related="moqui.basic.GeoPoint" short-alias="geoPoint"/>
+    <relationship type="one-nofk" title="Acquire" related="mantle.order.OrderHeader">
+        <key-map field-name="acquireOrderId"/></relationship>
+    <relationship type="one" title="Acquire" related="mantle.order.OrderItem" short-alias="acquireOrderItem">
+        <key-map field-name="acquireOrderId" related="orderId"/>
+        <key-map field-name="acquireOrderItemSeqId" related="orderItemSeqId"/>
+    </relationship>
+    <relationship type="one" title="Acquire" related="mantle.work.effort.WorkEffort" short-alias="acquireWorkEffort">
+        <key-map field-name="acquireWorkEffortId"/></relationship>
+    <relationship type="one" title="Acquire" related="mantle.shipment.Shipment" short-alias="acquireShipment">
+        <key-map field-name="acquireShipmentId"/></relationship>
+    <relationship type="one" title="AcquireCost" related="moqui.basic.Uom" short-alias="acquireCostUom">
+        <key-map field-name="acquireCostUomId"/></relationship>
+    <relationship type="one" title="DepreciationType" related="moqui.basic.Enumeration" short-alias="depreciationType">
+        <key-map field-name="depreciationTypeEnumId"/></relationship>
+    <relationship type="one" title="TaxDepreciationType" related="moqui.basic.Enumeration" short-alias="taxDepreciationType">
+        <key-map field-name="taxDepreciationTypeEnumId"/></relationship>
+    <relationship type="many" related="mantle.product.asset.AssetDetail" short-alias="details">
+        <key-map field-name="assetId"/></relationship>
+    <relationship type="many" related="mantle.product.asset.AssetDepreciation" short-alias="depreciations">
+        <key-map field-name="assetId"/></relationship>
+    <relationship type="many" related="mantle.product.asset.AssetGlAppl" short-alias="glAppls">
+        <key-map field-name="assetId"/></relationship>
+    <relationship type="many" related="mantle.product.asset.AssetIdentification" short-alias="identifications">
+        <key-map field-name="assetId"/></relationship>
+    <relationship type="many" related="mantle.product.asset.AssetPartyAssignment" short-alias="partyAssignments">
+        <key-map field-name="assetId"/></relationship>
+    <relationship type="many" related="mantle.product.issuance.AssetIssuance" short-alias="issuances">
+        <key-map field-name="assetId"/></relationship>
+    <relationship type="many" related="mantle.product.issuance.AssetReservation" short-alias="reservations">
+        <key-map field-name="assetId"/></relationship>
+    <relationship type="many" related="mantle.product.receipt.AssetReceipt" short-alias="receipts">
+        <key-map field-name="assetId"/></relationship>
+    <index name="ASSET_SN">
+        <index-field name="serialNumber"/></index>
+    <index name="ASSET_PdStFacAtp">
+        <index-field name="productId"/>
+        <index-field name="statusId"/>
+        <index-field name="facilityId"/>
+        <index-field name="availableToPromiseTotal"/>
+    </index>
+    <seed-data>
+        <moqui.basic.EnumerationType description="Asset Type" enumTypeId="AssetType"/>
+        <moqui.basic.Enumeration description="Inventory" enumId="AstTpInventory" enumTypeId="AssetType"/>
+        <moqui.basic.Enumeration description="Supplies" enumId="AstTpSupplies" enumTypeId="AssetType"/>
+        <moqui.basic.Enumeration description="Fixed Asset" enumId="AstTpFixed" enumTypeId="AssetType"/>
+        <moqui.basic.Enumeration description="Equipment" enumId="AstTpEquipment" parentEnumId="AstTpFixed" enumTypeId="AssetType"/>
+        <moqui.basic.Enumeration description="Rental Equipment Asset" enumId="AstTpRental" parentEnumId="AstTpFixed" enumTypeId="AssetType"/>
+        <moqui.basic.Enumeration description="Real Estate" enumId="AstTpRealEstate" parentEnumId="AstTpFixed" enumTypeId="AssetType"/>
+        <moqui.basic.Enumeration description="Investment Real Estate" enumId="AstTpInvRealEstate" parentEnumId="AstTpFixed" enumTypeId="AssetType"/>
+        <moqui.basic.Enumeration description="Bearer Biological" enumId="AstTpBearerBiological" parentEnumId="AstTpFixed" enumTypeId="AssetType"/>
+        <moqui.basic.Enumeration description="Biological" enumId="AstTpBiological" enumTypeId="AssetType"/>
+        <moqui.basic.Enumeration description="Intangible" enumId="AstTpIntangible" enumTypeId="AssetType"/>
+        <moqui.basic.EnumerationType description="Asset Class" enumTypeId="AssetClass"/>
+        <moqui.basic.Enumeration description="Inventory" enumId="AsClsInventory" enumTypeId="AssetClass"/>
+        <moqui.basic.Enumeration description="Inventory - Raw Material" enumId="AsClsInventoryRaw" parentEnumId="AsClsInventory" enumTypeId="AssetClass"/>
+        <moqui.basic.Enumeration description="Inventory - Sub-assembly" enumId="AsClsInventorySub" parentEnumId="AsClsInventory" enumTypeId="AssetClass"/>
+        <moqui.basic.Enumeration description="Inventory - Finished Good" enumId="AsClsInventoryFin" parentEnumId="AsClsInventory" enumTypeId="AssetClass"/>
+        <moqui.basic.Enumeration description="Inventory - Digital Good" enumId="AsClsInventoryDig" parentEnumId="AsClsInventory" enumTypeId="AssetClass"/>
+        <moqui.basic.Enumeration description="Warehouse Equipment" enumId="AsClsWhEquip" enumTypeId="AssetClass"/>
+        <moqui.basic.Enumeration description="Manufacturing Equipment" enumId="AsClsMfgEquip" enumTypeId="AssetClass"/>
+        <moqui.basic.Enumeration description="Boat" enumId="AsClsBoat" enumTypeId="AssetClass"/>
+        <moqui.basic.Enumeration description="Forklift" enumId="AsClsForklift" enumTypeId="AssetClass"/>
+        <moqui.basic.Enumeration description="Digger" enumId="AsClsDigger" enumTypeId="AssetClass"/>
+        <moqui.basic.Enumeration description="Manlift" enumId="AsClsManlift" enumTypeId="AssetClass"/>
+        <moqui.basic.Enumeration description="Service Body" enumId="AsClsServiceBody" enumTypeId="AssetClass"/>
+        <moqui.basic.Enumeration description="Tractor" enumId="AsClsTractor" enumTypeId="AssetClass"/>
+        <moqui.basic.Enumeration description="Passenger Vehicle" enumId="AsClsPassengerVeh" enumTypeId="AssetClass"/>
+        <moqui.basic.Enumeration description="Compressor" enumId="AsClsCompressor" enumTypeId="AssetClass"/>
+        <moqui.basic.Enumeration description="Trencher" enumId="AsClsTrencher" enumTypeId="AssetClass"/>
+        <moqui.basic.Enumeration description="Puller" enumId="AsClsPuller" enumTypeId="AssetClass"/>
+        <moqui.basic.Enumeration description="Tanker" enumId="AsClsTanker" enumTypeId="AssetClass"/>
+        <moqui.basic.Enumeration description="Reel Stand" enumId="AsClsReelStand" enumTypeId="AssetClass"/>
+        <moqui.basic.Enumeration description="Cargo Vehicle" enumId="AsClsCargoVehicle" enumTypeId="AssetClass"/>
+        <moqui.basic.Enumeration description="Truck" enumId="AsClsTruck" parentEnumId="AsClsCargoVehicle" enumTypeId="AssetClass"/>
+        <moqui.basic.Enumeration description="Trailer" enumId="AsClsTrailer" parentEnumId="AsClsCargoVehicle" enumTypeId="AssetClass"/>
+        <moqui.basic.Enumeration description="Container" enumId="AsClsContainer" parentEnumId="AsClsCargoVehicle" enumTypeId="AssetClass"/>
+        <moqui.basic.Enumeration description="Computer Hardware" enumId="AsClsComputerHard" enumTypeId="AssetClass"/>
+        <moqui.basic.Enumeration description="Desktop" enumId="AsClsDesktop" parentEnumId="AsClsComputerHard" enumTypeId="AssetClass"/>
+        <moqui.basic.Enumeration description="Laptop" enumId="AsClsLaptop" parentEnumId="AsClsComputerHard" enumTypeId="AssetClass"/>
+        <moqui.basic.Enumeration description="Tablet" enumId="AsClsTablet" parentEnumId="AsClsComputerHard" enumTypeId="AssetClass"/>
+        <moqui.basic.Enumeration description="Monitor" enumId="AsClsMonitor" parentEnumId="AsClsComputerHard" enumTypeId="AssetClass"/>
+        <moqui.basic.Enumeration description="Computer Software" enumId="AsClsComputerSoft" enumTypeId="AssetClass"/>
+        <moqui.basic.Enumeration description="Programming Software" enumId="AsClsSoftProgramming" parentEnumId="AsClsComputerSoft" enumTypeId="AssetClass"/>
+        <moqui.basic.Enumeration description="System Software" enumId="AsClsSoftSystem" parentEnumId="AsClsComputerSoft" enumTypeId="AssetClass"/>
+        <moqui.basic.Enumeration description="Application Software" enumId="AsClsSoftApp" parentEnumId="AsClsComputerSoft" enumTypeId="AssetClass"/>
+        <moqui.basic.Enumeration description="Utility Software" enumId="AsClsSoftUtility" parentEnumId="AsClsComputerSoft" enumTypeId="AssetClass"/>
+        <moqui.basic.StatusType description="Asset" statusTypeId="Asset"/>
+        <moqui.basic.StatusItem description="Incoming" sequenceNum="1" statusId="AstIncoming" statusTypeId="Asset"/>
+        <moqui.basic.StatusItem description="Available" sequenceNum="2" statusId="AstAvailable" statusTypeId="Asset"/>
+        <moqui.basic.StatusItem description="Promised" sequenceNum="3" statusId="AstPromised" statusTypeId="Asset"/>
+        <moqui.basic.StatusItem description="Delivered" sequenceNum="4" statusId="AstDelivered" statusTypeId="Asset"/>
+        <moqui.basic.StatusItem description="Activated" sequenceNum="5" statusId="AstActivated" statusTypeId="Asset"/>
+        <moqui.basic.StatusItem description="Deactivated" sequenceNum="6" statusId="AstDeactivated" statusTypeId="Asset"/>
+        <moqui.basic.StatusItem description="On Hold" sequenceNum="7" statusId="AstOnHold" statusTypeId="Asset"/>
+        <moqui.basic.StatusItem description="In Use" sequenceNum="8" statusId="AstInUse" statusTypeId="Asset"/>
+        <moqui.basic.StatusItem description="In Storage" sequenceNum="9" statusId="AstInStorage" statusTypeId="Asset"/>
+        <moqui.basic.StatusItem description="In Transfer" sequenceNum="10" statusId="AstInTransfer" statusTypeId="Asset"/>
+        <moqui.basic.StatusItem description="In Transfer (Promised)" sequenceNum="11" statusId="AstInTransferPromise" statusTypeId="Asset"/>
+        <moqui.basic.StatusItem description="Returned" sequenceNum="20" statusId="AstReturned" statusTypeId="Asset"/>
+        <moqui.basic.StatusItem description="Defective" sequenceNum="21" statusId="AstDefective" statusTypeId="Asset"/>
+        <moqui.basic.StatusItem description="Quarantine" sequenceNum="30" statusId="AstQuarantine" statusTypeId="Asset"/>
+        <moqui.basic.StatusItem description="Morgue" sequenceNum="31" statusId="AstMorgue" statusTypeId="Asset"/>
+        <moqui.basic.StatusFlowTransition statusFlowId="Default" statusId="AstIncoming" toStatusId="AstAvailable" transitionName="Arrived"/>
+        <moqui.basic.StatusFlowTransition statusFlowId="Default" statusId="AstIncoming" toStatusId="AstOnHold" transitionName="Hold"/>
+        <moqui.basic.StatusFlowTransition statusFlowId="Default" statusId="AstAvailable" toStatusId="AstPromised" transitionName="Promise"/>
+        <moqui.basic.StatusFlowTransition statusFlowId="Default" statusId="AstAvailable" toStatusId="AstDelivered" transitionName="Deliver"/>
+        <moqui.basic.StatusFlowTransition statusFlowId="Default" statusId="AstAvailable" toStatusId="AstOnHold" transitionName="Hold"/>
+        <moqui.basic.StatusFlowTransition statusFlowId="Default" statusId="AstAvailable" toStatusId="AstDefective" transitionName="Mark As Defective"/>
+        <moqui.basic.StatusFlowTransition statusFlowId="Default" statusId="AstAvailable" toStatusId="AstInTransfer" transitionName="Start Transfer"/>
+        <moqui.basic.StatusFlowTransition statusFlowId="Default" statusId="AstOnHold" toStatusId="AstAvailable" transitionName="Release Hold"/>
+        <moqui.basic.StatusFlowTransition statusFlowId="Default" statusId="AstOnHold" toStatusId="AstDefective" transitionName="Defective"/>
+        <moqui.basic.StatusFlowTransition statusFlowId="Default" statusId="AstOnHold" toStatusId="AstDelivered" transitionName="Deliver"/>
+        <moqui.basic.StatusFlowTransition statusFlowId="Default" statusId="AstInTransfer" toStatusId="AstAvailable" transitionName="Transfer Complete"/>
+        <moqui.basic.StatusFlowTransition statusFlowId="Default" statusId="AstPromised" toStatusId="AstAvailable" transitionName="Cancel Promise"/>
+        <moqui.basic.StatusFlowTransition statusFlowId="Default" statusId="AstPromised" toStatusId="AstDelivered" transitionName="Deliver"/>
+        <moqui.basic.StatusFlowTransition statusFlowId="Default" statusId="AstPromised" toStatusId="AstDefective" transitionName="Mark As Defective"/>
+        <moqui.basic.StatusFlowTransition statusFlowId="Default" statusId="AstPromised" toStatusId="AstInTransferPromise" transitionName="Start Transfer (Promised)"/>
+        <moqui.basic.StatusFlowTransition statusFlowId="Default" statusId="AstInTransferPromise" toStatusId="AstPromised" transitionName="Transfer Complete (Promised)"/>
+        <moqui.basic.StatusFlowTransition statusFlowId="Default" statusId="AstDelivered" toStatusId="AstReturned" transitionName="Return Status Pending"/>
+        <moqui.basic.StatusFlowTransition statusFlowId="Default" statusId="AstDelivered" toStatusId="AstActivated" transitionName="Activate"/>
+        <moqui.basic.StatusFlowTransition statusFlowId="Default" statusId="AstDelivered" toStatusId="AstAvailable" transitionName="Un-Deliver (Available)"/>
+        <moqui.basic.StatusFlowTransition statusFlowId="Default" statusId="AstReturned" toStatusId="AstAvailable" transitionName="Make Return Available"/>
+        <moqui.basic.StatusFlowTransition statusFlowId="Default" statusId="AstReturned" toStatusId="AstOnHold" transitionName="Hold"/>
+        <moqui.basic.StatusFlowTransition statusFlowId="Default" statusId="AstReturned" toStatusId="AstDefective" transitionName="Defective"/>
+        <moqui.basic.StatusFlowTransition statusFlowId="Default" statusId="AstActivated" toStatusId="AstDeactivated" transitionName="Deactivate"/>
+        <moqui.basic.StatusFlowTransition statusFlowId="Default" statusId="AstActivated" toStatusId="AstReturned" transitionName="Return"/>
+        <moqui.basic.StatusFlowTransition statusFlowId="Default" statusId="AstDeactivated" toStatusId="AstOnHold" transitionName="Hold"/>
+        <moqui.basic.StatusFlowTransition statusFlowId="Default" statusId="AstDeactivated" toStatusId="AstReturned" transitionName="Return"/>
+        <moqui.basic.StatusFlowTransition statusFlowId="Default" statusId="AstIncoming" toStatusId="AstQuarantine" transitionName="Quarantine"/>
+        <moqui.basic.StatusFlowTransition statusFlowId="Default" statusId="AstAvailable" toStatusId="AstQuarantine" transitionName="Quarantine"/>
+        <moqui.basic.StatusFlowTransition statusFlowId="Default" statusId="AstOnHold" toStatusId="AstQuarantine" transitionName="Quarantine"/>
+        <moqui.basic.StatusFlowTransition statusFlowId="Default" statusId="AstQuarantine" toStatusId="AstAvailable" transitionName="Release Available"/>
+        <moqui.basic.StatusFlowTransition statusFlowId="Default" statusId="AstQuarantine" toStatusId="AstOnHold" transitionName="Release Hold"/>
+        <moqui.basic.StatusFlowTransition statusFlowId="Default" statusId="AstQuarantine" toStatusId="AstMorgue" transitionName="Morgue"/>
+        <moqui.basic.StatusFlowTransition statusFlowId="Default" statusId="AstIncoming" toStatusId="AstMorgue" transitionName="Morgue"/>
+        <moqui.basic.StatusFlowTransition statusFlowId="Default" statusId="AstAvailable" toStatusId="AstMorgue" transitionName="Morgue"/>
+        <moqui.basic.StatusFlowTransition statusFlowId="Default" statusId="AstOnHold" toStatusId="AstMorgue" transitionName="Morgue"/>
+        <moqui.basic.StatusFlowTransition statusFlowId="Default" statusId="AstMorgue" toStatusId="AstIncoming" transitionName="Incoming"/>
+        <moqui.basic.StatusFlowTransition statusFlowId="Default" statusId="AstInUse" toStatusId="AstInStorage" transitionName="Store"/>
+        <moqui.basic.StatusFlowTransition statusFlowId="Default" statusId="AstInUse" toStatusId="AstReturned" transitionName="Return"/>
+        <moqui.basic.StatusFlowTransition statusFlowId="Default" statusId="AstInUse" toStatusId="AstDefective" transitionName="Defective"/>
+        <moqui.basic.StatusFlowTransition statusFlowId="Default" statusId="AstInUse" toStatusId="AstInTransfer" transitionName="Start Transfer"/>
+        <moqui.basic.StatusFlowTransition statusFlowId="Default" statusId="AstInTransfer" toStatusId="AstInUse" transitionName="Transfer Complete (Use)"/>
+        <moqui.basic.StatusFlowTransition statusFlowId="Default" statusId="AstInStorage" toStatusId="AstInUse" transitionName="Use"/>
+        <moqui.basic.StatusFlowTransition statusFlowId="Default" statusId="AstInStorage" toStatusId="AstAvailable" transitionName="Make Available"/>
+        <moqui.basic.StatusFlowTransition statusFlowId="Default" statusId="AstInStorage" toStatusId="AstReturned" transitionName="Return"/>
+        <moqui.basic.StatusFlowTransition statusFlowId="Default" statusId="AstInStorage" toStatusId="AstDefective" transitionName="Defective"/>
+        <moqui.basic.StatusFlowTransition statusFlowId="Default" statusId="AstInStorage" toStatusId="AstInTransfer" transitionName="Start Transfer"/>
+        <moqui.basic.StatusFlowTransition statusFlowId="Default" statusId="AstInTransfer" toStatusId="AstInStorage" transitionName="Transfer Complete (Store)"/>
+        <moqui.basic.StatusFlowTransition statusFlowId="Default" statusId="AstInStorage" toStatusId="AstDelivered" transitionName="Deliver"/>
+        <moqui.basic.StatusFlowTransition statusFlowId="Default" statusId="AstDelivered" toStatusId="AstInStorage" transitionName="Un-Deliver (In Storage)"/>
+        <moqui.basic.StatusFlowTransition statusFlowId="Default" statusId="AstDefective" toStatusId="AstOnHold" transitionName="Not Defective"/>
+        <moqui.basic.EnumerationType description="Depreciation Type" enumTypeId="DepreciationType"/>
+        <moqui.basic.Enumeration description="Straight Line" enumId="DtpStraightLine" enumTypeId="DepreciationType"/>
+        <moqui.basic.Enumeration description="Double Declining Balance" enumId="DtpDoubleDeclining" enumTypeId="DepreciationType"/>
+        <moqui.basic.Enumeration description="Sum of Years Digits" enumId="DtpSumYearsDigits" enumTypeId="DepreciationType"/>
+        <moqui.basic.EnumerationType description="Tax Depreciation Type" enumTypeId="TaxDepreciationType"/>
+        <moqui.basic.Enumeration description="MACRS GDS 5 Year" enumId="TxdtMacrsGds5Yr" enumTypeId="TaxDepreciationType"/>
+        <moqui.basic.Enumeration description="MACRS GDS 7 Year" enumId="TxdtMacrsGds7Yr" enumTypeId="TaxDepreciationType"/>
+    </seed-data>
+    <master>
+        <detail relationship="parent"/>
+        <detail relationship="type"/>
+        <detail relationship="class"/>
+        <detail relationship="status"/>
+        <detail relationship="owner"/>
+        <detail relationship="originalQuantityUom"/>
+        <detail relationship="originFacility"/>
+        <detail relationship="facility"/>
+        <detail relationship="location"/>
+        <detail relationship="container"/>
+        <detail relationship="boxType"/>
+        <detail relationship="lot"/>
+        <detail relationship="geoPoint"/>
+        <detail relationship="acquireOrderItem"/>
+        <detail relationship="acquireWorkEffort"/>
+        <detail relationship="acquireShipment"/>
+        <detail relationship="acquireCostUom"/>
+        <detail relationship="depreciationType"/>
+        <detail relationship="taxDepreciationType"/>
+        <detail relationship="details"/>
+        <detail relationship="depreciations"/>
+        <detail relationship="identifications"/>
+        <detail relationship="partyAssignments"/>
+        <detail relationship="issuances"/>
+        <detail relationship="reservations"/>
+        <detail relationship="receipts"/>
+    </master>
+    <field name="lastUpdatedStamp" type="date-time"/>
+    <relationship related="mantle.account.invoice.InvoiceItem" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="assetId" related="assetId"/></relationship>
+    <relationship related="mantle.account.invoice.InvoiceItemDetail" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="assetId" related="assetId"/></relationship>
+    <relationship related="mantle.ledger.config.AssetTypeGlAccount" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="assetId" related="assetId"/></relationship>
+    <relationship related="mantle.ledger.transaction.AcctgTrans" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="assetId" related="assetId"/></relationship>
+    <relationship related="mantle.ledger.transaction.AcctgTransEntry" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="assetId" related="assetId"/></relationship>
+    <relationship related="mantle.order.OrderItem" type="many" is-auto-reverse="true" mutable="true" title="From">
+        <key-map field-name="assetId" related="fromAssetId"/></relationship>
+    <relationship related="mantle.other.budget.BudgetItemDetail" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="assetId" related="assetId"/></relationship>
+    <relationship related="mantle.product.asset.AssetDetail" type="many" is-auto-reverse="true" mutable="true" title="Other">
+        <key-map field-name="assetId" related="otherAssetId"/></relationship>
+    <relationship related="mantle.product.asset.AssetPaymentMethod" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="assetId" related="assetId"/></relationship>
+    <relationship related="mantle.product.asset.AssetStandardCost" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="assetId" related="assetId"/></relationship>
+    <relationship related="mantle.product.maintenance.AssetMaintenance" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="assetId" related="assetId"/></relationship>
+    <relationship related="mantle.product.maintenance.AssetMeter" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="assetId" related="assetId"/></relationship>
+    <relationship related="mantle.product.maintenance.AssetRegistration" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="assetId" related="assetId"/></relationship>
+    <relationship related="mantle.request.requirement.Requirement" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="assetId" related="assetId"/></relationship>
+    <relationship related="mantle.shipment.carrier.Delivery" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="assetId" related="assetId"/></relationship>
+    <relationship related="mantle.work.effort.WorkEffortAssetAssign" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="assetId" related="assetId"/></relationship>
+    <relationship related="mantle.work.estimate.ProductionEstimateAsset" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="assetId" related="assetId"/></relationship>
+    <relationship related="mantle.work.measurement.Measurement" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="assetId" related="assetId"/></relationship>
+    <relationship related="moqui.basic.print.NetworkPrinter" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="assetId" related="assetId"/></relationship>
+
+<!-- seca <seca id="AssetStatusAvailableReservations" service="update#mantle.product.asset.Asset" when="post-service">
+    <condition>
+        <expression><![CDATA[statusChanged && statusId == 'AstAvailable']]></expression></condition>
+    <actions>
+        <service-call name="mantle.product.AssetServices.reserve#IncreasedAsset" in-map="context"/></actions>
+</seca>-->
+<!-- seca <seca id="AssetStatusNotAvailableReservations" service="update#mantle.product.asset.Asset" when="post-service">
+    <condition>
+        <expression><![CDATA[statusChanged && oldStatusId == 'AstAvailable']]></expression></condition>
+    <actions>
+        <service-call name="mantle.product.AssetServices.check#AssetReservations" in-map="context"/></actions>
+</seca>-->
+<!-- eeca org.moqui.impl.entity.EntityEcaRule@60ccd3a5-->
+</entity>

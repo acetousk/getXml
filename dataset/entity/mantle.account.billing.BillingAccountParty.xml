@@ -1,0 +1,13 @@
+
+<!-- Entity Name: mantle.account.billing.BillingAccountParty sql table: BILLING_ACCOUNT_PARTY --><entity entity-name="BillingAccountParty" package="mantle.account.billing">
+    <field name="billingAccountId" type="id" is-pk="true"/>
+    <field name="partyId" type="id" is-pk="true"/>
+    <field name="roleTypeId" type="id" is-pk="true"/>
+    <field name="fromDate" type="date-time" is-pk="true"/>
+    <field name="thruDate" type="date-time"/>
+    <relationship type="one" related="mantle.account.billing.BillingAccount"/>
+    <relationship type="one" related="mantle.party.Party"/>
+    <relationship type="one" related="mantle.party.RoleType"/>
+    <field name="lastUpdatedStamp" type="date-time"/>
+
+</entity>

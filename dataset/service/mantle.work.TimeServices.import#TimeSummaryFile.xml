@@ -1,0 +1,7 @@
+<!--Service Location mantle.work.TimeServices.import#TimeSummaryFile--><service verb="import" noun="TimeSummaryFile"><in-parameters><parameter name="clientPartyId" required="true"/><parameter name="effectiveDate" type="Timestamp" default="ec.user.nowTimestamp"/><parameter name="fileText" required="true"/></in-parameters><out-parameters/><actions><script><![CDATA[org.moqui.context.ExecutionContext ec = context.ec
+            recordsLoaded = ec.entity.makeDataLoader().csvText(fileText)
+                    .csvEntityName("mantle.work.TimeServices.import#TimeSummaryRecord")
+                    .csvFieldNames(['employeeId', 'emplPositionClassId', 'standardHours', 'overtimeHours',
+                                    'doubleTimeHours', 'standardPieces', 'overtimePieces', 'doubleTimePieces'])
+                    .defaultValues([clientPartyId:clientPartyId, effectiveDate:effectiveDate])
+                    .load()]]></script><message><![CDATA[Loaded ${recordsLoaded} time summary records]]></message></actions></service>

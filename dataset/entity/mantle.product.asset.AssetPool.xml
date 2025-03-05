@@ -1,0 +1,19 @@
+
+<!-- Entity Name: mantle.product.asset.AssetPool sql table: ASSET_POOL --><entity entity-name="AssetPool" package="mantle.product.asset">
+    <field name="assetPoolId" type="id" is-pk="true"/>
+    <field name="pseudoId" type="text-short" default="assetPoolId"/>
+    <field name="ownerPartyId" type="id" enable-audit-log="update" default="'_NA_'"/>
+    <field name="description" type="text-medium"/>
+    <relationship type="many" related="mantle.product.asset.Asset" short-alias="assets">
+        <key-map field-name="assetPoolId"/></relationship>
+    <relationship type="many" related="mantle.product.asset.AssetPoolParty" short-alias="poolParties">
+        <key-map field-name="assetPoolId"/></relationship>
+    <relationship type="many" related="mantle.product.asset.AssetPoolStore" short-alias="poolStores">
+        <key-map field-name="assetPoolId"/></relationship>
+    <index name="ASSET_POOL_PSEUDO" unique="true">
+        <index-field name="pseudoId"/>
+        <index-field name="ownerPartyId"/>
+    </index>
+    <field name="lastUpdatedStamp" type="date-time"/>
+
+</entity>

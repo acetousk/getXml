@@ -1,0 +1,6 @@
+<!--Transition Screen Location component://coarchy/screen/coarchy-com/c.xml Transition Name robots.txt--><transition name="robots.txt"><actions><!--always-actions at component://webroot/screen/webroot.xml--><set field="html_scripts" from="new LinkedHashSet()"/><set field="footer_scripts" from="new LinkedHashSet()"/><set field="html_stylesheets" from="new LinkedHashSet()"/><!--transition actions--><script><![CDATA[List disallowList = ['settings','coapp','apps', 'vapps', 'qapps', 'rest', 'rpc', 'status', 'menuData']
+            def outWriter = new StringWriter()
+            outWriter.append("user-agent: *\n")
+            for (disPath in disallowList) outWriter.append("disallow: /${disPath}\n")
+            outWriter.append("\nSiteMap: /sitemap.xml\n")
+            ec.web.sendTextResponse(outWriter.toString())]]></script></actions></transition>

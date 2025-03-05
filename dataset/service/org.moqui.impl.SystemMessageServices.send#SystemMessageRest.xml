@@ -1,0 +1,20 @@
+<!--Service Location org.moqui.impl.SystemMessageServices.send#SystemMessageRest--><service verb="send" noun="SystemMessageRest"><in-parameters><parameter name="systemMessageId" required="true" entity-name="moqui.service.message.SystemMessage" field-name="systemMessageId"/></in-parameters><out-parameters><parameter name="remoteMessageId" entity-name="moqui.service.message.SystemMessage" field-name="remoteMessageId"/></out-parameters><actions><entity-find-one entity-name="moqui.service.message.SystemMessage" value-field="systemMessage"/><set field="systemMessageType" from="systemMessage.'moqui.service.message.SystemMessageType'"/><if condition="!systemMessage.systemMessageRemoteId"><return error="true" message="System message ${systemMessageId} has no systemMessageRemoteId, not sending."/></if><set field="systemMessageRemote" from="systemMessage.'moqui.service.message.SystemMessageRemote'"/><script><![CDATA[String urlExpand = ec.resource.expand(systemMessageRemote.sendUrl, "systemMessage", [remoteMessageId:systemMessage.systemMessageId,
+                        systemMessageTypeId:systemMessage.systemMessageTypeId, systemMessageRemoteId:systemMessage.systemMessageRemoteId], false)
+
+                org.moqui.util.RestClient restClient = ec.service.rest().method(org.moqui.util.RestClient.POST).uri(urlExpand)
+                        .addHeader("Content-Type", systemMessageType.contentType ?: "text/plain").text(systemMessage.messageText)
+                if (!systemMessageRemote.messageAuthEnumId || "SmatLogin".equals(systemMessageRemote.messageAuthEnumId)) {
+                    restClient.basicAuth((String) systemMessageRemote.username, (String) systemMessageRemote.password)
+                } else {
+                    // TODO: support SmatHmacSha256
+                    ec.message.addError("Send REST message auth type ${systemMessageRemote.messageAuthEnumId} not supported for remote ${systemMessageRemote.systemMessageRemoteId}")
+                    return
+                }
+
+                org.moqui.util.RestClient.RestResponse restResponse = restClient.call()
+                if (restResponse.statusCode < 200 || restResponse.statusCode >= 300) {
+                    String errMsg = restResponse.text()
+                    ec.message.addError("System message ${systemMessageId} send error response (${restResponse.statusCode}): ${errMsg}")
+                    return
+                }
+                // responseText = restResponse.text()]]></script></actions></service>

@@ -1,0 +1,19 @@
+
+<!-- Entity Name: mantle.request.RequestItemOrder sql table: REQUEST_ITEM_ORDER --><entity entity-name="RequestItemOrder" package="mantle.request" cache="never">
+    <field name="requestItemOrderId" type="id" is-pk="true"/>
+    <field name="requestId" type="id"/>
+    <field name="requestItemSeqId" type="id"/>
+    <field name="orderId" type="id"/>
+    <field name="orderItemSeqId" type="id"/>
+    <field name="quantity" type="number-decimal"/>
+    <relationship type="one" related="mantle.request.RequestItem" short-alias="requestItem">
+        <key-map field-name="requestId"/>
+        <key-map field-name="requestItemSeqId"/>
+    </relationship>
+    <relationship type="one" related="mantle.order.OrderItem" short-alias="orderItem">
+        <key-map field-name="orderId"/>
+        <key-map field-name="orderItemSeqId"/>
+    </relationship>
+    <field name="lastUpdatedStamp" type="date-time"/>
+
+</entity>

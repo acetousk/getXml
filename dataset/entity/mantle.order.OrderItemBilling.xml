@@ -1,0 +1,29 @@
+
+<!-- Entity Name: mantle.order.OrderItemBilling sql table: ORDER_ITEM_BILLING --><entity entity-name="OrderItemBilling" package="mantle.order" cache="never">
+    <field name="orderItemBillingId" type="id" is-pk="true"/>
+    <field name="orderId" type="id"/>
+    <field name="orderItemSeqId" type="id"/>
+    <field name="invoiceId" type="id"/>
+    <field name="invoiceItemSeqId" type="id"/>
+    <field name="assetIssuanceId" type="id"/>
+    <field name="assetReceiptId" type="id"/>
+    <field name="shipmentId" type="id">
+        <description><![CDATA[For physical items the assetIssuanceId can be used
+            to find the Shipment but for adjustments and such, possibly prorated for a particular Shipment, this is
+            the way to find it.]]></description></field>
+    <field name="quantity" type="number-decimal"/>
+    <field name="amount" type="currency-precise"/>
+    <relationship type="one" related="mantle.order.OrderItem" short-alias="orderItem">
+        <key-map field-name="orderId"/>
+        <key-map field-name="orderItemSeqId"/>
+    </relationship>
+    <relationship type="one" related="mantle.account.invoice.InvoiceItem" short-alias="invoiceItem">
+        <key-map field-name="invoiceId"/>
+        <key-map field-name="invoiceItemSeqId"/>
+    </relationship>
+    <relationship type="one" related="mantle.product.receipt.AssetReceipt" short-alias="receipt"/>
+    <relationship type="one" related="mantle.product.issuance.AssetIssuance" short-alias="issuance"/>
+    <relationship type="one" related="mantle.shipment.Shipment" short-alias="shipment"/>
+    <field name="lastUpdatedStamp" type="date-time"/>
+
+</entity>

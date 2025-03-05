@@ -1,0 +1,5 @@
+<!--Service Location org.moqui.EntityServices.receive#DataFeedDelete--><service verb="receive" noun="DataFeedDelete"><in-parameters><parameter name="dataFeedId"/><parameter name="feedStamp" type="Timestamp"/><parameter name="dataDocumentId" required="true"/><parameter name="documentId" required="true"><description><![CDATA[The combined PK field values of the primary
+                entity in the DataDocument. If there is more than one PK field the values are separated with a
+                double-colon ("::").]]></description></parameter></in-parameters><out-parameters/>
+    null
+</service>

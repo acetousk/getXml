@@ -1,0 +1,167 @@
+
+<!-- Entity Name: mantle.facility.Facility sql table: FACILITY --><entity entity-name="Facility" package="mantle.facility" short-alias="facilities" has-dependents="true">
+    <field name="facilityId" type="id" is-pk="true"/>
+    <field name="pseudoId" type="text-short" default="facilityId"/>
+    <field name="facilityTypeEnumId" type="id"/>
+    <field name="parentFacilityId" type="id"/>
+    <field name="statusId" type="id"/>
+    <field name="ownerPartyId" type="id" enable-audit-log="update"/>
+    <field name="facilityName" type="text-medium"/>
+    <field name="facilitySize" type="number-decimal"/>
+    <field name="facilitySizeUomId" type="id"/>
+    <field name="openedDate" type="date-time"/>
+    <field name="closedDate" type="date-time"/>
+    <field name="description" type="text-medium"/>
+    <field name="geoId" type="id">
+        <description><![CDATA[A geographic boundary describing the area of the facility (not a geographic boundary like a state that the facility is in).]]></description></field>
+    <field name="geoPointId" type="id"/>
+    <field name="countyGeoId" type="id"/>
+    <field name="stateGeoId" type="id"/>
+    <field name="assetAllowOtherOwner" type="text-indicator"/>
+    <field name="assetAllowIssueOverQoh" type="text-indicator"/>
+    <field name="assetInventoryLocRequire" type="text-indicator"/>
+    <field name="defaultDaysToShip" type="number-integer"/>
+    <field name="externalId" type="text-short">
+        <description><![CDATA[ID for the Facility in the direct upstream system it came from if it came from an external system]]></description></field>
+    <field name="originId" type="text-short">
+        <description><![CDATA[ID for the Facility in the original system it came from (system of record) if not the direct upstream system]]></description></field>
+    <relationship type="one" title="FacilityType" related="moqui.basic.Enumeration" short-alias="type">
+        <key-map field-name="facilityTypeEnumId"/></relationship>
+    <relationship type="one" title="Parent" related="mantle.facility.Facility" short-alias="parent">
+        <key-map field-name="parentFacilityId" related="facilityId"/></relationship>
+    <relationship type="one" title="Facility" related="moqui.basic.StatusItem" short-alias="status"/>
+    <relationship type="one" title="Owner" related="mantle.party.Party" short-alias="owner">
+        <key-map field-name="ownerPartyId"/></relationship>
+    <relationship type="one-nofk" title="Owner" related="mantle.party.Organization" short-alias="ownerOrganization">
+        <key-map field-name="ownerPartyId"/></relationship>
+    <relationship type="one-nofk" title="Owner" related="mantle.party.Person" short-alias="ownerPerson">
+        <key-map field-name="ownerPartyId"/></relationship>
+    <relationship type="one" title="FacilitySize" related="moqui.basic.Uom" short-alias="sizeUom">
+        <key-map field-name="facilitySizeUomId"/></relationship>
+    <relationship type="one" related="moqui.basic.Geo" short-alias="geo"/>
+    <relationship type="one" related="moqui.basic.GeoPoint" short-alias="geoPoint"/>
+    <relationship type="one" title="County" related="moqui.basic.Geo" short-alias="countyGeo">
+        <key-map field-name="countyGeoId"/></relationship>
+    <relationship type="one" title="State" related="moqui.basic.Geo" short-alias="stateGeo">
+        <key-map field-name="stateGeoId"/></relationship>
+    <relationship type="many" related="mantle.facility.FacilityCertification" short-alias="certifications">
+        <key-map field-name="facilityId"/></relationship>
+    <relationship type="many" related="mantle.facility.FacilityContactMech" short-alias="contactMechs">
+        <key-map field-name="facilityId"/></relationship>
+    <relationship type="many" related="mantle.facility.FacilityContent" short-alias="contents">
+        <key-map field-name="facilityId"/></relationship>
+    <relationship type="many" related="mantle.facility.FacilityGlAppl" short-alias="glAppls">
+        <key-map field-name="facilityId"/></relationship>
+    <relationship type="many" related="mantle.facility.FacilityGroupMember" short-alias="groups">
+        <key-map field-name="facilityId"/></relationship>
+    <relationship type="many" related="mantle.facility.FacilityLocation" short-alias="locations">
+        <key-map field-name="facilityId"/></relationship>
+    <relationship type="many" related="mantle.facility.FacilityLocationType" short-alias="locationTypes">
+        <key-map field-name="facilityId"/></relationship>
+    <relationship type="many" related="mantle.facility.FacilityNote" short-alias="notes">
+        <key-map field-name="facilityId"/></relationship>
+    <relationship type="many" related="mantle.facility.FacilityParty" short-alias="parties">
+        <key-map field-name="facilityId"/></relationship>
+    <relationship type="many" related="mantle.facility.FacilityPrinter" short-alias="printers">
+        <key-map field-name="facilityId"/></relationship>
+    <index name="FACILITY_ID_PSEUDO" unique="true">
+        <index-field name="pseudoId"/></index>
+    <seed-data>
+        <moqui.basic.EnumerationType description="Facility Type" enumTypeId="FacilityType"/>
+        <moqui.basic.Enumeration description="Block" enumId="FcTpBlock" enumTypeId="FacilityType"/>
+        <moqui.basic.Enumeration description="Block Group" enumId="FcTpBlockGroup" enumTypeId="FacilityType"/>
+        <moqui.basic.Enumeration description="Building" enumId="FcTpBuilding" enumTypeId="FacilityType"/>
+        <moqui.basic.Enumeration description="Land" enumId="FcTpLand" enumTypeId="FacilityType"/>
+        <moqui.basic.Enumeration description="Floor" enumId="FcTpFloor" enumTypeId="FacilityType"/>
+        <moqui.basic.Enumeration description="Office" enumId="FcTpOffice" enumTypeId="FacilityType"/>
+        <moqui.basic.Enumeration description="Call Center" enumId="FcTpCallCenter" enumTypeId="FacilityType"/>
+        <moqui.basic.Enumeration description="Data Center" enumId="FcTpDataCenter" enumTypeId="FacilityType"/>
+        <moqui.basic.Enumeration description="Plant" enumId="FcTpPlant" enumTypeId="FacilityType"/>
+        <moqui.basic.Enumeration description="Room" enumId="FcTpRoom" enumTypeId="FacilityType"/>
+        <moqui.basic.Enumeration description="Retail Store" enumId="FcTpRetailStore" enumTypeId="FacilityType"/>
+        <moqui.basic.Enumeration description="Warehouse" enumId="FcTpWarehouse" enumTypeId="FacilityType"/>
+        <moqui.basic.Enumeration description="Dock" enumId="FcTpDock" enumTypeId="FacilityType"/>
+        <moqui.basic.Enumeration description="Production Line" enumId="FcTpLine" enumTypeId="FacilityType"/>
+        <moqui.basic.StatusType description="Facility" statusTypeId="Facility"/>
+    </seed-data>
+    <master>
+        <detail relationship="type"/>
+        <detail relationship="parent"/>
+        <detail relationship="status"/>
+        <detail relationship="owner" use-master="basic"/>
+        <detail relationship="sizeUom"/>
+        <detail relationship="geo"/>
+        <detail relationship="geoPoint"/>
+        <detail relationship="certifications"/>
+        <detail relationship="contactMechs">
+            <detail relationship="contactMech" use-master="default"/>
+            <detail relationship="purpose"/>
+        </detail>
+        <detail relationship="contents"/>
+        <detail relationship="groups">
+            <detail relationship="group"/></detail>
+        <detail relationship="notes"/>
+        <detail relationship="parties">
+            <detail relationship="party" use-master="basic"/>
+            <detail relationship="role"/>
+        </detail>
+        <detail relationship="printers">
+            <detail relationship="printer"/></detail>
+    </master>
+    <field name="lastUpdatedStamp" type="date-time"/>
+    <relationship related="mantle.account.invoice.InvoiceItemDetail" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="facilityId" related="facilityId"/></relationship>
+    <relationship related="mantle.facility.FacilityBoxType" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="facilityId" related="facilityId"/></relationship>
+    <relationship related="mantle.facility.ProductFacility" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="facilityId" related="facilityId"/></relationship>
+    <relationship related="mantle.order.OrderPart" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="facilityId" related="facilityId"/></relationship>
+    <relationship related="mantle.order.return.ReturnHeader" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="facilityId" related="facilityId"/></relationship>
+    <relationship related="mantle.other.budget.BudgetItemDetail" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="facilityId" related="facilityId"/></relationship>
+    <relationship related="mantle.party.PartyBadgeScan" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="facilityId" related="facilityId"/></relationship>
+    <relationship related="mantle.product.asset.Asset" type="many" is-auto-reverse="true" mutable="true" title="Origin">
+        <key-map field-name="facilityId" related="originFacilityId"/></relationship>
+    <relationship related="mantle.product.asset.Asset" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="facilityId" related="facilityId"/></relationship>
+    <relationship related="mantle.product.asset.Container" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="facilityId" related="facilityId"/></relationship>
+    <relationship related="mantle.product.asset.PhysicalInventory" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="facilityId" related="facilityId"/></relationship>
+    <relationship related="mantle.product.asset.PhysicalInventoryCount" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="facilityId" related="facilityId"/></relationship>
+    <relationship related="mantle.product.issuance.AssetIssuance" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="facilityId" related="facilityId"/></relationship>
+    <relationship related="mantle.product.store.ProductStore" type="many" is-auto-reverse="true" mutable="true" title="Inventory">
+        <key-map field-name="facilityId" related="inventoryFacilityId"/></relationship>
+    <relationship related="mantle.product.store.ProductStoreFacility" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="facilityId" related="facilityId"/></relationship>
+    <relationship related="mantle.request.Request" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="facilityId" related="facilityId"/></relationship>
+    <relationship related="mantle.request.requirement.Requirement" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="facilityId" related="facilityId"/></relationship>
+    <relationship related="mantle.shipment.ShipmentRouteSegment" type="many" is-auto-reverse="true" mutable="true" title="Origin">
+        <key-map field-name="facilityId" related="originFacilityId"/></relationship>
+    <relationship related="mantle.shipment.ShipmentRouteSegment" type="many" is-auto-reverse="true" mutable="true" title="Destination">
+        <key-map field-name="facilityId" related="destinationFacilityId"/></relationship>
+    <relationship related="mantle.shipment.carrier.Delivery" type="many" is-auto-reverse="true" mutable="true" title="Origin">
+        <key-map field-name="facilityId" related="originFacilityId"/></relationship>
+    <relationship related="mantle.shipment.carrier.Delivery" type="many" is-auto-reverse="true" mutable="true" title="Dest">
+        <key-map field-name="facilityId" related="destFacilityId"/></relationship>
+    <relationship related="mantle.work.effort.WorkEffort" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="facilityId" related="facilityId"/></relationship>
+    <relationship related="mantle.work.effort.WorkEffortFacility" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="facilityId" related="facilityId"/></relationship>
+    <relationship related="mantle.work.estimate.ProductionEstimate" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="facilityId" related="facilityId"/></relationship>
+    <relationship related="mantle.work.estimate.ProductionEstimate" type="many" is-auto-reverse="true" mutable="true" title="Destination">
+        <key-map field-name="facilityId" related="destinationFacilityId"/></relationship>
+    <relationship related="mantle.work.measurement.Measurement" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="facilityId" related="facilityId"/></relationship>
+    <relationship related="mantle.work.time.TimeEntry" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="facilityId" related="facilityId"/></relationship>
+
+</entity>

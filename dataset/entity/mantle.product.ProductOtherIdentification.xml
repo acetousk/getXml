@@ -1,0 +1,23 @@
+
+<!-- Entity Name: mantle.product.ProductOtherIdentification sql table: PRODUCT_OTHER_IDENTIFICATION --><entity entity-name="ProductOtherIdentification" package="mantle.product" has-dependents="true">
+    <field name="productOtherIdentId" type="id" is-pk="true"/>
+    <field name="productId" type="id"/>
+    <field name="productStoreId" type="id"/>
+    <field name="productIdTypeEnumId" type="id"/>
+    <field name="marketSegmentId" type="id"/>
+    <field name="parentProductId" type="id"/>
+    <field name="idValue" type="text-medium"/>
+    <relationship type="one" title="ProductIdentificationType" related="moqui.basic.Enumeration" short-alias="type">
+        <key-map field-name="productIdTypeEnumId"/></relationship>
+    <relationship type="one" related="mantle.product.Product" short-alias="product"/>
+    <relationship type="one" related="mantle.product.store.ProductStore" short-alias="productStore"/>
+    <relationship type="one" related="mantle.marketing.segment.MarketSegment" short-alias="marketSegment"/>
+    <relationship type="one" title="Parent" related="mantle.product.Product" short-alias="parentProduct">
+        <key-map field-name="parentProductId" related="productId"/></relationship>
+    <index name="PRODUCT_STR_ID_VAL" unique="false">
+        <index-field name="idValue"/></index>
+    <field name="lastUpdatedStamp" type="date-time"/>
+    <relationship related="mantle.product.ProductParameterOption" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="productOtherIdentId" related="productOtherIdentId"/></relationship>
+
+</entity>

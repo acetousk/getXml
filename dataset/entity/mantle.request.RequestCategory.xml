@@ -1,0 +1,16 @@
+
+<!-- Entity Name: mantle.request.RequestCategory sql table: REQUEST_CATEGORY --><entity entity-name="RequestCategory" package="mantle.request" has-dependents="true">
+    <field name="requestCategoryId" type="id" is-pk="true"/>
+    <field name="parentCategoryId" type="id"/>
+    <field name="responsiblePartyId" type="id">
+        <description><![CDATA[Party (person or group) responsible for Requests in this Category.]]></description></field>
+    <field name="description" type="text-medium"/>
+    <relationship type="one" title="Parent" related="mantle.request.RequestCategory" short-alias="parent">
+        <key-map field-name="parentCategoryId" related="requestCategoryId"/></relationship>
+    <relationship type="one" title="Responsible" related="mantle.party.Party" short-alias="responsible">
+        <key-map field-name="responsiblePartyId"/></relationship>
+    <field name="lastUpdatedStamp" type="date-time"/>
+    <relationship related="mantle.request.Request" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="requestCategoryId" related="requestCategoryId"/></relationship>
+
+</entity>

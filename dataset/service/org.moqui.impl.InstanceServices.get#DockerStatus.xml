@@ -1,0 +1,56 @@
+<!--Service Location org.moqui.impl.InstanceServices.get#DockerStatus--><service verb="get" noun="DockerStatus"><in-parameters><parameter name="appInstanceId" required="true"/></in-parameters><out-parameters><parameter name="connectSuccess" type="Boolean"/><parameter name="instanceExists" type="Boolean"/><parameter name="instanceRunning" type="Boolean"/><parameter name="statusString"/><parameter name="errorString"/><parameter name="startedAt" type="Timestamp"/><parameter name="finishedAt" type="Timestamp"/><parameter name="inspectMap" type="Map"/><parameter name="instanceLog"/></out-parameters><actions><script><![CDATA[import org.moqui.context.ExecutionContext
+            import org.moqui.entity.EntityValue
+            import org.moqui.util.RestClient
+
+            connectSuccess = null
+            instanceExists = null
+            instanceRunning = null
+            statusString = ""
+            errorString = ""
+            startedAt = null
+            finishedAt = null
+
+            ExecutionContext ec = context.ec
+            EntityValue appInstance = ec.entity.find("moqui.server.instance.AppInstance").condition("appInstanceId", appInstanceId).one()
+            EntityValue instanceHost = appInstance.findRelatedOne("instanceHost", null, null)
+            if (instanceHost == null) { ec.message.addMessage("No InstanceHost found for AppInstance ${appInstanceId}"); return; }
+
+            RestClient restClient = ec.service.rest().method("GET")
+            restClient.uri().protocol(instanceHost.hostProtocol ? (String) instanceHost.hostProtocol : "http")
+                    .host(instanceHost.hostAddress as String).port(instanceHost.adminPort ? (instanceHost.adminPort as int) : 2375)
+                    .path("containers").path(appInstance.instanceUuid ? (String) appInstance.instanceUuid : (String) appInstance.instanceName)
+                    .path("json").build()
+
+            try {
+                RestClient.RestResponse restResponse = restClient.call()
+                connectSuccess = true
+
+                if (restResponse.statusCode == 200) {
+                    instanceExists = true
+
+                    inspectMap = (Map) restResponse.jsonObject()
+                    Map stateMap = inspectMap.State
+                    instanceRunning = stateMap.Running as Boolean
+                    statusString = stateMap.Status as String
+                    errorString = stateMap.Error as String
+                    startedAt = ec.l10n.parseTimestamp(stateMap.StartedAt as String, "")
+                    if (stateMap.FinishedAt) finishedAt = ec.l10n.parseTimestamp(stateMap.FinishedAt as String, "")
+
+                    if (!appInstance.instanceUuid) {
+                        appInstance.instanceUuid = inspectMap.Id
+                        appInstance.update()
+                    }
+
+                    ec.message.addMessage("Docker container ${appInstance.instanceName} (${appInstance.instanceUuid}) ${instanceRunning ? 'running' : 'NOT running'}, status ${statusString}, ${errorString ? 'error: ' + errorString + ', ' : ''}started at ${ec.l10n.format(startedAt, '')}${finishedAt ? ', finished at ' + ec.l10n.format(finishedAt, '') : ''}")
+                } else if (restResponse.statusCode == 404) {
+                    instanceExists = false
+                    ec.message.addMessage("Docker container ${appInstance.instanceName} (${appInstance.instanceUuid}) does not exist")
+                } else {
+                    errorString = restResponse.getReasonPhrase()
+                    ec.message.addMessage("Server error on Docker host: ${errorString}")
+                }
+            } catch (Exception e) {
+                connectSuccess = false
+                ec.logger.log(ec.logger.ERROR_INT, "Error connecting to Docker host", e)
+                ec.message.addError("Error connecting to Docker host: ${e.toString()}")
+            }]]></script></actions></service>

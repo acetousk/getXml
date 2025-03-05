@@ -1,0 +1,33 @@
+
+<!-- Entity Name: mantle.product.store.ProductStorePromotion sql table: PRODUCT_STORE_PROMOTION --><entity entity-name="ProductStorePromotion" package="mantle.product.store" use="configuration" cache="true" has-dependents="true">
+    <field name="storePromotionId" type="id" is-pk="true"/>
+    <field name="productStoreId" type="id"/>
+    <field name="itemDescription" type="text-medium">
+        <description><![CDATA[Description for the OrderItem (itemDescription), promo service
+            should run this through ResourceFacade.expand() with parameters depending on the promo service]]></description></field>
+    <field name="serviceRegisterId" type="id" not-null="true">
+        <description><![CDATA[Registered Service of type ProductStorePromotion that implements the
+            mantle.product.StoreServices.apply#Promotion interface]]></description></field>
+    <field name="fromDate" type="date-time"/>
+    <field name="thruDate" type="date-time"/>
+    <field name="sequenceNum" type="number-integer"/>
+    <field name="requireCode" type="text-indicator"/>
+    <field name="useLimitPerOrder" type="number-integer"/>
+    <field name="useLimitPerCustomer" type="number-integer"/>
+    <field name="useLimitPerPromotion" type="number-integer"/>
+    <field name="freeGroundShipping" type="text-indicator"/>
+    <relationship type="one" related="mantle.product.store.ProductStore" short-alias="store"/>
+    <relationship type="one" related="moqui.service.ServiceRegister" short-alias="serviceRegister"/>
+    <relationship type="many" related="mantle.product.store.ProductStorePromoParameter" short-alias="parameters">
+        <key-map field-name="storePromotionId"/></relationship>
+    <relationship type="many" related="mantle.product.store.ProductStorePromoCode" short-alias="codes">
+        <key-map field-name="storePromotionId"/></relationship>
+    <seed-data>
+        <moqui.basic.Enumeration description="Product Store Promotion" enumId="ProductStorePromotion" enumTypeId="ServiceRegisterType"/></seed-data>
+    <field name="lastUpdatedStamp" type="date-time"/>
+    <relationship related="mantle.order.OrderItem" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="storePromotionId" related="storePromotionId"/></relationship>
+    <relationship related="mantle.product.store.ProductStorePromoProduct" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="storePromotionId" related="storePromotionId"/></relationship>
+
+</entity>

@@ -1,0 +1,13 @@
+
+<!-- Entity Name: mantle.ledger.config.GlAccountTypeDefault sql table: GL_ACCOUNT_TYPE_DEFAULT --><entity entity-name="GlAccountTypeDefault" package="mantle.ledger.config" use="configuration">
+    <field name="glAccountTypeEnumId" type="id" is-pk="true"/>
+    <field name="organizationPartyId" type="id" is-pk="true"/>
+    <field name="glAccountId" type="id"/>
+    <relationship type="one" title="GlAccountType" related="moqui.basic.Enumeration">
+        <key-map field-name="glAccountTypeEnumId"/></relationship>
+    <relationship type="one" title="Organization" related="mantle.party.Party">
+        <key-map field-name="organizationPartyId"/></relationship>
+    <relationship type="one" related="mantle.ledger.account.GlAccount"/>
+    <field name="lastUpdatedStamp" type="date-time"/>
+
+</entity>

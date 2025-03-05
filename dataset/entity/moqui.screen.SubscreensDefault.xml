@@ -1,0 +1,9 @@
+
+<!-- Entity Name: moqui.screen.SubscreensDefault sql table: SUBSCREENS_DEFAULT --><entity entity-name="SubscreensDefault" package="moqui.screen" use="configuration" cache="true">
+    <field name="screenLocation" type="text-medium" is-pk="true"/>
+    <field name="defaultSeqId" type="id" is-pk="true"/>
+    <field name="conditionExpression" type="text-medium"/>
+    <field name="subscreenName" type="text-medium"/>
+    <field name="lastUpdatedStamp" type="date-time"/>
+
+</entity>

@@ -1,0 +1,21 @@
+
+<!-- Entity Name: mantle.account.financial.FinancialAccountAuth sql table: FINANCIAL_ACCOUNT_AUTH --><entity entity-name="FinancialAccountAuth" package="mantle.account.financial" cache="never" has-dependents="true">
+    <field name="finAccountAuthId" type="id" is-pk="true"/>
+    <field name="finAccountId" type="id"/>
+    <field name="amount" type="currency-amount"/>
+    <field name="authorizationDate" type="date-time"/>
+    <field name="expireDate" type="date-time"/>
+    <field name="paymentId" type="id"/>
+    <relationship type="one" related="mantle.account.financial.FinancialAccount" short-alias="finAccount"/>
+    <relationship type="one" related="mantle.account.payment.Payment" short-alias="payment"/>
+    <field name="lastUpdatedStamp" type="date-time"/>
+    <relationship related="mantle.account.financial.FinancialAccountTrans" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="finAccountAuthId" related="finAccountAuthId"/></relationship>
+
+<!-- seca <seca id="FinancialAccountAuthUpdateCalcTotals" service="update#mantle.account.financial.FinancialAccountAuth" when="post-service">
+    <actions>
+        <service-call name="mantle.account.FinancialAccountServices.calculate#FinancialAccountTotals" in-map="context"/></actions></seca>-->
+<!-- seca <seca id="FinancialAccountAuthDeleteCalcTotals" service="delete#mantle.account.financial.FinancialAccountAuth" when="post-service">
+    <actions>
+        <service-call name="mantle.account.FinancialAccountServices.calculate#FinancialAccountTotals" in-map="context"/></actions></seca>-->
+</entity>

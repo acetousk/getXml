@@ -1,0 +1,47 @@
+<!--Service Location mantle.sales.SalesReportServices.get#SalesTopProduct--><service verb="get" noun="SalesTopProduct"><in-parameters><parameter name="interval" default-value="M"/><parameter name="thruDate" type="Date" default="new java.sql.Date(ec.user.nowTimestamp.time)"/><parameter name="indexName" default-value="mantle_sales"/><parameter name="documentType" default-value="MantleSalesOrderItem"/><parameter name="topLimit" type="Integer" default="10"/><parameter name="poffset" type="Integer" default="-1"/><parameter name="dateField" default-value="placedDate"/><parameter name="orderByField" default-value="totalSales"/><parameter name="clusterName" default-value="default"/></in-parameters><out-parameters><parameter name="topProductList" type="List"><parameter name="result" type="Map"/></parameter><parameter name="topProductStart" type="Timestamp"/><parameter name="topProductEnd" type="Timestamp"/></out-parameters><actions><script><![CDATA[import groovy.json.JsonOutput
+            import org.moqui.context.ExecutionContext
+            ExecutionContext ec = context.ec
+
+            def elasticClient = ec.factory.elastic.getClient((String) clusterName)
+            if (elasticClient == null) { ec.message.addMessage("No ElasticClient found for cluster ${clusterName}", "danger"); return }
+
+            Map<String, String> perMap = [d:'day', w:'week', M:'month', q:'quarter', y:'year']
+            ArrayList<Timestamp> curPer = ec.user.getPeriodRange(perMap.get(interval), poffset, thruDate)
+            /* no longer do this, other aggregations now use an offset to match the Java week definition for user's Locale:
+            // for weeks shift by one to start on Monday (like ES does for aggregations) instead of Sunday
+            if (interval == 'w') { curPer[0] = curPer[0] + 1; curPer[1] = curPer[1] + 1 }
+            */
+            topProductStart = curPer.get(0)
+            topProductEnd = curPer.get(1)
+
+            Map queryMap = [bool: [filter: [
+                    [range: [(dateField): [gte:(topProductStart.time as String), lt:(topProductEnd.time as String), format: 'epoch_millis']]],
+                    [terms: [partStatusId: ['OrderPlaced', 'OrderProcessing', 'OrderApproved', 'OrderSent', 'OrderCompleted', 'OrderHold']]]
+            ]]]
+
+            // By Product Term
+            Map subAggsMap = [:]
+            Map aggsMap = [TopTerms:[terms:[field:'productId', size:topLimit, order:[(orderByField):"desc"]], aggs:subAggsMap]]
+
+            subAggsMap.totalQuantity = [sum:[field:'orderQuantity']]
+            subAggsMap.totalSales = [sum:[field:'itemSaleTotal']]
+            // total product shipped (issuedSaleTotal; itemTypeEnumId = ItemProduct)
+            subAggsMap.productIssuedTotal = [sum:[field:'issuances.issuedSaleTotal']]
+            // product cost total (issuedCostTotal)
+            subAggsMap.productCostTotal = [sum:[field:'issuances.issuedCostTotal']]
+
+            String orderIdx = org.moqui.impl.context.ElasticFacadeImpl.ddIdToEsIndex((String) documentType)
+            Map resultMap = elasticClient.search(orderIdx, [query:queryMap, aggs:aggsMap])
+            Map aggregationsMap = (Map) resultMap.aggregations
+
+            topProductList = new ArrayList(topLimit)
+            for (Map bucket in (List<Map>) aggregationsMap.TopTerms.buckets) {
+                BigDecimal productIssuedTotal = bucket.productIssuedTotal?.value as BigDecimal
+                BigDecimal productCostTotal = bucket.productCostTotal?.value as BigDecimal
+                Map curLine = [productId:bucket.key,
+                        totalQuantity:bucket.totalQuantity?.value as BigDecimal,
+                        totalSales:bucket.totalSales?.value as BigDecimal,
+                        productIssuedTotal:productIssuedTotal, productCostTotal:productCostTotal,
+                        costPercent:(productIssuedTotal ? (productCostTotal/productIssuedTotal) : 0.0)]
+                topProductList.add(curLine)
+            }]]></script></actions></service>

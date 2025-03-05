@@ -1,0 +1,14 @@
+
+<!-- Entity Name: moqui.security.UserGroupMember sql table: USER_GROUP_MEMBER --><entity entity-name="UserGroupMember" package="moqui.security" use="configuration" cache="true">
+    <field name="userGroupId" type="id" is-pk="true"/>
+    <field name="userId" type="id" is-pk="true"/>
+    <field name="fromDate" type="date-time" is-pk="true"/>
+    <field name="thruDate" type="date-time"/>
+    <relationship type="one" related="moqui.security.UserGroup" short-alias="group"/>
+    <relationship type="one-nofk" related="moqui.security.UserAccount" short-alias="user">
+        <description><![CDATA[No FK in order to allow externally authenticated users.]]></description></relationship>
+    <relationship type="many" related="moqui.security.UserGroupPermission" short-alias="permissions">
+        <key-map field-name="userGroupId"/></relationship>
+    <field name="lastUpdatedStamp" type="date-time"/>
+
+</entity>

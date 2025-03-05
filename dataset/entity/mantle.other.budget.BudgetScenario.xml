@@ -1,0 +1,11 @@
+
+<!-- Entity Name: mantle.other.budget.BudgetScenario sql table: BUDGET_SCENARIO --><entity entity-name="BudgetScenario" package="mantle.other.budget" has-dependents="true">
+    <field name="budgetScenarioId" type="id" is-pk="true"/>
+    <field name="description" type="text-medium"/>
+    <field name="lastUpdatedStamp" type="date-time"/>
+    <relationship related="mantle.other.budget.BudgetScenarioApplication" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="budgetScenarioId" related="budgetScenarioId"/></relationship>
+    <relationship related="mantle.other.budget.BudgetScenarioRule" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="budgetScenarioId" related="budgetScenarioId"/></relationship>
+
+</entity>

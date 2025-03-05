@@ -1,0 +1,9 @@
+
+<!-- Entity Name: moqui.server.instance.AppInstanceEnv sql table: APP_INSTANCE_ENV --><entity entity-name="AppInstanceEnv" package="moqui.server.instance" use="configuration">
+    <field name="appInstanceId" type="id" is-pk="true"/>
+    <field name="envName" type="text-medium" is-pk="true"/>
+    <field name="envValue" type="text-medium" encrypt="true"/>
+    <relationship type="one" related="moqui.server.instance.AppInstance"/>
+    <field name="lastUpdatedStamp" type="date-time"/>
+
+</entity>

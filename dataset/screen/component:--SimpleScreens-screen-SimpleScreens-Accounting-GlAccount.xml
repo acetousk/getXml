@@ -1,0 +1,1 @@
+<!-- Screen Location component://SimpleScreens/screen/SimpleScreens/Accounting/GlAccount.xml --><screen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://moqui.org/xsd/xml-screen-3.xsd" default-menu-title="GL Accounts" default-menu-index="10"><subscreens default-item="FindGlAccount"/><widgets><subscreens-active/></widgets></screen>

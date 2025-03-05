@@ -1,0 +1,15 @@
+
+<!-- Entity Name: mantle.request.RequestNote sql table: REQUEST_NOTE --><entity entity-name="RequestNote" package="mantle.request" cache="never">
+    <field name="requestId" type="id" is-pk="true"/>
+    <field name="noteDate" type="date-time" is-pk="true" default="ec.user.nowTimestamp"/>
+    <field name="requestItemSeqId" type="id"/>
+    <field name="noteText" type="text-very-long"/>
+    <field name="userId" type="id" default="ec.user.userId"/>
+    <relationship type="one" related="mantle.request.Request" short-alias="request"/>
+    <relationship type="one-nofk" related="mantle.request.RequestItem" short-alias="item">
+        <key-map field-name="requestId"/>
+        <key-map field-name="requestItemSeqId"/>
+    </relationship>
+    <field name="lastUpdatedStamp" type="date-time"/>
+
+</entity>

@@ -1,0 +1,52 @@
+<!--Service Location mantle.party.ContactServices.clean#TelecomNumber--><service verb="clean" noun="TelecomNumber"><in-parameters><parameter name="countryCode" entity-name="mantle.party.contact.TelecomNumber" field-name="countryCode"/><parameter name="areaCode" entity-name="mantle.party.contact.TelecomNumber" field-name="areaCode"/><parameter name="contactNumber" entity-name="mantle.party.contact.TelecomNumber" field-name="contactNumber"/><parameter name="extension"/></in-parameters><out-parameters><parameter name="countryCode" entity-name="mantle.party.contact.TelecomNumber" field-name="countryCode"/><parameter name="areaCode" entity-name="mantle.party.contact.TelecomNumber" field-name="areaCode"/><parameter name="contactNumber" entity-name="mantle.party.contact.TelecomNumber" field-name="contactNumber"/><parameter name="extension"/><parameter name="isValid" type="Boolean"><description><![CDATA[Null if unknown. Does basic validation of areaCode and contactNumber based on countryCode.]]></description></parameter></out-parameters><actions><script><![CDATA[// countryCode, areaCode, and extension should contain only digits
+            if (countryCode) countryCode = countryCode.trim().replaceAll(/\D/, "")
+            if (areaCode) areaCode = areaCode.trim().replaceAll(/\D/, "")
+            if (extension) extension = extension.trim().replaceAll(/\D/, "")
+            if (contactNumber) {
+                // trim to make sure
+                contactNumber = contactNumber.trim()
+                // if contactNumber contains spaces change them to dashes
+                contactNumber = contactNumber.replaceAll(/\s/, "-")
+                // contactNumber should only contain digits, and '.' or '-'
+                contactNumber = contactNumber.replaceAll(/[^\d\.-]/, "")
+                // if contains dot and dash replace all dot with dash
+                if (contactNumber.contains('.') && contactNumber.contains('-')) contactNumber.replaceAll(/\./, "-")
+                contactNumber = contactNumber.trim().replaceAll("--", "-")
+                // if no dots or dashes and length is 7 add a dash after 3 digits
+                if (!contactNumber.contains('-') && !contactNumber.contains('.') && contactNumber.length() == 7)
+                    contactNumber = contactNumber.substring(0, 3) + '-' + contactNumber.substring(3)
+            }
+            // validation by country codes, see https://en.wikipedia.org/wiki/List_of_country_calling_codes
+            if ((countryCode == '1' || countryCode == '+1') && contactNumber) {
+                // North America Numbering Plan (USA, Canada, etc) - 3 digit areaCode, 7 digit contactNumber
+                // see https://en.wikipedia.org/wiki/North_American_Numbering_Plan
+                isValid = true
+                if (areaCode) {
+                    if (areaCode.length() != 3) {
+                        isValid = false
+                        ec.message.addMessage("Area code ${areaCode} not valid for North America, should be 3 digits", "warning")
+                    }
+                    if (areaCode.charAt(0) == '0' as char || areaCode.charAt(0) == '1' as char) {
+                        isValid = false
+                        ec.message.addMessage("Area code ${areaCode} not valid for North America, should not start with 0 or 1", "warning")
+                    }
+                } else {
+                    isValid = false
+                    ec.message.addMessage("No area code specified, for North America must have a 3 digit area code not starting with 0 or 1", "warning")
+                }
+                if (contactNumber) {
+                    String contactNumberOnly = contactNumber.trim().replaceAll(/\D/, "")
+                    if (contactNumberOnly.length() != 7) {
+                        isValid = false
+                        ec.message.addMessage("Contact number ${contactNumber} not valid for North America, should be 7 digits", "warning")
+                    }
+                    if (contactNumberOnly.charAt(0) == '0' as char || contactNumberOnly.charAt(0) == '1' as char) {
+                        isValid = false
+                        ec.message.addMessage("Contact number ${contactNumber} not valid for North America, should not start with 0 or 1", "warning")
+                    }
+                } else {
+                    isValid = false
+                    ec.message.addMessage("No contact number specified, for North America must have a 7 digit contact number not starting with 0 or 1", "warning")
+                }
+            }
+            // TODO: add validation for other countryCode values]]></script></actions></service>

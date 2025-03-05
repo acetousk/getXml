@@ -1,0 +1,9 @@
+
+<!-- Entity Name: mantle.product.asset.AssetPoolStore sql table: ASSET_POOL_STORE --><entity entity-name="AssetPoolStore" package="mantle.product.asset">
+    <field name="assetPoolId" type="id" is-pk="true"/>
+    <field name="productStoreId" type="id" is-pk="true"/>
+    <relationship type="one" related="mantle.product.asset.AssetPool" short-alias="pool"/>
+    <relationship type="one" related="mantle.product.store.ProductStore" short-alias="productStore"/>
+    <field name="lastUpdatedStamp" type="date-time"/>
+
+</entity>

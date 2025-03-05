@@ -1,0 +1,11 @@
+
+<!-- Entity Name: mantle.shipment.carrier.ShippingGatewayCarrier sql table: SHIPPING_GATEWAY_CARRIER --><entity entity-name="ShippingGatewayCarrier" package="mantle.shipment.carrier" use="configuration" cache="true">
+    <field name="shippingGatewayConfigId" type="id" is-pk="true"/>
+    <field name="carrierPartyId" type="id" is-pk="true"/>
+    <field name="gatewayAccountId" type="text-medium"/>
+    <relationship type="one" related="mantle.shipment.carrier.ShippingGatewayConfig"/>
+    <relationship type="one" title="Carrier" related="mantle.party.Party">
+        <key-map field-name="carrierPartyId"/></relationship>
+    <field name="lastUpdatedStamp" type="date-time"/>
+
+</entity>

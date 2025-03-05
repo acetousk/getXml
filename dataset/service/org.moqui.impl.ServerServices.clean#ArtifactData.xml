@@ -1,0 +1,13 @@
+<!--Service Location org.moqui.impl.ServerServices.clean#ArtifactData--><service verb="clean" noun="ArtifactData"><in-parameters><parameter name="daysToKeep" type="Integer" default="90"/></in-parameters><out-parameters><parameter name="artifactHitsRemoved" type="Long"/><parameter name="artifactHitBinsRemoved" type="Long"/></out-parameters><actions><script><![CDATA[import org.moqui.context.ExecutionContext
+            import org.moqui.entity.EntityCondition
+            ExecutionContext ec = context.ec
+            Calendar basisCal = ec.user.getCalendarSafe()
+            basisCal.add(Calendar.DAY_OF_YEAR, (int) -daysToKeep)
+            basisTimestamp = new Timestamp(basisCal.getTimeInMillis())
+            artifactHitsRemoved = ec.entity.find("moqui.server.ArtifactHit")
+                    .condition("startDateTime", EntityCondition.LESS_THAN, basisTimestamp)
+                    .disableAuthz().deleteAll()
+            artifactHitBinsRemoved = ec.entity.find("moqui.server.ArtifactHitBin")
+                    .condition("binEndDateTime", EntityCondition.LESS_THAN, basisTimestamp)
+                    .disableAuthz().deleteAll()
+            ec.logger.info("Removed ${artifactHitsRemoved} ArtifactHit records and ${artifactHitBinsRemoved} ArtifactHitBin records more than ${daysToKeep} days old")]]></script></actions></service>

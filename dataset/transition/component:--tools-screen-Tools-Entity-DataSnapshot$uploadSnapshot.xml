@@ -1,0 +1,7 @@
+<!--Transition Screen Location component://tools/screen/Tools/Entity/DataSnapshot.xml Transition Name uploadSnapshot--><transition name="uploadSnapshot"><actions><!--always-actions at component://webroot/screen/webroot.xml--><set field="html_scripts" from="new LinkedHashSet()"/><set field="footer_scripts" from="new LinkedHashSet()"/><set field="html_stylesheets" from="new LinkedHashSet()"/><!--transition actions--><script><![CDATA[String filename = snapshotFile.getName()
+            if (!filename.endsWith(".zip")) { ec.message.addError("File ${filename} is not a zip file, should be a zip containing one or more xml data files"); return; }
+            File targetFile = new File((String) ec.factory.getRuntimePath() + '/db/snapshot/' + filename)
+            if (!targetFile.parentFile.exists()) targetFile.parentFile.mkdirs()
+            if (targetFile.exists()) { ec.message.addError("File ${filename} already exists"); return }
+            InputStream fileStream = snapshotFile.getInputStream()
+            try { targetFile.append(fileStream) } finally { fileStream.close() }]]></script></actions></transition>

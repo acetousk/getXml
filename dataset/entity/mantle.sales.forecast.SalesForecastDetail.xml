@@ -1,0 +1,17 @@
+
+<!-- Entity Name: mantle.sales.forecast.SalesForecastDetail sql table: SALES_FORECAST_DETAIL --><entity entity-name="SalesForecastDetail" package="mantle.sales.forecast">
+    <field name="salesForecastId" type="id" is-pk="true"/>
+    <field name="salesForecastDetailSeqId" type="id" is-pk="true"/>
+    <field name="amount" type="currency-amount"/>
+    <field name="quantity" type="number-decimal"/>
+    <field name="quantityUomId" type="id"/>
+    <field name="productId" type="id"/>
+    <field name="productCategoryId" type="id"/>
+    <relationship type="one" related="SalesForecast"/>
+    <relationship type="one" title="Quantity" related="moqui.basic.Uom">
+        <key-map field-name="quantityUomId"/></relationship>
+    <relationship type="one" related="mantle.product.Product"/>
+    <relationship type="one" related="mantle.product.category.ProductCategory"/>
+    <field name="lastUpdatedStamp" type="date-time"/>
+
+</entity>

@@ -1,0 +1,16 @@
+
+<!-- Entity Name: mantle.order.OrderItemWorkEffort sql table: ORDER_ITEM_WORK_EFFORT --><entity entity-name="OrderItemWorkEffort" package="mantle.order" cache="never">
+    <field name="orderId" type="id" is-pk="true"/>
+    <field name="orderItemSeqId" type="id" is-pk="true"/>
+    <field name="workEffortId" type="id" is-pk="true"/>
+    <field name="requiredWork" type="text-indicator">
+        <description><![CDATA[If Y require WorkEffort Status of Complete, Closed, or Cancelled to consider OrderItem fulfilled]]></description></field>
+    <field name="forStatusId" type="id">
+        <description><![CDATA[Task must be Complete or Closed before change to this status (soft rule, depending on code in place)]]></description></field>
+    <relationship type="one" related="mantle.order.OrderItem"/>
+    <relationship type="one" related="mantle.work.effort.WorkEffort"/>
+    <relationship type="one" title="OrderHeader" related="moqui.basic.StatusItem" short-alias="forStatus">
+        <key-map field-name="forStatusId"/></relationship>
+    <field name="lastUpdatedStamp" type="date-time"/>
+
+</entity>

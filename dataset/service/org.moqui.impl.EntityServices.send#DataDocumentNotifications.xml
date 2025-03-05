@@ -1,0 +1,13 @@
+<!--Service Location org.moqui.impl.EntityServices.send#DataDocumentNotifications--><service verb="send" noun="DataDocumentNotifications"><in-parameters><parameter name="dataFeedId" entity-name="moqui.entity.feed.DataFeed" field-name="dataFeedId"/><parameter name="feedStamp" type="Timestamp"/><parameter name="documentList" type="List" required="true"><parameter name="document" type="Map"><parameter name="_id" required="true"><description><![CDATA[The combined PK field values of the primary
+                        entity in the DataDocument. If there is more than one PK field the values are separated with a
+                        double-colon ("::").]]></description></parameter><parameter name="_type" required="true"><description><![CDATA[The DataDocument.dataDocumentId that defines
+                        the document structure, etc.]]></description></parameter><parameter name="_index"><description><![CDATA[From DataDocument.indexName, if specified.]]></description></parameter><parameter name="_timestamp"><description><![CDATA[Document timestamp in the format yyyy-MM-dd'T'HH:mm:ss]]></description></parameter></parameter></parameter></in-parameters><out-parameters/><actions><iterate list="documentList" entry="document"><set field="userIdSet" from="new HashSet()"/><script><![CDATA[findAllFieldsNestedMap("userId", document, userIdSet)]]></script><script><![CDATA[findAllFieldsNestedMap("fromUserId", document, userIdSet)]]></script><script><![CDATA[findAllFieldsNestedMap("toUserId", document, userIdSet)]]></script><if condition="!userIdSet"><log level="info" message="Not sending ${document._type} DataDocument notification, no userIds found"/><continue/></if><script><![CDATA[def nm = ec.makeNotificationMessage()
+                    nm.topic((String) document._type).message((Map<String, Object>) document).userIds((Set) userIdSet)
+                    def notificationTopic = nm.getNotificationTopic()
+                    if (notificationTopic == null && document._type) {
+                        def dataDocument = ec.entity.find("moqui.entity.document.DataDocument").condition("dataDocumentId", document._type).useCache(true).one()
+                        if (dataDocument.documentTitle) nm.title(dataDocument.documentTitle)
+                        def dataDocumentLinks = dataDocument.findRelated("links", null, null, true, false)
+                        if (dataDocumentLinks) nm.link(dataDocumentLinks[0].linkUrl)
+                    }
+                    nm.send()]]></script></iterate></actions></service>

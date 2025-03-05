@@ -1,0 +1,22 @@
+
+<!-- Entity Name: moqui.basic.UomConversion sql table: UOM_CONVERSION --><entity entity-name="UomConversion" package="moqui.basic" use="configuration" cache="true">
+    <field name="uomConversionId" type="id" is-pk="true"/>
+    <field name="uomId" type="id"/>
+    <field name="toUomId" type="id"/>
+    <field name="fromDate" type="date-time"/>
+    <field name="thruDate" type="date-time"/>
+    <field name="conversionFactor" type="number-float"/>
+    <field name="conversionOffset" type="number-decimal">
+        <description><![CDATA[The factor is multiplied first, then the offset is added. When converting in the reverse
+                direction the offset is subtracted first, then divided by the factor.]]></description></field>
+    <field name="purposeEnumId" type="id"/>
+    <relationship type="one" related="moqui.basic.Uom" short-alias="uom"/>
+    <relationship type="one" title="To" related="moqui.basic.Uom" short-alias="toUom">
+        <key-map field-name="toUomId" related="uomId"/></relationship>
+    <relationship type="one" related="moqui.basic.Enumeration" title="UomConversionPurpose">
+        <key-map field-name="purposeEnumId" related="enumId"/></relationship>
+    <seed-data>
+        <moqui.basic.EnumerationType description="Uom Conversion Purpose" enumTypeId="UomConversionPurpose"/></seed-data>
+    <field name="lastUpdatedStamp" type="date-time"/>
+
+</entity>

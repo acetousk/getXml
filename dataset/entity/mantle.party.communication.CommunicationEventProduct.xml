@@ -1,0 +1,9 @@
+
+<!-- Entity Name: mantle.party.communication.CommunicationEventProduct sql table: COMMUNICATION_EVENT_PRODUCT --><entity entity-name="CommunicationEventProduct" package="mantle.party.communication" cache="never">
+    <field name="productId" type="id" is-pk="true"/>
+    <field name="communicationEventId" type="id" is-pk="true"/>
+    <relationship type="one" related="mantle.product.Product" short-alias="product"/>
+    <relationship type="one" related="mantle.party.communication.CommunicationEvent" short-alias="communicationEvent"/>
+    <field name="lastUpdatedStamp" type="date-time"/>
+
+</entity>

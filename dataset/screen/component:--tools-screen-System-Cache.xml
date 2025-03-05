@@ -1,0 +1,1 @@
+<!-- Screen Location component://tools/screen/System/Cache.xml --><screen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://moqui.org/xsd/xml-screen-3.xsd" default-menu-title="Cache" default-menu-index="5"><subscreens default-item="CacheList"/><widgets><subscreens-active/></widgets></screen>

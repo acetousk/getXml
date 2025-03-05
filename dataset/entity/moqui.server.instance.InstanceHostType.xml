@@ -1,0 +1,20 @@
+
+<!-- Entity Name: moqui.server.instance.InstanceHostType sql table: INSTANCE_HOST_TYPE --><entity entity-name="InstanceHostType" package="moqui.server.instance" use="configuration" has-dependents="true">
+    <field name="hostTypeId" type="id" is-pk="true"/>
+    <field name="description" type="text-medium"/>
+    <field name="initService" type="text-medium"/>
+    <field name="startService" type="text-medium"/>
+    <field name="stopService" type="text-medium"/>
+    <field name="removeService" type="text-medium"/>
+    <field name="checkService" type="text-medium"/>
+    <seed-data>
+        <moqui.server.instance.InstanceHostType hostTypeId="docker" description="Docker" initService="org.moqui.impl.InstanceServices.init#InstanceDocker" startService="org.moqui.impl.InstanceServices.start#InstanceDocker" stopService="org.moqui.impl.InstanceServices.stop#InstanceDocker" removeService="org.moqui.impl.InstanceServices.remove#InstanceDocker" checkService="org.moqui.impl.InstanceServices.check#InstanceDocker"/>
+        <moqui.server.instance.InstanceHost instanceHostId="LocalDocker" hostTypeId="docker" hostProtocol="http" hostAddress="127.0.0.1" adminPort="2375"/>
+    </seed-data>
+    <field name="lastUpdatedStamp" type="date-time"/>
+    <relationship related="moqui.server.instance.InstanceHost" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="hostTypeId" related="hostTypeId"/></relationship>
+    <relationship related="moqui.server.instance.InstanceImage" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="hostTypeId" related="hostTypeId"/></relationship>
+
+</entity>

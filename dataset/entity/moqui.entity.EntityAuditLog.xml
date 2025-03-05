@@ -1,0 +1,31 @@
+
+<!-- Entity Name: moqui.entity.EntityAuditLog sql table: ENTITY_AUDIT_LOG --><entity entity-name="EntityAuditLog" package="moqui.entity" use="transactional" authorize-skip="create" cache="never" create-only="true">
+    <field name="auditHistorySeqId" type="id" is-pk="true"/>
+    <field name="changedEntityName" type="text-medium"/>
+    <field name="changedFieldName" type="text-short"/>
+    <field name="pkPrimaryValue" type="text-medium"/>
+    <field name="pkSecondaryValue" type="text-medium"/>
+    <field name="pkRestCombinedValue" type="text-medium"/>
+    <field name="oldValueText" type="text-long"/>
+    <field name="newValueText" type="text-long"/>
+    <field name="changeReason" type="text-medium"/>
+    <field name="changedDate" type="date-time"/>
+    <field name="changedByUserId" type="text-medium"/>
+    <field name="changedInVisitId" type="text-medium"/>
+    <field name="artifactStack" type="text-long"/>
+    <index name="ENTAUDLOG_FLD1PK">
+        <index-field name="changedEntityName"/>
+        <index-field name="changedFieldName"/>
+        <index-field name="pkPrimaryValue"/>
+    </index>
+    <index name="ENTAUDLOG_ENTPKPR">
+        <index-field name="changedEntityName"/>
+        <index-field name="pkPrimaryValue"/>
+    </index>
+    <index name="ENTAUDLOG_PKPRIM">
+        <index-field name="pkPrimaryValue"/></index>
+    <field name="lastUpdatedStamp" type="date-time"/>
+    <relationship related="mantle.order.OrderHeader" type="many" is-auto-reverse="true" mutable="true" title="Status">
+        <key-map field-name="pkPrimaryValue" related="orderId"/></relationship>
+
+</entity>

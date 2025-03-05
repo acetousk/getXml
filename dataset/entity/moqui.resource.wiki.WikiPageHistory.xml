@@ -1,0 +1,13 @@
+
+<!-- Entity Name: moqui.resource.wiki.WikiPageHistory sql table: WIKI_PAGE_HISTORY --><entity entity-name="WikiPageHistory" package="moqui.resource.wiki" use="nontransactional" cache="never">
+    <field name="wikiPageId" type="id" is-pk="true"/>
+    <field name="historySeqId" type="id" is-pk="true"/>
+    <field name="oldPagePath" type="text-medium"/>
+    <field name="userId" type="id"/>
+    <field name="changeDateTime" type="date-time"/>
+    <field name="versionName" type="text-short"/>
+    <relationship type="one" related="moqui.resource.wiki.WikiPage" short-alias="page"/>
+    <relationship type="one-nofk" related="moqui.security.UserAccount" short-alias="user"/>
+    <field name="lastUpdatedStamp" type="date-time"/>
+
+</entity>

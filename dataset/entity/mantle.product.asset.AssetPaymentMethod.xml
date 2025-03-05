@@ -1,0 +1,17 @@
+
+<!-- Entity Name: mantle.product.asset.AssetPaymentMethod sql table: ASSET_PAYMENT_METHOD --><entity entity-name="AssetPaymentMethod" package="mantle.product.asset">
+    <field name="assetId" type="id" is-pk="true"/>
+    <field name="paymentMethodId" type="id" is-pk="true"/>
+    <field name="typeEnumId" type="id"/>
+    <field name="sequenceNum" type="number-integer"/>
+    <relationship type="one" related="mantle.product.asset.Asset"/>
+    <relationship type="one" related="mantle.account.method.PaymentMethod"/>
+    <relationship type="one" title="AssetPaymentMethodType" related="moqui.basic.Enumeration">
+        <key-map field-name="typeEnumId"/></relationship>
+    <seed-data>
+        <moqui.basic.EnumerationType description="Asset Payment Method Type" enumTypeId="AssetPaymentMethodType"/>
+        <moqui.basic.Enumeration enumId="ApmtSecuredLoan" description="Secured Loan" enumTypeId="AssetPaymentMethodType"/>
+    </seed-data>
+    <field name="lastUpdatedStamp" type="date-time"/>
+
+</entity>

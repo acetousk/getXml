@@ -1,0 +1,110 @@
+
+<!-- Entity Name: mantle.ledger.config.PartyAcctgPreference sql table: PARTY_ACCTG_PREFERENCE --><entity entity-name="PartyAcctgPreference" package="mantle.ledger.config" use="configuration">
+    <field name="organizationPartyId" type="id" is-pk="true"/>
+    <field name="fiscalYearStartMonth" type="number-integer"/>
+    <field name="fiscalYearStartDay" type="number-integer"/>
+    <field name="realTimeGlSummary" type="text-indicator">
+        <description><![CDATA[Defaults to N. If set to Y GlAccountOrganization and GlAccountOrgTimePeriod are updated with each AcctgTrans post.]]></description></field>
+    <field name="hourlyTimePeriodTypeId" type="id"/>
+    <field name="salaryTimePeriodTypeId" type="id"/>
+    <field name="taxFormEnumId" type="id"/>
+    <field name="payrollTaxFormEnumId" type="id"/>
+    <field name="taxClassificationEnumId" type="id"/>
+    <field name="employerClassEnumId" type="id"/>
+    <field name="cogsMethodEnumId" type="id"/>
+    <field name="baseCurrencyUomId" type="id">
+        <description><![CDATA[The unit of account currency for the Internal Organization]]></description></field>
+    <field name="localCurrencyUomId" type="id">
+        <description><![CDATA[For unstable local currencies when different from a more stable base currency]]></description></field>
+    <field name="invoiceSequenceEnumId" type="id"/>
+    <field name="invoiceIdPrefix" type="text-short"/>
+    <field name="useInvoiceIdForReturns" type="text-indicator"/>
+    <field name="orderSequenceEnumId" type="id"/>
+    <field name="orderIdPrefix" type="text-short"/>
+    <field name="refundPaymentMethodId" type="id"/>
+    <field name="errorGlJournalId" type="id">
+        <description><![CDATA[Journal to which all the failed automatic transaction are assigned.
+            If the error journal is set, if the GL posting fails for some reason the triggering operation
+            (finalizing an invoice or payment or whatever) would NOT roll back, instead the partial GL post would be
+            placed into the error journal.]]></description></field>
+    <field name="glAccountCodeMask" type="text-short"/>
+    <field name="settlementTermId" type="id">
+        <description><![CDATA[The default SettlementTerm to use on receivable (outgoing) invoices if there is none from agreement, order, etc]]></description></field>
+    <relationship type="one" title="Organization" related="mantle.party.Party">
+        <key-map field-name="organizationPartyId"/></relationship>
+    <relationship type="one" title="Hourly" related="mantle.party.time.TimePeriodType">
+        <key-map field-name="hourlyTimePeriodTypeId"/></relationship>
+    <relationship type="one" title="Salary" related="mantle.party.time.TimePeriodType">
+        <key-map field-name="salaryTimePeriodTypeId"/></relationship>
+    <relationship type="one" title="TaxForm" related="moqui.basic.Enumeration" short-alias="taxForm">
+        <key-map field-name="taxFormEnumId"/></relationship>
+    <relationship type="one" title="PayrollTaxForm" related="moqui.basic.Enumeration" short-alias="payrollTaxForm">
+        <key-map field-name="payrollTaxFormEnumId"/></relationship>
+    <relationship type="one" title="TaxClassification" related="moqui.basic.Enumeration" short-alias="taxClassification">
+        <key-map field-name="taxClassificationEnumId"/></relationship>
+    <relationship type="one" title="EmployerClassification" related="moqui.basic.Enumeration" short-alias="employerClassification">
+        <key-map field-name="employerClassEnumId"/></relationship>
+    <relationship type="one" title="CogsMethod" related="moqui.basic.Enumeration" short-alias="cogsMethod">
+        <key-map field-name="cogsMethodEnumId"/></relationship>
+    <relationship type="one" title="BaseCurrency" related="moqui.basic.Uom">
+        <key-map field-name="baseCurrencyUomId"/></relationship>
+    <relationship type="one" title="LocalCurrency" related="moqui.basic.Uom">
+        <key-map field-name="localCurrencyUomId"/></relationship>
+    <relationship type="one" title="Refund" related="mantle.account.method.PaymentMethod">
+        <key-map field-name="refundPaymentMethodId"/></relationship>
+    <relationship type="one" related="mantle.ledger.transaction.GlJournal">
+        <key-map field-name="errorGlJournalId"/></relationship>
+    <relationship type="one" title="InvoiceSequence" related="moqui.basic.Enumeration">
+        <key-map field-name="invoiceSequenceEnumId"/></relationship>
+    <relationship type="one" title="OrderSequence" related="moqui.basic.Enumeration">
+        <key-map field-name="orderSequenceEnumId"/></relationship>
+    <relationship type="one" related="mantle.account.invoice.SettlementTerm"/>
+    <seed-data>
+        <moqui.basic.EnumerationType description="Tax Form" enumTypeId="TaxForm"/>
+        <moqui.basic.Enumeration description="US IRS Form 1120" enumId="TxfUsIrs1120" sequenceNum="1" enumTypeId="TaxForm"/>
+        <moqui.basic.Enumeration description="US IRS Form 1120S" enumId="TxfUsIrs1120S" sequenceNum="2" enumTypeId="TaxForm"/>
+        <moqui.basic.Enumeration description="US IRS Form 1065" enumId="TxfUsIrs1065" sequenceNum="3" enumTypeId="TaxForm"/>
+        <moqui.basic.Enumeration description="US IRS Form 990" enumId="TxfUsIrs990" sequenceNum="4" enumTypeId="TaxForm"/>
+        <moqui.basic.Enumeration description="US IRS Form 990-PF" enumId="TxfUsIrs990PF" sequenceNum="5" enumTypeId="TaxForm"/>
+        <moqui.basic.Enumeration description="US IRS Form 990-T" enumId="TxfUsIrs990T" sequenceNum="6" enumTypeId="TaxForm"/>
+        <moqui.basic.Enumeration description="US IRS Form 1040" enumId="TxfUsIrs1040" sequenceNum="7" enumTypeId="TaxForm"/>
+        <moqui.basic.EnumerationType description="Payroll Tax Form" enumTypeId="PayrollTaxForm"/>
+        <moqui.basic.Enumeration description="US IRS Form 941" enumId="PtxfUsIrs941" enumTypeId="PayrollTaxForm"/>
+        <moqui.basic.Enumeration description="US IRS Form 943" enumId="PtxfUsIrs943" enumTypeId="PayrollTaxForm"/>
+        <moqui.basic.Enumeration description="US IRS Form 944" enumId="PtxfUsIrs944" enumTypeId="PayrollTaxForm"/>
+        <moqui.basic.Enumeration description="US IRS Schedule H" enumId="PtxfUsIrsSchH" enumTypeId="PayrollTaxForm"/>
+        <moqui.basic.Enumeration description="US IRS CT-1" enumId="PtxfUsIrsCT1" enumTypeId="PayrollTaxForm"/>
+        <moqui.basic.EnumerationType description="Tax Classification" enumTypeId="TaxClassification"/>
+        <moqui.basic.Enumeration description="USA - Individual, Sole Proprietor, Single-member LLC" enumId="TxcIndividual" sequenceNum="1" enumTypeId="TaxClassification"/>
+        <moqui.basic.Enumeration description="USA - C Corporation" enumId="TxcCCorp" sequenceNum="2" enumTypeId="TaxClassification"/>
+        <moqui.basic.Enumeration description="USA - S Corporation" enumId="TxcSCorp" sequenceNum="3" enumTypeId="TaxClassification"/>
+        <moqui.basic.Enumeration description="USA - Partnership" enumId="TxcPartnership" sequenceNum="4" enumTypeId="TaxClassification"/>
+        <moqui.basic.Enumeration description="USA - Trust/Estate" enumId="TxcTrustEstate" sequenceNum="5" enumTypeId="TaxClassification"/>
+        <moqui.basic.Enumeration description="USA - LLC as S Corp" enumId="TxcLlcSCorp" sequenceNum="6" enumTypeId="TaxClassification"/>
+        <moqui.basic.Enumeration description="USA - LLC as C Corp" enumId="TxcLlcCCorp" sequenceNum="7" enumTypeId="TaxClassification"/>
+        <moqui.basic.Enumeration description="USA - LLC as Partnership" enumId="TxcLlcPartnership" sequenceNum="8" enumTypeId="TaxClassification"/>
+        <moqui.basic.Enumeration description="Other" enumId="TxcOther" sequenceNum="9" enumTypeId="TaxClassification"/>
+        <moqui.basic.EnumerationType description="Employer Classification" enumTypeId="EmployerClassification"/>
+        <moqui.basic.Enumeration description="US IRS Agriculture (943)" enumId="EmclsUsIrsAgriculture" enumCode="A" enumTypeId="EmployerClassification"/>
+        <moqui.basic.Enumeration description="US IRS Household (Sch H)" enumId="EmclsUsIrsHousehold" enumCode="H" enumTypeId="EmployerClassification"/>
+        <moqui.basic.Enumeration description="US IRS Military (941)" enumId="EmclsUsIrsMilitary" enumCode="M" enumTypeId="EmployerClassification"/>
+        <moqui.basic.Enumeration description="US IRS Medicare Qualified Government (941)" enumId="EmclsUsIrsQualGovernment" enumCode="Q" enumTypeId="EmployerClassification"/>
+        <moqui.basic.Enumeration description="US IRS Railroad (CT-1)" enumId="EmclsUsIrsRailroad" enumCode="X" enumTypeId="EmployerClassification"/>
+        <moqui.basic.Enumeration description="US IRS Regular (944)" enumId="EmclsUsIrsRegular" enumCode="F" enumTypeId="EmployerClassification"/>
+        <moqui.basic.Enumeration description="US IRS Regular (all others) (941)" enumId="EmclsUsIrsRegularOther" enumCode="R" enumTypeId="EmployerClassification"/>
+        <moqui.basic.EnumerationType description="COGS Method" enumTypeId="CogsMethod"/>
+        <moqui.basic.Enumeration description="LIFO" enumId="CogsLifo" sequenceNum="1" enumTypeId="CogsMethod"/>
+        <moqui.basic.Enumeration description="FIFO" enumId="CogsFifo" sequenceNum="2" enumTypeId="CogsMethod"/>
+        <moqui.basic.Enumeration description="Average Cost" enumId="CogsAverageCost" sequenceNum="3" enumTypeId="CogsMethod"/>
+        <moqui.basic.Enumeration description="Inventory Actual Cost" enumId="CogsActualCost" sequenceNum="4" enumTypeId="CogsMethod"/>
+        <moqui.basic.EnumerationType description="Invoice Sequence Mode" enumTypeId="InvoiceSequence"/>
+        <moqui.basic.Enumeration description="Standard (faster, may have gaps, per system)" enumId="InvSqStandard" sequenceNum="1" enumTypeId="InvoiceSequence"/>
+        <moqui.basic.Enumeration description="Enforced Sequence (no gaps, per organization)" enumId="InvSqEnforced" sequenceNum="2" enumTypeId="InvoiceSequence"/>
+        <moqui.basic.Enumeration description="Enforced and Restart on Fiscal Year (no gaps, per org, reset to 1 each year)" enumId="InvSqEnfRestartYr" sequenceNum="3" enumTypeId="InvoiceSequence"/>
+        <moqui.basic.EnumerationType description="Order Sequence Mode" enumTypeId="OrderSequence"/>
+        <moqui.basic.Enumeration description="Standard (faster, may have gaps, per system)" enumId="OrdSqStandard" sequenceNum="1" enumTypeId="OrderSequence"/>
+        <moqui.basic.Enumeration description="Enforced Sequence (no gaps, per organization)" enumId="OrdSqEnforced" sequenceNum="2" enumTypeId="OrderSequence"/>
+    </seed-data>
+    <field name="lastUpdatedStamp" type="date-time"/>
+
+</entity>

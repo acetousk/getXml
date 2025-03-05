@@ -1,0 +1,21 @@
+
+<!-- Entity Name: mantle.product.asset.AssetIdentification sql table: ASSET_IDENTIFICATION --><entity entity-name="AssetIdentification" package="mantle.product.asset" cache="never">
+    <field name="assetId" type="id" is-pk="true"/>
+    <field name="identificationTypeEnumId" type="id" is-pk="true"/>
+    <field name="idValue" type="text-medium"/>
+    <relationship type="one" related="mantle.product.asset.Asset"/>
+    <relationship type="one" title="AssetIdentificationType" related="moqui.basic.Enumeration">
+        <key-map field-name="identificationTypeEnumId"/></relationship>
+    <seed-data>
+        <moqui.basic.EnumerationType description="Asset Identification Type" enumTypeId="AssetIdentificationType"/>
+        <moqui.basic.Enumeration description="Manufacturer Serial Number" enumId="AitMfgSerial" enumTypeId="AssetIdentificationType"/>
+        <moqui.basic.Enumeration description="Media Access Control (MAC) Address" enumId="AitMac" enumTypeId="AssetIdentificationType"/>
+        <moqui.basic.Enumeration description="Vendor Inventory/Tracking" enumId="AitVendorInventory" enumTypeId="AssetIdentificationType"/>
+        <moqui.basic.Enumeration description="Tracking Label Number" enumId="AitTrackingLabel" enumTypeId="AssetIdentificationType"/>
+        <moqui.basic.Enumeration description="Vehicle Identification Number (VIN)" enumId="AitVin" enumTypeId="AssetIdentificationType"/>
+        <moqui.basic.Enumeration description="Gas Card Number" enumId="AitGasCard" enumTypeId="AssetIdentificationType"/>
+        <moqui.basic.Enumeration description="License Plate Number" enumId="AitLicensePlate" enumTypeId="AssetIdentificationType"/>
+    </seed-data>
+    <field name="lastUpdatedStamp" type="date-time"/>
+
+</entity>

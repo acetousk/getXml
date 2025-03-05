@@ -1,0 +1,45 @@
+
+<!-- Entity Name: mantle.work.measurement.MeasurementType sql table: MEASUREMENT_TYPE --><entity entity-name="MeasurementType" package="mantle.work.measurement" has-dependents="true">
+    <field name="measurementTypeId" type="id" is-pk="true"/>
+    <field name="description" type="text-medium"/>
+    <field name="hasValue" type="text-indicator"/>
+    <field name="uomTypeEnumId" type="id"/>
+    <field name="enumTypeId" type="id"/>
+    <field name="productMeterTypeId" type="id"/>
+    <relationship type="one" title="UomType" related="moqui.basic.Enumeration">
+        <key-map field-name="uomTypeEnumId"/></relationship>
+    <relationship type="one" related="moqui.basic.EnumerationType"/>
+    <relationship type="one" related="mantle.product.maintenance.ProductMeterType"/>
+    <seed-data>
+        <moqui.basic.EnumerationType description="Sixteen Point Compass" enumTypeId="SixteenPointCompass"/>
+        <moqui.basic.Enumeration description="North (0°)" enumCode="N" enumId="SPC_N" enumTypeId="SixteenPointCompass"/>
+        <moqui.basic.Enumeration description="North Northeast (22.5°)" enumCode="NNE" enumId="SPC_NNE" enumTypeId="SixteenPointCompass"/>
+        <moqui.basic.Enumeration description="Northeast (45°)" enumCode="NE" enumId="SPC_NE" enumTypeId="SixteenPointCompass"/>
+        <moqui.basic.Enumeration description="East Northeast (67.5°)" enumCode="ENE" enumId="SPC_ENE" enumTypeId="SixteenPointCompass"/>
+        <moqui.basic.Enumeration description="East (90°)" enumCode="E" enumId="SPC_E" enumTypeId="SixteenPointCompass"/>
+        <moqui.basic.Enumeration description="East Southeast (112.5°)" enumCode="SSE" enumId="SPC_ESE" enumTypeId="SixteenPointCompass"/>
+        <moqui.basic.Enumeration description="Southeast (135°)" enumCode="SE" enumId="SPC_SE" enumTypeId="SixteenPointCompass"/>
+        <moqui.basic.Enumeration description="South Southeast (157.5°)" enumCode="SSE" enumId="SPC_SSE" enumTypeId="SixteenPointCompass"/>
+        <moqui.basic.Enumeration description="South (180°)" enumCode="S" enumId="SPC_S" enumTypeId="SixteenPointCompass"/>
+        <moqui.basic.Enumeration description="South Southwest (202.5°)" enumCode="SSW" enumId="SPC_SSW" enumTypeId="SixteenPointCompass"/>
+        <moqui.basic.Enumeration description="Southwest (225°)" enumCode="SW" enumId="SPC_SW" enumTypeId="SixteenPointCompass"/>
+        <moqui.basic.Enumeration description="West Southwest (247.5°)" enumCode="WSW" enumId="SPC_WSW" enumTypeId="SixteenPointCompass"/>
+        <moqui.basic.Enumeration description="West (270°)" enumCode="W" enumId="SPC_W" enumTypeId="SixteenPointCompass"/>
+        <moqui.basic.Enumeration description="West Northwest (292.5°)" enumCode="WNW" enumId="SPC_WNW" enumTypeId="SixteenPointCompass"/>
+        <moqui.basic.Enumeration description="Northwest (315°)" enumCode="NW" enumId="SPC_NW" enumTypeId="SixteenPointCompass"/>
+        <moqui.basic.Enumeration description="North Northwest (337.5°)" enumCode="NNW" enumId="SPC_NNW" enumTypeId="SixteenPointCompass"/>
+        <mantle.work.measurement.MeasurementType measurementTypeId="Temperature" description="Temperature" hasValue="Y" uomTypeEnumId="UT_TEMP_MEASURE"/>
+        <mantle.work.measurement.MeasurementType measurementTypeId="TemperatureFeelsLike" description="Temperature Feels Like" hasValue="Y" uomTypeEnumId="UT_TEMP_MEASURE"/>
+        <mantle.work.measurement.MeasurementType measurementTypeId="WindSpeed" description="Wind Speed" hasValue="Y" uomTypeEnumId="UT_VELOCITY_MEASURE"/>
+        <mantle.work.measurement.MeasurementType measurementTypeId="WindDirection" description="Wind Direction (Degrees)" hasValue="Y" uomTypeEnumId="" enumTypeId="SixteenPointCompass"/>
+        <mantle.work.measurement.MeasurementType measurementTypeId="AtmosphericPressure" description="Atmospheric Pressure" hasValue="Y" uomTypeEnumId="UT_PRESSURE_MEASURE"/>
+        <mantle.work.measurement.MeasurementType measurementTypeId="Precipitation" description="Precipitation" hasValue="Y" uomTypeEnumId="UT_LENGTH_MEASURE"/>
+        <mantle.work.measurement.MeasurementType measurementTypeId="Humidity" description="Humidity (Percentage)" hasValue="Y" uomTypeEnumId=""/>
+        <mantle.work.measurement.MeasurementType measurementTypeId="CloudCover" description="Cloud Cover (Percentage)" hasValue="Y" uomTypeEnumId=""/>
+        <mantle.work.measurement.MeasurementType measurementTypeId="pH" description="pH" hasValue="Y" uomTypeEnumId=""/>
+    </seed-data>
+    <field name="lastUpdatedStamp" type="date-time"/>
+    <relationship related="mantle.work.measurement.Measurement" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="measurementTypeId" related="measurementTypeId"/></relationship>
+
+</entity>

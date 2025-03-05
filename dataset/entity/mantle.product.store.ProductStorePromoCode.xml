@@ -1,0 +1,23 @@
+
+<!-- Entity Name: mantle.product.store.ProductStorePromoCode sql table: PRODUCT_STORE_PROMO_CODE --><entity entity-name="ProductStorePromoCode" package="mantle.product.store" has-dependents="true">
+    <field name="promoCodeId" type="id" is-pk="true"/>
+    <field name="promoCode" type="text-short" default="promoCodeId"/>
+    <field name="storePromotionId" type="id"/>
+    <field name="fromDate" type="date-time"/>
+    <field name="thruDate" type="date-time"/>
+    <field name="useLimitPerCode" type="number-integer"/>
+    <field name="useLimitPerCustomer" type="number-integer"/>
+    <field name="userEntered" type="text-indicator"/>
+    <field name="requireParty" type="text-indicator"/>
+    <relationship type="one" related="mantle.product.store.ProductStorePromotion" short-alias="storePromotion"/>
+    <relationship type="many" related="mantle.product.store.ProductStorePromoCodeParty" short-alias="parties">
+        <key-map field-name="storePromotionId"/></relationship>
+    <index name="PSTR_PROMO_CODE" unique="true">
+        <index-field name="promoCode"/></index>
+    <field name="lastUpdatedStamp" type="date-time"/>
+    <relationship related="mantle.order.OrderItem" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="promoCodeId" related="promoCodeId"/></relationship>
+    <relationship related="mantle.order.OrderPromoCode" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="promoCodeId" related="promoCodeId"/></relationship>
+
+</entity>

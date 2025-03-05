@@ -1,0 +1,9 @@
+
+<!-- Entity Name: mantle.party.PartySettingTypeRole sql table: PARTY_SETTING_TYPE_ROLE --><entity entity-name="PartySettingTypeRole" package="mantle.party" use="configuration">
+    <field name="partySettingTypeId" type="id" is-pk="true"/>
+    <field name="roleTypeId" type="id" is-pk="true"/>
+    <relationship type="one" related="mantle.party.PartySettingType" short-alias="settingType"/>
+    <relationship type="one" related="mantle.party.RoleType" short-alias="role"/>
+    <field name="lastUpdatedStamp" type="date-time"/>
+
+</entity>

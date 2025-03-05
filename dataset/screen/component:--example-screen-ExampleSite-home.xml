@@ -1,0 +1,1 @@
+<!-- Screen Location component://example/screen/ExampleSite/home.xml --><screen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://moqui.org/xsd/xml-screen-3.xsd" require-authentication="false"><widgets><render-mode><text type="html" location="component://example/screen/ExampleSite/home.html.ftl"/></render-mode></widgets></screen>

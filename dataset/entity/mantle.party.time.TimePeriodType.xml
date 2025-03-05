@@ -1,0 +1,62 @@
+
+<!-- Entity Name: mantle.party.time.TimePeriodType sql table: TIME_PERIOD_TYPE --><entity entity-name="TimePeriodType" package="mantle.party.time" use="configuration" cache="true" has-dependents="true">
+    <field name="timePeriodTypeId" type="id" is-pk="true"/>
+    <field name="periodPurposeEnumId" type="id"/>
+    <field name="parentPeriodTypeId" type="id"/>
+    <field name="description" type="text-medium"/>
+    <field name="periodLength" type="number-decimal"/>
+    <field name="lengthUomId" type="id"/>
+    <relationship type="one" title="TimePeriodPurpose" related="moqui.basic.Enumeration" short-alias="purpose">
+        <key-map field-name="periodPurposeEnumId"/></relationship>
+    <relationship type="one" title="Parent" related="mantle.party.time.TimePeriodType" short-alias="parentPeriodType">
+        <key-map field-name="parentPeriodTypeId"/></relationship>
+    <relationship type="one" title="Length" related="moqui.basic.Uom" short-alias="lengthUom">
+        <key-map field-name="lengthUomId" related="uomId"/></relationship>
+    <seed-data>
+        <moqui.basic.EnumerationType description="Time Period Purpose" enumTypeId="TimePeriodPurpose"/>
+        <moqui.basic.Enumeration enumId="Fiscal" description="Fiscal" enumTypeId="TimePeriodPurpose"/>
+        <moqui.basic.Enumeration enumId="Payroll" description="Payroll" enumTypeId="TimePeriodPurpose"/>
+        <moqui.basic.Enumeration enumId="Sales" description="Sales" enumTypeId="TimePeriodPurpose"/>
+        <moqui.basic.Enumeration enumId="Tax" description="Tax" enumTypeId="TimePeriodPurpose"/>
+        <mantle.party.time.TimePeriodType description="Fiscal Year" timePeriodTypeId="FiscalYear" periodPurposeEnumId="Fiscal" periodLength="1" lengthUomId="TF_yr"/>
+        <mantle.party.time.TimePeriodType description="Fiscal Quarter" timePeriodTypeId="FiscalQuarter" parentPeriodTypeId="FiscalYear" periodPurposeEnumId="Fiscal" periodLength="3" lengthUomId="TF_mon"/>
+        <mantle.party.time.TimePeriodType description="Fiscal Month" timePeriodTypeId="FiscalMonth" parentPeriodTypeId="FiscalQuarter" periodPurposeEnumId="Fiscal" periodLength="1" lengthUomId="TF_mon"/>
+        <mantle.party.time.TimePeriodType description="Fiscal Bi-Week" timePeriodTypeId="FiscalBiWeek" parentPeriodTypeId="FiscalMonth" periodPurposeEnumId="Fiscal" periodLength="2" lengthUomId="TF_wk"/>
+        <mantle.party.time.TimePeriodType description="Fiscal Week" timePeriodTypeId="FiscalWeek" parentPeriodTypeId="FiscalMonth" periodPurposeEnumId="Fiscal" periodLength="1" lengthUomId="TF_wk"/>
+        <mantle.party.time.TimePeriodType description="Payroll Year" timePeriodTypeId="PayrollYear" periodPurposeEnumId="Payroll" periodLength="1" lengthUomId="TF_yr"/>
+        <mantle.party.time.TimePeriodType description="Payroll Semi-Year" timePeriodTypeId="PayrollSemiYear" parentPeriodTypeId="PayrollYear" periodPurposeEnumId="Payroll" periodLength="6" lengthUomId="TF_mon"/>
+        <mantle.party.time.TimePeriodType description="Payroll Quarter" timePeriodTypeId="PayrollQuarter" parentPeriodTypeId="PayrollYear" periodPurposeEnumId="Payroll" periodLength="3" lengthUomId="TF_mon"/>
+        <mantle.party.time.TimePeriodType description="Payroll Month" timePeriodTypeId="PayrollMonth" parentPeriodTypeId="PayrollQuarter" periodPurposeEnumId="Payroll" periodLength="1" lengthUomId="TF_mon"/>
+        <mantle.party.time.TimePeriodType description="Payroll Semi-Month" timePeriodTypeId="PayrollSemiMonth" parentPeriodTypeId="PayrollMonth" periodPurposeEnumId="Payroll" periodLength="0.5" lengthUomId="TF_mon"/>
+        <mantle.party.time.TimePeriodType description="Payroll Bi-Week" timePeriodTypeId="PayrollBiWeek" parentPeriodTypeId="PayrollMonth" periodPurposeEnumId="Payroll" periodLength="2" lengthUomId="TF_wk"/>
+        <mantle.party.time.TimePeriodType description="Payroll Week" timePeriodTypeId="PayrollWeek" parentPeriodTypeId="PayrollMonth" periodPurposeEnumId="Payroll" periodLength="1" lengthUomId="TF_wk"/>
+        <mantle.party.time.TimePeriodType description="Sales Year" timePeriodTypeId="SalesYear" periodPurposeEnumId="Sales" periodLength="1" lengthUomId="TF_yr"/>
+        <mantle.party.time.TimePeriodType description="Sales Quarter" timePeriodTypeId="SalesQuarter" parentPeriodTypeId="SalesYear" periodPurposeEnumId="Sales" periodLength="3" lengthUomId="TF_mon"/>
+        <mantle.party.time.TimePeriodType description="Sales Month" timePeriodTypeId="SalesMonth" parentPeriodTypeId="SalesQuarter" periodPurposeEnumId="Sales" periodLength="1" lengthUomId="TF_mon"/>
+        <mantle.party.time.TimePeriodType description="Tax Year" timePeriodTypeId="TaxYear" periodPurposeEnumId="Tax" periodLength="1" lengthUomId="TF_yr"/>
+        <mantle.party.time.TimePeriodType description="Tax Quarter" timePeriodTypeId="TaxQuarter" parentPeriodTypeId="TaxYear" periodPurposeEnumId="Tax" periodLength="3" lengthUomId="TF_mon"/>
+        <mantle.party.time.TimePeriodType description="Tax Month" timePeriodTypeId="TaxMonth" parentPeriodTypeId="TaxQuarter" periodPurposeEnumId="Tax" periodLength="1" lengthUomId="TF_mon"/>
+    </seed-data>
+    <field name="lastUpdatedStamp" type="date-time"/>
+    <relationship related="mantle.humanres.employment.Employment" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="timePeriodTypeId" related="timePeriodTypeId"/></relationship>
+    <relationship related="mantle.humanres.employment.EmploymentSalary" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="timePeriodTypeId" related="timePeriodTypeId"/></relationship>
+    <relationship related="mantle.humanres.employment.PayrollAdjustment" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="timePeriodTypeId" related="timePeriodTypeId"/></relationship>
+    <relationship related="mantle.humanres.employment.PayrollAllowance" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="timePeriodTypeId" related="timePeriodTypeId"/></relationship>
+    <relationship related="mantle.humanres.employment.PayrollGarnishMinWage" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="timePeriodTypeId" related="timePeriodTypeId"/></relationship>
+    <relationship related="mantle.humanres.employment.PayrollStdDeduction" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="timePeriodTypeId" related="timePeriodTypeId"/></relationship>
+    <relationship related="mantle.humanres.rate.PayGradeSalary" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="timePeriodTypeId" related="timePeriodTypeId"/></relationship>
+    <relationship related="mantle.ledger.config.PartyAcctgPreference" type="many" is-auto-reverse="true" mutable="true" title="Hourly">
+        <key-map field-name="timePeriodTypeId" related="hourlyTimePeriodTypeId"/></relationship>
+    <relationship related="mantle.ledger.config.PartyAcctgPreference" type="many" is-auto-reverse="true" mutable="true" title="Salary">
+        <key-map field-name="timePeriodTypeId" related="salaryTimePeriodTypeId"/></relationship>
+    <relationship related="mantle.party.time.TimePeriod" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="timePeriodTypeId" related="timePeriodTypeId"/></relationship>
+
+</entity>

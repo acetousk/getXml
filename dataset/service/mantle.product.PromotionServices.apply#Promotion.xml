@@ -1,0 +1,3 @@
+<!--Service Location mantle.product.PromotionServices.apply#Promotion--><service verb="apply" noun="Promotion"><in-parameters><parameter name="orderId" required="true"/><parameter name="orderPartSeqId" required="true"/><parameter name="storePromotionId" required="true"/><parameter name="promoCodeId"/><parameter name="useLimit" type="BigDecimal"/><parameter name="itemDescription"/></in-parameters><out-parameters/>
+    null
+</service>

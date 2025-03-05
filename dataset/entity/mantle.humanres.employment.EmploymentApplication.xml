@@ -1,0 +1,31 @@
+
+<!-- Entity Name: mantle.humanres.employment.EmploymentApplication sql table: EMPLOYMENT_APPLICATION --><entity entity-name="EmploymentApplication" package="mantle.humanres.employment" use="nontransactional">
+    <field name="employmentApplicationId" type="id" is-pk="true"/>
+    <field name="emplPositionId" type="id"/>
+    <field name="statusId" type="id" enable-audit-log="true"/>
+    <field name="referredByEnumId" type="id"/>
+    <field name="applicationDate" type="date-time"/>
+    <field name="applyingPartyId" type="id"/>
+    <field name="referredByPartyId" type="id"/>
+    <field name="approverPartyId" type="id"/>
+    <relationship type="one" related="mantle.humanres.position.EmplPosition" short-alias="position"/>
+    <relationship type="one" title="EmploymentApplication" related="moqui.basic.StatusItem" short-alias="status"/>
+    <relationship type="one" title="EmploymentApplicationReferredBy" related="moqui.basic.Enumeration">
+        <key-map field-name="referredByEnumId"/></relationship>
+    <relationship type="one" title="Applying" related="mantle.party.Party" short-alias="applyingParty">
+        <key-map field-name="applyingPartyId"/></relationship>
+    <relationship type="one" title="ReferredBy" related="mantle.party.Party" short-alias="referredParty">
+        <key-map field-name="referredByPartyId"/></relationship>
+    <relationship type="one" title="Approver" related="mantle.party.Party" short-alias="approverParty">
+        <key-map field-name="approverPartyId"/></relationship>
+    <seed-data>
+        <moqui.basic.StatusType description="Employment Application Status" statusTypeId="EmploymentApplication"/>
+        <moqui.basic.EnumerationType description="Employment Application Referred By" enumTypeId="EmploymentApplicationReferredBy"/>
+        <moqui.basic.Enumeration description="Newspaper" enumId="EarbNewspaper" enumTypeId="EmploymentApplicationReferredBy"/>
+        <moqui.basic.Enumeration description="Personal Referral" enumId="EarbPersonal" enumTypeId="EmploymentApplicationReferredBy"/>
+        <moqui.basic.Enumeration description="Internet" enumId="EarbInternet" enumTypeId="EmploymentApplicationReferredBy"/>
+        <moqui.basic.Enumeration description="Advertisement" enumId="EarbAdvertisement" enumTypeId="EmploymentApplicationReferredBy"/>
+    </seed-data>
+    <field name="lastUpdatedStamp" type="date-time"/>
+
+</entity>

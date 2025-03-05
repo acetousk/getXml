@@ -1,0 +1,42 @@
+
+<!-- Entity Name: mantle.request.RequestItem sql table: REQUEST_ITEM --><entity entity-name="RequestItem" package="mantle.request" cache="never" has-dependents="true">
+    <field name="requestId" type="id" is-pk="true"/>
+    <field name="requestItemSeqId" type="id" is-pk="true"/>
+    <field name="statusId" type="id" enable-audit-log="true"/>
+    <field name="requiredByDate" type="date-time"/>
+    <field name="productId" type="id"/>
+    <field name="quantity" type="number-decimal"/>
+    <field name="selectedAmount" type="number-decimal">
+        <description><![CDATA[When Product.amountRequire=Y the amount goes here to supplement the quantity.]]></description></field>
+    <field name="maximumAmount" type="currency-amount">
+        <description><![CDATA[The maximum amount (price) to pay for the item.]]></description></field>
+    <field name="description" type="text-medium"/>
+    <field name="supplierPartyId" type="id"/>
+    <relationship type="one" related="mantle.request.Request" short-alias="request"/>
+    <relationship type="one" title="Request" related="moqui.basic.StatusItem" short-alias="status"/>
+    <relationship type="one" related="mantle.product.Product" short-alias="product"/>
+    <relationship type="one" title="Supplier" related="mantle.party.Party" short-alias="supplier">
+        <key-map field-name="supplierPartyId"/></relationship>
+    <field name="lastUpdatedStamp" type="date-time"/>
+    <relationship related="mantle.request.RequestItemAssoc" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="requestId" related="requestId"/>
+        <key-map field-name="requestItemSeqId" related="requestItemSeqId"/>
+    </relationship>
+    <relationship related="mantle.request.RequestItemAssoc" type="many" is-auto-reverse="true" mutable="true" title="Other">
+        <key-map field-name="requestId" related="otherRequestId"/>
+        <key-map field-name="requestItemSeqId" related="otherRequestItemSeqId"/>
+    </relationship>
+    <relationship related="mantle.request.RequestItemOrder" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="requestId" related="requestId"/>
+        <key-map field-name="requestItemSeqId" related="requestItemSeqId"/>
+    </relationship>
+    <relationship related="mantle.request.RequestNote" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="requestId" related="requestId"/>
+        <key-map field-name="requestItemSeqId" related="requestItemSeqId"/>
+    </relationship>
+    <relationship related="mantle.request.requirement.RequirementRequestItem" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="requestId" related="requestId"/>
+        <key-map field-name="requestItemSeqId" related="requestItemSeqId"/>
+    </relationship>
+
+</entity>

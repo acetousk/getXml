@@ -1,0 +1,13 @@
+
+<!-- Entity Name: mantle.ledger.config.FinancialAccountReasonGlAccount sql table: FINANCIAL_ACCOUNT_REASON_GL_ACCOUNT --><entity entity-name="FinancialAccountReasonGlAccount" package="mantle.ledger.config" use="configuration">
+    <field name="reasonEnumId" type="id" is-pk="true"/>
+    <field name="organizationPartyId" type="id" is-pk="true"/>
+    <field name="glAccountId" type="id"/>
+    <relationship type="one" title="FinancialAccountTransReason" related="moqui.basic.Enumeration">
+        <key-map field-name="reasonEnumId"/></relationship>
+    <relationship type="one" title="Organization" related="mantle.party.Party">
+        <key-map field-name="organizationPartyId"/></relationship>
+    <relationship type="one" related="mantle.ledger.account.GlAccount"/>
+    <field name="lastUpdatedStamp" type="date-time"/>
+
+</entity>

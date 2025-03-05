@@ -1,0 +1,16 @@
+
+<!-- Entity Name: mantle.other.budget.BudgetReview sql table: BUDGET_REVIEW --><entity entity-name="BudgetReview" package="mantle.other.budget">
+    <field name="budgetReviewId" type="id" is-pk="true"/>
+    <field name="budgetId" type="id"/>
+    <field name="partyId" type="id"/>
+    <field name="budgetReviewResultEnumId" type="id"/>
+    <field name="reviewDate" type="date-time"/>
+    <relationship type="one" related="mantle.other.budget.Budget"/>
+    <relationship type="one" related="mantle.party.Party"/>
+    <relationship type="one" title="BudgetReviewResult" related="moqui.basic.Enumeration">
+        <key-map field-name="budgetReviewResultEnumId"/></relationship>
+    <seed-data>
+        <moqui.basic.EnumerationType description="Budget Review Result" enumTypeId="BudgetReviewResult"/></seed-data>
+    <field name="lastUpdatedStamp" type="date-time"/>
+
+</entity>

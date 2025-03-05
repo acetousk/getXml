@@ -1,0 +1,11 @@
+
+<!-- Entity Name: mantle.order.return.ReturnContactMech sql table: RETURN_CONTACT_MECH --><entity entity-name="ReturnContactMech" package="mantle.order.return" cache="never">
+    <field name="returnId" type="id" is-pk="true"/>
+    <field name="contactMechPurposeId" type="id" is-pk="true"/>
+    <field name="contactMechId" type="id" is-pk="true"/>
+    <relationship type="one" related="mantle.order.return.ReturnHeader"/>
+    <relationship type="one" related="mantle.party.contact.ContactMech"/>
+    <relationship type="one" related="mantle.party.contact.ContactMechPurpose"/>
+    <field name="lastUpdatedStamp" type="date-time"/>
+
+</entity>

@@ -1,0 +1,52 @@
+
+<!-- Entity Name: moqui.entity.sync.EntitySync sql table: ENTITY_SYNC --><entity entity-name="EntitySync" package="moqui.entity.sync" use="configuration" short-alias="entitySyncs" has-dependents="true">
+    <field name="entitySyncId" type="id" is-pk="true"/>
+    <field name="description" type="text-medium"/>
+    <field name="statusId" type="id"/>
+    <field name="lastStartDate" type="date-time"/>
+    <field name="lastSuccessfulSyncTime" type="date-time"/>
+    <field name="syncSplitMillis" type="number-integer"/>
+    <field name="recordThreshold" type="number-integer">
+        <description><![CDATA[Keep retrieving time splits until the number of
+            records is greater then this threshold.]]></description></field>
+    <field name="delayBufferMillis" type="number-integer">
+        <description><![CDATA[Newer retrieve records newer than this many
+            milliseconds in the past (leave a delay buffer for transactions in progress).]]></description></field>
+    <field name="targetServerUrl" type="text-medium"/>
+    <field name="targetUsername" type="text-medium"/>
+    <field name="targetPassword" type="text-medium" encrypt="true"/>
+    <field name="targetPath" type="text-medium">
+        <description><![CDATA[For sending to via file the path and filename to use, or path/filename pattern using Groovy string expand]]></description></field>
+    <field name="keepRemoveInfoHours" type="number-decimal"/>
+    <field name="forPull" type="text-indicator">
+        <description><![CDATA[If Y this record tracks data pulled from a remote
+            system, otherwise it tracks data pushed from this system.]]></description></field>
+    <relationship type="one" title="EntitySync" related="moqui.basic.StatusItem" short-alias="status"/>
+    <relationship type="many" related="moqui.entity.sync.EntitySyncArtifact" short-alias="artifacts">
+        <key-map field-name="entitySyncId"/></relationship>
+    <seed-data>
+        <moqui.basic.StatusType description="Entity Sync" parentTypeId="" statusTypeId="EntitySync"/>
+        <moqui.basic.StatusItem description="Not Started" sequenceNum="1" statusId="EsNotStarted" statusTypeId="EntitySync"/>
+        <moqui.basic.StatusItem description="Running" sequenceNum="2" statusId="EsRunning" statusTypeId="EntitySync"/>
+        <moqui.basic.StatusItem description="Complete" sequenceNum="4" statusId="EsComplete" statusTypeId="EntitySync"/>
+        <moqui.basic.StatusItem description="Other Error" sequenceNum="98" statusId="EsOtherError" statusTypeId="EntitySync"/>
+        <moqui.basic.StatusFlowTransition statusFlowId="Default" statusId="EsNotStarted" toStatusId="EsRunning" transitionName="Running"/>
+        <moqui.basic.StatusFlowTransition statusFlowId="Default" statusId="EsRunning" toStatusId="EsComplete" transitionName="Complete"/>
+        <moqui.basic.StatusFlowTransition statusFlowId="Default" statusId="EsRunning" toStatusId="EsOtherError" transitionName="Error"/>
+        <moqui.basic.StatusFlowTransition statusFlowId="Default" statusId="EsRunning" toStatusId="EsNotStarted" transitionName="Reset Not Started"/>
+        <moqui.basic.StatusFlowTransition statusFlowId="Default" statusId="EsComplete" toStatusId="EsRunning" transitionName="Running"/>
+        <moqui.basic.StatusFlowTransition statusFlowId="Default" statusId="EsOtherError" toStatusId="EsRunning" transitionName="Running"/>
+    </seed-data>
+    <master>
+        <detail relationship="status"/>
+        <detail relationship="artifacts">
+            <detail relationship="group">
+                <detail relationship="artifacts"/></detail>
+            <detail relationship="applType"/>
+        </detail>
+    </master>
+    <field name="lastUpdatedStamp" type="date-time"/>
+    <relationship related="moqui.entity.sync.EntitySyncHistory" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="entitySyncId" related="entitySyncId"/></relationship>
+
+</entity>

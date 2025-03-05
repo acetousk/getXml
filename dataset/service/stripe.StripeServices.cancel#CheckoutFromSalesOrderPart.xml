@@ -1,0 +1,13 @@
+<!--Service Location stripe.StripeServices.cancel#CheckoutFromSalesOrderPart--><service verb="cancel" noun="CheckoutFromSalesOrderPart"><in-parameters><parameter name="orderId" required="true"/><parameter name="orderPartSeqId" required="true"/></in-parameters><out-parameters/><actions><entity-find entity-name="mantle.order.OrderPart" list="existingOrderPartList" limit="2"><econdition field-name="orderId"/><econdition field-name="customerPartyId" ignore="!customerPartyId"/><econdition field-name="checkoutId" operator="is-not-null"/><order-by field-name="-entryDate"/></entity-find><if condition="!existingOrderPartList.getFirst()"><log level="warn" message="No order found for orderId ${orderId}."/><return message="No order found for orderId ${orderId}."/></if><if condition="existingOrderPartList.size() >= 2"><log level="warn" message="Cannot have multiple order parts for the customer party (party is optional)"/><return message="Cannot have multiple order parts for the customer party (party is optional)"/></if><set field="orderPart" from="existingOrderPartList.getFirst()"/><if condition="!orderPart.checkoutId"><log level="warn" message="Not cancelling checkout for order ${orderId} order part ${orderPart.orderPartSeqId} as there is no checkoutId."/><return/></if><script><![CDATA[org.moqui.util.RestClient cancelCheckoutSessionRestClient = ec.service.rest().method(org.moqui.util.RestClient.POST)
+                        .basicAuth(orderPart.orderHeader.productStore.remote.privateKey,"")
+                def cancelCheckoutSessionUriBuilder = cancelCheckoutSessionRestClient.uri().protocol("https").host("api.stripe.com").port(443)
+                        .path("/v1/checkout/sessions/${orderPart.checkoutId}/expire")
+                cancelCheckoutSessionUriBuilder.build()
+
+                org.moqui.util.RestClient.RestResponse cancelCheckoutSessionRestResponse = cancelCheckoutSessionRestClient.call()
+                context.cancelCheckoutSessionResponseMap = (Map) cancelCheckoutSessionRestResponse.jsonObject()
+                if (cancelCheckoutSessionRestResponse.statusCode < 200 || cancelCheckoutSessionRestResponse.statusCode >= 300) {
+                    ec.logger.warn("Could not create Checkout")
+                    throw new org.moqui.BaseException("Got status code ${cancelCheckoutSessionRestResponse.statusCode} from Stripe on a create checkout session for the parameter '${cancelCheckoutSessionResponseMap.error.type}' and message '${cancelCheckoutSessionResponseMap.error.message}'")
+                    return
+                }]]></script></actions></service>

@@ -1,0 +1,23 @@
+
+<!-- Entity Name: mantle.product.category.ProductCategoryIdent sql table: PRODUCT_CATEGORY_IDENT --><entity entity-name="ProductCategoryIdent" package="mantle.product.category">
+    <description><![CDATA[Based on mantle.product.ProductOtherIdentification to be a one ProductCategory to many ProductCategoryIdent.]]></description>
+    <field name="productCategoryIdentId" type="id" is-pk="true"/>
+    <field name="productCategoryId" type="id"/>
+    <field name="identTypeEnumId" type="id"/>
+    <field name="productStoreId" type="id"/>
+    <field name="marketSegmentId" type="id"/>
+    <field name="idValue" type="text-medium"/>
+    <relationship type="one" title="ProductCategoryIdentType" related="moqui.basic.Enumeration" short-alias="type">
+        <key-map field-name="identTypeEnumId"/></relationship>
+    <relationship type="one" related="mantle.product.category.ProductCategory" short-alias="productCategory"/>
+    <relationship type="one" related="mantle.product.store.ProductStore" short-alias="productStore"/>
+    <relationship type="one" related="mantle.marketing.segment.MarketSegment" short-alias="marketSegment"/>
+    <index name="PRODUCT_CAT_STR_ID_VAL" unique="false">
+        <index-field name="idValue"/></index>
+    <seed-data>
+        <moqui.basic.EnumerationType description="Product Category Ident Type" enumTypeId="ProductCategoryIdentType"/>
+        <moqui.basic.Enumeration description="URL Slug" enumId="PcitUrlSlug" enumTypeId="ProductCategoryIdentType"/>
+    </seed-data>
+    <field name="lastUpdatedStamp" type="date-time"/>
+
+</entity>

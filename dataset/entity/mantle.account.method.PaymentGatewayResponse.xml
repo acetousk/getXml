@@ -1,0 +1,52 @@
+
+<!-- Entity Name: mantle.account.method.PaymentGatewayResponse sql table: PAYMENT_GATEWAY_RESPONSE --><entity entity-name="PaymentGatewayResponse" package="mantle.account.method" cache="never">
+    <field name="paymentGatewayResponseId" type="id" is-pk="true"/>
+    <field name="paymentGatewayConfigId" type="id"/>
+    <field name="paymentOperationEnumId" type="id"/>
+    <field name="paymentId" type="id"/>
+    <field name="paymentMethodId" type="id"/>
+    <field name="finAccountId" type="id"/>
+    <field name="amount" type="currency-amount"/>
+    <field name="amountUomId" type="id"/>
+    <field name="referenceNum" type="text-short"/>
+    <field name="altReference" type="text-short"/>
+    <field name="subReference" type="text-short"/>
+    <field name="approvalCode" type="text-short"/>
+    <field name="responseCode" type="text-short"/>
+    <field name="reasonCode" type="text-short"/>
+    <field name="reasonMessage" type="text-medium"/>
+    <field name="avsResult" type="text-short"/>
+    <field name="cvResult" type="text-short"/>
+    <field name="scoreResult" type="text-short"/>
+    <field name="transactionDate" type="date-time"/>
+    <field name="transactionStatus" type="text-short"/>
+    <field name="resultSuccess" type="text-indicator"/>
+    <field name="resultDeclined" type="text-indicator"/>
+    <field name="resultError" type="text-indicator"/>
+    <field name="resultNsf" type="text-indicator"/>
+    <field name="resultBadExpire" type="text-indicator"/>
+    <field name="resultBadCardNumber" type="text-indicator"/>
+    <relationship type="one" title="PaymentOperation" related="moqui.basic.Enumeration">
+        <key-map field-name="paymentOperationEnumId" related="enumId"/></relationship>
+    <relationship type="one" title="Amount" related="moqui.basic.Uom">
+        <key-map field-name="amountUomId"/></relationship>
+    <relationship type="one" related="mantle.account.payment.Payment"/>
+    <relationship type="one" related="mantle.account.method.PaymentMethod"/>
+    <relationship type="one" related="mantle.account.financial.FinancialAccount"/>
+    <index name="PMT_GTWR_REFNUM">
+        <index-field name="referenceNum"/></index>
+    <seed-data>
+        <moqui.basic.EnumerationType description="Payment Gateway Operation" enumTypeId="PaymentOperation"/>
+        <moqui.basic.Enumeration description="Store CIM Profile" enumId="PgoStoreCim" enumTypeId="PaymentOperation"/>
+        <moqui.basic.Enumeration description="Validate Authorize" enumId="PgoValidateAuthorize" enumTypeId="PaymentOperation"/>
+        <moqui.basic.Enumeration description="Authorize" enumId="PgoAuthorize" enumTypeId="PaymentOperation"/>
+        <moqui.basic.Enumeration description="Capture" enumId="PgoCapture" enumTypeId="PaymentOperation"/>
+        <moqui.basic.Enumeration description="Authorize and Capture" enumId="PgoAuthAndCapture" enumTypeId="PaymentOperation"/>
+        <moqui.basic.Enumeration description="Refund" enumId="PgoRefund" enumTypeId="PaymentOperation"/>
+        <moqui.basic.Enumeration description="Release" enumId="PgoRelease" enumTypeId="PaymentOperation"/>
+        <moqui.basic.Enumeration description="Transaction Details" enumId="PgoTxDetails" enumTypeId="PaymentOperation"/>
+        <moqui.basic.Enumeration description="Level 2/3 Data" enumId="PgoLevel3Data" enumTypeId="PaymentOperation"/>
+    </seed-data>
+    <field name="lastUpdatedStamp" type="date-time"/>
+
+</entity>

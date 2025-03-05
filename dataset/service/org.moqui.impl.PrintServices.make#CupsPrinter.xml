@@ -1,0 +1,16 @@
+<!--Service Location org.moqui.impl.PrintServices.make#CupsPrinter--><service verb="make" noun="CupsPrinter"><in-parameters><parameter name="networkPrinterId"/></in-parameters><out-parameters><parameter name="cupsClient" type="org.cups4j.CupsClient"/><parameter name="cupsPrinter" type="org.cups4j.CupsPrinter"/><parameter name="networkPrinter" type="EntityValue"/></out-parameters><actions><entity-find-one entity-name="moqui.basic.print.NetworkPrinter" value-field="networkPrinter"/><if condition="networkPrinter == null"><return error="true" message="Could not find NetworkPrinter [${networkPrinterId}]"/></if><script><![CDATA[import org.cups4j.CupsPrinter
+                import org.cups4j.CupsClient
+
+                String printerName = networkPrinter.printerName
+                cupsClient = new CupsClient((String) networkPrinter.serverHost, (int) networkPrinter.serverPort ?: 631)
+                if (printerName) {
+                    printerList = cupsClient.getPrinters()
+                    for (CupsPrinter curPrinter in printerList) {
+                        if (curPrinter.getName() == printerName) {
+                            cupsPrinter = curPrinter
+                            break
+                        }
+                    }
+                } else {
+                    cupsPrinter = cupsClient.getDefaultPrinter()
+                }]]></script><if condition="cupsPrinter == null"><return error="true" message="Print not found with name [${printerName}] on server [${networkPrinter.serverHost}] for NetworkPrinter [${networkPrinterId}]"/></if></actions></service>

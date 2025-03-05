@@ -1,0 +1,25 @@
+<!--Service Location mantle.product.ProductServices.create#VariantProducts--><service verb="create" noun="VariantProducts"><in-parameters><parameter name="productId" required="true"/><parameter name="productTypeEnumId"/><parameter name="assetTypeEnumId"/><parameter name="assetClassEnumId"/><parameter name="productFeatureGroupIdSet" type="Set"><parameter name="productFeatureGroupId"/></parameter><parameter name="copyCategoryMembers" type="Boolean" default="false"/></in-parameters><out-parameters/><actions><entity-find-one entity-name="mantle.product.Product" value-field="product"/><service-call name="mantle.product.ProductServices.find#ProductFeatures" out-map="[productFeatureList:context.productFeatureList]" in-map="[productId:productId, applTypeEnumId:'PfatSelectable', productFeatureGroupIdSet:productFeatureGroupIdSet]"/><set field="featuresByType" from="[:]"/><iterate list="productFeatureList" entry="productFeature"><script><![CDATA[addToListInMap(productFeature.productFeatureTypeEnumId, productFeature, featuresByType)]]></script></iterate><set field="featureListList" from="[]"/><set field="featureTypeTreeSet" from="new TreeSet(featuresByType.keySet())"/><iterate list="featureTypeTreeSet" entry="featureType"><script><![CDATA[featureListList.add(featuresByType.get(featureType))]]></script></iterate><script><![CDATA[import org.moqui.context.ExecutionContext
+                import org.moqui.entity.EntityValue
+                import org.moqui.entity.EntityCondition
+
+                ExecutionContext ec = context.ec
+
+                def recursiveCreate(ExecutionContext ec, EntityValue product, List<List<EntityValue>> featureListList,
+                                    ArrayList<EntityValue> featureList, int level) {
+
+                    for (int i = 0; i < featureListList[level].size(); i++) {
+                        featureList[level] = featureListList.get(level).get(i)
+                        if (level == featureListList.size() - 1) {
+                            // at the bottom, create the variant
+                            ec.service.sync().name("mantle.product.ProductServices.create#VariantProduct")
+                                    .parameters([product:product, productTypeEnumId:productTypeEnumId,
+                                                 assetTypeEnumId:assetTypeEnumId, assetClassEnumId:assetClassEnumId,
+                                                 featureList:featureList, copyCategoryMembers:copyCategoryMembers])
+                                    .call()
+                        } else {
+                            recursiveCreate(ec, product, featureListList, featureList, level + 1)
+                        }
+                    }
+                }
+
+                recursiveCreate(ec, product, featureListList, new ArrayList(featureListList.size()), 0)]]></script></actions></service>

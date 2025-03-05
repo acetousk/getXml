@@ -1,0 +1,32 @@
+
+<!-- Entity Name: mantle.product.issuance.AssetReservation sql table: ASSET_RESERVATION --><entity entity-name="AssetReservation" package="mantle.product.issuance" cache="never" has-dependents="true">
+    <field name="assetReservationId" type="id" is-pk="true"/>
+    <field name="assetId" type="id"/>
+    <field name="productId" type="id"/>
+    <field name="orderId" type="id"/>
+    <field name="orderItemSeqId" type="id"/>
+    <field name="reservationOrderEnumId" type="id"/>
+    <field name="quantity" type="number-decimal"/>
+    <field name="quantityNotAvailable" type="number-decimal">
+        <description><![CDATA[The quantity not available to promise for
+            this reservation (corresponds to negative Asset.availableToPromiseTotal).]]></description></field>
+    <field name="quantityNotIssued" type="number-decimal">
+        <description><![CDATA[The quantity not yet issued.]]></description></field>
+    <field name="reservedDate" type="date-time"/>
+    <field name="originalPromisedDate" type="date-time"/>
+    <field name="currentPromisedDate" type="date-time"/>
+    <field name="priority" type="number-integer"/>
+    <field name="sequenceNum" type="number-integer"/>
+    <relationship type="one" related="mantle.product.asset.Asset" short-alias="asset"/>
+    <relationship type="one" related="mantle.product.Product" short-alias="product"/>
+    <relationship type="one-nofk" related="mantle.order.OrderHeader" short-alias="orderHeader"/>
+    <relationship type="one" related="mantle.order.OrderItem" short-alias="orderItem"/>
+    <relationship type="one" title="AssetReservationOrder" related="moqui.basic.Enumeration" short-alias="reservationOrderEnum">
+        <key-map field-name="reservationOrderEnumId"/></relationship>
+    <field name="lastUpdatedStamp" type="date-time"/>
+    <relationship related="mantle.product.asset.AssetDetail" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="assetReservationId" related="assetReservationId"/></relationship>
+    <relationship related="mantle.product.issuance.AssetIssuance" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="assetReservationId" related="assetReservationId"/></relationship>
+
+</entity>

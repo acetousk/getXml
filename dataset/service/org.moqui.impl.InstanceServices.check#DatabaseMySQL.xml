@@ -1,0 +1,26 @@
+<!--Service Location org.moqui.impl.InstanceServices.check#DatabaseMySQL--><service verb="check" noun="DatabaseMySQL"><in-parameters><parameter name="appInstanceId" required="true"/></in-parameters><out-parameters><parameter name="dbConnectSuccess" type="Boolean"/><parameter name="databaseExists" type="Boolean"/><parameter name="dbUserExists" type="Boolean"/></out-parameters><actions><service-call name="org.moqui.impl.InstanceServices.get#AppInstanceEnv" in-map="context" out-map="[envMap:context.envMap,adminMap:context.adminMap]"/><if condition="!envMap"><return/></if><set field="adminMap.entity_ds_database" value="mysql"/><script><![CDATA[org.slf4j.Logger logger = org.slf4j.LoggerFactory.getLogger("checkDatabaseMySQL")
+
+                dbConnectSuccess = false
+                databaseExists = false
+                dbUserExists = false
+
+                javax.sql.XAConnection testXaCon = null
+                java.sql.Connection testCon = null
+                try {
+                    testXaCon = ec.entity.getConfConnection(adminMap)
+                    testCon = testXaCon.getConnection()
+                    dbConnectSuccess = true
+                } catch (Exception e) {
+                    logger.warn("Test connection failed", e)
+                } finally {
+                    if (testCon != null) testCon.close()
+                    if (testXaCon != null) testXaCon.close()
+                }
+
+                if (dbConnectSuccess) {
+                    long dbCount = ec.entity.runSqlCountConf("information_schema.schemata", "schema_name='${envMap.entity_ds_database}'", adminMap)
+                    if (dbCount > 0L) databaseExists = true
+
+                    long userCount = ec.entity.runSqlCountConf("mysql.user", "user='${envMap.entity_ds_user}'", adminMap)
+                    if (userCount > 0L) dbUserExists = true
+                }]]></script><message><![CDATA[Checked database ${envMap.entity_ds_database} at ${adminMap.entity_ds_host}: connect ${dbConnectSuccess ? 'successful' : 'failed'}, database ${databaseExists ? 'exists' : 'does not exist'}, user ${envMap.entity_ds_user} ${dbUserExists ? 'exists' : 'does not exist'}]]></message></actions></service>

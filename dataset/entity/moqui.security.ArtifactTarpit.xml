@@ -1,0 +1,14 @@
+
+<!-- Entity Name: moqui.security.ArtifactTarpit sql table: ARTIFACT_TARPIT --><entity entity-name="ArtifactTarpit" package="moqui.security" use="configuration">
+    <description><![CDATA[If an artifact in the group specified is accessed by any user in the UserGroup maxHitsCount
+            times in maxHitsDuration seconds then the user/artifact will be blocked for tarpitDuration seconds.]]></description>
+    <field name="userGroupId" type="id" is-pk="true"/>
+    <field name="artifactGroupId" type="id" is-pk="true"/>
+    <field name="maxHitsCount" type="number-integer"/>
+    <field name="maxHitsDuration" type="number-integer"/>
+    <field name="tarpitDuration" type="number-integer"/>
+    <relationship type="one" related="moqui.security.UserGroup"/>
+    <relationship type="one" related="moqui.security.ArtifactGroup"/>
+    <field name="lastUpdatedStamp" type="date-time"/>
+
+</entity>

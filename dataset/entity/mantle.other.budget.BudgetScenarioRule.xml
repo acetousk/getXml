@@ -1,0 +1,12 @@
+
+<!-- Entity Name: mantle.other.budget.BudgetScenarioRule sql table: BUDGET_SCENARIO_RULE --><entity entity-name="BudgetScenarioRule" package="mantle.other.budget">
+    <field name="budgetScenarioId" type="id" is-pk="true"/>
+    <field name="budgetItemTypeEnumId" type="id" is-pk="true"/>
+    <field name="amountChange" type="currency-amount"/>
+    <field name="percentageChange" type="number-decimal"/>
+    <relationship type="one" related="mantle.other.budget.BudgetScenario"/>
+    <relationship type="one" title="BudgetItemType" related="moqui.basic.Enumeration">
+        <key-map field-name="budgetItemTypeEnumId"/></relationship>
+    <field name="lastUpdatedStamp" type="date-time"/>
+
+</entity>

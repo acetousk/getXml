@@ -1,0 +1,15 @@
+
+<!-- Entity Name: mantle.humanres.position.EmplPositionParty sql table: EMPL_POSITION_PARTY --><entity entity-name="EmplPositionParty" package="mantle.humanres.position" use="nontransactional">
+    <description><![CDATA[For manager, department/etc internal organization, etc; use Employment entity for employee]]></description>
+    <field name="emplPositionId" type="id" is-pk="true"/>
+    <field name="partyId" type="id" is-pk="true"/>
+    <field name="roleTypeId" type="id" is-pk="true"/>
+    <field name="fromDate" type="date-time" is-pk="true"/>
+    <field name="thruDate" type="date-time"/>
+    <field name="comments" type="text-medium"/>
+    <relationship type="one" related="mantle.humanres.position.EmplPosition" short-alias="position"/>
+    <relationship type="one" related="mantle.party.Party" short-alias="party"/>
+    <relationship type="one" related="mantle.party.RoleType" short-alias="roleType"/>
+    <field name="lastUpdatedStamp" type="date-time"/>
+
+</entity>

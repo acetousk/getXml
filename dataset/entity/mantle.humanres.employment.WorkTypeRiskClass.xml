@@ -1,0 +1,16 @@
+
+<!-- Entity Name: mantle.humanres.employment.WorkTypeRiskClass sql table: WORK_TYPE_RISK_CLASS --><entity entity-name="WorkTypeRiskClass" package="mantle.humanres.employment" use="configuration">
+    <field name="geoId" type="id" is-pk="true"/>
+    <field name="workTypeEnumId" type="id" is-pk="true"/>
+    <field name="riskClassEnumId" type="id"/>
+    <relationship type="one" title="WorkType" related="moqui.basic.Enumeration" short-alias="workTypeEnum">
+        <key-map field-name="workTypeEnumId"/></relationship>
+    <relationship type="one" title="RiskClass" related="moqui.basic.Enumeration" short-alias="riskClassEnum">
+        <key-map field-name="riskClassEnumId"/></relationship>
+    <relationship type="one" title="Geo" related="moqui.basic.Geo" short-alias="geo">
+        <key-map field-name="geoId"/></relationship>
+    <seed-data>
+        <moqui.basic.EnumerationType description="Risk Class Type" enumTypeId="RiskClassType"/></seed-data>
+    <field name="lastUpdatedStamp" type="date-time"/>
+
+</entity>

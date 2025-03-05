@@ -1,0 +1,9 @@
+
+<!-- Entity Name: mantle.product.store.ProductStorePromoParameter sql table: PRODUCT_STORE_PROMO_PARAMETER --><entity entity-name="ProductStorePromoParameter" package="mantle.product.store" use="configuration" cache="true">
+    <field name="storePromotionId" type="id" is-pk="true"/>
+    <field name="parameterName" type="text-short" is-pk="true"/>
+    <field name="parameterValue" type="text-medium"/>
+    <relationship type="one" related="mantle.product.store.ProductStorePromotion" short-alias="storePromotion"/>
+    <field name="lastUpdatedStamp" type="date-time"/>
+
+</entity>

@@ -1,0 +1,32 @@
+<!-- Screen Location component://example/screen/ExampleApp.xml --><screen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://moqui.org/xsd/xml-screen-3.xsd" include-child-content="true" require-authentication="false" menu-image="fa fa-flash" menu-image-type="icon"><transition name="ExampleEntity" method="get" read-only="true"><path-parameter name="exampleId"/><actions><entity-find-one entity-name="moqui.example.Example" value-field="example"/><script><![CDATA[ec.web.sendJsonResponse(example)]]></script></actions><default-response type="none"/></transition><transition name="ExampleEntity" method="post"><service-call name="moqui.example.ExampleServices.createExample" in-map="ec.web.parameters" web-send-json-response="true" out-map="context" multi="parameter"/><default-response type="none"/></transition><transition name="ExampleEntity" method="put"><path-parameter name="exampleId"/><service-call name="moqui.example.ExampleServices.updateExample" in-map="ec.web.parameters" web-send-json-response="true" out-map="context" multi="parameter"/><default-response type="none"/></transition><transition name="ExampleEntity" method="delete"><path-parameter name="exampleId"/><service-call name="delete#moqui.example.Example" in-map="ec.web.parameters" web-send-json-response="true" out-map="context" multi="parameter"/><default-response type="none"/></transition><transition name="LoadAllData"><actions><script><![CDATA[import org.moqui.entity.EntityDataLoader
+            import org.moqui.context.ExecutionContext
+            import org.moqui.impl.context.ArtifactExecutionInfoImpl
+            ExecutionContext ec = context.ec
+
+            ec.artifactExecution.disableAuthz()
+            ArtifactExecutionInfoImpl aei = new ArtifactExecutionInfoImpl("loadData", "AT_OTHER", "AUTHZA_ALL")
+            ec.getArtifactExecution().push(aei, false)
+            ec.getArtifactExecution().setAnonymousAuthorizedAll()
+            boolean loggedInAnonymous = ec.getUser().loginAnonymousIfNoUser()
+
+            // TODO: reject requests until this is done?
+            // at least make sure there are no Enumeration records
+            if (ec.getEntity().find("moqui.basic.Enumeration").useCache(false).count()) {
+                String errMsg = "Not loading data, found Enumeration records so database isn't empty"
+                ec.logger.info(errMsg)
+                ec.message.addMessage(errMsg)
+                return
+            }
+
+            // load all the data
+            EntityDataLoader edl = ec.getEntity().makeDataLoader()
+
+            startTime = System.currentTimeMillis()
+            records = edl.load()
+            totalSeconds = (System.currentTimeMillis() - startTime) / 1000
+
+            ec.artifactExecution.pop(aei)
+            if (loggedInAnonymous) ec.getUser().logoutAnonymousOnly()
+            ec.artifactExecution.enableAuthz()
+
+            ec.cache.clearAllCaches()]]></script><log level="info" message="Loaded [${records}] records in ${totalSeconds} seconds."/></actions><default-response url="."/></transition><transition name="localCamelExample"><service-call name="moqui.example.ExampleServices.localCamelExample" web-send-json-response="true" in-map="true" out-map="context" multi="parameter"/><default-response type="none"/></transition><subscreens default-item="Example"><subscreens-item name="ExamplePolicies" menu-index="4" menu-title="Policies"/><subscreens-item name="ExampleTerms" menu-index="5" menu-title="Terms"/><subscreens-item name="ExampleWiki" menu-index="6" menu-title="Wiki"/><subscreens-item name="ExampleMarkdown" menu-index="7" menu-title="Markdown"/></subscreens><widgets><subscreens-panel id="example-app" type="popup"/></widgets></screen>

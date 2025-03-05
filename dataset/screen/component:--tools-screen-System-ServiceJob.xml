@@ -1,0 +1,1 @@
+<!-- Screen Location component://tools/screen/System/ServiceJob.xml --><screen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://moqui.org/xsd/xml-screen-3.xsd" default-menu-title="Service Jobs" default-menu-index="12"><subscreens default-item="Jobs"/><widgets><subscreens-panel id="ServiceJobPanel" type="popup"/></widgets></screen>

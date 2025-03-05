@@ -1,0 +1,75 @@
+
+<!-- Entity Name: mantle.ledger.config.AssetTypeGlAccount sql table: ASSET_TYPE_GL_ACCOUNT --><entity entity-name="AssetTypeGlAccount" package="mantle.ledger.config" use="configuration">
+    <description><![CDATA[Found by assetId, then by assetTypeEnumId and classEnumId, then by just assetTypeEnumId]]></description>
+    <field name="assetTypeGlAccountId" type="id" is-pk="true"/>
+    <field name="assetTypeEnumId" type="id"/>
+    <field name="classEnumId" type="id"/>
+    <field name="assetId" type="id"/>
+    <field name="organizationPartyId" type="id"/>
+    <field name="assetGlAccountId" type="id">
+        <description><![CDATA[The debit account for the asset value (purchase cost) on receipt and credit account on issuance;
+            for inventory assets this is the inventory value account (GatInventory);
+            for fixed assets this is a fixed asset value account (GatFixedAsset);
+            for supplies this is an expense account (GatExpense or GatOperatingExpense)]]></description></field>
+    <field name="wipAssetGlAccountId" type="id">
+        <description><![CDATA[The debit account for the asset value (purchase cost) on issue to production run (inventory consumed).
+            The credit account on receive from production run (inventory produced).
+            The opposing account will be the assetGlAccountId.]]></description></field>
+    <field name="receiptGlAccountId" type="id">
+        <description><![CDATA[The credit account on receipt (Unreceived Inventory, Unreceived Asset, etc)]]></description></field>
+    <field name="issuanceGlAccountId" type="id">
+        <description><![CDATA[The debit account on issuance AND credit account for accumulated depreciation for fixed assets;
+            for inventory assets this is the COGS account (GatCogs);
+            for fixed assets this is the Unissued Asset account (GatUnissuedFixedAsset)]]></description></field>
+    <field name="transferGlAccountId" type="id">
+        <description><![CDATA[The credit account on for inventory being transferred (in transit),
+                used instead of receipt and issuance accounts for transfer shipments, etc]]></description></field>
+    <field name="accDepreciationGlAccountId" type="id">
+        <description><![CDATA[The credit account for the depreciation expense for Fixed Assets (paired with depreciationGlAccountId);
+                A debit account for Fixed Asset sale or write off]]></description></field>
+    <field name="depreciationGlAccountId" type="id">
+        <description><![CDATA[The debit account for the depreciation expense for Fixed Assets (paired with accDepreciationGlAccountId)]]></description></field>
+    <field name="profitGlAccountId" type="id">
+        <description><![CDATA[The credit account for the eventual profit/gain derived
+            from the sale of the asset; for inventory assets this is a Sales account;
+            for fixed assets this is a profit/gain on sale/disposal account]]></description></field>
+    <field name="lossGlAccountId" type="id">
+        <description><![CDATA[The debit account for the loss derived from the disposal of the asset]]></description></field>
+    <field name="receiptTransTypeEnumId" type="id"/>
+    <field name="issuanceTransTypeEnumId" type="id"/>
+    <field name="shrinkageGlAccountId" type="id">
+        <description><![CDATA[The debit account for the loss (or cost) for inventory shrinkage or lost fixed assets]]></description></field>
+    <field name="foundGlAccountId" type="id">
+        <description><![CDATA[The credit account for the gain from inventory or fixed assets found]]></description></field>
+    <relationship type="one" title="AssetType" related="moqui.basic.Enumeration">
+        <key-map field-name="assetTypeEnumId"/></relationship>
+    <relationship type="one" title="AssetClass" related="moqui.basic.Enumeration">
+        <key-map field-name="classEnumId"/></relationship>
+    <relationship type="one" related="mantle.product.asset.Asset"/>
+    <relationship type="one" related="mantle.party.Party">
+        <key-map field-name="organizationPartyId"/></relationship>
+    <relationship type="one" title="Asset" related="mantle.ledger.account.GlAccount">
+        <key-map field-name="assetGlAccountId"/></relationship>
+    <relationship type="one" title="WipAsset" related="mantle.ledger.account.GlAccount">
+        <key-map field-name="wipAssetGlAccountId"/></relationship>
+    <relationship type="one" title="Receipt" related="mantle.ledger.account.GlAccount">
+        <key-map field-name="receiptGlAccountId"/></relationship>
+    <relationship type="one" title="Issuance" related="mantle.ledger.account.GlAccount">
+        <key-map field-name="issuanceGlAccountId"/></relationship>
+    <relationship type="one" title="Depreciation" related="mantle.ledger.account.GlAccount">
+        <key-map field-name="depreciationGlAccountId"/></relationship>
+    <relationship type="one" title="Profit" related="mantle.ledger.account.GlAccount">
+        <key-map field-name="profitGlAccountId"/></relationship>
+    <relationship type="one" title="Loss" related="mantle.ledger.account.GlAccount">
+        <key-map field-name="lossGlAccountId"/></relationship>
+    <relationship type="one" title="ReceiptTransType" related="moqui.basic.Enumeration">
+        <key-map field-name="receiptTransTypeEnumId"/></relationship>
+    <relationship type="one" title="IssuanceTransType" related="moqui.basic.Enumeration">
+        <key-map field-name="issuanceTransTypeEnumId"/></relationship>
+    <relationship type="one" title="Shrinkage" related="mantle.ledger.account.GlAccount">
+        <key-map field-name="shrinkageGlAccountId"/></relationship>
+    <relationship type="one" title="Found" related="mantle.ledger.account.GlAccount">
+        <key-map field-name="foundGlAccountId"/></relationship>
+    <field name="lastUpdatedStamp" type="date-time"/>
+
+</entity>

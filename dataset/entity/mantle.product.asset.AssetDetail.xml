@@ -1,0 +1,63 @@
+
+<!-- Entity Name: mantle.product.asset.AssetDetail sql table: ASSET_DETAIL --><entity entity-name="AssetDetail" package="mantle.product.asset" create-only="true" cache="never">
+    <field name="assetDetailId" type="id" is-pk="true"/>
+    <field name="assetId" type="id"/>
+    <field name="effectiveDate" type="date-time" create-only="false"/>
+    <field name="quantityOnHandDiff" type="number-decimal"/>
+    <field name="availableToPromiseDiff" type="number-decimal"/>
+    <field name="unitCost" type="number-decimal"/>
+    <field name="assetReservationId" type="id"/>
+    <field name="otherAssetId" type="id"/>
+    <field name="shipmentId" type="id"/>
+    <field name="productId" type="id"/>
+    <field name="orderId" type="id"/>
+    <field name="orderItemSeqId" type="id"/>
+    <field name="returnId" type="id"/>
+    <field name="returnItemSeqId" type="id"/>
+    <field name="workEffortId" type="id"/>
+    <field name="assetMaintenanceId" type="id"/>
+    <field name="assetIssuanceId" type="id"/>
+    <field name="assetReceiptId" type="id"/>
+    <field name="physicalInventoryId" type="id"/>
+    <field name="physicalInventoryCountId" type="id"/>
+    <field name="varianceReasonEnumId" type="id"/>
+    <field name="description" type="text-medium"/>
+    <field name="acctgTransResultEnumId" type="id" create-only="false"/>
+    <relationship type="one" related="mantle.product.asset.Asset" short-alias="asset"/>
+    <relationship type="one-nofk" related="mantle.product.issuance.AssetReservation" short-alias="assetReservation"/>
+    <relationship type="one" title="Other" related="mantle.product.asset.Asset" short-alias="otherAsset">
+        <key-map field-name="otherAssetId"/></relationship>
+    <relationship type="one" related="mantle.shipment.Shipment" short-alias="shipment"/>
+    <relationship type="one" related="mantle.product.Product" short-alias="product"/>
+    <relationship type="one" related="mantle.order.OrderItem" short-alias="orderItem"/>
+    <relationship type="one" related="mantle.order.return.ReturnItem" short-alias="returnItem"/>
+    <relationship type="one" related="mantle.work.effort.WorkEffort" short-alias="workEffort"/>
+    <relationship type="one" related="mantle.product.maintenance.AssetMaintenance" short-alias="assetMaintenance"/>
+    <relationship type="one" related="mantle.product.issuance.AssetIssuance" short-alias="assetIssuance"/>
+    <relationship type="one" related="mantle.product.receipt.AssetReceipt" short-alias="assetReceipt"/>
+    <relationship type="one" related="mantle.product.asset.PhysicalInventory" short-alias="physicalInventory"/>
+    <relationship type="one" related="mantle.product.asset.PhysicalInventoryCount" short-alias="physicalInventoryCount"/>
+    <relationship type="one" title="InventoryVarianceReason" related="moqui.basic.Enumeration" short-alias="varianceReasonEnum">
+        <key-map field-name="varianceReasonEnumId"/></relationship>
+    <relationship type="one" title="AcctgTransResult" related="moqui.basic.Enumeration" short-alias="acctgTransResultEnum">
+        <key-map field-name="acctgTransResultEnumId"/></relationship>
+    <index name="AST_DET_EFF_DATE">
+        <index-field name="effectiveDate"/></index>
+    <seed-data>
+        <moqui.basic.EnumerationType description="Inventory Variance Reason" enumTypeId="InventoryVarianceReason"/>
+        <moqui.basic.Enumeration enumId="InVrLost" description="Lost" enumTypeId="InventoryVarianceReason"/>
+        <moqui.basic.Enumeration enumId="InVrStolen" description="Stolen" enumTypeId="InventoryVarianceReason"/>
+        <moqui.basic.Enumeration enumId="InVrFound" description="Found" enumTypeId="InventoryVarianceReason"/>
+        <moqui.basic.Enumeration enumId="InVrDamaged" description="Damaged" enumTypeId="InventoryVarianceReason"/>
+        <moqui.basic.Enumeration enumId="InVrIntegration" description="Integration" enumTypeId="InventoryVarianceReason"/>
+        <moqui.basic.Enumeration enumId="InVrSample" description="Sample (Giveaway)" enumTypeId="InventoryVarianceReason"/>
+        <moqui.basic.Enumeration enumId="InVrMisShipOrdered" description="Mis-shipped Item Ordered (+)" enumTypeId="InventoryVarianceReason"/>
+        <moqui.basic.Enumeration enumId="InVrMisShipShipped" description="Mis-shipped Item Shipped (-)" enumTypeId="InventoryVarianceReason"/>
+    </seed-data>
+    <field name="lastUpdatedStamp" type="date-time"/>
+
+<!-- seca <seca id="AssetDetailPhysicalVarianceGlPost" service="create#mantle.product.asset.AssetDetail" when="post-service" run-on-error="false">
+    <actions>
+        <service-call name="mantle.ledger.AssetAutoPostServices.post#PhysicalInventoryVariance" in-map="context"/></actions></seca>-->
+<!-- eeca org.moqui.impl.entity.EntityEcaRule@e477ba0-->
+</entity>

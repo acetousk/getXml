@@ -1,0 +1,237 @@
+
+<!-- Entity Name: mantle.shipment.Shipment sql table: SHIPMENT --><entity entity-name="Shipment" package="mantle.shipment" short-alias="shipments" cache="never" has-dependents="true">
+    <field name="shipmentId" type="id" is-pk="true"/>
+    <field name="shipmentTypeEnumId" type="id"/>
+    <field name="statusId" type="id" enable-audit-log="true"/>
+    <field name="fromPartyId" type="id" enable-audit-log="update"/>
+    <field name="toPartyId" type="id" enable-audit-log="update"/>
+    <field name="binLocationNumber" type="number-integer">
+        <description><![CDATA[For picking multiple shipments in a single
+            shipment load (shipWorkEffortId, with purpose Shipment Load/Ship, WepShipmentShip); this is the structure for a
+            picklist instead of having a separate Picklist entity. This may be overridden within a Shipment with the
+            field of the same name on ShipmentItemSource.]]></description></field>
+    <field name="productStoreId" type="id"/>
+    <field name="priority" type="number-integer" default="5" enable-audit-log="update">
+        <description><![CDATA[Numeric priority, 1 to 9 where 1 is highest priority and 9 is lowest priority (like a to do list), defaults to 5]]></description></field>
+    <field name="entryDate" type="date-time"/>
+    <field name="shipAfterDate" type="date-time" enable-audit-log="update"/>
+    <field name="shipBeforeDate" type="date-time" enable-audit-log="update"/>
+    <field name="estimatedReadyDate" type="date-time" enable-audit-log="update"/>
+    <field name="estimatedShipDate" type="date-time" enable-audit-log="update"/>
+    <field name="estimatedArrivalDate" type="date-time" enable-audit-log="update"/>
+    <field name="latestCancelDate" type="date-time"/>
+    <field name="packedDate" type="date-time"/>
+    <field name="pickContainerId" type="id" enable-audit-log="update">
+        <description><![CDATA[Container assigned for picking, to move Asset(s) to Container on pick and issue from Container on pack]]></description></field>
+    <field name="shipWorkEffortId" type="id" enable-audit-log="update"/>
+    <field name="receiveWorkEffortId" type="id"/>
+    <field name="assemblyWorkEffortId" type="id"/>
+    <field name="estimatedShipCost" type="currency-amount"/>
+    <field name="costUomId" type="id"/>
+    <field name="addtlShippingCharge" type="currency-amount"/>
+    <field name="addtlShippingChargeDesc" type="text-medium"/>
+    <field name="signatureRequiredEnumId" type="id"/>
+    <field name="handlingInstructions" type="text-long"/>
+    <field name="otherPartyOrderId" type="text-short"/>
+    <field name="systemMessageRemoteId" type="id"/>
+    <field name="externalId" type="text-short">
+        <description><![CDATA[ID for the shipment in the direct upstream system it came from if it came from an external system]]></description></field>
+    <field name="originId" type="text-short">
+        <description><![CDATA[ID for the shipment in the original system it came from if not the direct upstream system]]></description></field>
+    <relationship type="one" title="ShipmentType" related="moqui.basic.Enumeration" short-alias="type">
+        <key-map field-name="shipmentTypeEnumId"/></relationship>
+    <relationship type="one" title="Shipment" related="moqui.basic.StatusItem" short-alias="status"/>
+    <relationship type="one" title="From" related="mantle.party.Party" short-alias="fromParty">
+        <key-map field-name="fromPartyId"/></relationship>
+    <relationship type="one-nofk" title="From" related="mantle.party.Organization" short-alias="fromOrganization">
+        <key-map field-name="fromPartyId"/></relationship>
+    <relationship type="one-nofk" title="From" related="mantle.party.Person" short-alias="fromPerson">
+        <key-map field-name="fromPartyId"/></relationship>
+    <relationship type="one" title="To" related="mantle.party.Party" short-alias="toParty">
+        <key-map field-name="toPartyId"/></relationship>
+    <relationship type="one-nofk" title="To" related="mantle.party.Organization" short-alias="toOrganization">
+        <key-map field-name="toPartyId"/></relationship>
+    <relationship type="one-nofk" title="To" related="mantle.party.Person" short-alias="toPerson">
+        <key-map field-name="toPartyId"/></relationship>
+    <relationship type="one" related="mantle.product.store.ProductStore" short-alias="productStore"/>
+    <relationship type="one" title="Pick" related="mantle.product.asset.Container" short-alias="pickContainer">
+        <key-map field-name="pickContainerId"/></relationship>
+    <relationship type="one" title="Ship" related="mantle.work.effort.WorkEffort" short-alias="shipWorkEffort">
+        <key-map field-name="shipWorkEffortId"/></relationship>
+    <relationship type="one" title="Receive" related="mantle.work.effort.WorkEffort" short-alias="receiveWorkEffort">
+        <key-map field-name="receiveWorkEffortId"/></relationship>
+    <relationship type="one" title="Assembly" related="mantle.work.effort.WorkEffort" short-alias="assemblyWorkEffort">
+        <key-map field-name="assemblyWorkEffortId"/></relationship>
+    <relationship type="one" title="Cost" related="moqui.basic.Uom" short-alias="costUom">
+        <key-map field-name="costUomId"/></relationship>
+    <relationship type="one" title="SignatureRequired" related="moqui.basic.Enumeration" short-alias="signatureRequiredEnum">
+        <key-map field-name="signatureRequiredEnumId"/></relationship>
+    <relationship type="one" related="moqui.service.message.SystemMessageRemote"/>
+    <relationship type="many" related="mantle.shipment.ShipmentContent" short-alias="contents">
+        <key-map field-name="shipmentId"/></relationship>
+    <relationship type="many" related="mantle.shipment.ShipmentItem" short-alias="items">
+        <key-map field-name="shipmentId"/></relationship>
+    <relationship type="many" related="mantle.shipment.ShipmentItemSource" short-alias="itemSources">
+        <key-map field-name="shipmentId"/></relationship>
+    <relationship type="many" related="mantle.shipment.ShipmentPackage" short-alias="packages">
+        <key-map field-name="shipmentId"/></relationship>
+    <relationship type="many" related="mantle.shipment.ShipmentRouteSegment" short-alias="routeSegments">
+        <key-map field-name="shipmentId"/></relationship>
+    <relationship type="many" related="mantle.shipment.ShipmentPackageRouteSeg" short-alias="packageRouteSegments">
+        <key-map field-name="shipmentId"/></relationship>
+    <index name="SHIPMENT_EXTERNAL">
+        <index-field name="externalId"/></index>
+    <index name="SHIPMENT_ORIGIN">
+        <index-field name="originId"/></index>
+    <seed-data>
+        <moqui.basic.EnumerationType description="Shipment Type" enumTypeId="ShipmentType"/>
+        <moqui.basic.Enumeration description="Incoming" enumId="ShpTpIncoming" enumTypeId="ShipmentType"/>
+        <moqui.basic.Enumeration description="Outgoing" enumId="ShpTpOutgoing" enumTypeId="ShipmentType"/>
+        <moqui.basic.Enumeration description="Sales Return" parentEnumId="ShpTpIncoming" enumId="ShpTpSalesReturn" enumTypeId="ShipmentType"/>
+        <moqui.basic.Enumeration description="Sales Shipment" parentEnumId="ShpTpOutgoing" enumId="ShpTpSales" enumTypeId="ShipmentType"/>
+        <moqui.basic.Enumeration description="Purchase Shipment" parentEnumId="ShpTpIncoming" enumId="ShpTpPurchase" enumTypeId="ShipmentType"/>
+        <moqui.basic.Enumeration description="Purchase Return" parentEnumId="ShpTpOutgoing" enumId="ShpTpPurchaseReturn" enumTypeId="ShipmentType"/>
+        <moqui.basic.Enumeration description="Drop Shipment" enumId="ShpTpDrop" enumTypeId="ShipmentType"/>
+        <moqui.basic.Enumeration description="Transfer" enumId="ShpTpTransfer" enumTypeId="ShipmentType"/>
+        <moqui.basic.StatusType description="Shipment Status" statusTypeId="Shipment"/>
+        <moqui.basic.StatusItem description="Input" sequenceNum="1" statusId="ShipInput" statusTypeId="Shipment"/>
+        <moqui.basic.StatusItem description="Scheduled" sequenceNum="2" statusId="ShipScheduled" statusTypeId="Shipment"/>
+        <moqui.basic.StatusItem description="Picked" sequenceNum="3" statusId="ShipPicked" statusTypeId="Shipment"/>
+        <moqui.basic.StatusItem description="Packed" sequenceNum="4" statusId="ShipPacked" statusTypeId="Shipment"/>
+        <moqui.basic.StatusItem description="Shipped" sequenceNum="5" statusId="ShipShipped" statusTypeId="Shipment"/>
+        <moqui.basic.StatusItem description="Delivered" sequenceNum="6" statusId="ShipDelivered" statusTypeId="Shipment"/>
+        <moqui.basic.StatusItem description="Rejected" sequenceNum="98" statusId="ShipRejected" statusTypeId="Shipment"/>
+        <moqui.basic.StatusItem description="Cancelled" sequenceNum="99" statusId="ShipCancelled" statusTypeId="Shipment"/>
+        <moqui.basic.StatusFlowTransition statusFlowId="Default" statusId="ShipInput" toStatusId="ShipScheduled" transitionName="Schedule"/>
+        <moqui.basic.StatusFlowTransition statusFlowId="Default" statusId="ShipInput" toStatusId="ShipPicked" transitionName="Pick"/>
+        <moqui.basic.StatusFlowTransition statusFlowId="Default" statusId="ShipInput" toStatusId="ShipPacked" transitionName="Pack"/>
+        <moqui.basic.StatusFlowTransition statusFlowId="Default" statusId="ShipInput" toStatusId="ShipShipped" transitionName="Ship"/>
+        <moqui.basic.StatusFlowTransition statusFlowId="Default" statusId="ShipInput" toStatusId="ShipDelivered" transitionName="Deliver"/>
+        <moqui.basic.StatusFlowTransition statusFlowId="Default" statusId="ShipInput" toStatusId="ShipCancelled" transitionName="Cancel"/>
+        <moqui.basic.StatusFlowTransition statusFlowId="Default" statusId="ShipScheduled" toStatusId="ShipPicked" transitionName="Pick"/>
+        <moqui.basic.StatusFlowTransition statusFlowId="Default" statusId="ShipScheduled" toStatusId="ShipPacked" transitionName="Pack"/>
+        <moqui.basic.StatusFlowTransition statusFlowId="Default" statusId="ShipScheduled" toStatusId="ShipShipped" transitionName="Ship"/>
+        <moqui.basic.StatusFlowTransition statusFlowId="Default" statusId="ShipScheduled" toStatusId="ShipDelivered" transitionName="Deliver"/>
+        <moqui.basic.StatusFlowTransition statusFlowId="Default" statusId="ShipScheduled" toStatusId="ShipCancelled" transitionName="Cancel"/>
+        <moqui.basic.StatusFlowTransition statusFlowId="Default" statusId="ShipPicked" toStatusId="ShipPacked" transitionName="Pack"/>
+        <moqui.basic.StatusFlowTransition statusFlowId="Default" statusId="ShipPicked" toStatusId="ShipScheduled" transitionName="Un-pick"/>
+        <moqui.basic.StatusFlowTransition statusFlowId="Default" statusId="ShipPicked" toStatusId="ShipCancelled" transitionName="Cancel"/>
+        <moqui.basic.StatusFlowTransition statusFlowId="Default" statusId="ShipPacked" toStatusId="ShipPicked" transitionName="Un-pack"/>
+        <moqui.basic.StatusFlowTransition statusFlowId="Default" statusId="ShipPacked" toStatusId="ShipShipped" transitionName="Ship"/>
+        <moqui.basic.StatusFlowTransition statusFlowId="Default" statusId="ShipPacked" toStatusId="ShipDelivered" transitionName="Deliver"/>
+        <moqui.basic.StatusFlowTransition statusFlowId="Default" statusId="ShipPacked" toStatusId="ShipRejected" transitionName="Reject"/>
+        <moqui.basic.StatusFlowTransition statusFlowId="Default" statusId="ShipPacked" toStatusId="ShipCancelled" transitionName="Cancel"/>
+        <moqui.basic.StatusFlowTransition statusFlowId="Default" statusId="ShipShipped" toStatusId="ShipDelivered" transitionName="Deliver"/>
+        <moqui.basic.StatusFlowTransition statusFlowId="Default" statusId="ShipShipped" toStatusId="ShipRejected" transitionName="Reject"/>
+        <moqui.basic.StatusFlowTransition statusFlowId="Default" statusId="ShipShipped" toStatusId="ShipCancelled" transitionName="Cancel"/>
+        <moqui.basic.StatusFlowTransition statusFlowId="Default" statusId="ShipDelivered" toStatusId="ShipShipped" transitionName="Un-deliver"/>
+        <moqui.basic.StatusFlowTransition statusFlowId="Default" statusId="ShipShipped" toStatusId="ShipPacked" transitionName="Un-ship"/>
+    </seed-data>
+    <master>
+        <detail relationship="type"/>
+        <detail relationship="status"/>
+        <detail relationship="fromParty" use-master="basic"/>
+        <detail relationship="toParty" use-master="basic"/>
+        <detail relationship="shipWorkEffort"/>
+        <detail relationship="receiveWorkEffort"/>
+        <detail relationship="costUom"/>
+        <detail relationship="contents"/>
+        <detail relationship="items">
+            <detail relationship="sources">
+                <detail relationship="status"/></detail>
+            <detail relationship="contents"/>
+            <detail relationship="issuances"/>
+            <detail relationship="receipts"/>
+        </detail>
+        <detail relationship="packages">
+            <detail relationship="contents"/>
+            <detail relationship="routeSegments"/>
+        </detail>
+        <detail relationship="routeSegments">
+            <detail relationship="carrierParty" use-master="basic"/>
+            <detail relationship="shipmentMethod"/>
+            <detail relationship="originFacility"/>
+            <detail relationship="originPostal" use-master="default"/>
+            <detail relationship="originTelecom" use-master="default"/>
+            <detail relationship="destFacility"/>
+            <detail relationship="destPostal" use-master="default"/>
+            <detail relationship="destTelecom" use-master="default"/>
+            <detail relationship="status"/>
+            <detail relationship="costUom"/>
+            <detail relationship="billingWeightUom"/>
+        </detail>
+    </master>
+    <field name="lastUpdatedStamp" type="date-time"/>
+    <relationship related="mantle.ledger.transaction.AcctgTrans" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="shipmentId" related="shipmentId"/></relationship>
+    <relationship related="mantle.order.OrderItemBilling" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="shipmentId" related="shipmentId"/></relationship>
+    <relationship related="mantle.product.asset.Asset" type="many" is-auto-reverse="true" mutable="true" title="Acquire">
+        <key-map field-name="shipmentId" related="acquireShipmentId"/></relationship>
+    <relationship related="mantle.product.asset.AssetDetail" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="shipmentId" related="shipmentId"/></relationship>
+    <relationship related="mantle.product.issuance.AssetIssuance" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="shipmentId" related="shipmentId"/></relationship>
+    <relationship related="mantle.product.receipt.AssetReceipt" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="shipmentId" related="shipmentId"/></relationship>
+    <relationship related="mantle.shipment.ShipmentContactMech" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="shipmentId" related="shipmentId"/></relationship>
+    <relationship related="mantle.shipment.ShipmentEmailMessage" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="shipmentId" related="shipmentId"/></relationship>
+    <relationship related="mantle.shipment.ShipmentPackageContent" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="shipmentId" related="shipmentId"/></relationship>
+    <relationship related="mantle.shipment.ShipmentParty" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="shipmentId" related="shipmentId"/></relationship>
+    <relationship related="mantle.shipment.ShipmentSystemMessage" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="shipmentId" related="shipmentId"/></relationship>
+    <relationship related="moqui.service.message.SystemMessage" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="shipmentId" related="shipmentId"/></relationship>
+
+<!-- seca <seca id="ShipmentDeliveredSentEmail" service="update#mantle.shipment.Shipment" when="tx-commit">
+    <condition>
+        <expression><![CDATA[statusChanged && statusId == 'ShipDelivered']]></expression></condition>
+    <actions>
+        <service-call name="mantle.shipment.ShipmentServices.send#ShipmentStoreEmail" in-map="[shipmentId:shipmentId, emailTypeEnumId:'PsetShipmentDelivered']"/></actions>
+</seca>-->
+<!-- seca <seca id="ShipmentShippedSendEmail" service="update#mantle.shipment.Shipment" when="tx-commit">
+    <condition>
+        <expression><![CDATA[statusChanged && statusId == 'ShipShipped']]></expression></condition>
+    <actions>
+        <service-call name="mantle.shipment.ShipmentServices.send#ShipmentStoreEmail" in-map="[shipmentId:shipmentId, emailTypeEnumId:'PsetShipmentShipped']"/></actions>
+</seca>-->
+<!-- seca <seca id="WorkEffortShipLoadStatusAuto" service="update#mantle.shipment.Shipment" when="post-service">
+    <condition>
+        <expression><![CDATA[statusChanged && (statusId in ['ShipPicked', 'ShipPacked', 'ShipShipped', 'ShipCancelled'] ||
+            oldStatusId in ['ShipPicked', 'ShipPacked', 'ShipShipped', 'ShipCancelled'])]]></expression></condition>
+    <actions>
+        <service-call name="mantle.work.ShipmentWorkServices.set#ShipmentLoadStatusOnShipmentStatus" in-map="[shipmentId:shipmentId, statusId:statusId]"/></actions>
+</seca>-->
+<!-- seca <seca id="ShipmentOutgoingPackedCreateInvoices" service="update#mantle.shipment.Shipment" when="post-service">
+    <description><![CDATA[Create sales invoice on Outgoing Shipment Packed]]></description>
+    <condition>
+        <expression><![CDATA[statusChanged && statusId == 'ShipPacked' && !(oldStatusId in ['ShipShipped', 'ShipDelivered'])]]></expression></condition>
+    <actions>
+        <entity-find-one entity-name="mantle.shipment.Shipment" value-field="shipment"/>
+        <set field="shipmentTypeEnum" from="shipment.'ShipmentType#moqui.basic.Enumeration'"/>
+        <if condition="shipmentTypeEnum?.enumId == 'ShpTpOutgoing' || shipmentTypeEnum?.parentEnumId == 'ShpTpOutgoing'">
+            <service-call name="mantle.account.InvoiceServices.create#SalesShipmentInvoices" in-map="[shipmentId:shipmentId]"/></if>
+    </actions>
+</seca>-->
+<!-- seca <seca id="ShipmentDeliveredReturnReceive" service="update#mantle.shipment.Shipment" when="post-service">
+    <condition>
+        <expression><![CDATA[statusChanged && statusId == 'ShipDelivered']]></expression></condition>
+    <actions>
+        <service-call name="mantle.order.ReturnServices.receive#ReturnShipmentItems" in-map="context"/></actions>
+</seca>-->
+<!-- seca <seca id="ShipmentIncomingDeliveredCreateInvoices" service="update#mantle.shipment.Shipment" when="post-service">
+    <description><![CDATA[Create purchase invoice on Incoming Shipment Delivered]]></description>
+    <condition>
+        <expression><![CDATA[statusChanged && statusId == 'ShipDelivered']]></expression></condition>
+    <actions>
+        <entity-find-one entity-name="mantle.shipment.Shipment" value-field="shipment"/>
+        <set field="shipmentTypeEnum" from="shipment.'ShipmentType#moqui.basic.Enumeration'"/>
+        <if condition="shipmentTypeEnum?.enumId == 'ShpTpIncoming' || shipmentTypeEnum?.parentEnumId == 'ShpTpIncoming'">
+            <service-call name="mantle.account.InvoiceServices.create#PurchaseShipmentInvoices" in-map="[shipmentId:shipmentId]"/></if>
+    </actions>
+</seca>-->
+</entity>

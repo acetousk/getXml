@@ -1,0 +1,26 @@
+<!--Service Location mantle.account.InvoiceServices.checkSet#InvoiceDueDate--><service verb="checkSet" noun="InvoiceDueDate"><in-parameters><parameter name="invoiceId"/><parameter name="overrideExisting" type="Boolean" default="false"/></in-parameters><out-parameters/><actions><entity-find-one entity-name="mantle.account.invoice.Invoice" value-field="invoice"/><if condition="invoice.dueDate != null && !overrideExisting"><return/></if><set field="origDueDate" from="invoice.dueDate"/><set field="invoiceDate" from="invoice.invoiceDate"/><if condition="!invoice.settlementTermId"><entity-find-count entity-name="mantle.party.PartyRole" count-field="fromOrgInternalCount"><econdition field-name="partyId" from="invoice.fromPartyId"/><econdition field-name="roleTypeId" value="OrgInternal"/></entity-find-count><set field="isFromPartyOrgInternal" from="fromOrgInternalCount > 0"/><set field="organizationPartyId" from="isFromPartyOrgInternal ? invoice.fromPartyId : invoice.toPartyId"/><set field="otherPartyId" from="isFromPartyOrgInternal ? invoice.toPartyId : invoice.fromPartyId"/><entity-find entity-name="mantle.party.agreement.AgreementAndTerm" list="agreementAndTermList"><date-filter/><econdition field-name="organizationPartyId"/><econdition field-name="otherPartyId"/><econdition field-name="otherRoleTypeId" operator="equals" value="Customer" ignore="!isFromPartyOrgInternal"/><econdition field-name="otherRoleTypeId" operator="not-equals" value="Customer" ignore="isFromPartyOrgInternal"/><econdition field-name="settlementTermId" operator="is-not-null"/><order-by field-name="-fromDate"/></entity-find><if condition="agreementAndTermList"><set field="invoice.settlementTermId" from="agreementAndTermList[0].settlementTermId"/></if><if condition="!invoice.settlementTermId && isFromPartyOrgInternal"><service-call name="mantle.ledger.LedgerServices.find#PartyAcctgPreference" out-map="[partyAcctgPreference:context.partyAcctgPreference]" in-map="[organizationPartyId:invoice.fromPartyId]"/><set field="invoice.settlementTermId" from="partyAcctgPreference?.settlementTermId"/></if></if><if condition="invoiceDate != null && invoice.settlementTermId"><entity-find-one entity-name="mantle.account.invoice.SettlementTerm" value-field="settlementTerm"><field-map field-name="settlementTermId" from="invoice.settlementTermId"/></entity-find-one><script><![CDATA[def dueDateDt = java.time.ZonedDateTime.ofInstant(java.time.Instant.ofEpochMilli(invoiceDate.time), java.time.ZoneId.systemDefault())
+
+                    switch (settlementTerm.termTypeEnumId) {
+                        case 'TtFinPaymentDayNextMonth':
+                            dueDateDt = dueDateDt.plusMonths(1)
+                            // fall through intentionally
+                        case 'TtFinPaymentDayCurMonth':
+                            int dayOfMonth = settlementTerm.termValue as long ?: 1
+                            int maxDays = dueDateDt.range(java.time.temporal.ChronoField.DAY_OF_MONTH).getMaximum()
+                            if (dayOfMonth > maxDays) dayOfMonth = maxDays
+                            dueDateDt = dueDateDt.withDayOfMonth(dayOfMonth)
+                            break
+                        default:
+                            dueDateDt = dueDateDt.plusDays((settlementTerm.termValue as long) ?: 0)
+                    }
+                    dueDate = java.sql.Timestamp.from(dueDateDt.toInstant())
+                    // could happen for TtFinPaymentDayCurMonth with a day less than today
+                    if (dueDate < invoiceDate) {
+                        dueDateDt = dueDateDt.plusMonths(1)
+                        dueDate = java.sql.Timestamp.from(dueDateDt.toInstant())
+                    }
+
+                    if (origDueDate == null || origDueDate != dueDate) {
+                        invoice.dueDate = dueDate
+                        invoice.update()
+                    }]]></script></if></actions></service>

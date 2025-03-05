@@ -1,0 +1,4 @@
+<!--Transition Screen Location component://webroot/screen/webroot/Login.xml Transition Name removePreAuth--><transition name="removePreAuth"><parameter name="initialTab"/><parameter name="returnTo"/><parameter name="username" from="ec.web?.sessionAttributes?.moquiPreAuthcUsername ?: username"/><actions><!--always-actions at component://webroot/screen/webroot.xml--><set field="html_scripts" from="new LinkedHashSet()"/><set field="footer_scripts" from="new LinkedHashSet()"/><set field="html_stylesheets" from="new LinkedHashSet()"/><!--transition actions--><script><![CDATA[ec.web.sessionAttributes.remove("moquiPreAuthcUsername")
+            ec.web.sessionAttributes.remove("moquiAuthcFactorRequired")
+            ec.web.sessionAttributes.remove("moquiPasswordChangeRequired")
+            ec.web.sessionAttributes.remove("moquiExpiredCredentials")]]></script></actions></transition>

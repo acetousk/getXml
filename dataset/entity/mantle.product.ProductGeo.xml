@@ -1,0 +1,20 @@
+
+<!-- Entity Name: mantle.product.ProductGeo sql table: PRODUCT_GEO --><entity entity-name="ProductGeo" package="mantle.product">
+    <field name="productId" type="id" is-pk="true"/>
+    <field name="geoId" type="id" is-pk="true"/>
+    <field name="productGeoPurposeEnumId" type="id"/>
+    <field name="description" type="text-medium"/>
+    <relationship type="one" related="mantle.product.Product" short-alias="product"/>
+    <relationship type="one" related="moqui.basic.Geo" short-alias="geo"/>
+    <relationship type="one" title="ProductGeoPurpose" related="moqui.basic.Enumeration">
+        <key-map field-name="productGeoPurposeEnumId"/></relationship>
+    <seed-data>
+        <moqui.basic.EnumerationType description="Product Geo Purpose" enumTypeId="ProductGeoPurpose"/>
+        <moqui.basic.Enumeration description="Purchase Include" enumId="PgpPurchaseInclude" enumTypeId="ProductGeoPurpose"/>
+        <moqui.basic.Enumeration description="Purchase Exclude" enumId="PgpPurchaseExclude" enumTypeId="ProductGeoPurpose"/>
+        <moqui.basic.Enumeration description="Shipment Include" enumId="PgpShipmentInclude" enumTypeId="ProductGeoPurpose"/>
+        <moqui.basic.Enumeration description="Shipment Exclude" enumId="PgpShipmentExclude" enumTypeId="ProductGeoPurpose"/>
+    </seed-data>
+    <field name="lastUpdatedStamp" type="date-time"/>
+
+</entity>

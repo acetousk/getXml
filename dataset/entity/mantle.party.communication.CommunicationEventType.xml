@@ -1,0 +1,35 @@
+
+<!-- Entity Name: mantle.party.communication.CommunicationEventType sql table: COMMUNICATION_EVENT_TYPE --><entity entity-name="CommunicationEventType" package="mantle.party.communication" has-dependents="true">
+    <field name="communicationEventTypeId" type="id" is-pk="true"/>
+    <field name="parentTypeId" type="id"/>
+    <field name="description" type="text-medium"/>
+    <field name="contactMechTypeEnumId" type="id"/>
+    <relationship type="one" title="Parent" related="mantle.party.communication.CommunicationEventType">
+        <key-map field-name="parentTypeId" related="communicationEventTypeId"/></relationship>
+    <relationship type="one" title="ContactMechType" related="moqui.basic.Enumeration">
+        <key-map field-name="contactMechTypeEnumId"/></relationship>
+    <seed-data>
+        <moqui.basic.EnumerationType description="Contact Mechanism Type" enumTypeId="ContactMechType"/>
+        <moqui.basic.Enumeration enumId="CmtPostalAddress" description="Postal Address" enumTypeId="ContactMechType"/>
+        <moqui.basic.Enumeration enumId="CmtTelecomNumber" description="Phone Number" enumTypeId="ContactMechType"/>
+        <moqui.basic.Enumeration enumId="CmtElectronicAddress" description="Electronic Address" enumTypeId="ContactMechType"/>
+        <moqui.basic.Enumeration enumId="CmtEmailAddress" description="Email Address" parentEnumId="CmtElectronicAddress" enumTypeId="ContactMechType"/>
+        <moqui.basic.Enumeration enumId="CmtIpAddress" description="Internet IP Address" parentEnumId="CmtElectronicAddress" enumTypeId="ContactMechType"/>
+        <moqui.basic.Enumeration enumId="CmtDomainName" description="Internet Domain Name" parentEnumId="CmtElectronicAddress" enumTypeId="ContactMechType"/>
+        <moqui.basic.Enumeration enumId="CmtWebAddress" description="Web URL/Address" parentEnumId="CmtElectronicAddress" enumTypeId="ContactMechType"/>
+        <moqui.basic.Enumeration enumId="CmtWebForm" description="Web Form" parentEnumId="CmtElectronicAddress" enumTypeId="ContactMechType"/>
+        <CommunicationEventType communicationEventTypeId="Email" description="Email" contactMechTypeEnumId="CmtEmailAddress"/>
+        <CommunicationEventType communicationEventTypeId="FaceToFace" description="Face-To-Face"/>
+        <CommunicationEventType communicationEventTypeId="Fax" description="Fax" contactMechTypeEnumId="CmtTelecomNumber"/>
+        <CommunicationEventType communicationEventTypeId="Letter" description="Letter" contactMechTypeEnumId="CmtPostalAddress"/>
+        <CommunicationEventType communicationEventTypeId="Phone" description="Phone" contactMechTypeEnumId="CmtTelecomNumber"/>
+        <CommunicationEventType communicationEventTypeId="WebSite" description="Web Site" contactMechTypeEnumId="CmtWebAddress"/>
+        <CommunicationEventType communicationEventTypeId="Comment" description="Comment"/>
+        <CommunicationEventType communicationEventTypeId="Message" description="Message"/>
+        <CommunicationEventType communicationEventTypeId="AutoEmail" description="Auto Email" contactMechTypeEnumId="CmtEmailAddress"/>
+    </seed-data>
+    <field name="lastUpdatedStamp" type="date-time"/>
+    <relationship related="mantle.party.communication.CommunicationEvent" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="communicationEventTypeId" related="communicationEventTypeId"/></relationship>
+
+</entity>

@@ -1,0 +1,24 @@
+
+<!-- Entity Name: mantle.order.OrderDecisionReason sql table: ORDER_DECISION_REASON --><entity entity-name="OrderDecisionReason" package="mantle.order" cache="never">
+    <field name="orderId" type="id" is-pk="true"/>
+    <field name="decisionDate" type="date-time" is-pk="true"/>
+    <field name="decisionReasonEnumId" type="id" is-pk="true"/>
+    <relationship type="one" related="mantle.order.OrderHeader" short-alias="orderHeader"/>
+    <relationship type="one" related="mantle.order.OrderDecision" short-alias="orderDecision"/>
+    <relationship type="one" title="OrderDecisionReason" related="moqui.basic.Enumeration">
+        <key-map field-name="decisionReasonEnumId"/></relationship>
+    <seed-data>
+        <moqui.basic.EnumerationType description="Order Decision Reason" enumTypeId="OrderDecisionReason"/>
+        <moqui.basic.Enumeration description="Fraud" enumId="OdrFraud" enumTypeId="OrderDecisionReason"/>
+        <moqui.basic.Enumeration description="Payment Not Received" enumId="OdrPayment" enumTypeId="OrderDecisionReason"/>
+        <moqui.basic.Enumeration description="Other" enumId="OdrOther" enumTypeId="OrderDecisionReason"/>
+        <moqui.basic.Enumeration description="Order Approved Reasons" enumId="EngOrderReasonApproved" enumTypeId="EnumGroup"/>
+        <moqui.basic.EnumGroupMember enumGroupEnumId="EngOrderReasonApproved" enumId="OdrOther"/>
+        <moqui.basic.Enumeration description="Order Rejected Reasons" enumId="EngOrderReasonRejected" enumTypeId="EnumGroup"/>
+        <moqui.basic.EnumGroupMember enumGroupEnumId="EngOrderReasonRejected" enumId="OdrFraud"/>
+        <moqui.basic.EnumGroupMember enumGroupEnumId="EngOrderReasonRejected" enumId="OdrPayment"/>
+        <moqui.basic.EnumGroupMember enumGroupEnumId="EngOrderReasonRejected" enumId="OdrOther"/>
+    </seed-data>
+    <field name="lastUpdatedStamp" type="date-time"/>
+
+</entity>

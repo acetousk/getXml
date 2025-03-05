@@ -1,0 +1,98 @@
+
+<!-- Entity Name: moqui.basic.email.EmailMessage sql table: EMAIL_MESSAGE --><entity entity-name="EmailMessage" package="moqui.basic.email" use="nontransactional" short-alias="emailMessages" cache="never" has-dependents="true">
+    <field name="emailMessageId" type="id" is-pk="true"/>
+    <field name="rootEmailMessageId" type="id">
+        <description><![CDATA[For threaded messages, this points to the message that started the thread.]]></description></field>
+    <field name="parentEmailMessageId" type="id">
+        <description><![CDATA[For threaded messages, this points to the previous message in the thread.]]></description></field>
+    <field name="statusId" type="id" enable-audit-log="true"/>
+    <field name="emailTypeEnumId" type="id"/>
+    <field name="sentDate" type="date-time"/>
+    <field name="receivedDate" type="date-time"/>
+    <field name="subject" type="text-medium"/>
+    <field name="body" type="text-very-long"/>
+    <field name="bodyText" type="text-very-long">
+        <description><![CDATA[The plain text variation of the body]]></description></field>
+    <field name="headersString" type="text-very-long"/>
+    <field name="fromAddress" type="text-medium"/>
+    <field name="fromName" type="text-medium"/>
+    <field name="toAddresses" type="text-long"/>
+    <field name="ccAddresses" type="text-long"/>
+    <field name="bccAddresses" type="text-long"/>
+    <field name="contentType" type="text-medium"/>
+    <field name="messageId" type="text-medium"/>
+    <field name="fromUserId" type="id"/>
+    <field name="toUserId" type="id"/>
+    <field name="emailTemplateId" type="id">
+        <description><![CDATA[For outgoing messages that came from an EmailTemplate.]]></description></field>
+    <field name="emailServerId" type="id"/>
+    <relationship type="one" title="EmailMessage" related="moqui.basic.StatusItem" short-alias="status"/>
+    <relationship type="one" title="EmailType" related="moqui.basic.Enumeration" short-alias="type">
+        <key-map field-name="emailTypeEnumId"/></relationship>
+    <relationship type="one" title="Root" related="moqui.basic.email.EmailMessage" short-alias="root">
+        <key-map field-name="rootEmailMessageId" related="emailMessageId"/></relationship>
+    <relationship type="one" title="Parent" related="moqui.basic.email.EmailMessage" short-alias="parent">
+        <key-map field-name="parentEmailMessageId" related="emailMessageId"/></relationship>
+    <relationship type="many" title="Child" related="moqui.basic.email.EmailMessage" short-alias="children">
+        <key-map field-name="emailMessageId" related="parentEmailMessageId"/></relationship>
+    <relationship type="one" title="From" related="moqui.security.UserAccount" short-alias="fromUser">
+        <key-map field-name="fromUserId"/></relationship>
+    <relationship type="one" title="To" related="moqui.security.UserAccount" short-alias="toUser">
+        <key-map field-name="toUserId"/></relationship>
+    <relationship type="one" related="moqui.basic.email.EmailTemplate" short-alias="template"/>
+    <relationship type="one" related="moqui.basic.email.EmailServer" short-alias="server"/>
+    <index name="EMAIL_MSG_ID">
+        <index-field name="messageId"/></index>
+    <seed-data>
+        <moqui.basic.StatusType description="Email Message Status" statusTypeId="EmailMessage"/>
+        <moqui.basic.StatusItem description="Draft" sequenceNum="1" statusId="ES_DRAFT" statusTypeId="EmailMessage"/>
+        <moqui.basic.StatusItem description="Ready" sequenceNum="2" statusId="ES_READY" statusTypeId="EmailMessage"/>
+        <moqui.basic.StatusItem description="Sent" sequenceNum="3" statusId="ES_SENT" statusTypeId="EmailMessage"/>
+        <moqui.basic.StatusItem description="Received" sequenceNum="4" statusId="ES_RECEIVED" statusTypeId="EmailMessage"/>
+        <moqui.basic.StatusItem description="Viewed" sequenceNum="5" statusId="ES_VIEWED" statusTypeId="EmailMessage"/>
+        <moqui.basic.StatusItem description="Bounced" sequenceNum="8" statusId="ES_BOUNCED" statusTypeId="EmailMessage"/>
+        <moqui.basic.StatusItem description="Cancelled" sequenceNum="9" statusId="ES_CANCELLED" statusTypeId="EmailMessage"/>
+        <moqui.basic.StatusFlowTransition statusFlowId="Default" statusId="ES_DRAFT" toStatusId="ES_READY" transitionName="Ready"/>
+        <moqui.basic.StatusFlowTransition statusFlowId="Default" statusId="ES_READY" toStatusId="ES_SENT" transitionName="Send"/>
+        <moqui.basic.StatusFlowTransition statusFlowId="Default" statusId="ES_READY" toStatusId="ES_VIEWED" transitionName="View"/>
+        <moqui.basic.StatusFlowTransition statusFlowId="Default" statusId="ES_READY" toStatusId="ES_CANCELLED" transitionName="Cancel"/>
+        <moqui.basic.StatusFlowTransition statusFlowId="Default" statusId="ES_SENT" toStatusId="ES_RECEIVED" transitionName="Received"/>
+        <moqui.basic.StatusFlowTransition statusFlowId="Default" statusId="ES_SENT" toStatusId="ES_VIEWED" transitionName="View"/>
+        <moqui.basic.StatusFlowTransition statusFlowId="Default" statusId="ES_SENT" toStatusId="ES_BOUNCED" transitionName="Bounce"/>
+        <moqui.basic.StatusFlowTransition statusFlowId="Default" statusId="ES_RECEIVED" toStatusId="ES_VIEWED" transitionName="View"/>
+        <moqui.basic.StatusFlowTransition statusFlowId="Default" statusId="ES_BOUNCED" toStatusId="ES_SENT" transitionName="Send"/>
+        <moqui.basic.EnumerationType description="Email Type" enumTypeId="EmailType"/>
+        <moqui.basic.Enumeration description="System" enumId="EMT_SYSTEM" enumTypeId="EmailType"/>
+        <moqui.basic.Enumeration description="Password Reset" enumId="EMT_PWD_RESET" parentEnumId="EMT_SYSTEM" enumTypeId="EmailType"/>
+        <moqui.basic.Enumeration description="Single Use Code" enumId="EMT_SINGLE_USE_CODE" parentEnumId="EMT_SYSTEM" enumTypeId="EmailType"/>
+        <moqui.basic.Enumeration description="Added Email Authentication Type" enumId="EMT_ADDED_EMAIL_AUTHC_FACTOR" parentEnumId="EMT_SYSTEM" enumTypeId="EmailType"/>
+        <moqui.basic.Enumeration description="Email Authentication Code Sent" enumId="EMT_EMAIL_AUTHC_FACTOR_SENT" parentEnumId="EMT_SYSTEM" enumTypeId="EmailType"/>
+        <moqui.basic.Enumeration description="Notification" enumId="EMT_NOTIFICATION" parentEnumId="EMT_SYSTEM" enumTypeId="EmailType"/>
+        <moqui.basic.Enumeration description="Screen Render" enumId="EMT_SCREEN_RENDER" parentEnumId="EMT_SYSTEM" enumTypeId="EmailType"/>
+        <moqui.basic.Enumeration description="Registration Confirmation" enumId="EMT_REG_CONFIRM" enumTypeId="EmailType"/>
+        <moqui.basic.Enumeration description="Update Personal Info Confirmation" enumId="EMT_UPD_INFO_CONFIRM" enumTypeId="EmailType"/>
+        <moqui.basic.Enumeration description="Email Address Verification" enumId="EMT_EMAIL_VERIFY" enumTypeId="EmailType"/>
+        <moqui.basic.Enumeration description="Account Invitation" enumId="EMT_ACCOUNT_INVITE" enumTypeId="EmailType"/>
+    </seed-data>
+    <master>
+        <detail relationship="status"/>
+        <detail relationship="type"/>
+        <detail relationship="root" use-master="default"/>
+        <detail relationship="parent" use-master="default"/>
+        <detail relationship="children" use-master="default"/>
+        <detail relationship="fromUser"/>
+        <detail relationship="toUser"/>
+        <detail relationship="template"/>
+        <detail relationship="server"/>
+    </master>
+    <field name="lastUpdatedStamp" type="date-time"/>
+    <relationship related="mantle.account.invoice.InvoiceEmailMessage" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="emailMessageId" related="emailMessageId"/></relationship>
+    <relationship related="mantle.order.OrderEmailMessage" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="emailMessageId" related="emailMessageId"/></relationship>
+    <relationship related="mantle.shipment.ShipmentEmailMessage" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="emailMessageId" related="emailMessageId"/></relationship>
+    <relationship related="moqui.security.user.NotificationMessageUser" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="emailMessageId" related="emailMessageId"/></relationship>
+
+</entity>

@@ -1,0 +1,1 @@
+<!-- Screen Location component://PopCommerce/screen/PopCommerceRoot/Order.xml --><screen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://moqui.org/xsd/xml-screen-3.xsd" require-authentication="false"><subscreens default-item="Cart"/><widgets><subscreens-active id="order"/></widgets></screen>

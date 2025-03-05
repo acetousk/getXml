@@ -1,0 +1,11 @@
+
+<!-- Entity Name: mantle.party.communication.WikiPageCommunicationEvent sql table: WIKI_PAGE_COMMUNICATION_EVENT --><entity entity-name="WikiPageCommunicationEvent" package="mantle.party.communication" cache="never">
+    <field name="wikiPageId" type="id" is-pk="true"/>
+    <field name="communicationEventId" type="id" is-pk="true"/>
+    <field name="description" type="text-medium"/>
+    <field name="sequenceNum" type="number-integer"/>
+    <relationship type="one" related="moqui.resource.wiki.WikiPage" short-alias="page"/>
+    <relationship type="one" related="mantle.party.communication.CommunicationEvent" short-alias="communicationEvent"/>
+    <field name="lastUpdatedStamp" type="date-time"/>
+
+</entity>

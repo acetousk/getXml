@@ -1,0 +1,698 @@
+
+<!-- Entity Name: moqui.basic.Enumeration sql table: ENUMERATION --><entity entity-name="Enumeration" package="moqui.basic" use="configuration" short-alias="enums" cache="true" has-dependents="true">
+    <field name="enumId" type="id" is-pk="true"/>
+    <field name="enumTypeId" type="id"/>
+    <field name="parentEnumId" type="id"/>
+    <field name="enumCode" type="text-medium"/>
+    <field name="sequenceNum" type="number-integer"/>
+    <field name="description" type="text-medium" enable-localization="true"/>
+    <field name="optionValue" type="text-medium">
+        <description><![CDATA[Usage depends on enum type such as an ID format/mask]]></description></field>
+    <field name="optionIndicator" type="text-indicator">
+        <description><![CDATA[Indicator flag with meaning depending on enum type]]></description></field>
+    <field name="relatedEnumId" type="id"/>
+    <field name="relatedEnumTypeId" type="id"/>
+    <field name="statusFlowId" type="id"/>
+    <relationship type="one" related="moqui.basic.EnumerationType" short-alias="type"/>
+    <relationship type="one-nofk" title="Parent" related="moqui.basic.Enumeration" short-alias="parent">
+        <key-map field-name="parentEnumId"/></relationship>
+    <relationship type="one-nofk" title="Related" related="moqui.basic.Enumeration" short-alias="related">
+        <key-map field-name="relatedEnumId"/></relationship>
+    <relationship type="one-nofk" title="Related" related="moqui.basic.EnumerationType" short-alias="relatedType">
+        <key-map field-name="relatedEnumTypeId"/></relationship>
+    <relationship type="one" related="moqui.basic.StatusFlow" short-alias="statusFlow"/>
+    <relationship type="many" related="moqui.basic.EnumGroupMember" short-alias="groupMembers">
+        <key-map field-name="enumId" related="enumGroupEnumId"/></relationship>
+    <seed-data>
+        <moqui.basic.EnumerationType enumTypeId="_NA_" description="Not Applicable"/>
+        <moqui.basic.Enumeration enumId="_NA_" enumTypeId="_NA_" description="Not Applicable"/>
+        <moqui.basic.EnumerationType description="Boolean (Yes/No)" enumTypeId="BooleanYN"/>
+        <moqui.basic.Enumeration description="Yes" enumId="BlY" enumTypeId="BooleanYN"/>
+        <moqui.basic.Enumeration description="No" enumId="BlN" enumTypeId="BooleanYN"/>
+        <moqui.basic.EnumerationType description="Day of Week" enumTypeId="DayOfWeek"/>
+        <moqui.basic.Enumeration description="Monday" enumId="DowMonday" sequenceNum="1" enumCode="MONDAY" enumTypeId="DayOfWeek"/>
+        <moqui.basic.Enumeration description="Tuesday" enumId="DowTuesday" sequenceNum="2" enumCode="TUESDAY" enumTypeId="DayOfWeek"/>
+        <moqui.basic.Enumeration description="Wednesday" enumId="DowWednesday" sequenceNum="3" enumCode="WEDNESDAY" enumTypeId="DayOfWeek"/>
+        <moqui.basic.Enumeration description="Thursday" enumId="DowThursday" sequenceNum="4" enumCode="THURSDAY" enumTypeId="DayOfWeek"/>
+        <moqui.basic.Enumeration description="Friday" enumId="DowFriday" sequenceNum="5" enumCode="FRIDAY" enumTypeId="DayOfWeek"/>
+        <moqui.basic.Enumeration description="Saturday" enumId="DowSaturday" sequenceNum="6" enumCode="SATURDAY" enumTypeId="DayOfWeek"/>
+        <moqui.basic.Enumeration description="Sunday" enumId="DowSunday" sequenceNum="7" enumCode="SUNDAY" enumTypeId="DayOfWeek"/>
+    </seed-data>
+    <master>
+        <detail relationship="type"/>
+        <detail relationship="parent"/>
+        <detail relationship="related"/>
+    </master>
+    <field name="lastUpdatedStamp" type="date-time"/>
+    <relationship related="ai.sql.TableEmbedding" type="many" is-auto-reverse="true" mutable="true" title="Model">
+        <key-map field-name="enumId" related="modelEnumId"/></relationship>
+    <relationship related="coarchy.Activity" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="enumId" related="implementationId"/></relationship>
+    <relationship related="coarchy.ClipboardActivity" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="enumId" related="implementationId"/></relationship>
+    <relationship related="coarchy.ClipboardActivityStatement" type="many" is-auto-reverse="true" mutable="true" title="ValueType">
+        <key-map field-name="enumId" related="typeEnumId"/></relationship>
+    <relationship related="coarchy.ValueStatement" type="many" is-auto-reverse="true" mutable="true" title="ValueType">
+        <key-map field-name="enumId" related="typeEnumId"/></relationship>
+    <relationship related="coarchy.product.ProductEvaluationResponse" type="many" is-auto-reverse="true" mutable="true" title="EvaluationBy">
+        <key-map field-name="enumId" related="evaluationByEnumId"/></relationship>
+    <relationship related="coarchy.product.ProductEvaluationResponse" type="many" is-auto-reverse="true" mutable="true" title="ImplementationStatus">
+        <key-map field-name="enumId" related="implementationStatusEnumId"/></relationship>
+    <relationship related="mantle.account.billing.BillingAccountTerm" type="many" is-auto-reverse="true" mutable="true" title="BillingAccountTermType">
+        <key-map field-name="enumId" related="termTypeEnumId"/></relationship>
+    <relationship related="mantle.account.financial.FinancialAccountTrans" type="many" is-auto-reverse="true" mutable="true" title="FinancialAccountTransType">
+        <key-map field-name="enumId" related="finAccountTransTypeEnumId"/></relationship>
+    <relationship related="mantle.account.financial.FinancialAccountTrans" type="many" is-auto-reverse="true" mutable="true" title="FinancialAccountTransReason">
+        <key-map field-name="enumId" related="reasonEnumId"/></relationship>
+    <relationship related="mantle.account.financial.FinancialAccountTrans" type="many" is-auto-reverse="true" mutable="true" title="AcctgTransResult">
+        <key-map field-name="enumId" related="acctgTransResultEnumId"/></relationship>
+    <relationship related="mantle.account.financial.FinancialAccountType" type="many" is-auto-reverse="true" mutable="true" title="FinancialAccountReplenishMethod">
+        <key-map field-name="enumId" related="replenishMethodEnumId"/></relationship>
+    <relationship related="mantle.account.financial.FinancialAccountType" type="many" is-auto-reverse="true" mutable="true" title="FinancialAccountReplenishType">
+        <key-map field-name="enumId" related="replenishTypeEnumId"/></relationship>
+    <relationship related="mantle.account.invoice.Invoice" type="many" is-auto-reverse="true" mutable="true" title="InvoiceType">
+        <key-map field-name="enumId" related="invoiceTypeEnumId"/></relationship>
+    <relationship related="mantle.account.invoice.Invoice" type="many" is-auto-reverse="true" mutable="true" title="AcctgTransResult">
+        <key-map field-name="enumId" related="acctgTransResultEnumId"/></relationship>
+    <relationship related="mantle.account.invoice.InvoiceContent" type="many" is-auto-reverse="true" mutable="true" title="InvoiceContentType">
+        <key-map field-name="enumId" related="contentTypeEnumId"/></relationship>
+    <relationship related="mantle.account.invoice.InvoiceItem" type="many" is-auto-reverse="true" mutable="true" title="ItemType">
+        <key-map field-name="enumId" related="itemTypeEnumId"/></relationship>
+    <relationship related="mantle.account.invoice.InvoiceItemAssoc" type="many" is-auto-reverse="true" mutable="true" title="InvoiceItemAssocType">
+        <key-map field-name="enumId" related="invoiceItemAssocTypeEnumId"/></relationship>
+    <relationship related="mantle.account.invoice.SettlementTerm" type="many" is-auto-reverse="true" mutable="true" title="TermType">
+        <key-map field-name="enumId" related="termTypeEnumId"/></relationship>
+    <relationship related="mantle.account.method.BankAccount" type="many" is-auto-reverse="true" mutable="true" title="BankAccountType">
+        <key-map field-name="enumId" related="typeEnumId"/></relationship>
+    <relationship related="mantle.account.method.BankAccount" type="many" is-auto-reverse="true" mutable="true" title="PaymentMethodFileType">
+        <key-map field-name="enumId" related="posPayFormatEnumId"/></relationship>
+    <relationship related="mantle.account.method.CreditCard" type="many" is-auto-reverse="true" mutable="true" title="CreditCardType">
+        <key-map field-name="enumId" related="creditCardTypeEnumId"/></relationship>
+    <relationship related="mantle.account.method.GiftCardFulfillment" type="many" is-auto-reverse="true" mutable="true" title="GiftCardFulfillmentType">
+        <key-map field-name="enumId" related="typeEnumId"/></relationship>
+    <relationship related="mantle.account.method.PaymentGatewayConfig" type="many" is-auto-reverse="true" mutable="true" title="PaymentGatewayType">
+        <key-map field-name="enumId" related="paymentGatewayTypeEnumId"/></relationship>
+    <relationship related="mantle.account.method.PaymentGatewayResponse" type="many" is-auto-reverse="true" mutable="true" title="PaymentOperation">
+        <key-map field-name="enumId" related="paymentOperationEnumId"/></relationship>
+    <relationship related="mantle.account.method.PaymentMethod" type="many" is-auto-reverse="true" mutable="true" title="PaymentMethodType">
+        <key-map field-name="enumId" related="paymentMethodTypeEnumId"/></relationship>
+    <relationship related="mantle.account.method.PaymentMethod" type="many" is-auto-reverse="true" mutable="true" title="PaymentMethodPurpose">
+        <key-map field-name="enumId" related="purposeEnumId"/></relationship>
+    <relationship related="mantle.account.method.PaymentMethod" type="many" is-auto-reverse="true" mutable="true" title="ContactPaymentTrustLevel">
+        <key-map field-name="enumId" related="trustLevelEnumId"/></relationship>
+    <relationship related="mantle.account.method.PaymentMethodContent" type="many" is-auto-reverse="true" mutable="true" title="PaymentMethodContentType">
+        <key-map field-name="enumId" related="contentTypeEnumId"/></relationship>
+    <relationship related="mantle.account.method.PaymentMethodFile" type="many" is-auto-reverse="true" mutable="true" title="PaymentMethodFileType">
+        <key-map field-name="enumId" related="fileTypeEnumId"/></relationship>
+    <relationship related="mantle.account.method.PaymentMethodFileType" type="many" is-auto-reverse="true" mutable="true" title="PaymentMethodFileType">
+        <key-map field-name="enumId" related="fileTypeEnumId"/></relationship>
+    <relationship related="mantle.account.method.PaymentMethodTrans" type="many" is-auto-reverse="true" mutable="true" title="PaymentMethodTransType">
+        <key-map field-name="enumId" related="transType"/></relationship>
+    <relationship related="mantle.account.payment.Deduction" type="many" is-auto-reverse="true" mutable="true" title="DeductionType">
+        <key-map field-name="enumId" related="deductionTypeEnumId"/></relationship>
+    <relationship related="mantle.account.payment.Payment" type="many" is-auto-reverse="true" mutable="true" title="PaymentType">
+        <key-map field-name="enumId" related="paymentTypeEnumId"/></relationship>
+    <relationship related="mantle.account.payment.Payment" type="many" is-auto-reverse="true" mutable="true" title="PaymentInstrument">
+        <key-map field-name="enumId" related="paymentInstrumentEnumId"/></relationship>
+    <relationship related="mantle.account.payment.Payment" type="many" is-auto-reverse="true" mutable="true" title="PayDistributionGroup">
+        <key-map field-name="enumId" related="distGroupEnumId"/></relationship>
+    <relationship related="mantle.account.payment.Payment" type="many" is-auto-reverse="true" mutable="true" title="AcctgTransResult">
+        <key-map field-name="enumId" related="acctgTransResultEnumId"/></relationship>
+    <relationship related="mantle.account.payment.PaymentApplication" type="many" is-auto-reverse="true" mutable="true" title="AcctgTransResult">
+        <key-map field-name="enumId" related="acctgTransResultEnumId"/></relationship>
+    <relationship related="mantle.account.payment.PaymentContent" type="many" is-auto-reverse="true" mutable="true" title="PaymentContentType">
+        <key-map field-name="enumId" related="contentTypeEnumId"/></relationship>
+    <relationship related="mantle.account.payment.PaymentFraudEvidence" type="many" is-auto-reverse="true" mutable="true" title="FraudType">
+        <key-map field-name="enumId" related="fraudTypeEnumId"/></relationship>
+    <relationship related="mantle.facility.Facility" type="many" is-auto-reverse="true" mutable="true" title="FacilityType">
+        <key-map field-name="enumId" related="facilityTypeEnumId"/></relationship>
+    <relationship related="mantle.facility.FacilityCertification" type="many" is-auto-reverse="true" mutable="true" title="FacilityCertificationType">
+        <key-map field-name="enumId" related="certificationTypeEnumId"/></relationship>
+    <relationship related="mantle.facility.FacilityContent" type="many" is-auto-reverse="true" mutable="true" title="FacilityContentType">
+        <key-map field-name="enumId" related="facilityContentTypeEnumId"/></relationship>
+    <relationship related="mantle.facility.FacilityGroup" type="many" is-auto-reverse="true" mutable="true" title="FacilityGroupType">
+        <key-map field-name="enumId" related="facilityGroupTypeEnumId"/></relationship>
+    <relationship related="mantle.facility.FacilityLocation" type="many" is-auto-reverse="true" mutable="true" title="FacilityLocationType">
+        <key-map field-name="enumId" related="locationTypeEnumId"/></relationship>
+    <relationship related="mantle.facility.FacilityLocationType" type="many" is-auto-reverse="true" mutable="true" title="FacilityLocationType">
+        <key-map field-name="enumId" related="locationTypeEnumId"/></relationship>
+    <relationship related="mantle.facility.FacilityPrinter" type="many" is-auto-reverse="true" mutable="true" title="PrinterPurpose">
+        <key-map field-name="enumId" related="printerPurposeEnumId"/></relationship>
+    <relationship related="mantle.humanres.ability.PartySkill" type="many" is-auto-reverse="true" mutable="true" title="SkillType">
+        <key-map field-name="enumId" related="skillTypeEnumId"/></relationship>
+    <relationship related="mantle.humanres.employment.Employee" type="many" is-auto-reverse="true" mutable="true" title="PayDistributionGroup">
+        <key-map field-name="enumId" related="distGroupEnumId"/></relationship>
+    <relationship related="mantle.humanres.employment.Employee" type="many" is-auto-reverse="true" mutable="true" title="TaxClassification">
+        <key-map field-name="enumId" related="taxClassificationEnumId"/></relationship>
+    <relationship related="mantle.humanres.employment.Employee" type="many" is-auto-reverse="true" mutable="true" title="TaxFederalStatus">
+        <key-map field-name="enumId" related="taxFederalStatusEnumId"/></relationship>
+    <relationship related="mantle.humanres.employment.Employee" type="many" is-auto-reverse="true" mutable="true" title="TaxStateStatus">
+        <key-map field-name="enumId" related="taxStateStatusEnumId"/></relationship>
+    <relationship related="mantle.humanres.employment.Employment" type="many" is-auto-reverse="true" mutable="true" title="TerminationReason">
+        <key-map field-name="enumId" related="terminationReasonEnumId"/></relationship>
+    <relationship related="mantle.humanres.employment.Employment" type="many" is-auto-reverse="true" mutable="true" title="TerminationType">
+        <key-map field-name="enumId" related="terminationTypeEnumId"/></relationship>
+    <relationship related="mantle.humanres.employment.Employment" type="many" is-auto-reverse="true" mutable="true" title="IdentityType">
+        <key-map field-name="enumId" related="identityTypeEnumId"/></relationship>
+    <relationship related="mantle.humanres.employment.Employment" type="many" is-auto-reverse="true" mutable="true" title="EmplAuthzType">
+        <key-map field-name="enumId" related="emplAuthzTypeEnumId"/></relationship>
+    <relationship related="mantle.humanres.employment.EmploymentApplication" type="many" is-auto-reverse="true" mutable="true" title="EmploymentApplicationReferredBy">
+        <key-map field-name="enumId" related="referredByEnumId"/></relationship>
+    <relationship related="mantle.humanres.employment.EmploymentLeave" type="many" is-auto-reverse="true" mutable="true" title="EmploymentLeaveType">
+        <key-map field-name="enumId" related="leaveTypeEnumId"/></relationship>
+    <relationship related="mantle.humanres.employment.EmploymentLeave" type="many" is-auto-reverse="true" mutable="true" title="EmploymentLeaveReason">
+        <key-map field-name="enumId" related="leaveReasonEnumId"/></relationship>
+    <relationship related="mantle.humanres.employment.EmploymentPayDetail" type="many" is-auto-reverse="true" mutable="true" title="ItemType">
+        <key-map field-name="enumId" related="itemTypeEnumId"/></relationship>
+    <relationship related="mantle.humanres.employment.PayrollAdjustment" type="many" is-auto-reverse="true" mutable="true" title="ItemType">
+        <key-map field-name="enumId" related="itemTypeEnumId"/></relationship>
+    <relationship related="mantle.humanres.employment.PayrollAdjustment" type="many" is-auto-reverse="true" mutable="true" title="PayrollPhase">
+        <key-map field-name="enumId" related="payrollPhaseEnumId"/></relationship>
+    <relationship related="mantle.humanres.employment.PayrollAdjustment" type="many" is-auto-reverse="true" mutable="true" title="PayrollRateBasis">
+        <key-map field-name="enumId" related="rateBasisEnumId"/></relationship>
+    <relationship related="mantle.humanres.employment.PayrollAdjustmentFedStts" type="many" is-auto-reverse="true" mutable="true" title="TaxFederalStatus">
+        <key-map field-name="enumId" related="taxFederalStatusEnumId"/></relationship>
+    <relationship related="mantle.humanres.employment.PayrollAdjustmentStateStts" type="many" is-auto-reverse="true" mutable="true" title="TaxStateStatus">
+        <key-map field-name="enumId" related="taxStateStatusEnumId"/></relationship>
+    <relationship related="mantle.humanres.employment.PayrollAllowance" type="many" is-auto-reverse="true" mutable="true" title="PayrollAllowanceAmountType">
+        <key-map field-name="enumId" related="amountTypeEnumId"/></relationship>
+    <relationship related="mantle.humanres.employment.PayrollStdDeduction" type="many" is-auto-reverse="true" mutable="true" title="TaxFederalStatus">
+        <key-map field-name="enumId" related="taxFederalStatusEnumId"/></relationship>
+    <relationship related="mantle.humanres.employment.PayrollStdDeduction" type="many" is-auto-reverse="true" mutable="true" title="TaxStateStatus">
+        <key-map field-name="enumId" related="taxStateStatusEnumId"/></relationship>
+    <relationship related="mantle.humanres.employment.WorkTypeGlOverride" type="many" is-auto-reverse="true" mutable="true" title="WorkType">
+        <key-map field-name="enumId" related="workTypeEnumId"/></relationship>
+    <relationship related="mantle.humanres.employment.WorkTypeGlOverride" type="many" is-auto-reverse="true" mutable="true" title="ItemType">
+        <key-map field-name="enumId" related="itemTypeEnumId"/></relationship>
+    <relationship related="mantle.humanres.employment.WorkTypeRiskClass" type="many" is-auto-reverse="true" mutable="true" title="WorkType">
+        <key-map field-name="enumId" related="workTypeEnumId"/></relationship>
+    <relationship related="mantle.humanres.employment.WorkTypeRiskClass" type="many" is-auto-reverse="true" mutable="true" title="RiskClass">
+        <key-map field-name="enumId" related="riskClassEnumId"/></relationship>
+    <relationship related="mantle.humanres.position.EmplClassResponsibility" type="many" is-auto-reverse="true" mutable="true" title="EmploymentResponsibility">
+        <key-map field-name="enumId" related="responsibilityEnumId"/></relationship>
+    <relationship related="mantle.humanres.position.EmplPosition" type="many" is-auto-reverse="true" mutable="true" title="EmplTaxExempt">
+        <key-map field-name="enumId" related="taxExemptEnumId"/></relationship>
+    <relationship related="mantle.humanres.position.EmplPositionClassSkill" type="many" is-auto-reverse="true" mutable="true" title="SkillType">
+        <key-map field-name="enumId" related="skillTypeEnumId"/></relationship>
+    <relationship related="mantle.humanres.position.EmplPositionClassWorkType" type="many" is-auto-reverse="true" mutable="true" title="WorkType">
+        <key-map field-name="enumId" related="workTypeEnumId"/></relationship>
+    <relationship related="mantle.humanres.position.EmplPositionResponsibility" type="many" is-auto-reverse="true" mutable="true" title="EmploymentResponsibility">
+        <key-map field-name="enumId" related="responsibilityEnumId"/></relationship>
+    <relationship related="mantle.humanres.rate.RateAmount" type="many" is-auto-reverse="true" mutable="true" title="RateType">
+        <key-map field-name="enumId" related="rateTypeEnumId"/></relationship>
+    <relationship related="mantle.humanres.rate.RateAmount" type="many" is-auto-reverse="true" mutable="true" title="RatePurpose">
+        <key-map field-name="enumId" related="ratePurposeEnumId"/></relationship>
+    <relationship related="mantle.humanres.rate.RateAmount" type="many" is-auto-reverse="true" mutable="true" title="WorkType">
+        <key-map field-name="enumId" related="workTypeEnumId"/></relationship>
+    <relationship related="mantle.ledger.account.GlAccount" type="many" is-auto-reverse="true" mutable="true" title="GlAccountType">
+        <key-map field-name="enumId" related="glAccountTypeEnumId"/></relationship>
+    <relationship related="mantle.ledger.account.GlAccount" type="many" is-auto-reverse="true" mutable="true" title="GlAccountClass">
+        <key-map field-name="enumId" related="glAccountClassEnumId"/></relationship>
+    <relationship related="mantle.ledger.account.GlAccount" type="many" is-auto-reverse="true" mutable="true" title="GlResourceType">
+        <key-map field-name="enumId" related="glResourceTypeEnumId"/></relationship>
+    <relationship related="mantle.ledger.account.GlAccount" type="many" is-auto-reverse="true" mutable="true" title="GlXbrlClass">
+        <key-map field-name="enumId" related="glXbrlClassEnumId"/></relationship>
+    <relationship related="mantle.ledger.account.GlAccountCategory" type="many" is-auto-reverse="true" mutable="true" title="GlAccountCategoryType">
+        <key-map field-name="enumId" related="categoryTypeEnumId"/></relationship>
+    <relationship related="mantle.ledger.account.GlAccountEnumAppl" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="enumId" related="enumId"/></relationship>
+    <relationship related="mantle.ledger.account.GlAccountGroup" type="many" is-auto-reverse="true" mutable="true" title="GlAccountGroupType">
+        <key-map field-name="enumId" related="groupTypeEnumId"/></relationship>
+    <relationship related="mantle.ledger.account.GlAccountGroupMember" type="many" is-auto-reverse="true" mutable="true" title="GlAccountGroupType">
+        <key-map field-name="enumId" related="groupTypeEnumId"/></relationship>
+    <relationship related="mantle.ledger.account.GlBudgetXref" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="enumId" related="budgetItemTypeEnumId"/></relationship>
+    <relationship related="mantle.ledger.config.AssetTypeGlAccount" type="many" is-auto-reverse="true" mutable="true" title="AssetType">
+        <key-map field-name="enumId" related="assetTypeEnumId"/></relationship>
+    <relationship related="mantle.ledger.config.AssetTypeGlAccount" type="many" is-auto-reverse="true" mutable="true" title="AssetClass">
+        <key-map field-name="enumId" related="classEnumId"/></relationship>
+    <relationship related="mantle.ledger.config.AssetTypeGlAccount" type="many" is-auto-reverse="true" mutable="true" title="ReceiptTransType">
+        <key-map field-name="enumId" related="receiptTransTypeEnumId"/></relationship>
+    <relationship related="mantle.ledger.config.AssetTypeGlAccount" type="many" is-auto-reverse="true" mutable="true" title="IssuanceTransType">
+        <key-map field-name="enumId" related="issuanceTransTypeEnumId"/></relationship>
+    <relationship related="mantle.ledger.config.CreditCardTypeGlAccount" type="many" is-auto-reverse="true" mutable="true" title="CreditCardType">
+        <key-map field-name="enumId" related="creditCardTypeEnumId"/></relationship>
+    <relationship related="mantle.ledger.config.FinancialAccountReasonGlAccount" type="many" is-auto-reverse="true" mutable="true" title="FinancialAccountTransReason">
+        <key-map field-name="enumId" related="reasonEnumId"/></relationship>
+    <relationship related="mantle.ledger.config.GlAccountTypeDefault" type="many" is-auto-reverse="true" mutable="true" title="GlAccountType">
+        <key-map field-name="enumId" related="glAccountTypeEnumId"/></relationship>
+    <relationship related="mantle.ledger.config.GlAccountTypePartyDefault" type="many" is-auto-reverse="true" mutable="true" title="GlAccountType">
+        <key-map field-name="enumId" related="glAccountTypeEnumId"/></relationship>
+    <relationship related="mantle.ledger.config.InvoiceTypeTransType" type="many" is-auto-reverse="true" mutable="true" title="InvoiceType">
+        <key-map field-name="enumId" related="invoiceTypeEnumId"/></relationship>
+    <relationship related="mantle.ledger.config.InvoiceTypeTransType" type="many" is-auto-reverse="true" mutable="true" title="AcctgTransType">
+        <key-map field-name="enumId" related="acctgTransTypeEnumId"/></relationship>
+    <relationship related="mantle.ledger.config.ItemTypeGlAccount" type="many" is-auto-reverse="true" mutable="true" title="ItemType">
+        <key-map field-name="enumId" related="itemTypeEnumId"/></relationship>
+    <relationship related="mantle.ledger.config.PartyAcctgPreference" type="many" is-auto-reverse="true" mutable="true" title="TaxForm">
+        <key-map field-name="enumId" related="taxFormEnumId"/></relationship>
+    <relationship related="mantle.ledger.config.PartyAcctgPreference" type="many" is-auto-reverse="true" mutable="true" title="PayrollTaxForm">
+        <key-map field-name="enumId" related="payrollTaxFormEnumId"/></relationship>
+    <relationship related="mantle.ledger.config.PartyAcctgPreference" type="many" is-auto-reverse="true" mutable="true" title="TaxClassification">
+        <key-map field-name="enumId" related="taxClassificationEnumId"/></relationship>
+    <relationship related="mantle.ledger.config.PartyAcctgPreference" type="many" is-auto-reverse="true" mutable="true" title="EmployerClassification">
+        <key-map field-name="enumId" related="employerClassEnumId"/></relationship>
+    <relationship related="mantle.ledger.config.PartyAcctgPreference" type="many" is-auto-reverse="true" mutable="true" title="CogsMethod">
+        <key-map field-name="enumId" related="cogsMethodEnumId"/></relationship>
+    <relationship related="mantle.ledger.config.PartyAcctgPreference" type="many" is-auto-reverse="true" mutable="true" title="InvoiceSequence">
+        <key-map field-name="enumId" related="invoiceSequenceEnumId"/></relationship>
+    <relationship related="mantle.ledger.config.PartyAcctgPreference" type="many" is-auto-reverse="true" mutable="true" title="OrderSequence">
+        <key-map field-name="enumId" related="orderSequenceEnumId"/></relationship>
+    <relationship related="mantle.ledger.config.PaymentInstrumentGlAccount" type="many" is-auto-reverse="true" mutable="true" title="PaymentInstrument">
+        <key-map field-name="enumId" related="paymentInstrumentEnumId"/></relationship>
+    <relationship related="mantle.ledger.config.PaymentTypeGlAccount" type="many" is-auto-reverse="true" mutable="true" title="PaymentType">
+        <key-map field-name="enumId" related="paymentTypeEnumId"/></relationship>
+    <relationship related="mantle.ledger.config.ProductCategoryGlAccount" type="many" is-auto-reverse="true" mutable="true" title="GlAccountType">
+        <key-map field-name="enumId" related="glAccountTypeEnumId"/></relationship>
+    <relationship related="mantle.ledger.config.ProductGlAccount" type="many" is-auto-reverse="true" mutable="true" title="GlAccountType">
+        <key-map field-name="enumId" related="glAccountTypeEnumId"/></relationship>
+    <relationship related="mantle.ledger.config.VarianceReasonGlAccount" type="many" is-auto-reverse="true" mutable="true" title="InventoryVarianceReason">
+        <key-map field-name="enumId" related="varianceReasonEnumId"/></relationship>
+    <relationship related="mantle.ledger.transaction.AcctgTrans" type="many" is-auto-reverse="true" mutable="true" title="AcctgTransType">
+        <key-map field-name="enumId" related="acctgTransTypeEnumId"/></relationship>
+    <relationship related="mantle.ledger.transaction.AcctgTrans" type="many" is-auto-reverse="true" mutable="true" title="GlFiscalType">
+        <key-map field-name="enumId" related="glFiscalTypeEnumId"/></relationship>
+    <relationship related="mantle.ledger.transaction.AcctgTransEntry" type="many" is-auto-reverse="true" mutable="true" title="GlAccountType">
+        <key-map field-name="enumId" related="glAccountTypeEnumId"/></relationship>
+    <relationship related="mantle.ledger.transaction.GlJournal" type="many" is-auto-reverse="true" mutable="true" title="GlJournalType">
+        <key-map field-name="enumId" related="glJournalTypeEnumId"/></relationship>
+    <relationship related="mantle.marketing.contact.ContactList" type="many" is-auto-reverse="true" mutable="true" title="ContactListType">
+        <key-map field-name="enumId" related="contactListTypeEnumId"/></relationship>
+    <relationship related="mantle.marketing.contact.ContactList" type="many" is-auto-reverse="true" mutable="true" title="ContactMechType">
+        <key-map field-name="enumId" related="contactMechTypeEnumId"/></relationship>
+    <relationship related="mantle.marketing.contact.ContactListEmail" type="many" is-auto-reverse="true" mutable="true" title="ContactListEmailType">
+        <key-map field-name="enumId" related="emailTypeEnumId"/></relationship>
+    <relationship related="mantle.marketing.segment.MarketSegment" type="many" is-auto-reverse="true" mutable="true" title="MarketSegmentType">
+        <key-map field-name="enumId" related="marketSegmentTypeEnumId"/></relationship>
+    <relationship related="mantle.marketing.tracking.TrackingCode" type="many" is-auto-reverse="true" mutable="true" title="TrackingCodeType">
+        <key-map field-name="enumId" related="trackingCodeTypeEnumId"/></relationship>
+    <relationship related="mantle.marketing.tracking.TrackingCodeOrder" type="many" is-auto-reverse="true" mutable="true" title="TrackingCodeType">
+        <key-map field-name="enumId" related="trackingCodeTypeEnumId"/></relationship>
+    <relationship related="mantle.marketing.tracking.TrackingCodeOrderReturn" type="many" is-auto-reverse="true" mutable="true" title="TrackingCodeType">
+        <key-map field-name="enumId" related="trackingCodeTypeEnumId"/></relationship>
+    <relationship related="mantle.marketing.tracking.TrackingCodeVisit" type="many" is-auto-reverse="true" mutable="true" title="TrackingCodeSource">
+        <key-map field-name="enumId" related="sourceEnumId"/></relationship>
+    <relationship related="mantle.order.OrderContent" type="many" is-auto-reverse="true" mutable="true" title="OrderContentType">
+        <key-map field-name="enumId" related="orderContentTypeEnumId"/></relationship>
+    <relationship related="mantle.order.OrderDecisionReason" type="many" is-auto-reverse="true" mutable="true" title="OrderDecisionReason">
+        <key-map field-name="enumId" related="decisionReasonEnumId"/></relationship>
+    <relationship related="mantle.order.OrderHeader" type="many" is-auto-reverse="true" mutable="true" title="SalesChannel">
+        <key-map field-name="enumId" related="salesChannelEnumId"/></relationship>
+    <relationship related="mantle.order.OrderItem" type="many" is-auto-reverse="true" mutable="true" title="ItemType">
+        <key-map field-name="enumId" related="itemTypeEnumId"/></relationship>
+    <relationship related="mantle.order.OrderPart" type="many" is-auto-reverse="true" mutable="true" title="ShipmentMethod">
+        <key-map field-name="enumId" related="shipmentMethodEnumId"/></relationship>
+    <relationship related="mantle.order.OrderPart" type="many" is-auto-reverse="true" mutable="true" title="TermType">
+        <key-map field-name="enumId" related="tradeTermEnumId"/></relationship>
+    <relationship related="mantle.order.OrderPart" type="many" is-auto-reverse="true" mutable="true" title="SignatureRequired">
+        <key-map field-name="enumId" related="signatureRequiredEnumId"/></relationship>
+    <relationship related="mantle.order.OrderPart" type="many" is-auto-reverse="true" mutable="true" title="AssetReservationAuto">
+        <key-map field-name="enumId" related="reservationAutoEnumId"/></relationship>
+    <relationship related="mantle.order.return.ReturnHeader" type="many" is-auto-reverse="true" mutable="true" title="ShipmentMethod">
+        <key-map field-name="enumId" related="shipmentMethodEnumId"/></relationship>
+    <relationship related="mantle.order.return.ReturnItem" type="many" is-auto-reverse="true" mutable="true" title="ReturnReason">
+        <key-map field-name="enumId" related="returnReasonEnumId"/></relationship>
+    <relationship related="mantle.order.return.ReturnItem" type="many" is-auto-reverse="true" mutable="true" title="ReturnResponse">
+        <key-map field-name="enumId" related="returnResponseEnumId"/></relationship>
+    <relationship related="mantle.order.return.ReturnItem" type="many" is-auto-reverse="true" mutable="true" title="ItemType">
+        <key-map field-name="enumId" related="itemTypeEnumId"/></relationship>
+    <relationship related="mantle.other.budget.Budget" type="many" is-auto-reverse="true" mutable="true" title="BudgetType">
+        <key-map field-name="enumId" related="budgetTypeEnumId"/></relationship>
+    <relationship related="mantle.other.budget.BudgetItem" type="many" is-auto-reverse="true" mutable="true" title="BudgetItemType">
+        <key-map field-name="enumId" related="budgetItemTypeEnumId"/></relationship>
+    <relationship related="mantle.other.budget.BudgetItem" type="many" is-auto-reverse="true" mutable="true" title="ItemType">
+        <key-map field-name="enumId" related="itemTypeEnumId"/></relationship>
+    <relationship related="mantle.other.budget.BudgetReview" type="many" is-auto-reverse="true" mutable="true" title="BudgetReviewResult">
+        <key-map field-name="enumId" related="budgetReviewResultEnumId"/></relationship>
+    <relationship related="mantle.other.budget.BudgetScenarioRule" type="many" is-auto-reverse="true" mutable="true" title="BudgetItemType">
+        <key-map field-name="enumId" related="budgetItemTypeEnumId"/></relationship>
+    <relationship related="mantle.other.tax.TaxAuthority" type="many" is-auto-reverse="true" mutable="true" title="TaxAuthorityType">
+        <key-map field-name="enumId" related="taxAuthorityTypeEnumId"/></relationship>
+    <relationship related="mantle.other.tax.TaxAuthorityAssoc" type="many" is-auto-reverse="true" mutable="true" title="TaxAuthorityAssocType">
+        <key-map field-name="enumId" related="assocTypeEnumId"/></relationship>
+    <relationship related="mantle.other.tax.TaxGatewayConfig" type="many" is-auto-reverse="true" mutable="true" title="TaxGatewayType">
+        <key-map field-name="enumId" related="taxGatewayTypeEnumId"/></relationship>
+    <relationship related="mantle.party.EmplPositionClassPtyClsTp" type="many" is-auto-reverse="true" mutable="true" title="PartyClassificationType">
+        <key-map field-name="enumId" related="classificationTypeEnumId"/></relationship>
+    <relationship related="mantle.party.Party" type="many" is-auto-reverse="true" mutable="true" title="PartyType">
+        <key-map field-name="enumId" related="partyTypeEnumId"/></relationship>
+    <relationship related="mantle.party.Party" type="many" is-auto-reverse="true" mutable="true" title="PartyVisibility">
+        <key-map field-name="enumId" related="visibilityEnumId"/></relationship>
+    <relationship related="mantle.party.PartyBadgeScan" type="many" is-auto-reverse="true" mutable="true" title="PartyBadgeScanPurpose">
+        <key-map field-name="enumId" related="scanPurposeEnumId"/></relationship>
+    <relationship related="mantle.party.PartyBadgeScan" type="many" is-auto-reverse="true" mutable="true" title="PartyBadgeScanResult">
+        <key-map field-name="enumId" related="scanResultEnumId"/></relationship>
+    <relationship related="mantle.party.PartyClassification" type="many" is-auto-reverse="true" mutable="true" title="PartyClassificationType">
+        <key-map field-name="enumId" related="classificationTypeEnumId"/></relationship>
+    <relationship related="mantle.party.PartyContent" type="many" is-auto-reverse="true" mutable="true" title="PartyContentType">
+        <key-map field-name="enumId" related="partyContentTypeEnumId"/></relationship>
+    <relationship related="mantle.party.PartyContent" type="many" is-auto-reverse="true" mutable="true" title="PartyIdType">
+        <key-map field-name="enumId" related="partyIdTypeEnumId"/></relationship>
+    <relationship related="mantle.party.PartyIdentification" type="many" is-auto-reverse="true" mutable="true" title="PartyIdType">
+        <key-map field-name="enumId" related="partyIdTypeEnumId"/></relationship>
+    <relationship related="mantle.party.PartyRelationship" type="many" is-auto-reverse="true" mutable="true" title="PartyRelationshipType">
+        <key-map field-name="enumId" related="relationshipTypeEnumId"/></relationship>
+    <relationship related="mantle.party.PartyRelationshipSetting" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="enumId" related="settingValue"/></relationship>
+    <relationship related="mantle.party.PartySetting" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="enumId" related="settingValue"/></relationship>
+    <relationship related="mantle.party.PartySystemMessage" type="many" is-auto-reverse="true" mutable="true" title="PartyIdType">
+        <key-map field-name="enumId" related="partyIdTypeEnumId"/></relationship>
+    <relationship related="mantle.party.Person" type="many" is-auto-reverse="true" mutable="true" title="MaritalStatus">
+        <key-map field-name="enumId" related="maritalStatusEnumId"/></relationship>
+    <relationship related="mantle.party.Person" type="many" is-auto-reverse="true" mutable="true" title="EmploymentStatus">
+        <key-map field-name="enumId" related="employmentStatusEnumId"/></relationship>
+    <relationship related="mantle.party.Person" type="many" is-auto-reverse="true" mutable="true" title="ResidenceStatus">
+        <key-map field-name="enumId" related="residenceStatusEnumId"/></relationship>
+    <relationship related="mantle.party.RoleGroupMember" type="many" is-auto-reverse="true" mutable="true" title="RoleGroup">
+        <key-map field-name="enumId" related="roleGroupEnumId"/></relationship>
+    <relationship related="mantle.party.agreement.Agreement" type="many" is-auto-reverse="true" mutable="true" title="AgreementType">
+        <key-map field-name="enumId" related="agreementTypeEnumId"/></relationship>
+    <relationship related="mantle.party.agreement.AgreementAssoc" type="many" is-auto-reverse="true" mutable="true" title="AgreementAssocType">
+        <key-map field-name="enumId" related="agreementAssocTypeEnumId"/></relationship>
+    <relationship related="mantle.party.agreement.AgreementContent" type="many" is-auto-reverse="true" mutable="true" title="AgreementContentType">
+        <key-map field-name="enumId" related="contentTypeEnumId"/></relationship>
+    <relationship related="mantle.party.agreement.AgreementItem" type="many" is-auto-reverse="true" mutable="true" title="AgreementItemType">
+        <key-map field-name="enumId" related="agreementItemTypeEnumId"/></relationship>
+    <relationship related="mantle.party.agreement.AgreementTerm" type="many" is-auto-reverse="true" mutable="true" title="TermType">
+        <key-map field-name="enumId" related="termTypeEnumId"/></relationship>
+    <relationship related="mantle.party.communication.CommunicationEvent" type="many" is-auto-reverse="true" mutable="true" title="ContactMechType">
+        <key-map field-name="enumId" related="contactMechTypeEnumId"/></relationship>
+    <relationship related="mantle.party.communication.CommunicationEvent" type="many" is-auto-reverse="true" mutable="true" title="CommunicationEventReason">
+        <key-map field-name="enumId" related="reasonEnumId"/></relationship>
+    <relationship related="mantle.party.communication.CommunicationEventContent" type="many" is-auto-reverse="true" mutable="true" title="CommunicationContentType">
+        <key-map field-name="enumId" related="contentTypeEnumId"/></relationship>
+    <relationship related="mantle.party.communication.CommunicationEventPurpose" type="many" is-auto-reverse="true" mutable="true" title="CommunicationPurpose">
+        <key-map field-name="enumId" related="purposeEnumId"/></relationship>
+    <relationship related="mantle.party.communication.CommunicationEventType" type="many" is-auto-reverse="true" mutable="true" title="ContactMechType">
+        <key-map field-name="enumId" related="contactMechTypeEnumId"/></relationship>
+    <relationship related="mantle.party.contact.ContactMech" type="many" is-auto-reverse="true" mutable="true" title="ContactMechType">
+        <key-map field-name="enumId" related="contactMechTypeEnumId"/></relationship>
+    <relationship related="mantle.party.contact.ContactMech" type="many" is-auto-reverse="true" mutable="true" title="ContactPaymentTrustLevel">
+        <key-map field-name="enumId" related="trustLevelEnumId"/></relationship>
+    <relationship related="mantle.party.contact.ContactMechPurpose" type="many" is-auto-reverse="true" mutable="true" title="ContactMechType">
+        <key-map field-name="enumId" related="contactMechTypeEnumId"/></relationship>
+    <relationship related="mantle.party.time.TimePeriodType" type="many" is-auto-reverse="true" mutable="true" title="TimePeriodPurpose">
+        <key-map field-name="enumId" related="periodPurposeEnumId"/></relationship>
+    <relationship related="mantle.product.Product" type="many" is-auto-reverse="true" mutable="true" title="ProductType">
+        <key-map field-name="enumId" related="productTypeEnumId"/></relationship>
+    <relationship related="mantle.product.Product" type="many" is-auto-reverse="true" mutable="true" title="ProductClass">
+        <key-map field-name="enumId" related="productClassEnumId"/></relationship>
+    <relationship related="mantle.product.Product" type="many" is-auto-reverse="true" mutable="true" title="AssetType">
+        <key-map field-name="enumId" related="assetTypeEnumId"/></relationship>
+    <relationship related="mantle.product.Product" type="many" is-auto-reverse="true" mutable="true" title="AssetClass">
+        <key-map field-name="enumId" related="assetClassEnumId"/></relationship>
+    <relationship related="mantle.product.Product" type="many" is-auto-reverse="true" mutable="true" title="SignatureRequired">
+        <key-map field-name="enumId" related="signatureRequiredEnumId"/></relationship>
+    <relationship related="mantle.product.ProductAssoc" type="many" is-auto-reverse="true" mutable="true" title="ProductAssocType">
+        <key-map field-name="enumId" related="productAssocTypeEnumId"/></relationship>
+    <relationship related="mantle.product.ProductClassContent" type="many" is-auto-reverse="true" mutable="true" title="ProductClass">
+        <key-map field-name="enumId" related="productClassEnumId"/></relationship>
+    <relationship related="mantle.product.ProductClassContent" type="many" is-auto-reverse="true" mutable="true" title="ProductContentType">
+        <key-map field-name="enumId" related="productContentTypeEnumId"/></relationship>
+    <relationship related="mantle.product.ProductClassDimension" type="many" is-auto-reverse="true" mutable="true" title="ProductClass">
+        <key-map field-name="enumId" related="productClassEnumId"/></relationship>
+    <relationship related="mantle.product.ProductClassFeature" type="many" is-auto-reverse="true" mutable="true" title="ProductClass">
+        <key-map field-name="enumId" related="productClassEnumId"/></relationship>
+    <relationship related="mantle.product.ProductClassFeature" type="many" is-auto-reverse="true" mutable="true" title="ProductFeatureType">
+        <key-map field-name="enumId" related="productFeatureTypeEnumId"/></relationship>
+    <relationship related="mantle.product.ProductClassFeatureGroup" type="many" is-auto-reverse="true" mutable="true" title="ProductClass">
+        <key-map field-name="enumId" related="productClassEnumId"/></relationship>
+    <relationship related="mantle.product.ProductClassUomDimension" type="many" is-auto-reverse="true" mutable="true" title="ProductClass">
+        <key-map field-name="enumId" related="productClassEnumId"/></relationship>
+    <relationship related="mantle.product.ProductContent" type="many" is-auto-reverse="true" mutable="true" title="ProductContentType">
+        <key-map field-name="enumId" related="productContentTypeEnumId"/></relationship>
+    <relationship related="mantle.product.ProductDbForm" type="many" is-auto-reverse="true" mutable="true" title="ProductFormType">
+        <key-map field-name="enumId" related="productFormTypeEnumId"/></relationship>
+    <relationship related="mantle.product.ProductDimensionType" type="many" is-auto-reverse="true" mutable="true" title="UomType">
+        <key-map field-name="enumId" related="uomTypeEnumId"/></relationship>
+    <relationship related="mantle.product.ProductGeo" type="many" is-auto-reverse="true" mutable="true" title="ProductGeoPurpose">
+        <key-map field-name="enumId" related="productGeoPurposeEnumId"/></relationship>
+    <relationship related="mantle.product.ProductIdentification" type="many" is-auto-reverse="true" mutable="true" title="ProductIdentificationType">
+        <key-map field-name="enumId" related="productIdTypeEnumId"/></relationship>
+    <relationship related="mantle.product.ProductOtherIdentification" type="many" is-auto-reverse="true" mutable="true" title="ProductIdentificationType">
+        <key-map field-name="enumId" related="productIdTypeEnumId"/></relationship>
+    <relationship related="mantle.product.ProductParameter" type="many" is-auto-reverse="true" mutable="true" title="ProductIdentificationType">
+        <key-map field-name="enumId" related="productIdTypeEnumId"/></relationship>
+    <relationship related="mantle.product.ProductPrice" type="many" is-auto-reverse="true" mutable="true" title="ProductPriceType">
+        <key-map field-name="enumId" related="priceTypeEnumId"/></relationship>
+    <relationship related="mantle.product.ProductPrice" type="many" is-auto-reverse="true" mutable="true" title="ProductPricePurpose">
+        <key-map field-name="enumId" related="pricePurposeEnumId"/></relationship>
+    <relationship related="mantle.product.ProductPrice" type="many" is-auto-reverse="true" mutable="true" title="SupplierPreferredOrder">
+        <key-map field-name="enumId" related="preferredOrderEnumId"/></relationship>
+    <relationship related="mantle.product.ProductPrice" type="many" is-auto-reverse="true" mutable="true" title="SupplierRatingType">
+        <key-map field-name="enumId" related="supplierRatingTypeEnumId"/></relationship>
+    <relationship related="mantle.product.asset.Asset" type="many" is-auto-reverse="true" mutable="true" title="AssetType">
+        <key-map field-name="enumId" related="assetTypeEnumId"/></relationship>
+    <relationship related="mantle.product.asset.Asset" type="many" is-auto-reverse="true" mutable="true" title="AssetClass">
+        <key-map field-name="enumId" related="classEnumId"/></relationship>
+    <relationship related="mantle.product.asset.Asset" type="many" is-auto-reverse="true" mutable="true" title="DepreciationType">
+        <key-map field-name="enumId" related="depreciationTypeEnumId"/></relationship>
+    <relationship related="mantle.product.asset.Asset" type="many" is-auto-reverse="true" mutable="true" title="TaxDepreciationType">
+        <key-map field-name="enumId" related="taxDepreciationTypeEnumId"/></relationship>
+    <relationship related="mantle.product.asset.AssetDetail" type="many" is-auto-reverse="true" mutable="true" title="InventoryVarianceReason">
+        <key-map field-name="enumId" related="varianceReasonEnumId"/></relationship>
+    <relationship related="mantle.product.asset.AssetDetail" type="many" is-auto-reverse="true" mutable="true" title="AcctgTransResult">
+        <key-map field-name="enumId" related="acctgTransResultEnumId"/></relationship>
+    <relationship related="mantle.product.asset.AssetIdentification" type="many" is-auto-reverse="true" mutable="true" title="AssetIdentificationType">
+        <key-map field-name="enumId" related="identificationTypeEnumId"/></relationship>
+    <relationship related="mantle.product.asset.AssetPaymentMethod" type="many" is-auto-reverse="true" mutable="true" title="AssetPaymentMethodType">
+        <key-map field-name="enumId" related="typeEnumId"/></relationship>
+    <relationship related="mantle.product.asset.AssetStandardCost" type="many" is-auto-reverse="true" mutable="true" title="AssetStandardCostType">
+        <key-map field-name="enumId" related="assetStandardCostTypeEnumId"/></relationship>
+    <relationship related="mantle.product.asset.Container" type="many" is-auto-reverse="true" mutable="true" title="ContainerType">
+        <key-map field-name="enumId" related="containerTypeEnumId"/></relationship>
+    <relationship related="mantle.product.category.ProductCategory" type="many" is-auto-reverse="true" mutable="true" title="ProductCategoryType">
+        <key-map field-name="enumId" related="productCategoryTypeEnumId"/></relationship>
+    <relationship related="mantle.product.category.ProductCategoryContent" type="many" is-auto-reverse="true" mutable="true" title="ProductCategoryContentType">
+        <key-map field-name="enumId" related="categoryContentTypeEnumId"/></relationship>
+    <relationship related="mantle.product.category.ProductCategoryIdent" type="many" is-auto-reverse="true" mutable="true" title="ProductCategoryIdentType">
+        <key-map field-name="enumId" related="identTypeEnumId"/></relationship>
+    <relationship related="mantle.product.feature.ProductCategoryFeatGrpAppl" type="many" is-auto-reverse="true" mutable="true" title="ProductFeatureApplType">
+        <key-map field-name="enumId" related="applTypeEnumId"/></relationship>
+    <relationship related="mantle.product.feature.ProductFeature" type="many" is-auto-reverse="true" mutable="true" title="ProductFeatureType">
+        <key-map field-name="enumId" related="productFeatureTypeEnumId"/></relationship>
+    <relationship related="mantle.product.feature.ProductFeatureAppl" type="many" is-auto-reverse="true" mutable="true" title="ProductFeatureApplType">
+        <key-map field-name="enumId" related="applTypeEnumId"/></relationship>
+    <relationship related="mantle.product.feature.ProductFeatureIactn" type="many" is-auto-reverse="true" mutable="true" title="ProductFeatureIactnType">
+        <key-map field-name="enumId" related="iactnTypeEnumId"/></relationship>
+    <relationship related="mantle.product.issuance.AssetIssuance" type="many" is-auto-reverse="true" mutable="true" title="AcctgTransResult">
+        <key-map field-name="enumId" related="acctgTransResultEnumId"/></relationship>
+    <relationship related="mantle.product.issuance.AssetReservation" type="many" is-auto-reverse="true" mutable="true" title="AssetReservationOrder">
+        <key-map field-name="enumId" related="reservationOrderEnumId"/></relationship>
+    <relationship related="mantle.product.maintenance.AssetMaintenance" type="many" is-auto-reverse="true" mutable="true" title="MaintenanceType">
+        <key-map field-name="enumId" related="maintenanceTypeEnumId"/></relationship>
+    <relationship related="mantle.product.maintenance.AssetMaintenanceContent" type="many" is-auto-reverse="true" mutable="true" title="AssetMaintContentType">
+        <key-map field-name="enumId" related="contentTypeEnumId"/></relationship>
+    <relationship related="mantle.product.maintenance.ProductMaintenance" type="many" is-auto-reverse="true" mutable="true" title="MaintenanceType">
+        <key-map field-name="enumId" related="maintenanceTypeEnumId"/></relationship>
+    <relationship related="mantle.product.receipt.AssetReceipt" type="many" is-auto-reverse="true" mutable="true" title="RejectionReason">
+        <key-map field-name="enumId" related="rejectionReasonEnumId"/></relationship>
+    <relationship related="mantle.product.receipt.AssetReceipt" type="many" is-auto-reverse="true" mutable="true" title="AcctgTransResult">
+        <key-map field-name="enumId" related="acctgTransResultEnumId"/></relationship>
+    <relationship related="mantle.product.store.ProductStore" type="many" is-auto-reverse="true" mutable="true" title="AssetReservationOrder">
+        <key-map field-name="enumId" related="reservationOrderEnumId"/></relationship>
+    <relationship related="mantle.product.store.ProductStore" type="many" is-auto-reverse="true" mutable="true" title="AssetReservationAuto">
+        <key-map field-name="enumId" related="reservationAutoEnumId"/></relationship>
+    <relationship related="mantle.product.store.ProductStore" type="many" is-auto-reverse="true" mutable="true" title="DefaultSalesChannel">
+        <key-map field-name="enumId" related="defaultSalesChannelEnumId"/></relationship>
+    <relationship related="mantle.product.store.ProductStoreCategory" type="many" is-auto-reverse="true" mutable="true" title="ProductStoreCategoryType">
+        <key-map field-name="enumId" related="storeCategoryTypeEnumId"/></relationship>
+    <relationship related="mantle.product.store.ProductStoreDataDocument" type="many" is-auto-reverse="true" mutable="true" title="StoreDataDocumentType">
+        <key-map field-name="enumId" related="typeEnumId"/></relationship>
+    <relationship related="mantle.product.store.ProductStoreEmail" type="many" is-auto-reverse="true" mutable="true" title="ProductStoreEmailType">
+        <key-map field-name="enumId" related="emailTypeEnumId"/></relationship>
+    <relationship related="mantle.product.store.ProductStoreGroup" type="many" is-auto-reverse="true" mutable="true" title="ProductStoreGroupType">
+        <key-map field-name="enumId" related="storeGroupTypeEnumId"/></relationship>
+    <relationship related="mantle.product.store.ProductStorePaymentGateway" type="many" is-auto-reverse="true" mutable="true" title="PaymentInstrument">
+        <key-map field-name="enumId" related="paymentInstrumentEnumId"/></relationship>
+    <relationship related="mantle.product.store.ProductStoreProduct" type="many" is-auto-reverse="true" mutable="true" title="SignatureRequired">
+        <key-map field-name="enumId" related="signatureRequiredEnumId"/></relationship>
+    <relationship related="mantle.product.store.ProductStoreSetting" type="many" is-auto-reverse="true" mutable="true" title="ProductStoreSettingType">
+        <key-map field-name="enumId" related="settingTypeEnumId"/></relationship>
+    <relationship related="mantle.product.store.ProductStoreShipOption" type="many" is-auto-reverse="true" mutable="true" title="ShipmentMethod">
+        <key-map field-name="enumId" related="shipmentMethodEnumId"/></relationship>
+    <relationship related="mantle.product.store.ProductStoreShippingGateway" type="many" is-auto-reverse="true" mutable="true" title="TermType">
+        <key-map field-name="enumId" related="defaultTradeTermEnumId"/></relationship>
+    <relationship related="mantle.product.store.ProductStoreWikiContent" type="many" is-auto-reverse="true" mutable="true" title="ProductStoreContentType">
+        <key-map field-name="enumId" related="contentTypeEnumId"/></relationship>
+    <relationship related="mantle.product.store.ProductStoreWikiContent" type="many" is-auto-reverse="true" mutable="true" title="ProductStoreWikiSpaceType">
+        <key-map field-name="enumId" related="spaceTypeEnumId"/></relationship>
+    <relationship related="mantle.product.store.ProductStoreWikiSpace" type="many" is-auto-reverse="true" mutable="true" title="ProductStoreWikiSpaceType">
+        <key-map field-name="enumId" related="spaceTypeEnumId"/></relationship>
+    <relationship related="mantle.product.subscription.Subscription" type="many" is-auto-reverse="true" mutable="true" title="SubscriptionType">
+        <key-map field-name="enumId" related="subscriptionTypeEnumId"/></relationship>
+    <relationship related="mantle.request.Request" type="many" is-auto-reverse="true" mutable="true" title="RequestType">
+        <key-map field-name="enumId" related="requestTypeEnumId"/></relationship>
+    <relationship related="mantle.request.Request" type="many" is-auto-reverse="true" mutable="true" title="RequestResolution">
+        <key-map field-name="enumId" related="requestResolutionEnumId"/></relationship>
+    <relationship related="mantle.request.Request" type="many" is-auto-reverse="true" mutable="true" title="SalesChannel">
+        <key-map field-name="enumId" related="salesChannelEnumId"/></relationship>
+    <relationship related="mantle.request.RequestContent" type="many" is-auto-reverse="true" mutable="true" title="RequestContentType">
+        <key-map field-name="enumId" related="contentTypeEnumId"/></relationship>
+    <relationship related="mantle.request.requirement.Requirement" type="many" is-auto-reverse="true" mutable="true" title="RequirementType">
+        <key-map field-name="enumId" related="requirementTypeEnumId"/></relationship>
+    <relationship related="mantle.request.requirement.WorkRequirementFulfillment" type="many" is-auto-reverse="true" mutable="true" title="WorkRequirementFulfillmentType">
+        <key-map field-name="enumId" related="fulfillmentTypeEnumId"/></relationship>
+    <relationship related="mantle.sales.need.PartyNeed" type="many" is-auto-reverse="true" mutable="true" title="NeedType">
+        <key-map field-name="enumId" related="needTypeEnumId"/></relationship>
+    <relationship related="mantle.sales.opportunity.SalesOpportunity" type="many" is-auto-reverse="true" mutable="true" title="SalesOpportunityType">
+        <key-map field-name="enumId" related="typeEnumId"/></relationship>
+    <relationship related="mantle.shipment.Shipment" type="many" is-auto-reverse="true" mutable="true" title="ShipmentType">
+        <key-map field-name="enumId" related="shipmentTypeEnumId"/></relationship>
+    <relationship related="mantle.shipment.Shipment" type="many" is-auto-reverse="true" mutable="true" title="SignatureRequired">
+        <key-map field-name="enumId" related="signatureRequiredEnumId"/></relationship>
+    <relationship related="mantle.shipment.ShipmentContent" type="many" is-auto-reverse="true" mutable="true" title="ShipmentContentType">
+        <key-map field-name="enumId" related="shipmentContentTypeEnumId"/></relationship>
+    <relationship related="mantle.shipment.ShipmentPackageRouteSeg" type="many" is-auto-reverse="true" mutable="true" title="ShipmentTrackingStatus">
+        <key-map field-name="enumId" related="trackingStatusEnumId"/></relationship>
+    <relationship related="mantle.shipment.ShipmentPackageRouteSeg" type="many" is-auto-reverse="true" mutable="true" title="ReturnTrackingStatus">
+        <key-map field-name="enumId" related="returnTrackingStatusEnumId"/></relationship>
+    <relationship related="mantle.shipment.ShipmentRouteSegment" type="many" is-auto-reverse="true" mutable="true" title="ShipmentMethod">
+        <key-map field-name="enumId" related="shipmentMethodEnumId"/></relationship>
+    <relationship related="mantle.shipment.ShipmentRouteSegment" type="many" is-auto-reverse="true" mutable="true" title="TermType">
+        <key-map field-name="enumId" related="tradeTermEnumId"/></relationship>
+    <relationship related="mantle.shipment.ShipmentRouteSegment" type="many" is-auto-reverse="true" mutable="true" title="CustomsContents">
+        <key-map field-name="enumId" related="customsContentsEnumId"/></relationship>
+    <relationship related="mantle.shipment.ShipmentRouteSegment" type="many" is-auto-reverse="true" mutable="true" title="CustomsNonDelivery">
+        <key-map field-name="enumId" related="customsNonDeliveryEnumId"/></relationship>
+    <relationship related="mantle.shipment.carrier.CarrierShipmentMethod" type="many" is-auto-reverse="true" mutable="true" title="ShipmentMethod">
+        <key-map field-name="enumId" related="shipmentMethodEnumId"/></relationship>
+    <relationship related="mantle.shipment.carrier.ShippingGatewayConfig" type="many" is-auto-reverse="true" mutable="true" title="ShippingGatewayType">
+        <key-map field-name="enumId" related="shippingGatewayTypeEnumId"/></relationship>
+    <relationship related="mantle.shipment.carrier.ShippingGatewayMethod" type="many" is-auto-reverse="true" mutable="true" title="ShipmentMethod">
+        <key-map field-name="enumId" related="shipmentMethodEnumId"/></relationship>
+    <relationship related="mantle.shipment.carrier.ShippingGatewayOption" type="many" is-auto-reverse="true" mutable="true" title="ShippingGatewayOption">
+        <key-map field-name="enumId" related="optionEnumId"/></relationship>
+    <relationship related="mantle.work.effort.Deliverable" type="many" is-auto-reverse="true" mutable="true" title="DeliverableType">
+        <key-map field-name="enumId" related="deliverableTypeEnumId"/></relationship>
+    <relationship related="mantle.work.effort.WorkEffort" type="many" is-auto-reverse="true" mutable="true" title="WorkEffortType">
+        <key-map field-name="enumId" related="workEffortTypeEnumId"/></relationship>
+    <relationship related="mantle.work.effort.WorkEffort" type="many" is-auto-reverse="true" mutable="true" title="WorkEffortPurpose">
+        <key-map field-name="enumId" related="purposeEnumId"/></relationship>
+    <relationship related="mantle.work.effort.WorkEffort" type="many" is-auto-reverse="true" mutable="true" title="WorkEffortVisibility">
+        <key-map field-name="enumId" related="visibilityEnumId"/></relationship>
+    <relationship related="mantle.work.effort.WorkEffort" type="many" is-auto-reverse="true" mutable="true" title="WorkEffortResolution">
+        <key-map field-name="enumId" related="resolutionEnumId"/></relationship>
+    <relationship related="mantle.work.effort.WorkEffort" type="many" is-auto-reverse="true" mutable="true" title="WorkType">
+        <key-map field-name="enumId" related="workTypeEnumId"/></relationship>
+    <relationship related="mantle.work.effort.WorkEffortAssoc" type="many" is-auto-reverse="true" mutable="true" title="WorkEffortAssocType">
+        <key-map field-name="enumId" related="workEffortAssocTypeEnumId"/></relationship>
+    <relationship related="mantle.work.effort.WorkEffortContent" type="many" is-auto-reverse="true" mutable="true" title="WorkEffortContentType">
+        <key-map field-name="enumId" related="contentTypeEnumId"/></relationship>
+    <relationship related="mantle.work.effort.WorkEffortFacility" type="many" is-auto-reverse="true" mutable="true" title="WorkEffortFacilityType">
+        <key-map field-name="enumId" related="typeEnumId"/></relationship>
+    <relationship related="mantle.work.effort.WorkEffortParty" type="many" is-auto-reverse="true" mutable="true" title="WorkEffortPartyAvailability">
+        <key-map field-name="enumId" related="availabilityEnumId"/></relationship>
+    <relationship related="mantle.work.effort.WorkEffortParty" type="many" is-auto-reverse="true" mutable="true" title="WorkEffortPartyDelegateReason">
+        <key-map field-name="enumId" related="delegateReasonEnumId"/></relationship>
+    <relationship related="mantle.work.effort.WorkEffortParty" type="many" is-auto-reverse="true" mutable="true" title="WorkEffortPartyExpectation">
+        <key-map field-name="enumId" related="expectationEnumId"/></relationship>
+    <relationship related="mantle.work.effort.WorkEffortParty" type="many" is-auto-reverse="true" mutable="true" title="WorkType">
+        <key-map field-name="enumId" related="workTypeEnumId"/></relationship>
+    <relationship related="mantle.work.effort.WorkEffortPartyAsset" type="many" is-auto-reverse="true" mutable="true" title="WorkEffortPurpose">
+        <key-map field-name="enumId" related="purposeEnumId"/></relationship>
+    <relationship related="mantle.work.effort.WorkEffortProduct" type="many" is-auto-reverse="true" mutable="true" title="WorkEffortProductType">
+        <key-map field-name="enumId" related="typeEnumId"/></relationship>
+    <relationship related="mantle.work.effort.WorkEffortSkillStandard" type="many" is-auto-reverse="true" mutable="true" title="SkillType">
+        <key-map field-name="enumId" related="skillTypeEnumId"/></relationship>
+    <relationship related="mantle.work.measurement.Measurement" type="many" is-auto-reverse="true" mutable="true" title="Measurement">
+        <key-map field-name="enumId" related="measurementEnumId"/></relationship>
+    <relationship related="mantle.work.measurement.Measurement" type="many" is-auto-reverse="true" mutable="true" title="MeasurementReason">
+        <key-map field-name="enumId" related="reasonEnumId"/></relationship>
+    <relationship related="mantle.work.measurement.MeasurementType" type="many" is-auto-reverse="true" mutable="true" title="UomType">
+        <key-map field-name="enumId" related="uomTypeEnumId"/></relationship>
+    <relationship related="mantle.work.time.TimeEntry" type="many" is-auto-reverse="true" mutable="true" title="RateType">
+        <key-map field-name="enumId" related="rateTypeEnumId"/></relationship>
+    <relationship related="mantle.work.time.TimeEntry" type="many" is-auto-reverse="true" mutable="true" title="RateModifier">
+        <key-map field-name="enumId" related="rateModifierEnumId"/></relationship>
+    <relationship related="mantle.work.time.TimeEntry" type="many" is-auto-reverse="true" mutable="true" title="WorkType">
+        <key-map field-name="enumId" related="workTypeEnumId"/></relationship>
+    <relationship related="mantle.work.time.TimeEntry" type="many" is-auto-reverse="true" mutable="true" title="PieceRateType">
+        <key-map field-name="enumId" related="pieceRateTypeEnumId"/></relationship>
+    <relationship related="moqui.basic.DataSource" type="many" is-auto-reverse="true" mutable="true" title="DataSourceType">
+        <key-map field-name="enumId" related="dataSourceTypeEnumId"/></relationship>
+    <relationship related="moqui.basic.EnumGroupMember" type="many" is-auto-reverse="true" mutable="true" title="EnumGroup">
+        <key-map field-name="enumId" related="enumGroupEnumId"/></relationship>
+    <relationship related="moqui.basic.Geo" type="many" is-auto-reverse="true" mutable="true" title="GeoType">
+        <key-map field-name="enumId" related="geoTypeEnumId"/></relationship>
+    <relationship related="moqui.basic.GeoAssoc" type="many" is-auto-reverse="true" mutable="true" title="GeoAssocType">
+        <key-map field-name="enumId" related="geoAssocTypeEnumId"/></relationship>
+    <relationship related="moqui.basic.GeoPoint" type="many" is-auto-reverse="true" mutable="true" title="GeoPointType">
+        <key-map field-name="enumId" related="geoPointTypeEnumId"/></relationship>
+    <relationship related="moqui.basic.Uom" type="many" is-auto-reverse="true" mutable="true" title="UomType">
+        <key-map field-name="enumId" related="uomTypeEnumId"/></relationship>
+    <relationship related="moqui.basic.UomConversion" type="many" is-auto-reverse="true" mutable="true" title="UomConversionPurpose">
+        <key-map field-name="enumId" related="purposeEnumId"/></relationship>
+    <relationship related="moqui.basic.UomDimTypeGroupMember" type="many" is-auto-reverse="true" mutable="true" title="UomDimTypeGroup">
+        <key-map field-name="enumId" related="uomDimTypeGroupEnumId"/></relationship>
+    <relationship related="moqui.basic.UomDimensionType" type="many" is-auto-reverse="true" mutable="true" title="UomType">
+        <key-map field-name="enumId" related="uomTypeEnumId"/></relationship>
+    <relationship related="moqui.basic.UomGroupMember" type="many" is-auto-reverse="true" mutable="true" title="UomGroup">
+        <key-map field-name="enumId" related="uomGroupEnumId"/></relationship>
+    <relationship related="moqui.basic.email.EmailMessage" type="many" is-auto-reverse="true" mutable="true" title="EmailType">
+        <key-map field-name="enumId" related="emailTypeEnumId"/></relationship>
+    <relationship related="moqui.basic.email.EmailTemplate" type="many" is-auto-reverse="true" mutable="true" title="EmailType">
+        <key-map field-name="enumId" related="emailTypeEnumId"/></relationship>
+    <relationship related="moqui.entity.feed.DataFeed" type="many" is-auto-reverse="true" mutable="true" title="DataFeedType">
+        <key-map field-name="enumId" related="dataFeedTypeEnumId"/></relationship>
+    <relationship related="moqui.entity.sync.EntitySyncArtifact" type="many" is-auto-reverse="true" mutable="true" title="EntitySyncArtifactAppl">
+        <key-map field-name="enumId" related="applEnumId"/></relationship>
+    <relationship related="moqui.example.Example" type="many" is-auto-reverse="true" mutable="true" title="ExampleType">
+        <key-map field-name="enumId" related="exampleTypeEnumId"/></relationship>
+    <relationship related="moqui.example.ExampleContent" type="many" is-auto-reverse="true" mutable="true" title="ExampleContentPurpose">
+        <key-map field-name="enumId" related="purposeEnumId"/></relationship>
+    <relationship related="moqui.example.ExampleFeature" type="many" is-auto-reverse="true" mutable="true" title="ExampleFeatureSource">
+        <key-map field-name="enumId" related="featureSourceEnumId"/></relationship>
+    <relationship related="moqui.example.ExampleFeatureAppl" type="many" is-auto-reverse="true" mutable="true" title="ExampleFeatureAppl">
+        <key-map field-name="enumId" related="exampleFeatureApplEnumId"/></relationship>
+    <relationship related="moqui.screen.ScreenTheme" type="many" is-auto-reverse="true" mutable="true" title="ScreenThemeType">
+        <key-map field-name="enumId" related="screenThemeTypeEnumId"/></relationship>
+    <relationship related="moqui.screen.ScreenThemeResource" type="many" is-auto-reverse="true" mutable="true" title="ScreenThemeResourceType">
+        <key-map field-name="enumId" related="resourceTypeEnumId"/></relationship>
+    <relationship related="moqui.screen.form.DbForm" type="many" is-auto-reverse="true" mutable="true" title="DbFormPurpose">
+        <key-map field-name="enumId" related="purposeEnumId"/></relationship>
+    <relationship related="moqui.screen.form.DbFormField" type="many" is-auto-reverse="true" mutable="true" title="DbFormFieldType">
+        <key-map field-name="enumId" related="fieldTypeEnumId"/></relationship>
+    <relationship related="moqui.screen.form.FormConfig" type="many" is-auto-reverse="true" mutable="true" title="FormConfigType">
+        <key-map field-name="enumId" related="configTypeEnumId"/></relationship>
+    <relationship related="moqui.screen.form.FormConfigUserType" type="many" is-auto-reverse="true" mutable="true" title="FormConfigType">
+        <key-map field-name="enumId" related="configTypeEnumId"/></relationship>
+    <relationship related="moqui.security.ArtifactAuthz" type="many" is-auto-reverse="true" mutable="true" title="AuthzType">
+        <key-map field-name="enumId" related="authzTypeEnumId"/></relationship>
+    <relationship related="moqui.security.ArtifactAuthz" type="many" is-auto-reverse="true" mutable="true" title="AuthzAction">
+        <key-map field-name="enumId" related="authzActionEnumId"/></relationship>
+    <relationship related="moqui.security.ArtifactAuthzFailure" type="many" is-auto-reverse="true" mutable="true" title="ArtifactType">
+        <key-map field-name="enumId" related="artifactTypeEnumId"/></relationship>
+    <relationship related="moqui.security.ArtifactAuthzFailure" type="many" is-auto-reverse="true" mutable="true" title="AuthzAction">
+        <key-map field-name="enumId" related="authzActionEnumId"/></relationship>
+    <relationship related="moqui.security.ArtifactGroupMember" type="many" is-auto-reverse="true" mutable="true" title="ArtifactType">
+        <key-map field-name="enumId" related="artifactTypeEnumId"/></relationship>
+    <relationship related="moqui.security.ArtifactTarpitLock" type="many" is-auto-reverse="true" mutable="true" title="ArtifactType">
+        <key-map field-name="enumId" related="artifactTypeEnumId"/></relationship>
+    <relationship related="moqui.security.EntityFilter" type="many" is-auto-reverse="true" mutable="true" title="ComparisonOperator">
+        <key-map field-name="enumId" related="comparisonEnumId"/></relationship>
+    <relationship related="moqui.security.UserAuthcFactor" type="many" is-auto-reverse="true" mutable="true" title="UserAuthcFactorType">
+        <key-map field-name="enumId" related="factorTypeEnumId"/></relationship>
+    <relationship related="moqui.security.UserGroup" type="many" is-auto-reverse="true" mutable="true" title="UserGroupType">
+        <key-map field-name="enumId" related="groupTypeEnumId"/></relationship>
+    <relationship related="moqui.security.UserGroupPreference" type="many" is-auto-reverse="true" mutable="true" title="UserPreferenceKey">
+        <key-map field-name="enumId" related="preferenceKey"/></relationship>
+    <relationship related="moqui.security.UserGroupScreenTheme" type="many" is-auto-reverse="true" mutable="true" title="ScreenThemeType">
+        <key-map field-name="enumId" related="screenThemeTypeEnumId"/></relationship>
+    <relationship related="moqui.security.UserPreference" type="many" is-auto-reverse="true" mutable="true" title="UserPreferenceKey">
+        <key-map field-name="enumId" related="preferenceKey"/></relationship>
+    <relationship related="moqui.security.UserScreenTheme" type="many" is-auto-reverse="true" mutable="true" title="ScreenThemeType">
+        <key-map field-name="enumId" related="screenThemeTypeEnumId"/></relationship>
+    <relationship related="moqui.service.ServiceRegister" type="many" is-auto-reverse="true" mutable="true" title="ServiceRegisterType">
+        <key-map field-name="enumId" related="serviceTypeEnumId"/></relationship>
+    <relationship related="moqui.service.message.SystemMessageEnumMap" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="enumId" related="enumId"/></relationship>
+    <relationship related="moqui.service.message.SystemMessageRemote" type="many" is-auto-reverse="true" mutable="true" title="SystemMessageAuthType">
+        <key-map field-name="enumId" related="messageAuthEnumId"/></relationship>
+    <relationship related="moqui.service.message.SystemMessageRemote" type="many" is-auto-reverse="true" mutable="true" title="SendMessageAuthType">
+        <key-map field-name="enumId" related="sendAuthEnumId"/></relationship>
+    <relationship related="moqui.service.message.SystemMessageType" type="many" is-auto-reverse="true" mutable="true" title="MessageReceiveResponse">
+        <key-map field-name="enumId" related="receiveResponseEnumId"/></relationship>
+
+</entity>

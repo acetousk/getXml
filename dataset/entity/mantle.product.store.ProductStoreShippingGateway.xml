@@ -1,0 +1,27 @@
+
+<!-- Entity Name: mantle.product.store.ProductStoreShippingGateway sql table: PRODUCT_STORE_SHIPPING_GATEWAY --><entity entity-name="ProductStoreShippingGateway" package="mantle.product.store">
+    <field name="productStoreId" type="id" is-pk="true"/>
+    <field name="carrierPartyId" type="id" is-pk="true"/>
+    <field name="shippingGatewayConfigId" type="id"/>
+    <field name="billingType" type="text-short">
+        <description><![CDATA[For third party and other carrier account billing;
+            for Shippo valid values are SENDER, RECIPIENT, THIRD_PARTY]]></description></field>
+    <field name="billingAccount" type="text-short">
+        <description><![CDATA[Third party or other carrier account number]]></description></field>
+    <field name="billingZip" type="text-short"/>
+    <field name="billingCountry" type="text-short">
+        <description><![CDATA[For Shippo this is the 2 letter ISO country code]]></description></field>
+    <field name="insurancePercent" type="number-decimal">
+        <description><![CDATA[For insurance estimate records the percent of insured amount that is the cost of the insurance]]></description></field>
+    <field name="defaultTradeTermEnumId" type="id"/>
+    <field name="customsContentsEnumId" type="id"/>
+    <field name="customsNonDeliveryEnumId" type="id"/>
+    <relationship type="one" related="mantle.product.store.ProductStore" short-alias="store"/>
+    <relationship type="one" title="Carrier" related="mantle.party.Party" short-alias="carrier">
+        <key-map field-name="carrierPartyId"/></relationship>
+    <relationship type="one" related="mantle.shipment.carrier.ShippingGatewayConfig" short-alias="config"/>
+    <relationship type="one" title="TermType" related="moqui.basic.Enumeration" short-alias="defaultTradeTermEnum">
+        <key-map field-name="defaultTradeTermEnumId"/></relationship>
+    <field name="lastUpdatedStamp" type="date-time"/>
+
+</entity>

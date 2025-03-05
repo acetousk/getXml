@@ -1,0 +1,23 @@
+
+<!-- Entity Name: moqui.entity.view.DbViewEntityMember sql table: DB_VIEW_ENTITY_MEMBER --><entity entity-name="DbViewEntityMember" package="moqui.entity.view" use="configuration" cache="true" authorize-skip="view" has-dependents="true">
+    <field name="dbViewEntityName" type="text-medium" is-pk="true"/>
+    <field name="entityAlias" type="text-short" is-pk="true"/>
+    <field name="entityName" type="text-medium"/>
+    <field name="joinFromAlias" type="text-short"/>
+    <field name="joinOptional" type="text-indicator"/>
+    <relationship type="one" related="moqui.entity.view.DbViewEntity"/>
+    <relationship type="one" title="JoinFrom" related="moqui.entity.view.DbViewEntityMember">
+        <key-map field-name="dbViewEntityName"/>
+        <key-map field-name="joinFromAlias" related="entityAlias"/>
+    </relationship>
+    <field name="lastUpdatedStamp" type="date-time"/>
+    <relationship related="moqui.entity.view.DbViewEntityAlias" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="dbViewEntityName" related="dbViewEntityName"/>
+        <key-map field-name="entityAlias" related="entityAlias"/>
+    </relationship>
+    <relationship related="moqui.entity.view.DbViewEntityKeyMap" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="dbViewEntityName" related="dbViewEntityName"/>
+        <key-map field-name="entityAlias" related="entityAlias"/>
+    </relationship>
+
+</entity>

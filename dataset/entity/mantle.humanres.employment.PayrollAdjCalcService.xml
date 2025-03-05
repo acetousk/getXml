@@ -1,0 +1,21 @@
+
+<!-- Entity Name: mantle.humanres.employment.PayrollAdjCalcService sql table: PAYROLL_ADJ_CALC_SERVICE --><entity entity-name="PayrollAdjCalcService" package="mantle.humanres.employment" use="configuration" cache="true">
+    <field name="adjCalcServiceId" type="id" is-pk="true"/>
+    <field name="organizationPartyId" type="id">
+        <description><![CDATA[If null applies to all organizations]]></description></field>
+    <field name="payrollPhaseEnumId" type="id"/>
+    <field name="description" type="text-medium">
+        <description><![CDATA[Description for the OrderItem (itemDescription), adjustment calc service
+            should run this through ResourceFacade.expand() with parameters depending on the adjustment calc service]]></description></field>
+    <field name="serviceRegisterId" type="id" not-null="true">
+        <description><![CDATA[Registered Service of type PayrollAdjustmentCalc that implements the
+            mantle.humanres.PayrollServices.calculate#Adjustment interface]]></description></field>
+    <field name="sequenceNum" type="number-integer"/>
+    <relationship type="one" related="moqui.service.ServiceRegister" short-alias="serviceRegister"/>
+    <relationship type="many" related="mantle.humanres.employment.PayrollAdjCalcParameter" short-alias="parameters">
+        <key-map field-name="adjCalcServiceId"/></relationship>
+    <seed-data>
+        <moqui.basic.Enumeration description="Payroll Adjustment Calculation" enumId="PayrollAdjustmentCalc" enumTypeId="ServiceRegisterType"/></seed-data>
+    <field name="lastUpdatedStamp" type="date-time"/>
+
+</entity>

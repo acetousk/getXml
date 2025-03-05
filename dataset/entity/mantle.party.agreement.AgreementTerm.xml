@@ -1,0 +1,20 @@
+
+<!-- Entity Name: mantle.party.agreement.AgreementTerm sql table: AGREEMENT_TERM --><entity entity-name="AgreementTerm" package="mantle.party.agreement">
+    <field name="agreementTermId" type="id" is-pk="true"/>
+    <field name="agreementId" type="id"/>
+    <field name="agreementItemSeqId" type="id"/>
+    <field name="settlementTermId" type="id"/>
+    <field name="termTypeEnumId" type="id"/>
+    <field name="termText" type="text-long"/>
+    <field name="termNumber" type="number-decimal"/>
+    <relationship type="one" related="mantle.party.agreement.Agreement"/>
+    <relationship type="one-nofk" related="mantle.party.agreement.AgreementItem">
+        <key-map field-name="agreementId"/>
+        <key-map field-name="agreementItemSeqId"/>
+    </relationship>
+    <relationship type="one" related="mantle.account.invoice.SettlementTerm"/>
+    <relationship type="one" title="TermType" related="moqui.basic.Enumeration">
+        <key-map field-name="termTypeEnumId"/></relationship>
+    <field name="lastUpdatedStamp" type="date-time"/>
+
+</entity>

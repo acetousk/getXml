@@ -1,0 +1,11 @@
+
+<!-- Entity Name: mantle.marketing.segment.MarketSegmentParty sql table: MARKET_SEGMENT_PARTY --><entity entity-name="MarketSegmentParty" package="mantle.marketing.segment">
+    <field name="marketSegmentId" type="id" is-pk="true"/>
+    <field name="partyId" type="id" is-pk="true"/>
+    <field name="roleTypeId" type="id" is-pk="true"/>
+    <relationship type="one" related="mantle.marketing.segment.MarketSegment"/>
+    <relationship type="one" related="mantle.party.Party"/>
+    <relationship type="one" related="mantle.party.RoleType"/>
+    <field name="lastUpdatedStamp" type="date-time"/>
+
+</entity>

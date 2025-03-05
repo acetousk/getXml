@@ -1,0 +1,387 @@
+
+<!-- Entity Name: mantle.work.effort.WorkEffort sql table: WORK_EFFORT --><entity entity-name="WorkEffort" package="mantle.work.effort" short-alias="workEfforts" cache="never" sequence-bank-size="10" has-dependents="true">
+    <field name="workEffortId" type="id" is-pk="true"/>
+    <field name="universalId" type="text-medium"/>
+    <field name="sourceReferenceId" type="text-short"/>
+    <field name="parentWorkEffortId" type="id">
+        <description><![CDATA[For task/etc breakdown]]></description></field>
+    <field name="rootWorkEffortId" type="id">
+        <description><![CDATA[The root of the tree this is part of (if applicable), like a project]]></description></field>
+    <field name="workEffortTypeEnumId" type="id"/>
+    <field name="purposeEnumId" type="id"/>
+    <field name="visibilityEnumId" type="id"/>
+    <field name="resolutionEnumId" type="id" enable-audit-log="update"/>
+    <field name="workTypeEnumId" type="id"/>
+    <field name="ownerPartyId" type="id" enable-audit-log="update">
+        <description><![CDATA[The party that "owns" the work effort, for production runs
+            producing inventory this will be used as the Asset.ownerPartyId]]></description></field>
+    <field name="productStoreId" type="id" enable-audit-log="update"/>
+    <field name="statusId" type="id" enable-audit-log="true"/>
+    <field name="statusFlowId" type="id"/>
+    <field name="priority" type="number-integer"/>
+    <field name="sendNotificationEmail" type="text-indicator"/>
+    <field name="percentComplete" type="number-integer"/>
+    <field name="revisionNumber" type="number-integer"/>
+    <field name="workEffortName" type="text-medium"/>
+    <field name="description" type="text-long"/>
+    <field name="location" type="text-medium"/>
+    <field name="facilityId" type="id">
+        <description><![CDATA[Where the WorkEffort takes place]]></description></field>
+    <field name="infoUrl" type="text-medium"/>
+    <field name="shipmentMethodEnumId" type="id">
+        <description><![CDATA[Mostly for Shipment Load/Ship (WepShipmentShip)
+            purpose, using WorkEffort as a more task and planning oriented approach to a picklist.]]></description></field>
+    <field name="estimatedStartDate" type="date-time"/>
+    <field name="estimatedCompletionDate" type="date-time"/>
+    <field name="actualStartDate" type="date-time"/>
+    <field name="actualCompletionDate" type="date-time" enable-audit-log="true"/>
+    <field name="recurStartCron" type="text-medium"/>
+    <field name="recurLimit" type="number-integer"/>
+    <field name="recurEndDate" type="date-time"/>
+    <field name="allDayStart" type="date"/>
+    <field name="allDayEnd" type="date">
+        <description><![CDATA[Can be null for single day events]]></description></field>
+    <field name="estimatedWorkTime" type="number-decimal" enable-audit-log="true">
+        <description><![CDATA[Total estimated work time across all parties]]></description></field>
+    <field name="estimatedSetupTime" type="number-decimal">
+        <description><![CDATA[Total estimated setup time across all parties]]></description></field>
+    <field name="remainingWorkTime" type="number-decimal" enable-audit-log="true">
+        <description><![CDATA[Total remaining work time across all parties]]></description></field>
+    <field name="actualWorkTime" type="number-decimal">
+        <description><![CDATA[Total actual work time across all parties]]></description></field>
+    <field name="actualSetupTime" type="number-decimal">
+        <description><![CDATA[Total actual setup time across all parties]]></description></field>
+    <field name="totalTimeAllowed" type="number-decimal" enable-audit-log="true">
+        <description><![CDATA[Total work time allowed (budgeted) across all parties]]></description></field>
+    <field name="estimatedWorkDuration" type="number-decimal">
+        <description><![CDATA[Estimated work duration in calendar time (see estimatedWorkTime for total worked time across parties)]]></description></field>
+    <field name="actualWorkDuration" type="number-decimal">
+        <description><![CDATA[Actual work duration in calendar time (see actualWorkTime for total worked time across parties)]]></description></field>
+    <field name="actualBreakDuration" type="number-decimal">
+        <description><![CDATA[Actual break duration in calendar time]]></description></field>
+    <field name="timeUomId" type="id">
+        <description><![CDATA[Time unit for all time and duration fields; defaults to hours (TF_hr)]]></description></field>
+    <field name="actualCost" type="currency-amount"/>
+    <field name="actualClientCost" type="currency-amount"/>
+    <field name="totalClientCostAllowed" type="currency-amount"/>
+    <field name="costUomId" type="id"/>
+    <relationship type="one" title="Parent" related="mantle.work.effort.WorkEffort" short-alias="parent">
+        <key-map field-name="parentWorkEffortId" related="workEffortId"/></relationship>
+    <relationship type="one" title="Root" related="mantle.work.effort.WorkEffort" short-alias="root">
+        <key-map field-name="rootWorkEffortId" related="workEffortId"/></relationship>
+    <relationship type="one" title="WorkEffortType" related="moqui.basic.Enumeration" short-alias="type">
+        <key-map field-name="workEffortTypeEnumId"/></relationship>
+    <relationship type="one" title="WorkEffortPurpose" related="moqui.basic.Enumeration" short-alias="purpose">
+        <key-map field-name="purposeEnumId"/></relationship>
+    <relationship type="one" title="WorkEffortVisibility" related="moqui.basic.Enumeration" short-alias="visibility">
+        <key-map field-name="visibilityEnumId"/></relationship>
+    <relationship type="one" title="WorkEffortResolution" related="moqui.basic.Enumeration" short-alias="resolution">
+        <key-map field-name="resolutionEnumId"/></relationship>
+    <relationship type="one" title="WorkType" related="moqui.basic.Enumeration" short-alias="workType">
+        <key-map field-name="workTypeEnumId"/></relationship>
+    <relationship type="one" title="Owner" related="mantle.party.Party" short-alias="owner">
+        <key-map field-name="ownerPartyId"/></relationship>
+    <relationship type="one" related="mantle.product.store.ProductStore" short-alias="productStore"/>
+    <relationship type="one" title="WorkEffort" related="moqui.basic.StatusItem" short-alias="status"/>
+    <relationship type="one" related="mantle.facility.Facility" short-alias="facility"/>
+    <relationship type="one" title="Time" related="moqui.basic.Uom" short-alias="timeUom">
+        <key-map field-name="timeUomId"/></relationship>
+    <relationship type="one" title="Cost" related="moqui.basic.Uom" short-alias="costUom">
+        <key-map field-name="costUomId"/></relationship>
+    <relationship type="many" related="mantle.work.effort.WorkEffortAssetAssign" short-alias="assets">
+        <key-map field-name="workEffortId"/></relationship>
+    <relationship type="many" related="mantle.work.effort.WorkEffortAssetNeeded" short-alias="assetsNeeded">
+        <key-map field-name="workEffortId"/></relationship>
+    <relationship type="many" related="mantle.work.effort.WorkEffortAssoc" short-alias="assocs">
+        <key-map field-name="workEffortId"/></relationship>
+    <relationship type="many" related="mantle.work.effort.WorkEffortAssoc" short-alias="toAssocs">
+        <key-map field-name="workEffortId" related="toWorkEffortId"/></relationship>
+    <relationship type="many" related="mantle.work.effort.WorkEffortBilling" short-alias="billings">
+        <key-map field-name="workEffortId"/></relationship>
+    <relationship type="many" related="mantle.work.effort.WorkEffortCategoryAppl" short-alias="categories">
+        <key-map field-name="workEffortId"/></relationship>
+    <relationship type="many" related="mantle.work.effort.WorkEffortCommEvent" short-alias="communicationEvents">
+        <key-map field-name="workEffortId"/></relationship>
+    <relationship type="many" related="mantle.work.effort.WorkEffortContactMech" short-alias="contactMechs">
+        <key-map field-name="workEffortId"/></relationship>
+    <relationship type="many" related="mantle.work.effort.WorkEffortContent" short-alias="contents">
+        <key-map field-name="workEffortId"/></relationship>
+    <relationship type="many" related="mantle.work.effort.WorkEffortFacility" short-alias="facilities">
+        <key-map field-name="workEffortId"/></relationship>
+    <relationship type="many" related="mantle.work.effort.WorkEffortNote" short-alias="notes">
+        <key-map field-name="workEffortId"/></relationship>
+    <relationship type="many" related="mantle.work.effort.WorkEffortParty" short-alias="parties">
+        <key-map field-name="workEffortId"/></relationship>
+    <relationship type="many" related="mantle.work.effort.WorkEffortProduct" short-alias="products">
+        <key-map field-name="workEffortId"/></relationship>
+    <index name="WORK_EFF_ST_WET" unique="false">
+        <index-field name="statusId"/>
+        <index-field name="workEffortTypeEnumId"/>
+    </index>
+    <seed-data>
+        <moqui.basic.EnumerationType description="Work Effort Type" enumTypeId="WorkEffortType"/>
+        <moqui.basic.Enumeration description="Project" enumId="WetProject" enumTypeId="WorkEffortType"/>
+        <moqui.basic.Enumeration description="Milestone" enumId="WetMilestone" enumTypeId="WorkEffortType"/>
+        <moqui.basic.Enumeration description="Task" enumId="WetTask" enumTypeId="WorkEffortType"/>
+        <moqui.basic.Enumeration description="Release" enumId="WetRelease" enumTypeId="WorkEffortType"/>
+        <moqui.basic.Enumeration description="Component" enumId="WetComponent" enumTypeId="WorkEffortType"/>
+        <moqui.basic.Enumeration description="Event" enumId="WetEvent" enumTypeId="WorkEffortType"/>
+        <moqui.basic.Enumeration description="Available" enumId="WetAvailable" enumTypeId="WorkEffortType"/>
+        <moqui.basic.Enumeration description="Time Off" enumId="WetTimeOff" enumTypeId="WorkEffortType"/>
+        <moqui.basic.EnumerationType description="Work Effort Purpose" enumTypeId="WorkEffortPurpose"/>
+        <moqui.basic.Enumeration description="Task" enumId="WepTask" parentEnumId="WetTask" enumTypeId="WorkEffortPurpose"/>
+        <moqui.basic.Enumeration description="Bug Fix" enumId="WepFix" parentEnumId="WetTask" enumTypeId="WorkEffortPurpose"/>
+        <moqui.basic.Enumeration description="New Feature" enumId="WepNewFeature" parentEnumId="WetTask" enumTypeId="WorkEffortPurpose"/>
+        <moqui.basic.Enumeration description="Feature Enhancement" enumId="WepFeatureEnhance" parentEnumId="WetTask" enumTypeId="WorkEffortPurpose"/>
+        <moqui.basic.Enumeration description="Feature Test" enumId="WepFeatureTest" parentEnumId="WetTask" enumTypeId="WorkEffortPurpose"/>
+        <moqui.basic.Enumeration description="To Do" enumId="WepToDo" parentEnumId="WetTask" enumTypeId="WorkEffortPurpose"/>
+        <moqui.basic.Enumeration description="Document" enumId="WepDocument" parentEnumId="WetTask" enumTypeId="WorkEffortPurpose"/>
+        <moqui.basic.Enumeration description="Communication" enumId="WepCommunication" parentEnumId="WetTask" enumTypeId="WorkEffortPurpose"/>
+        <moqui.basic.Enumeration description="Placeholder" enumId="WepPlaceholder" parentEnumId="WetTask" enumTypeId="WorkEffortPurpose"/>
+        <moqui.basic.Enumeration description="Organization Management" enumId="WepPrOrgMgmt" parentEnumId="WetProject" enumTypeId="WorkEffortPurpose"/>
+        <moqui.basic.Enumeration description="Training" enumId="WepPrTraining" parentEnumId="WetProject" enumTypeId="WorkEffortPurpose"/>
+        <moqui.basic.Enumeration description="IT Security" enumId="WepPrItSecurity" parentEnumId="WetProject" enumTypeId="WorkEffortPurpose"/>
+        <moqui.basic.Enumeration description="Marketing" enumId="WepPrMarketing" parentEnumId="WetProject" enumTypeId="WorkEffortPurpose"/>
+        <moqui.basic.Enumeration description="Product Development" enumId="WepPrProdDev" parentEnumId="WetProject" enumTypeId="WorkEffortPurpose"/>
+        <moqui.basic.Enumeration description="Product Fulfillment" enumId="WepPrProdFulfill" parentEnumId="WetProject" enumTypeId="WorkEffortPurpose"/>
+        <moqui.basic.Enumeration description="Manufacturing" enumId="WepManufacturing" enumTypeId="WorkEffortPurpose"/>
+        <moqui.basic.Enumeration description="Assembling" enumId="WepAssembling" parentEnumId="WepManufacturing" enumTypeId="WorkEffortPurpose"/>
+        <moqui.basic.Enumeration description="Routing" enumId="WepRouting" parentEnumId="WepManufacturing" enumTypeId="WorkEffortPurpose"/>
+        <moqui.basic.Enumeration description="Routing Task" enumId="WepRoutingTask" parentEnumId="WepManufacturing" enumTypeId="WorkEffortPurpose"/>
+        <moqui.basic.Enumeration description="Production Run" enumId="WepProductionRun" parentEnumId="WepManufacturing" enumTypeId="WorkEffortPurpose"/>
+        <moqui.basic.Enumeration description="Pick Assembly" enumId="WepPickAssembly" parentEnumId="WepManufacturing" enumTypeId="WorkEffortPurpose"/>
+        <moqui.basic.Enumeration description="Shipment Pick/Load/Ship" enumId="WepShipmentShip" enumTypeId="WorkEffortPurpose"/>
+        <moqui.basic.Enumeration description="Shipment Receive" enumId="WepShipmentReceive" enumTypeId="WorkEffortPurpose"/>
+        <moqui.basic.Enumeration description="Asset Usage (Rental)" enumId="WepAssetUsage" enumTypeId="WorkEffortPurpose"/>
+        <moqui.basic.Enumeration description="Business Travel" enumId="WepBusinessTravel" enumTypeId="WorkEffortPurpose"/>
+        <moqui.basic.Enumeration description="Meeting" enumId="WepMeeting" enumTypeId="WorkEffortPurpose"/>
+        <moqui.basic.Enumeration description="Training" enumId="WepTraining" enumTypeId="WorkEffortPurpose"/>
+        <moqui.basic.Enumeration description="Holiday" enumId="WepHoliday" enumTypeId="WorkEffortPurpose"/>
+        <moqui.basic.Enumeration description="Maintenance" enumId="WepMaintenance" enumTypeId="WorkEffortPurpose"/>
+        <moqui.basic.Enumeration description="Research" enumId="WepResearch" enumTypeId="WorkEffortPurpose"/>
+        <moqui.basic.Enumeration description="Development" enumId="WepDevelopment" enumTypeId="WorkEffortPurpose"/>
+        <moqui.basic.Enumeration description="Support" enumId="WepSupport" enumTypeId="WorkEffortPurpose"/>
+        <moqui.basic.Enumeration description="Deployment" enumId="WepDeployment" enumTypeId="WorkEffortPurpose"/>
+        <moqui.basic.Enumeration description="Sub-contracting" enumId="WepSubcontracting" enumTypeId="WorkEffortPurpose"/>
+        <moqui.basic.Enumeration description="Phone Call" enumId="WepPhoneCall" enumTypeId="WorkEffortPurpose"/>
+        <moqui.basic.Enumeration description="Email" enumId="WepEmail" enumTypeId="WorkEffortPurpose"/>
+        <moqui.basic.Enumeration description="Timesheet" enumId="WepTimesheet" enumTypeId="WorkEffortPurpose"/>
+        <moqui.basic.EnumerationType description="Work Effort Resolution" enumTypeId="WorkEffortResolution"/>
+        <moqui.basic.Enumeration description="Unresolved" enumId="WerUnresolved" enumTypeId="WorkEffortResolution"/>
+        <moqui.basic.Enumeration description="Completed" enumId="WerCompleted" enumTypeId="WorkEffortResolution"/>
+        <moqui.basic.Enumeration description="Incomplete" enumId="WerIncomplete" enumTypeId="WorkEffortResolution"/>
+        <moqui.basic.Enumeration description="Won't Complete" enumId="WerWontComplete" enumTypeId="WorkEffortResolution"/>
+        <moqui.basic.Enumeration description="Duplicate" enumId="WerDuplicate" enumTypeId="WorkEffortResolution"/>
+        <moqui.basic.Enumeration description="Cannot Reproduce" enumId="WerCannotReproduce" enumTypeId="WorkEffortResolution"/>
+        <moqui.basic.Enumeration description="Insufficient Information" enumId="WerInsufficient" enumTypeId="WorkEffortResolution"/>
+        <moqui.basic.StatusType description="Work Effort Status" statusTypeId="WorkEffort"/>
+        <moqui.basic.StatusItem description="In Planning" sequenceNum="1" statusId="WeInPlanning" statusTypeId="WorkEffort"/>
+        <moqui.basic.StatusItem description="Approved" sequenceNum="2" statusId="WeApproved" statusTypeId="WorkEffort"/>
+        <moqui.basic.StatusItem description="In Progress" sequenceNum="3" statusId="WeInProgress" statusTypeId="WorkEffort"/>
+        <moqui.basic.StatusItem description="On Hold" sequenceNum="5" statusId="WeOnHold" statusTypeId="WorkEffort"/>
+        <moqui.basic.StatusItem description="Complete" sequenceNum="9" statusId="WeComplete" statusTypeId="WorkEffort"/>
+        <moqui.basic.StatusItem description="Closed" sequenceNum="10" statusId="WeClosed" statusTypeId="WorkEffort"/>
+        <moqui.basic.StatusItem description="Cancelled" sequenceNum="99" statusId="WeCancelled" statusTypeId="WorkEffort"/>
+        <moqui.basic.StatusFlowTransition statusFlowId="Default" statusId="WeInPlanning" toStatusId="WeApproved" transitionName="Approve"/>
+        <moqui.basic.StatusFlowTransition statusFlowId="Default" statusId="WeInPlanning" toStatusId="WeInProgress" transitionName="Begin"/>
+        <moqui.basic.StatusFlowTransition statusFlowId="Default" statusId="WeInPlanning" toStatusId="WeCancelled" transitionName="Cancel"/>
+        <moqui.basic.StatusFlowTransition statusFlowId="Default" statusId="WeInPlanning" toStatusId="WeComplete" transitionName="Complete"/>
+        <moqui.basic.StatusFlowTransition statusFlowId="Default" statusId="WeApproved" toStatusId="WeInProgress" transitionName="Begin"/>
+        <moqui.basic.StatusFlowTransition statusFlowId="Default" statusId="WeApproved" toStatusId="WeComplete" transitionName="Complete"/>
+        <moqui.basic.StatusFlowTransition statusFlowId="Default" statusId="WeApproved" toStatusId="WeCancelled" transitionName="Cancel"/>
+        <moqui.basic.StatusFlowTransition statusFlowId="Default" statusId="WeInProgress" toStatusId="WeOnHold" transitionName="Hold"/>
+        <moqui.basic.StatusFlowTransition statusFlowId="Default" statusId="WeInProgress" toStatusId="WeComplete" transitionName="Complete"/>
+        <moqui.basic.StatusFlowTransition statusFlowId="Default" statusId="WeInProgress" toStatusId="WeCancelled" transitionName="Cancel"/>
+        <moqui.basic.StatusFlowTransition statusFlowId="Default" statusId="WeComplete" toStatusId="WeClosed" transitionName="Close"/>
+        <moqui.basic.StatusFlowTransition statusFlowId="Default" statusId="WeComplete" toStatusId="WeInProgress" transitionName="Resume"/>
+        <moqui.basic.StatusFlowTransition statusFlowId="Default" statusId="WeOnHold" toStatusId="WeInProgress" transitionName="Resume"/>
+        <moqui.basic.StatusFlowTransition statusFlowId="Default" statusId="WeOnHold" toStatusId="WeComplete" transitionName="Complete"/>
+        <moqui.basic.StatusFlowTransition statusFlowId="Default" statusId="WeOnHold" toStatusId="WeCancelled" transitionName="Cancel"/>
+        <moqui.basic.StatusFlowTransition statusFlowId="Default" statusId="WeClosed" toStatusId="WeInPlanning" transitionName="Re-open"/>
+        <moqui.basic.StatusFlowTransition statusFlowId="Default" statusId="WeCancelled" toStatusId="WeInPlanning" transitionName="Re-open"/>
+        <moqui.basic.StatusFlow statusFlowId="WorkEffortOther" description="Other, more lenient, status transitions for WorkEffort"/>
+        <moqui.basic.StatusFlowTransition statusFlowId="WorkEffortOther" statusId="WeInPlanning" toStatusId="WeClosed" transitionName="Close"/>
+        <moqui.basic.StatusFlowTransition statusFlowId="WorkEffortOther" statusId="WeApproved" toStatusId="WeClosed" transitionName="Close"/>
+        <moqui.basic.StatusFlowTransition statusFlowId="WorkEffortOther" statusId="WeInProgress" toStatusId="WeClosed" transitionName="Close"/>
+        <moqui.basic.StatusFlowTransition statusFlowId="WorkEffortOther" statusId="WeOnHold" toStatusId="WeClosed" transitionName="Close"/>
+        <moqui.basic.StatusFlowTransition statusFlowId="WorkEffortOther" statusId="WeComplete" toStatusId="WeCancelled" transitionName="Cancel"/>
+        <moqui.basic.StatusFlowTransition statusFlowId="WorkEffortOther" statusId="WeClosed" toStatusId="WeInProgress" transitionName="Re-open"/>
+        <moqui.basic.StatusFlowTransition statusFlowId="WorkEffortOther" statusId="WeClosed" toStatusId="WeComplete" transitionName="Complete"/>
+        <moqui.basic.StatusFlowTransition statusFlowId="WorkEffortOther" statusId="WeCancelled" toStatusId="WeInProgress" transitionName="Re-open"/>
+        <moqui.basic.StatusFlowTransition statusFlowId="WorkEffortOther" statusId="WeCancelled" toStatusId="WeComplete" transitionName="Complete"/>
+        <moqui.basic.StatusFlowTransition statusFlowId="WorkEffortOther" statusId="WeCancelled" toStatusId="WeClosed" transitionName="Close"/>
+        <moqui.basic.EnumerationType description="Work Effort Visibility" enumTypeId="WorkEffortVisibility"/>
+        <moqui.basic.Enumeration description="All Users" enumId="WevAllUsers" enumTypeId="WorkEffortVisibility"/>
+        <moqui.basic.Enumeration description="General (public access)" enumId="WevGeneral" enumTypeId="WorkEffortVisibility"/>
+        <moqui.basic.Enumeration description="Work Group (group only access)" enumId="WevWorkGroup" enumTypeId="WorkEffortVisibility"/>
+        <moqui.basic.Enumeration description="Restricted (private access)" enumId="WevRestricted" enumTypeId="WorkEffortVisibility"/>
+        <moqui.basic.Enumeration description="Top Secret (confidential access)" enumId="WevConfidential" enumTypeId="WorkEffortVisibility"/>
+    </seed-data>
+    <master>
+        <detail relationship="parent"/>
+        <detail relationship="root"/>
+        <detail relationship="type"/>
+        <detail relationship="purpose"/>
+        <detail relationship="visibility"/>
+        <detail relationship="resolution"/>
+        <detail relationship="workType"/>
+        <detail relationship="owner" use-master="basic"/>
+        <detail relationship="status"/>
+        <detail relationship="facility"/>
+        <detail relationship="timeUom"/>
+        <detail relationship="costUom"/>
+        <detail relationship="assets">
+            <detail relationship="asset"/>
+            <detail relationship="status"/>
+        </detail>
+        <detail relationship="assetsNeeded">
+            <detail relationship="assetProduct"/></detail>
+        <detail relationship="assocs">
+            <detail relationship="toWorkEffort"/>
+            <detail relationship="type"/>
+        </detail>
+        <detail relationship="toAssocs">
+            <detail relationship="workEffort"/>
+            <detail relationship="type"/>
+        </detail>
+        <detail relationship="billings">
+            <detail relationship="invoiceItem"/></detail>
+        <detail relationship="communicationEvents">
+            <detail relationship="communicationEvent"/></detail>
+        <detail relationship="contactMechs">
+            <detail relationship="contactMech" use-master="default"/>
+            <detail relationship="purpose"/>
+        </detail>
+        <detail relationship="contents">
+            <detail relationship="type"/></detail>
+        <detail relationship="facilities">
+            <detail relationship="facility"/>
+            <detail relationship="type"/>
+        </detail>
+        <detail relationship="notes"/>
+        <detail relationship="parties">
+            <detail relationship="party" use-master="basic"/>
+            <detail relationship="role"/>
+            <detail relationship="status"/>
+            <detail relationship="availability"/>
+            <detail relationship="delegateReason"/>
+            <detail relationship="expectation"/>
+            <detail relationship="positionClass"/>
+        </detail>
+        <detail relationship="products">
+            <detail relationship="product"/>
+            <detail relationship="type"/>
+            <detail relationship="status"/>
+            <detail relationship="receipts"/>
+            <detail relationship="issuances"/>
+        </detail>
+    </master>
+    <field name="activityId" type="id"/>
+    <relationship type="one" title="Activity" related="coarchy.Activity" short-alias="activity">
+        <key-map field-name="activityId"/></relationship>
+    <relationship type="many" related="coarchy.ActivityActor" short-alias="actors">
+        <key-map field-name="activityId"/></relationship>
+    <field name="lastUpdatedStamp" type="date-time"/>
+    <relationship related="mantle.account.invoice.InvoiceItemDetail" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="workEffortId" related="workEffortId"/></relationship>
+    <relationship related="mantle.humanres.rate.RateAmount" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="workEffortId" related="workEffortId"/></relationship>
+    <relationship related="mantle.ledger.transaction.AcctgTrans" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="workEffortId" related="workEffortId"/></relationship>
+    <relationship related="mantle.order.OrderItemWorkEffort" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="workEffortId" related="workEffortId"/></relationship>
+    <relationship related="mantle.party.agreement.AgreementItemWorkEffort" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="workEffortId" related="workEffortId"/></relationship>
+    <relationship related="mantle.product.ProductAssoc" type="many" is-auto-reverse="true" mutable="true" title="Routing">
+        <key-map field-name="workEffortId" related="routingWorkEffortId"/></relationship>
+    <relationship related="mantle.product.ProductWorkEffort" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="workEffortId" related="workEffortId"/></relationship>
+    <relationship related="mantle.product.asset.Asset" type="many" is-auto-reverse="true" mutable="true" title="Acquire">
+        <key-map field-name="workEffortId" related="acquireWorkEffortId"/></relationship>
+    <relationship related="mantle.product.asset.AssetDetail" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="workEffortId" related="workEffortId"/></relationship>
+    <relationship related="mantle.product.issuance.AssetIssuance" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="workEffortId" related="workEffortId"/></relationship>
+    <relationship related="mantle.product.maintenance.AssetMaintenance" type="many" is-auto-reverse="true" mutable="true" title="Task">
+        <key-map field-name="workEffortId" related="taskWorkEffortId"/></relationship>
+    <relationship related="mantle.product.maintenance.ProductMaintenance" type="many" is-auto-reverse="true" mutable="true" title="Template">
+        <key-map field-name="workEffortId" related="templateWorkEffortId"/></relationship>
+    <relationship related="mantle.product.receipt.AssetReceipt" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="workEffortId" related="workEffortId"/></relationship>
+    <relationship related="mantle.request.Request" type="many" is-auto-reverse="true" mutable="true" title="Root">
+        <key-map field-name="workEffortId" related="rootWorkEffortId"/></relationship>
+    <relationship related="mantle.request.RequestWorkEffort" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="workEffortId" related="workEffortId"/></relationship>
+    <relationship related="mantle.request.requirement.WorkRequirementFulfillment" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="workEffortId" related="workEffortId"/></relationship>
+    <relationship related="mantle.sales.opportunity.SalesOpportunityWorkEffort" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="workEffortId" related="workEffortId"/></relationship>
+    <relationship related="mantle.shipment.Shipment" type="many" is-auto-reverse="true" mutable="true" title="Ship">
+        <key-map field-name="workEffortId" related="shipWorkEffortId"/></relationship>
+    <relationship related="mantle.shipment.Shipment" type="many" is-auto-reverse="true" mutable="true" title="Receive">
+        <key-map field-name="workEffortId" related="receiveWorkEffortId"/></relationship>
+    <relationship related="mantle.shipment.Shipment" type="many" is-auto-reverse="true" mutable="true" title="Assembly">
+        <key-map field-name="workEffortId" related="assemblyWorkEffortId"/></relationship>
+    <relationship related="mantle.work.effort.WikiPageWorkEffort" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="workEffortId" related="workEffortId"/></relationship>
+    <relationship related="mantle.work.effort.WorkEffortAssoc" type="many" is-auto-reverse="true" mutable="true" title="To">
+        <key-map field-name="workEffortId" related="toWorkEffortId"/></relationship>
+    <relationship related="mantle.work.effort.WorkEffortDeliverableProd" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="workEffortId" related="workEffortId"/></relationship>
+    <relationship related="mantle.work.effort.WorkEffortEmplPosition" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="workEffortId" related="workEffortId"/></relationship>
+    <relationship related="mantle.work.effort.WorkEffortInvoice" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="workEffortId" related="workEffortId"/></relationship>
+    <relationship related="mantle.work.effort.WorkEffortSkillStandard" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="workEffortId" related="workEffortId"/></relationship>
+    <relationship related="mantle.work.estimate.ProductionEstimateWorkEff" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="workEffortId" related="workEffortId"/></relationship>
+    <relationship related="mantle.work.measurement.Measurement" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="workEffortId" related="workEffortId"/></relationship>
+    <relationship related="mantle.work.time.TimeEntry" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="workEffortId" related="workEffortId"/></relationship>
+
+<!-- seca <seca id="WorkEffortShipLoadStatusCheck" service="update#mantle.work.effort.WorkEffort" when="pre-validate">
+    <condition>
+        <expression><![CDATA[workEffortId && statusId in ['WeComplete', 'WeClosed', 'WeCancelled']]]></expression></condition>
+    <actions>
+        <service-call name="mantle.work.ShipmentWorkServices.check#ShipmentLoadStatusChange" in-map="[workEffortId:workEffortId, statusId:statusId]"/></actions>
+</seca>-->
+<!-- seca <seca id="OrderItemWorkEffortCheckComplete" service="update#mantle.work.effort.WorkEffort" when="post-service">
+    <condition>
+        <expression><![CDATA[statusChanged && statusId in ['WeComplete', 'WeClosed', 'WeCancelled']]]></expression></condition>
+    <actions>
+        <entity-find entity-name="mantle.order.OrderItemWorkEffort" list="itemWorkEffortList">
+            <econdition field-name="workEffortId"/>
+            <econdition field-name="requiredWork" value="Y"/>
+        </entity-find>
+        <iterate list="itemWorkEffortList" entry="itemWorkEffort">
+            <entity-find-one entity-name="mantle.order.OrderItem" value-field="orderItem">
+                <field-map field-name="orderId" from="itemWorkEffort.orderId"/>
+                <field-map field-name="orderItemSeqId" from="itemWorkEffort.orderItemSeqId"/>
+            </entity-find-one>
+            <if condition="orderItem != null">
+                <service-call name="mantle.order.OrderServices.checkComplete#OrderPart" in-map="[orderId:orderItem.orderId, orderPartSeqId:orderItem.orderPartSeqId]"/></if>
+        </iterate>
+    </actions>
+</seca>-->
+<!-- seca <seca id="WorkEffortStartCompleteDates" service="update#mantle.work.effort.WorkEffort" when="post-service">
+    <condition>
+        <expression><![CDATA[statusChanged && statusId in ['WeInProgress', 'WeComplete']]]></expression></condition>
+    <actions>
+        <entity-find-one entity-name="mantle.work.effort.WorkEffort" value-field="workEffort"/>
+        <if condition="workEffort.actualStartDate == null && statusId == 'WeInProgress'">
+            <then>
+                <set field="workEffort.actualStartDate" from="ec.user.nowTimestamp"/>
+                <entity-update value-field="workEffort"/>
+            </then>
+            <else-if condition="workEffort.actualCompletionDate == null && statusId == 'WeComplete'">
+                <set field="workEffort.actualCompletionDate" from="ec.user.nowTimestamp"/>
+                <entity-update value-field="workEffort"/>
+            </else-if>
+        </if>
+    </actions>
+</seca>-->
+<!-- eeca org.moqui.impl.entity.EntityEcaRule@2bb40e32-->
+<!-- eeca org.moqui.impl.entity.EntityEcaRule@2d63a11a-->
+</entity>

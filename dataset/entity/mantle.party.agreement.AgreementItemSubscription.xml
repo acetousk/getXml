@@ -1,0 +1,14 @@
+
+<!-- Entity Name: mantle.party.agreement.AgreementItemSubscription sql table: AGREEMENT_ITEM_SUBSCRIPTION --><entity entity-name="AgreementItemSubscription" package="mantle.party.agreement">
+    <field name="agreementItemSubscriptionId" type="id" is-pk="true"/>
+    <field name="agreementId" type="id"/>
+    <field name="agreementItemSeqId" type="id"/>
+    <field name="subscriptionId" type="id"/>
+    <field name="fromDate" type="date-time"/>
+    <field name="thruDate" type="date-time"/>
+    <relationship type="one" related="mantle.party.agreement.Agreement"/>
+    <relationship type="one" related="mantle.party.agreement.AgreementItem"/>
+    <relationship type="one" related="mantle.product.subscription.Subscription"/>
+    <field name="lastUpdatedStamp" type="date-time"/>
+
+</entity>

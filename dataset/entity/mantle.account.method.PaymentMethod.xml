@@ -1,0 +1,142 @@
+
+<!-- Entity Name: mantle.account.method.PaymentMethod sql table: PAYMENT_METHOD --><entity entity-name="PaymentMethod" package="mantle.account.method" short-alias="paymentMethods" cache="never" has-dependents="true">
+    <field name="paymentMethodId" type="id" is-pk="true"/>
+    <field name="paymentMethodTypeEnumId" type="id"/>
+    <field name="purposeEnumId" type="id"/>
+    <field name="ownerPartyId" type="id" enable-audit-log="update"/>
+    <field name="description" type="text-medium"/>
+    <field name="fromDate" type="date-time"/>
+    <field name="thruDate" type="date-time"/>
+    <field name="thruDateSetAuto" type="text-indicator">
+        <description><![CDATA[If Y then expire (set thruDate) once allowed (no active Payment)]]></description></field>
+    <field name="openedDate" type="date-time"/>
+    <field name="titleOnAccount" type="text-medium">
+        <description><![CDATA[Not commonly used; payment gateways generally only
+            separate first and last names]]></description></field>
+    <field name="firstNameOnAccount" type="text-medium"/>
+    <field name="middleNameOnAccount" type="text-medium">
+        <description><![CDATA[Not commonly used; payment gateways generally only
+                    separate first and last names; for credit cards middle initial generally included with first name]]></description></field>
+    <field name="lastNameOnAccount" type="text-medium"/>
+    <field name="suffixOnAccount" type="text-medium">
+        <description><![CDATA[Not commonly used; payment gateways generally only
+                    separate first and last names]]></description></field>
+    <field name="companyNameOnAccount" type="text-medium"/>
+    <field name="ledgerBalance" type="currency-amount"/>
+    <field name="availableBalance" type="currency-amount"/>
+    <field name="balanceDate" type="date-time"/>
+    <field name="loanPaymentAmount" type="currency-amount"/>
+    <field name="loanPaymentPeriodUomId" type="id">
+        <description><![CDATA[Uom with uomTypeEnumId=UT_TIME_FREQ_MEASURE]]></description></field>
+    <field name="currencyUomId" type="id"/>
+    <field name="postalContactMechId" type="id"/>
+    <field name="telecomContactMechId" type="id"/>
+    <field name="emailContactMechId" type="id"/>
+    <field name="gatewayCimId" type="text-short" enable-audit-log="update"/>
+    <field name="paymentGatewayConfigId" type="id"/>
+    <field name="imageUrl" type="text-medium">
+        <description><![CDATA[Usually specific to a type or sub-type of PaymentMethod, for display to users]]></description></field>
+    <field name="trustLevelEnumId" type="id"/>
+    <field name="paymentFraudEvidenceId" type="id">
+        <description><![CDATA[Refer to evidence here if trust level is gray listed or black listed]]></description></field>
+    <field name="glAccountId" type="id">
+        <description><![CDATA[A GL Account associated with this PaymentMethod for reconciliation, etc]]></description></field>
+    <field name="finAccountId" type="id">
+        <description><![CDATA[Refers to FinancialAccount when paymentMethodTypeEnumId=PmtFinancialAccount]]></description></field>
+    <field name="originalPaymentMethodId" type="id">
+        <description><![CDATA[Because PaymentMethod records are treated as
+            immutable (except for certain fields) they are cloned and expired on update and this field will have the
+            paymentMethodId of the original record.]]></description></field>
+    <relationship type="one" title="PaymentMethodType" related="moqui.basic.Enumeration" short-alias="methodType">
+        <key-map field-name="paymentMethodTypeEnumId"/></relationship>
+    <relationship type="one" title="PaymentMethodPurpose" related="moqui.basic.Enumeration" short-alias="methodPurpose">
+        <key-map field-name="purposeEnumId"/></relationship>
+    <relationship type="one" title="Owner" related="mantle.party.Party" short-alias="ownerParty">
+        <key-map field-name="ownerPartyId"/></relationship>
+    <relationship type="one" title="Currency" related="moqui.basic.Uom">
+        <key-map field-name="currencyUomId"/></relationship>
+    <relationship type="one" title="Postal" related="mantle.party.contact.ContactMech" short-alias="postal" mutable="true">
+        <key-map field-name="postalContactMechId"/></relationship>
+    <relationship type="one" related="mantle.party.contact.PostalAddress" short-alias="postalAddress" mutable="true">
+        <key-map field-name="postalContactMechId"/></relationship>
+    <relationship type="one" title="Telecom" related="mantle.party.contact.ContactMech" short-alias="telecom" mutable="true">
+        <key-map field-name="telecomContactMechId"/></relationship>
+    <relationship type="one" related="mantle.party.contact.TelecomNumber" short-alias="telecomNumber" mutable="true">
+        <key-map field-name="telecomContactMechId"/></relationship>
+    <relationship type="one" title="Email" related="mantle.party.contact.ContactMech" short-alias="email" mutable="true">
+        <key-map field-name="emailContactMechId"/></relationship>
+    <relationship type="one" related="mantle.account.method.PaymentGatewayConfig" short-alias="gatewayConfig"/>
+    <relationship type="one" title="ContactPaymentTrustLevel" related="moqui.basic.Enumeration" short-alias="trustLevel">
+        <key-map field-name="trustLevelEnumId"/></relationship>
+    <relationship type="one" related="mantle.account.payment.PaymentFraudEvidence" short-alias="paymentFraudEvidence" mutable="true"/>
+    <relationship type="one" related="mantle.ledger.account.GlAccount" short-alias="glAccount"/>
+    <relationship type="one" related="mantle.account.financial.FinancialAccount" short-alias="financialAccount"/>
+    <relationship type="one-nofk" related="mantle.account.method.BankAccount" short-alias="bankAccount" mutable="true"/>
+    <relationship type="one-nofk" related="mantle.account.method.BitcoinWallet" short-alias="bitcoinWallet" mutable="true"/>
+    <relationship type="one-nofk" related="mantle.account.method.CreditCard" short-alias="creditCard" mutable="true"/>
+    <relationship type="one-nofk" related="mantle.account.method.GiftCard" short-alias="giftCard" mutable="true"/>
+    <relationship type="one-nofk" related="mantle.account.method.PayPalAccount" short-alias="payPalAccount" mutable="true"/>
+    <seed-data>
+        <moqui.basic.EnumerationType description="Payment Method Type" enumTypeId="PaymentMethodType"/>
+        <moqui.basic.Enumeration description="Bank Account" enumId="PmtBankAccount" enumTypeId="PaymentMethodType"/>
+        <moqui.basic.Enumeration description="Bitcoin Wallet" enumId="PmtBitcoinWallet" enumTypeId="PaymentMethodType"/>
+        <moqui.basic.Enumeration description="Credit Card" enumId="PmtCreditCard" enumTypeId="PaymentMethodType"/>
+        <moqui.basic.Enumeration description="Gift Card" enumId="PmtGiftCard" enumTypeId="PaymentMethodType"/>
+        <moqui.basic.Enumeration description="Financial Account" enumId="PmtFinancialAccount" enumTypeId="PaymentMethodType"/>
+        <moqui.basic.Enumeration description="PayPal Account" enumId="PmtPayPalAccount" enumTypeId="PaymentMethodType"/>
+        <moqui.basic.Enumeration description="Amazon Pay Account" enumId="PmtAmazonPayAccount" enumTypeId="PaymentMethodType"/>
+        <moqui.basic.Enumeration description="Other Type (no detail record)" enumId="PmtOther" enumTypeId="PaymentMethodType"/>
+        <moqui.basic.EnumerationType description="Payment Method Purpose" enumTypeId="PaymentMethodPurpose"/>
+        <moqui.basic.Enumeration description="General" enumId="PmpGeneral" enumTypeId="PaymentMethodPurpose"/>
+        <moqui.basic.Enumeration description="Payroll" enumId="PmpPayroll" enumTypeId="PaymentMethodPurpose"/>
+        <moqui.basic.Enumeration description="Return Refund" enumId="PmpReturnRefund" enumTypeId="PaymentMethodPurpose"/>
+        <moqui.basic.Enumeration description="Sales Revenue" enumId="PmpSalesRevenue" enumTypeId="PaymentMethodPurpose"/>
+    </seed-data>
+    <master>
+        <detail relationship="methodType"/>
+        <detail relationship="ownerParty">
+            <detail relationship="organization"/>
+            <detail relationship="person"/>
+        </detail>
+        <detail relationship="postal" use-master="default"/>
+        <detail relationship="telecom" use-master="default"/>
+        <detail relationship="email" use-master="default"/>
+        <detail relationship="trustLevel"/>
+        <detail relationship="bankAccount"/>
+        <detail relationship="bitcoinWallet"/>
+        <detail relationship="creditCard">
+            <detail relationship="type"/></detail>
+        <detail relationship="giftCard"/>
+        <detail relationship="payPalAccount"/>
+    </master>
+    <field name="lastUpdatedStamp" type="date-time"/>
+    <relationship related="mantle.account.financial.FinancialAccount" type="many" is-auto-reverse="true" mutable="true" title="Replenish">
+        <key-map field-name="paymentMethodId" related="replenishPaymentId"/></relationship>
+    <relationship related="mantle.account.method.BankAccountCheck" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="paymentMethodId" related="paymentMethodId"/></relationship>
+    <relationship related="mantle.account.method.PaymentGatewayResponse" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="paymentMethodId" related="paymentMethodId"/></relationship>
+    <relationship related="mantle.account.method.PaymentMethodContent" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="paymentMethodId" related="paymentMethodId"/></relationship>
+    <relationship related="mantle.account.method.PaymentMethodFile" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="paymentMethodId" related="paymentMethodId"/></relationship>
+    <relationship related="mantle.account.method.PaymentMethodFileType" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="paymentMethodId" related="paymentMethodId"/></relationship>
+    <relationship related="mantle.account.method.PaymentMethodTrans" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="paymentMethodId" related="paymentMethodId"/></relationship>
+    <relationship related="mantle.account.payment.Payment" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="paymentMethodId" related="paymentMethodId"/></relationship>
+    <relationship related="mantle.account.payment.Payment" type="many" is-auto-reverse="true" mutable="true" title="To">
+        <key-map field-name="paymentMethodId" related="toPaymentMethodId"/></relationship>
+    <relationship related="mantle.ledger.config.PartyAcctgPreference" type="many" is-auto-reverse="true" mutable="true" title="Refund">
+        <key-map field-name="paymentMethodId" related="refundPaymentMethodId"/></relationship>
+    <relationship related="mantle.order.return.ReturnHeader" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="paymentMethodId" related="paymentMethodId"/></relationship>
+    <relationship related="mantle.party.Party" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="ownerPartyId" related="partyId"/></relationship>
+    <relationship related="mantle.party.agreement.Agreement" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="paymentMethodId" related="paymentMethodId"/></relationship>
+    <relationship related="mantle.product.asset.AssetPaymentMethod" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="paymentMethodId" related="paymentMethodId"/></relationship>
+
+</entity>

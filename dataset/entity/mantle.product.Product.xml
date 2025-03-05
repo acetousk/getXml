@@ -1,0 +1,239 @@
+
+<!-- Entity Name: mantle.product.Product sql table: PRODUCT --><entity entity-name="Product" package="mantle.product" short-alias="products" cache="true" has-dependents="true">
+    <field name="productId" type="id" is-pk="true"/>
+    <field name="pseudoId" type="text-short" default="productId"/>
+    <field name="productTypeEnumId" type="id"/>
+    <field name="productClassEnumId" type="id"/>
+    <field name="assetTypeEnumId" type="id"/>
+    <field name="assetClassEnumId" type="id"/>
+    <field name="statusId" type="id"/>
+    <field name="ownerPartyId" type="id" enable-audit-log="update" default="'_NA_'">
+        <description><![CDATA[Brand or other organization that owns the product design, IP, etc.
+                There may be multiple suppliers, manufacturers, etc for a product but only one that 'owns' it.]]></description></field>
+    <field name="productName" type="text-medium"/>
+    <field name="description" type="text-long"/>
+    <field name="comments" type="text-long"/>
+    <field name="salesIntroductionDate" type="date-time"/>
+    <field name="salesDiscontinuationDate" type="date-time"/>
+    <field name="salesDiscWhenNotAvail" type="text-indicator"/>
+    <field name="supportDiscontinuationDate" type="date-time"/>
+    <field name="requireInventory" type="text-indicator"/>
+    <field name="chargeShipping" type="text-indicator">
+        <description><![CDATA[Set to N to not charge shipping (ie defaults to Y)]]></description></field>
+    <field name="signatureRequiredEnumId" type="id"/>
+    <field name="shippingInsuranceReqd" type="text-indicator"/>
+    <field name="inShippingBox" type="text-indicator"/>
+    <field name="defaultShipmentBoxTypeId" type="id"/>
+    <field name="taxable" type="text-indicator">
+        <description><![CDATA[Set to N to not charge sales tax (ie defaults to Y)]]></description></field>
+    <field name="taxCode" type="text-short">
+        <description><![CDATA[A code representing the tax category of the product,
+            passed to the tax calculation gateway.]]></description></field>
+    <field name="returnable" type="text-indicator"/>
+    <field name="amountUomId" type="id"/>
+    <field name="amountFixed" type="number-decimal">
+        <description><![CDATA[For products with fixed amounts such as gift certificate amounts, rope lengths, etc.]]></description></field>
+    <field name="amountRequire" type="text-indicator">
+        <description><![CDATA[Require an amount in addition to quantity on orders/etc.]]></description></field>
+    <field name="originGeoId" type="id"/>
+    <relationship type="one" title="ProductType" related="moqui.basic.Enumeration" short-alias="type">
+        <key-map field-name="productTypeEnumId"/></relationship>
+    <relationship type="one" title="ProductClass" related="moqui.basic.Enumeration" short-alias="class">
+        <key-map field-name="productClassEnumId"/></relationship>
+    <relationship type="one" title="AssetType" related="moqui.basic.Enumeration" short-alias="assetType">
+        <key-map field-name="assetTypeEnumId"/></relationship>
+    <relationship type="one" title="AssetClass" related="moqui.basic.Enumeration" short-alias="assetClass">
+        <key-map field-name="assetClassEnumId"/></relationship>
+    <relationship type="one" title="Product" related="moqui.basic.StatusItem" short-alias="status"/>
+    <relationship type="one" title="Owner" related="mantle.party.Party" short-alias="owner">
+        <key-map field-name="ownerPartyId"/></relationship>
+    <relationship type="one" title="Origin" related="moqui.basic.Geo" short-alias="originGeo">
+        <key-map field-name="originGeoId"/></relationship>
+    <relationship type="one" title="SignatureRequired" related="moqui.basic.Enumeration" short-alias="signatureRequiredEnum">
+        <key-map field-name="signatureRequiredEnumId"/></relationship>
+    <relationship type="one" title="Default" related="ShipmentBoxType" short-alias="defaultBoxType">
+        <key-map field-name="defaultShipmentBoxTypeId"/></relationship>
+    <relationship type="one" title="Amount" related="moqui.basic.Uom" short-alias="amountUom">
+        <key-map field-name="amountUomId"/></relationship>
+    <relationship type="many" related="mantle.product.ProductAssoc" short-alias="assocs">
+        <key-map field-name="productId"/></relationship>
+    <relationship type="many" title="To" related="mantle.product.ProductAssoc" short-alias="toAssocs">
+        <key-map field-name="productId" related="toProductId"/></relationship>
+    <relationship type="many" related="mantle.product.ProductContent" short-alias="contents">
+        <key-map field-name="productId"/></relationship>
+    <relationship type="many" related="mantle.product.ProductDimension" short-alias="dimensions">
+        <key-map field-name="productId"/></relationship>
+    <relationship type="many" related="mantle.product.ProductGeo" short-alias="geos">
+        <key-map field-name="productId"/></relationship>
+    <relationship type="many" related="mantle.product.ProductGlAppl" short-alias="glAppls">
+        <key-map field-name="productId"/></relationship>
+    <relationship type="many" related="mantle.product.ProductIdentification" short-alias="identifications">
+        <key-map field-name="productId"/></relationship>
+    <relationship type="many" related="mantle.product.ProductOtherIdentification" short-alias="otherIdentifications">
+        <key-map field-name="productId"/></relationship>
+    <relationship type="many" related="mantle.product.ProductParty" short-alias="parties">
+        <key-map field-name="productId"/></relationship>
+    <relationship type="many" related="mantle.product.ProductPrice" short-alias="prices">
+        <key-map field-name="productId"/></relationship>
+    <relationship type="many" related="mantle.product.category.ProductCategoryMember" short-alias="categories">
+        <key-map field-name="productId"/></relationship>
+    <relationship type="many" related="mantle.product.feature.ProductFeatureAppl" short-alias="features">
+        <key-map field-name="productId"/></relationship>
+    <relationship type="many" related="mantle.product.maintenance.ProductMaintenance" short-alias="maintenances">
+        <key-map field-name="productId"/></relationship>
+    <relationship type="many" related="mantle.product.maintenance.ProductMeter" short-alias="meters">
+        <key-map field-name="productId"/></relationship>
+    <relationship type="many" related="mantle.product.subscription.ProductSubscriptionResource" short-alias="subscriptionResources">
+        <key-map field-name="productId"/></relationship>
+    <relationship type="many" related="mantle.product.asset.Asset" short-alias="assets">
+        <key-map field-name="productId"/></relationship>
+    <index name="PRODUCT_ID_PSEUDO" unique="true">
+        <index-field name="pseudoId"/>
+        <index-field name="ownerPartyId"/>
+    </index>
+    <seed-data>
+        <moqui.basic.EnumerationType description="Product Type" enumTypeId="ProductType"/>
+        <moqui.basic.Enumeration description="Asset (Good)" enumId="PtAsset" enumTypeId="ProductType"/>
+        <moqui.basic.Enumeration description="Digital and Asset" enumId="PtDigitalAsset" enumTypeId="ProductType"/>
+        <moqui.basic.Enumeration description="Digital (download)" enumId="PtDigital" enumTypeId="ProductType"/>
+        <moqui.basic.Enumeration description="Asset Use" enumId="PtAssetUse" enumTypeId="ProductType"/>
+        <moqui.basic.Enumeration description="Facility Use" enumId="PtFacilityUse" enumTypeId="ProductType"/>
+        <moqui.basic.Enumeration description="Service" enumId="PtService" enumTypeId="ProductType"/>
+        <moqui.basic.Enumeration description="Virtual (with variants)" enumId="PtVirtual" enumTypeId="ProductType"/>
+        <moqui.basic.Enumeration description="Pick Assembly" enumId="PtPickAssembly" enumTypeId="ProductType"/>
+        <moqui.basic.Enumeration description="Configurable Good" enumId="PtConfigurable" enumTypeId="ProductType"/>
+        <moqui.basic.StatusType description="Product" statusTypeId="Product"/>
+        <moqui.basic.EnumerationType description="Product Class" enumTypeId="ProductClass"/>
+        <moqui.basic.Enumeration description="Gift Card or Certificate" enumId="PclsGiftCard" enumTypeId="ProductClass"/>
+    </seed-data>
+    <master>
+        <detail relationship="type"/>
+        <detail relationship="class"/>
+        <detail relationship="assetType"/>
+        <detail relationship="assetClass"/>
+        <detail relationship="status"/>
+        <detail relationship="originGeo"/>
+        <detail relationship="defaultBoxType"/>
+        <detail relationship="amountUom"/>
+        <detail relationship="assocs">
+            <detail relationship="type"/>
+            <detail relationship="toProduct"/>
+        </detail>
+        <detail relationship="toAssocs">
+            <detail relationship="type"/>
+            <detail relationship="product"/>
+        </detail>
+        <detail relationship="contents"/>
+        <detail relationship="dimensions"/>
+        <detail relationship="geos">
+            <detail relationship="geo"/></detail>
+        <detail relationship="identifications">
+            <detail relationship="type"/></detail>
+        <detail relationship="otherIdentifications">
+            <detail relationship="type"/></detail>
+        <detail relationship="parties">
+            <detail relationship="party" use-master="basic"/>
+            <detail relationship="role"/>
+        </detail>
+        <detail relationship="prices">
+            <detail relationship="type"/>
+            <detail relationship="purpose"/>
+            <detail relationship="priceUom"/>
+            <detail relationship="termUom"/>
+            <detail relationship="quantityUom"/>
+        </detail>
+        <detail relationship="categories">
+            <detail relationship="category"/></detail>
+        <detail relationship="features">
+            <detail relationship="feature"/></detail>
+    </master>
+    <field name="hidden" type="text-indicator" default="'N'"/>
+    <field name="lastUpdatedStamp" type="date-time"/>
+    <relationship related="coarchy.product.ProductEvaluation" type="many" is-auto-reverse="true" mutable="true" title="Product">
+        <key-map field-name="productId" related="productId"/></relationship>
+    <relationship related="mantle.account.invoice.InvoiceItem" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="productId" related="productId"/></relationship>
+    <relationship related="mantle.facility.ProductFacility" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="productId" related="productId"/></relationship>
+    <relationship related="mantle.facility.ProductFacilityLocation" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="productId" related="productId"/></relationship>
+    <relationship related="mantle.ledger.config.ProductGlAccount" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="productId" related="productId"/></relationship>
+    <relationship related="mantle.ledger.transaction.AcctgTransEntry" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="productId" related="productId"/></relationship>
+    <relationship related="mantle.order.OrderItem" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="productId" related="productId"/></relationship>
+    <relationship related="mantle.order.return.ReturnItem" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="productId" related="productId"/></relationship>
+    <relationship related="mantle.order.return.ReturnItem" type="many" is-auto-reverse="true" mutable="true" title="Replacement">
+        <key-map field-name="productId" related="replacementProductId"/></relationship>
+    <relationship related="mantle.other.budget.BudgetItem" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="productId" related="productId"/></relationship>
+    <relationship related="mantle.other.budget.BudgetItemDetail" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="productId" related="productId"/></relationship>
+    <relationship related="mantle.party.agreement.AgreementItem" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="productId" related="productId"/></relationship>
+    <relationship related="mantle.party.communication.CommunicationEventProduct" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="productId" related="productId"/></relationship>
+    <relationship related="mantle.product.ProductCalculatedInfo" type="one-nofk" is-auto-reverse="true" mutable="true">
+        <key-map field-name="productId" related="productId"/></relationship>
+    <relationship related="mantle.product.ProductDbForm" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="productId" related="productId"/></relationship>
+    <relationship related="mantle.product.ProductOtherIdentification" type="many" is-auto-reverse="true" mutable="true" title="Parent">
+        <key-map field-name="productId" related="parentProductId"/></relationship>
+    <relationship related="mantle.product.ProductParameterOption" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="productId" related="productId"/></relationship>
+    <relationship related="mantle.product.ProductParameterProduct" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="productId" related="productId"/></relationship>
+    <relationship related="mantle.product.ProductParameterSet" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="productId" related="productId"/></relationship>
+    <relationship related="mantle.product.ProductReview" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="productId" related="productId"/></relationship>
+    <relationship related="mantle.product.ProductUomDimension" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="productId" related="productId"/></relationship>
+    <relationship related="mantle.product.ProductWorkEffort" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="productId" related="productId"/></relationship>
+    <relationship related="mantle.product.asset.AssetDetail" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="productId" related="productId"/></relationship>
+    <relationship related="mantle.product.asset.PhysicalInventoryCount" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="productId" related="productId"/></relationship>
+    <relationship related="mantle.product.feature.ProductFeatureAppl" type="many" is-auto-reverse="true" mutable="true" title="Feature">
+        <key-map field-name="productId" related="featureProductId"/></relationship>
+    <relationship related="mantle.product.issuance.AssetIssuance" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="productId" related="productId"/></relationship>
+    <relationship related="mantle.product.issuance.AssetReservation" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="productId" related="productId"/></relationship>
+    <relationship related="mantle.product.receipt.AssetReceipt" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="productId" related="productId"/></relationship>
+    <relationship related="mantle.product.store.ProductStoreProduct" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="productId" related="productId"/></relationship>
+    <relationship related="mantle.product.store.ProductStorePromoProduct" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="productId" related="productId"/></relationship>
+    <relationship related="mantle.product.subscription.Subscription" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="productId" related="productId"/></relationship>
+    <relationship related="mantle.request.RequestItem" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="productId" related="productId"/></relationship>
+    <relationship related="mantle.request.requirement.Requirement" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="productId" related="productId"/></relationship>
+    <relationship related="mantle.sales.forecast.SalesForecastDetail" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="productId" related="productId"/></relationship>
+    <relationship related="mantle.sales.need.PartyNeed" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="productId" related="productId"/></relationship>
+    <relationship related="mantle.shipment.ShipmentContent" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="productId" related="productId"/></relationship>
+    <relationship related="mantle.shipment.ShipmentItem" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="productId" related="productId"/></relationship>
+    <relationship related="mantle.shipment.ShipmentItemSource" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="productId" related="productId"/></relationship>
+    <relationship related="mantle.shipment.ShipmentPackageContent" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="productId" related="productId"/></relationship>
+    <relationship related="mantle.work.effort.WorkEffortAssetNeeded" type="many" is-auto-reverse="true" mutable="true" title="Asset">
+        <key-map field-name="productId" related="assetProductId"/></relationship>
+    <relationship related="mantle.work.effort.WorkEffortProduct" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="productId" related="productId"/></relationship>
+    <relationship related="mantle.work.estimate.ProductionEstimate" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="productId" related="productId"/></relationship>
+    <relationship related="mantle.work.measurement.Measurement" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="productId" related="productId"/></relationship>
+
+</entity>

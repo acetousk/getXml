@@ -1,0 +1,23 @@
+
+<!-- Entity Name: moqui.basic.DataSource sql table: DATA_SOURCE --><entity entity-name="DataSource" package="moqui.basic" use="nontransactional" cache="true" has-dependents="true">
+    <field name="dataSourceId" type="id" is-pk="true"/>
+    <field name="dataSourceTypeEnumId" type="id"/>
+    <field name="description" type="text-medium"/>
+    <relationship type="one" title="DataSourceType" related="moqui.basic.Enumeration">
+        <key-map field-name="dataSourceTypeEnumId"/></relationship>
+    <seed-data>
+        <moqui.basic.EnumerationType description="Data Source Type" enumTypeId="DataSourceType"/>
+        <moqui.basic.Enumeration description="Purchased Data" enumId="DST_PURCHASED_DATA" enumTypeId="DataSourceType"/>
+        <moqui.basic.Enumeration description="Customer Data Entry" enumId="DST_CUSTOMER_ENTRY" enumTypeId="DataSourceType"/>
+        <moqui.basic.Enumeration description="Internal Data Entry (employees, etc)" enumId="DST_INTERNAL_ENTRY" enumTypeId="DataSourceType"/>
+        <moqui.basic.Enumeration description="Mailing List Sign-up" enumId="DST_MAILING_SIGNUP" enumTypeId="DataSourceType"/>
+    </seed-data>
+    <field name="lastUpdatedStamp" type="date-time"/>
+    <relationship related="mantle.party.Party" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="dataSourceId" related="dataSourceId"/></relationship>
+    <relationship related="mantle.party.contact.ContactMech" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="dataSourceId" related="dataSourceId"/></relationship>
+    <relationship related="moqui.basic.GeoPoint" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="dataSourceId" related="dataSourceId"/></relationship>
+
+</entity>

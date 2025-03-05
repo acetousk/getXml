@@ -1,0 +1,19 @@
+
+<!-- Entity Name: moqui.basic.print.NetworkPrinter sql table: NETWORK_PRINTER --><entity entity-name="NetworkPrinter" package="moqui.basic.print" use="configuration" has-dependents="true">
+    <field name="networkPrinterId" type="id" is-pk="true"/>
+    <field name="serverHost" type="text-medium"/>
+    <field name="serverPort" type="number-integer">
+        <description><![CDATA[Defaults to 631]]></description></field>
+    <field name="printerName" type="text-medium">
+        <description><![CDATA[Leave empty to use default printer on print server]]></description></field>
+    <field name="description" type="text-medium"/>
+    <field name="location" type="text-medium"/>
+    <field name="assetId" type="id"/>
+    <relationship type="one" related="mantle.product.asset.Asset"/>
+    <field name="lastUpdatedStamp" type="date-time"/>
+    <relationship related="mantle.facility.FacilityPrinter" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="networkPrinterId" related="networkPrinterId"/></relationship>
+    <relationship related="moqui.basic.print.PrintJob" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="networkPrinterId" related="networkPrinterId"/></relationship>
+
+</entity>

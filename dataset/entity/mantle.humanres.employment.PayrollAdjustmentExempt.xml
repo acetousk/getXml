@@ -1,0 +1,8 @@
+
+<!-- Entity Name: mantle.humanres.employment.PayrollAdjustmentExempt sql table: PAYROLL_ADJUSTMENT_EXEMPT --><entity entity-name="PayrollAdjustmentExempt" package="mantle.humanres.employment" use="configuration">
+    <field name="payrollAdjustmentId" type="id" is-pk="true"/>
+    <field name="taxExemptEnumId" type="id" is-pk="true"/>
+    <relationship type="one" related="mantle.humanres.employment.PayrollAdjustment"/>
+    <field name="lastUpdatedStamp" type="date-time"/>
+
+</entity>

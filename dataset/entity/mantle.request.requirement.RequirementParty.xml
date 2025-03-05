@@ -1,0 +1,13 @@
+
+<!-- Entity Name: mantle.request.requirement.RequirementParty sql table: REQUIREMENT_PARTY --><entity entity-name="RequirementParty" package="mantle.request.requirement" cache="never">
+    <field name="requirementId" type="id" is-pk="true"/>
+    <field name="partyId" type="id" is-pk="true"/>
+    <field name="roleTypeId" type="id" is-pk="true"/>
+    <field name="fromDate" type="date-time" is-pk="true"/>
+    <field name="thruDate" type="date-time"/>
+    <relationship type="one" related="mantle.request.requirement.Requirement" short-alias="requirement"/>
+    <relationship type="one" related="mantle.party.Party" short-alias="party"/>
+    <relationship type="one" related="mantle.party.RoleType" short-alias="role"/>
+    <field name="lastUpdatedStamp" type="date-time"/>
+
+</entity>

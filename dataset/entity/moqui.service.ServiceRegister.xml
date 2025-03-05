@@ -1,0 +1,24 @@
+
+<!-- Entity Name: moqui.service.ServiceRegister sql table: SERVICE_REGISTER --><entity entity-name="ServiceRegister" package="moqui.service" use="configuration" cache="true" has-dependents="true">
+    <field name="serviceRegisterId" type="id" is-pk="true"/>
+    <field name="serviceTypeEnumId" type="id"/>
+    <field name="description" type="text-medium"/>
+    <field name="serviceName" type="text-medium"/>
+    <field name="configParameters" type="text-medium"/>
+    <relationship type="one" title="ServiceRegisterType" related="moqui.basic.Enumeration" short-alias="serviceTypeEnum">
+        <key-map field-name="serviceTypeEnumId"/></relationship>
+    <seed-data>
+        <moqui.basic.EnumerationType description="Service Register Type" enumTypeId="ServiceRegisterType"/></seed-data>
+    <field name="lastUpdatedStamp" type="date-time"/>
+    <relationship related="mantle.account.invoice.SettlementTerm" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="serviceRegisterId" related="orderPmtServiceRegisterId"/></relationship>
+    <relationship related="mantle.humanres.employment.PayrollAdjCalcService" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="serviceRegisterId" related="serviceRegisterId"/></relationship>
+    <relationship related="mantle.product.ProductPriceModify" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="serviceRegisterId" related="serviceRegisterId"/></relationship>
+    <relationship related="mantle.product.store.ProductStoreApprove" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="serviceRegisterId" related="serviceRegisterId"/></relationship>
+    <relationship related="mantle.product.store.ProductStorePromotion" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="serviceRegisterId" related="serviceRegisterId"/></relationship>
+
+</entity>

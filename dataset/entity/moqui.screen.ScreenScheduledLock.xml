@@ -1,0 +1,9 @@
+
+<!-- Entity Name: moqui.screen.ScreenScheduledLock sql table: SCREEN_SCHEDULED_LOCK --><entity entity-name="ScreenScheduledLock" package="moqui.screen" use="transactional" cache="never">
+    <description><![CDATA[Runtime data for a scheduled ServiceJob (with a cronExpression), managed automatically by the service job runner.]]></description>
+    <field name="screenScheduledId" type="id" is-pk="true"/>
+    <field name="lastRunTime" type="date-time"/>
+    <relationship type="one" related="moqui.screen.ScreenScheduled"/>
+    <field name="lastUpdatedStamp" type="date-time"/>
+
+</entity>

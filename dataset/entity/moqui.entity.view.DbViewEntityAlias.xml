@@ -1,0 +1,12 @@
+
+<!-- Entity Name: moqui.entity.view.DbViewEntityAlias sql table: DB_VIEW_ENTITY_ALIAS --><entity entity-name="DbViewEntityAlias" package="moqui.entity.view" use="configuration" cache="true" authorize-skip="view">
+    <field name="dbViewEntityName" type="text-medium" is-pk="true"/>
+    <field name="fieldAlias" type="text-medium" is-pk="true"/>
+    <field name="entityAlias" type="text-short"/>
+    <field name="fieldName" type="text-medium"/>
+    <field name="functionName" type="text-medium"/>
+    <relationship type="one" related="moqui.entity.view.DbViewEntity"/>
+    <relationship type="one" related="moqui.entity.view.DbViewEntityMember"/>
+    <field name="lastUpdatedStamp" type="date-time"/>
+
+</entity>

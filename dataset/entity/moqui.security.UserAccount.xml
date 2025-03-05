@@ -1,0 +1,146 @@
+
+<!-- Entity Name: moqui.security.UserAccount sql table: USER_ACCOUNT --><entity entity-name="UserAccount" package="moqui.security" use="transactional" short-alias="users" has-dependents="true">
+    <field name="userId" type="id" is-pk="true"/>
+    <field name="username" type="text-medium" enable-audit-log="true">
+        <description><![CDATA[The username used along with the password to login]]></description></field>
+    <field name="userFullName" type="text-medium" enable-audit-log="update">
+        <description><![CDATA[User's first, middle, last, etc name]]></description></field>
+    <field name="currentPassword" type="text-medium">
+        <description><![CDATA[NOTE: not an encrypted field because one way hash encryption used for it]]></description></field>
+    <field name="resetPassword" type="text-medium">
+        <description><![CDATA[Set to random password for password reset, can be used only to update password]]></description></field>
+    <field name="passwordSalt" type="text-medium"/>
+    <field name="passwordHashType" type="text-short"/>
+    <field name="passwordBase64" type="text-indicator">
+        <description><![CDATA[Set to Y is currentPassword Base64 encoded, defaults to Hex encoded]]></description></field>
+    <field name="passwordSetDate" type="date-time"/>
+    <field name="passwordHint" type="text-medium"/>
+    <field name="publicKey" type="text-long">
+        <description><![CDATA[RSA public key for key based authentication]]></description></field>
+    <field name="hasLoggedOut" type="text-indicator">
+        <description><![CDATA[Set to Y when user logs out and to N when user logs in.
+            If user is session authenticated on request and this is Y then treat as if user not authenticated.]]></description></field>
+    <field name="disabled" type="text-indicator" default="'N'" enable-audit-log="update"/>
+    <field name="disabledDateTime" type="date-time"/>
+    <field name="terminateDate" type="date-time" enable-audit-log="true">
+        <description><![CDATA[If set then user may not login after this date, and no notifications will be sent after this date.]]></description></field>
+    <field name="successiveFailedLogins" type="number-integer"/>
+    <field name="requirePasswordChange" type="text-indicator"/>
+    <field name="currencyUomId" type="id"/>
+    <field name="locale" type="text-short"/>
+    <field name="timeZone" type="text-short"/>
+    <field name="externalUserId" type="text-medium"/>
+    <field name="emailAddress" type="text-medium" enable-audit-log="update">
+        <description><![CDATA[The email address to use for forgot password emails and other system messages.]]></description></field>
+    <field name="ipAllowed" type="text-medium">
+        <description><![CDATA[If specified only allow login from matching IP4 address. Comma separated patterns where each pattern has 4
+                dot separated segments each segment may be number, '*' for wildcard, or '-' separate number range (like '0-31').]]></description></field>
+    <relationship type="one" title="Currency" related="moqui.basic.Uom" short-alias="currencyUom">
+        <key-map field-name="currencyUomId"/></relationship>
+    <relationship type="many" related="moqui.security.UserGroupMember" short-alias="groups">
+        <key-map field-name="userId"/></relationship>
+    <relationship type="many" related="moqui.security.UserLoginKey" short-alias="loginKeys">
+        <key-map field-name="userId"/></relationship>
+    <relationship type="many" related="moqui.security.UserLoginHistory" short-alias="loginHistories">
+        <key-map field-name="userId"/></relationship>
+    <relationship type="many" related="moqui.security.UserPreference" short-alias="preferences">
+        <key-map field-name="userId"/></relationship>
+    <relationship type="many" related="moqui.security.user.NotificationTopicUser" short-alias="notificationTopics">
+        <key-map field-name="userId"/></relationship>
+    <index name="USERACCT_USERNAME" unique="true">
+        <index-field name="username"/></index>
+    <index name="USERACCT_EMAILADDR" unique="true">
+        <index-field name="emailAddress"/></index>
+    <seed-data>
+        <moqui.security.UserAccount userId="_NA_" username="_NA_" userFullName="Not Applicable" currentPassword="" disabled="Y"/></seed-data>
+    <field name="partyId" type="id"/>
+    <relationship type="one" related="mantle.party.Party"/>
+    <field name="lastUpdatedStamp" type="date-time"/>
+    <relationship related="mantle.account.financial.FinancialAccountTrans" type="many" is-auto-reverse="true" mutable="true" title="PerformedBy">
+        <key-map field-name="userId" related="performedByUserId"/></relationship>
+    <relationship related="mantle.facility.FacilityNote" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="userId" related="userId"/></relationship>
+    <relationship related="mantle.order.OrderContent" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="userId" related="userId"/></relationship>
+    <relationship related="mantle.order.OrderNote" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="userId" related="userId"/></relationship>
+    <relationship related="mantle.party.PartyNote" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="userId" related="userId"/></relationship>
+    <relationship related="mantle.party.communication.CommunicationEvent" type="many" is-auto-reverse="true" mutable="true" title="From">
+        <key-map field-name="partyId" related="fromPartyId"/></relationship>
+    <relationship related="mantle.party.communication.CommunicationEventContent" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="userId" related="userId"/></relationship>
+    <relationship related="mantle.party.communication.CommunicationEventParty" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="partyId" related="partyId"/></relationship>
+    <relationship related="mantle.product.ProductReview" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="userId" related="userId"/></relationship>
+    <relationship related="mantle.product.issuance.AssetIssuance" type="many" is-auto-reverse="true" mutable="true" title="IssuedBy">
+        <key-map field-name="userId" related="issuedByUserId"/></relationship>
+    <relationship related="mantle.product.maintenance.AssetMaintenance" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="userId" related="userId"/></relationship>
+    <relationship related="mantle.product.maintenance.AssetMaintenanceContent" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="userId" related="userId"/></relationship>
+    <relationship related="mantle.product.maintenance.AssetMeter" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="userId" related="userId"/></relationship>
+    <relationship related="mantle.product.receipt.AssetReceipt" type="many" is-auto-reverse="true" mutable="true" title="ReceivedBy">
+        <key-map field-name="userId" related="receivedByUserId"/></relationship>
+    <relationship related="mantle.request.RequestContent" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="userId" related="userId"/></relationship>
+    <relationship related="mantle.sales.opportunity.SalesOpportunityNote" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="userId" related="userId"/></relationship>
+    <relationship related="mantle.shipment.ShipmentContent" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="userId" related="userId"/></relationship>
+    <relationship related="mantle.work.effort.WorkEffortNote" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="userId" related="userId"/></relationship>
+    <relationship related="mantle.work.effort.WorkEffortParty" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="partyId" related="partyId"/></relationship>
+    <relationship related="mantle.work.measurement.Measurement" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="userId" related="userId"/></relationship>
+    <relationship related="moqui.basic.email.EmailMessage" type="many" is-auto-reverse="true" mutable="true" title="From">
+        <key-map field-name="userId" related="fromUserId"/></relationship>
+    <relationship related="moqui.basic.email.EmailMessage" type="many" is-auto-reverse="true" mutable="true" title="To">
+        <key-map field-name="userId" related="toUserId"/></relationship>
+    <relationship related="moqui.resource.DbResourceFileHistory" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="userId" related="userId"/></relationship>
+    <relationship related="moqui.resource.wiki.WikiPage" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="userId" related="createdByUserId"/></relationship>
+    <relationship related="moqui.resource.wiki.WikiPageHistory" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="userId" related="userId"/></relationship>
+    <relationship related="moqui.resource.wiki.WikiPageUser" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="userId" related="userId"/></relationship>
+    <relationship related="moqui.resource.wiki.WikiSpaceUser" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="userId" related="userId"/></relationship>
+    <relationship related="moqui.screen.ScreenScheduled" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="userId" related="userId"/></relationship>
+    <relationship related="moqui.screen.form.FormConfigUser" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="userId" related="userId"/></relationship>
+    <relationship related="moqui.screen.form.FormConfigUserType" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="userId" related="userId"/></relationship>
+    <relationship related="moqui.screen.form.FormListFindUser" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="userId" related="userId"/></relationship>
+    <relationship related="moqui.screen.form.FormListFindUserDefault" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="userId" related="userId"/></relationship>
+    <relationship related="moqui.screen.form.FormResponse" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="userId" related="userId"/></relationship>
+    <relationship related="moqui.security.ArtifactAuthzFailure" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="userId" related="userId"/></relationship>
+    <relationship related="moqui.security.ArtifactTarpitLock" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="userId" related="userId"/></relationship>
+    <relationship related="moqui.security.UserAuthcFactor" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="userId" related="userId"/></relationship>
+    <relationship related="moqui.security.UserPasswordHistory" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="userId" related="userId"/></relationship>
+    <relationship related="moqui.security.UserScreenTheme" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="userId" related="userId"/></relationship>
+    <relationship related="moqui.security.user.NotificationMessageUser" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="userId" related="userId"/></relationship>
+    <relationship related="moqui.server.ArtifactHit" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="userId" related="userId"/></relationship>
+    <relationship related="moqui.server.Visit" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="userId" related="userId"/></relationship>
+    <relationship related="moqui.service.job.ServiceJobRun" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="userId" related="userId"/></relationship>
+    <relationship related="moqui.service.job.ServiceJobUser" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="userId" related="userId"/></relationship>
+
+</entity>

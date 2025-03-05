@@ -1,0 +1,11 @@
+
+<!-- Entity Name: mantle.account.invoice.InvoiceParty sql table: INVOICE_PARTY --><entity entity-name="InvoiceParty" package="mantle.account.invoice" cache="never">
+    <field name="invoiceId" type="id" is-pk="true"/>
+    <field name="partyId" type="id" is-pk="true"/>
+    <field name="roleTypeId" type="id" is-pk="true"/>
+    <relationship type="one" related="mantle.account.invoice.Invoice"/>
+    <relationship type="one" related="mantle.party.Party"/>
+    <relationship type="one" related="mantle.party.RoleType"/>
+    <field name="lastUpdatedStamp" type="date-time"/>
+
+</entity>

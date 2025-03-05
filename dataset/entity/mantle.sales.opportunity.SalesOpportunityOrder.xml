@@ -1,0 +1,10 @@
+
+<!-- Entity Name: mantle.sales.opportunity.SalesOpportunityOrder sql table: SALES_OPPORTUNITY_ORDER --><entity entity-name="SalesOpportunityOrder" package="mantle.sales.opportunity">
+    <description><![CDATA[Associate orders (including proposed/quote orders) with an opportunity]]></description>
+    <field name="salesOpportunityId" type="id" is-pk="true"/>
+    <field name="orderId" type="id" is-pk="true"/>
+    <relationship type="one" related="mantle.sales.opportunity.SalesOpportunity"/>
+    <relationship type="one" related="mantle.order.OrderHeader"/>
+    <field name="lastUpdatedStamp" type="date-time"/>
+
+</entity>

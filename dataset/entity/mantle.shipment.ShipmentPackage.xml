@@ -1,0 +1,31 @@
+
+<!-- Entity Name: mantle.shipment.ShipmentPackage sql table: SHIPMENT_PACKAGE --><entity entity-name="ShipmentPackage" package="mantle.shipment" cache="never" has-dependents="true">
+    <field name="shipmentId" type="id" is-pk="true"/>
+    <field name="shipmentPackageSeqId" type="id" is-pk="true"/>
+    <field name="shipmentBoxTypeId" type="id" enable-audit-log="update"/>
+    <field name="weight" type="number-decimal" enable-audit-log="update"/>
+    <field name="weightUomId" type="id" enable-audit-log="update"/>
+    <field name="gatewayPackageId" type="text-medium"/>
+    <relationship type="one" related="mantle.shipment.Shipment" short-alias="shipment"/>
+    <relationship type="one" related="mantle.shipment.ShipmentBoxType" short-alias="boxType"/>
+    <relationship type="one" title="Weight" related="moqui.basic.Uom" short-alias="weightUom">
+        <key-map field-name="weightUomId"/></relationship>
+    <relationship type="many" related="mantle.shipment.ShipmentPackageContent" short-alias="contents">
+        <key-map field-name="shipmentId"/>
+        <key-map field-name="shipmentPackageSeqId"/>
+    </relationship>
+    <relationship type="many" related="mantle.shipment.ShipmentPackageRouteSeg" short-alias="routeSegments">
+        <key-map field-name="shipmentId"/>
+        <key-map field-name="shipmentPackageSeqId"/>
+    </relationship>
+    <field name="lastUpdatedStamp" type="date-time"/>
+    <relationship related="mantle.product.receipt.AssetReceipt" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="shipmentId" related="shipmentId"/>
+        <key-map field-name="shipmentPackageSeqId" related="shipmentPackageSeqId"/>
+    </relationship>
+    <relationship related="mantle.shipment.ShipmentContent" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="shipmentId" related="shipmentId"/>
+        <key-map field-name="shipmentPackageSeqId" related="shipmentPackageSeqId"/>
+    </relationship>
+
+</entity>

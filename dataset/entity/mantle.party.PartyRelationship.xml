@@ -1,0 +1,50 @@
+
+<!-- Entity Name: mantle.party.PartyRelationship sql table: PARTY_RELATIONSHIP --><entity entity-name="PartyRelationship" package="mantle.party" has-dependents="true">
+    <field name="partyRelationshipId" type="id" is-pk="true"/>
+    <field name="relationshipTypeEnumId" type="id"/>
+    <field name="fromPartyId" type="id"/>
+    <field name="fromRoleTypeId" type="id"/>
+    <field name="toPartyId" type="id"/>
+    <field name="toRoleTypeId" type="id"/>
+    <field name="fromDate" type="date-time"/>
+    <field name="thruDate" type="date-time"/>
+    <field name="statusId" type="id" enable-audit-log="true"/>
+    <field name="comments" type="text-medium"/>
+    <field name="relationshipName" type="text-medium">
+        <description><![CDATA[Official name of relationship, such as title in an organization.]]></description></field>
+    <relationship type="one" title="PartyRelationshipType" related="moqui.basic.Enumeration" short-alias="type">
+        <key-map field-name="relationshipTypeEnumId"/></relationship>
+    <relationship type="one" title="From" related="mantle.party.Party" short-alias="fromParty">
+        <key-map field-name="fromPartyId"/></relationship>
+    <relationship type="one" title="From" related="mantle.party.RoleType" short-alias="fromRole">
+        <key-map field-name="fromRoleTypeId"/></relationship>
+    <relationship type="one" title="To" related="mantle.party.Party" short-alias="toParty">
+        <key-map field-name="toPartyId"/></relationship>
+    <relationship type="one" title="To" related="mantle.party.RoleType" short-alias="toRole">
+        <key-map field-name="toRoleTypeId"/></relationship>
+    <relationship type="one" title="PartyRelationship" related="moqui.basic.StatusItem" short-alias="status"/>
+    <seed-data>
+        <moqui.basic.EnumerationType description="Party Relationship Type" enumTypeId="PartyRelationshipType"/>
+        <moqui.basic.Enumeration description="Agent" enumId="PrtAgent" enumTypeId="PartyRelationshipType"/>
+        <moqui.basic.Enumeration description="Child" enumId="PrtChild" enumTypeId="PartyRelationshipType"/>
+        <moqui.basic.Enumeration description="Contact" enumId="PrtContact" enumTypeId="PartyRelationshipType"/>
+        <moqui.basic.Enumeration description="Customer" enumId="PrtCustomer" enumTypeId="PartyRelationshipType"/>
+        <moqui.basic.Enumeration description="Employee" enumId="PrtEmployee" enumTypeId="PartyRelationshipType"/>
+        <moqui.basic.Enumeration description="Friend" enumId="PrtFriend" enumTypeId="PartyRelationshipType"/>
+        <moqui.basic.Enumeration description="Manager" enumId="PrtManager" enumTypeId="PartyRelationshipType"/>
+        <moqui.basic.Enumeration description="Organization Member" enumId="PrtMember" enumTypeId="PartyRelationshipType"/>
+        <moqui.basic.Enumeration description="Organization Rollup (Child)" enumId="PrtOrgRollup" enumTypeId="PartyRelationshipType"/>
+        <moqui.basic.Enumeration description="Partner" enumId="PrtPartner" enumTypeId="PartyRelationshipType"/>
+        <moqui.basic.Enumeration description="Representative" enumId="PrtRepresentative" enumTypeId="PartyRelationshipType"/>
+        <moqui.basic.Enumeration description="Sales Affiliate" enumId="PrtSalesAffiliate" enumTypeId="PartyRelationshipType"/>
+        <moqui.basic.Enumeration description="Spouse" enumId="PrtSpouse" enumTypeId="PartyRelationshipType"/>
+        <moqui.basic.Enumeration description="Supplier" enumId="PrtSupplier" enumTypeId="PartyRelationshipType"/>
+        <moqui.basic.StatusType description="Party Relationship" statusTypeId="PartyRelationship"/>
+    </seed-data>
+    <field name="lastUpdatedStamp" type="date-time"/>
+    <relationship related="mantle.humanres.employment.Employment" type="one-nofk" is-auto-reverse="true" mutable="true">
+        <key-map field-name="partyRelationshipId" related="partyRelationshipId"/></relationship>
+    <relationship related="mantle.party.PartyRelationshipSetting" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="partyRelationshipId" related="partyRelationshipId"/></relationship>
+
+</entity>

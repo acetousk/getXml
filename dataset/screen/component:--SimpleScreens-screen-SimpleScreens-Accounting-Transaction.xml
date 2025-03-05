@@ -1,0 +1,1 @@
+<!-- Screen Location component://SimpleScreens/screen/SimpleScreens/Accounting/Transaction.xml --><screen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://moqui.org/xsd/xml-screen-3.xsd" default-menu-title="Transactions" default-menu-index="4"><subscreens default-item="FindTransaction"/><widgets><subscreens-active/></widgets></screen>

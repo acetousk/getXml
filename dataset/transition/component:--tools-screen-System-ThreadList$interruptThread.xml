@@ -1,0 +1,14 @@
+<!--Transition Screen Location component://tools/screen/System/ThreadList.xml Transition Name interruptThread--><transition name="interruptThread"><parameter name="threadName"/><actions><!--always-actions at component://webroot/screen/webroot.xml--><set field="html_scripts" from="new LinkedHashSet()"/><set field="footer_scripts" from="new LinkedHashSet()"/><set field="html_stylesheets" from="new LinkedHashSet()"/><!--transition actions--><script><![CDATA[boolean found = false
+            for (Thread thread in Thread.getAllStackTraces().keySet()) {
+                if (thread.name == threadName) {
+                    found = true
+                    try {
+                        thread.interrupt()
+                        ec.message.addMessage("Interrupted thread ${threadName}", "success")
+                    } catch (Throwable t) {
+                        ec.logger.log(300, "Error interrupting thread ${thread.id}:${thread.name}", t)
+                        ec.message.addMessage("Error interrupting thread ${thread.id}:${thread.name}: ${t.toString()}", "danger")
+                    }
+                }
+            }
+            if (!found) ec.message.addMessage("Could not find thread with name ${threadName}", "warning")]]></script></actions></transition>

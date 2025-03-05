@@ -1,0 +1,15 @@
+
+<!-- Entity Name: moqui.security.UserLoginKey sql table: USER_LOGIN_KEY --><entity entity-name="UserLoginKey" package="moqui.security" use="transactional" cache="never">
+    <description><![CDATA[A login key is an alternate way to authenticate a user, generally issued for temporary use sort of
+            like a session.]]></description>
+    <field name="loginKey" type="text-medium" is-pk="true">
+        <description><![CDATA[NOTE: not an encrypted field because one way
+            hash encryption used for it (uses login-key.@encrypt-hash-type, no salt, hash before lookup on verify)]]></description></field>
+    <field name="userId" type="id"/>
+    <field name="fromDate" type="date-time"/>
+    <field name="thruDate" type="date-time"/>
+    <field name="description" type="text-medium"/>
+    <relationship type="one" related="moqui.security.UserAccount" short-alias="user"/>
+    <field name="lastUpdatedStamp" type="date-time"/>
+
+</entity>

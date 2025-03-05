@@ -1,0 +1,16 @@
+
+<!-- Entity Name: mantle.order.OrderPartParty sql table: ORDER_PART_PARTY --><entity entity-name="OrderPartParty" package="mantle.order" cache="never">
+    <field name="orderId" type="id" is-pk="true"/>
+    <field name="orderPartSeqId" type="id" is-pk="true"/>
+    <field name="partyId" type="id" is-pk="true"/>
+    <field name="roleTypeId" type="id" is-pk="true"/>
+    <field name="sequenceNum" type="number-integer"/>
+    <relationship type="one" related="mantle.order.OrderPart" short-alias="orderPart"/>
+    <relationship type="one" related="mantle.party.Party" short-alias="party"/>
+    <relationship type="one-nofk" related="mantle.party.Person" short-alias="person"/>
+    <relationship type="one-nofk" related="mantle.party.Organization" short-alias="organization"/>
+    <relationship type="one" related="mantle.party.RoleType" short-alias="roleType"/>
+    <field name="lastUpdatedStamp" type="date-time"/>
+
+<!-- eeca org.moqui.impl.entity.EntityEcaRule@7360b6ca-->
+</entity>

@@ -1,0 +1,30 @@
+
+<!-- Entity Name: mantle.humanres.employment.EmploymentLeave sql table: EMPLOYMENT_LEAVE --><entity entity-name="EmploymentLeave" package="mantle.humanres.employment" use="nontransactional">
+    <field name="partyRelationshipId" type="id" is-pk="true"/>
+    <field name="fromDate" type="date" is-pk="true"/>
+    <field name="thruDate" type="date"/>
+    <field name="leaveTypeEnumId" type="id"/>
+    <field name="leaveReasonEnumId" type="id"/>
+    <field name="leaveApproved" type="text-indicator" enable-audit-log="true"/>
+    <field name="approverPartyId" type="id"/>
+    <field name="description" type="text-medium"/>
+    <relationship type="one" related="mantle.humanres.employment.Employment"/>
+    <relationship type="one" title="EmploymentLeaveType" related="moqui.basic.Enumeration">
+        <key-map field-name="leaveTypeEnumId"/></relationship>
+    <relationship type="one" title="EmploymentLeaveReason" related="moqui.basic.Enumeration">
+        <key-map field-name="leaveReasonEnumId"/></relationship>
+    <relationship type="one" title="Approver" related="mantle.party.Party">
+        <key-map field-name="approverPartyId"/></relationship>
+    <seed-data>
+        <moqui.basic.EnumerationType description="Employment Leave Type" enumTypeId="EmploymentLeaveType"/>
+        <moqui.basic.Enumeration description="Earned Leave" enumId="EltEarned" enumTypeId="EmploymentLeaveType"/>
+        <moqui.basic.Enumeration description="Loss of Pay" enumId="EltLossOfPay" enumTypeId="EmploymentLeaveType"/>
+        <moqui.basic.Enumeration description="Holiday" enumId="EltHoliday" enumTypeId="EmploymentLeaveType"/>
+        <moqui.basic.Enumeration description="Special Day Off" enumId="EltSpecialDayOff" enumTypeId="EmploymentLeaveType"/>
+        <moqui.basic.EnumerationType description="Employment Leave Reason" enumTypeId="EmploymentLeaveReason"/>
+        <moqui.basic.Enumeration description="Medical" enumId="ElrMedical" enumTypeId="EmploymentLeaveReason"/>
+        <moqui.basic.Enumeration description="Personal" enumId="ElrPersonal" enumTypeId="EmploymentLeaveReason"/>
+    </seed-data>
+    <field name="lastUpdatedStamp" type="date-time"/>
+
+</entity>

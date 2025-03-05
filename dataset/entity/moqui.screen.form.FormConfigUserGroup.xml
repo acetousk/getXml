@@ -1,0 +1,9 @@
+
+<!-- Entity Name: moqui.screen.form.FormConfigUserGroup sql table: FORM_CONFIG_USER_GROUP --><entity entity-name="FormConfigUserGroup" package="moqui.screen.form" use="configuration">
+    <field name="formConfigId" type="id" is-pk="true"/>
+    <field name="userGroupId" type="id" is-pk="true"/>
+    <relationship type="one" related="moqui.screen.form.FormConfig" short-alias="formConfig"/>
+    <relationship type="one" related="moqui.security.UserGroup" short-alias="userGroup"/>
+    <field name="lastUpdatedStamp" type="date-time"/>
+
+</entity>

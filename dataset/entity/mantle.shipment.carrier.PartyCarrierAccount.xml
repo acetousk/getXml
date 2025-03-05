@@ -1,0 +1,14 @@
+
+<!-- Entity Name: mantle.shipment.carrier.PartyCarrierAccount sql table: PARTY_CARRIER_ACCOUNT --><entity entity-name="PartyCarrierAccount" package="mantle.shipment.carrier" cache="never">
+    <field name="partyId" type="id" is-pk="true"/>
+    <field name="carrierPartyId" type="id" is-pk="true"/>
+    <field name="fromDate" type="date-time" is-pk="true"/>
+    <field name="thruDate" type="date-time"/>
+    <field name="accountNumber" type="id"/>
+    <relationship type="one" related="mantle.party.Party">
+        <key-map field-name="partyId"/></relationship>
+    <relationship type="one" title="Carrier" related="mantle.party.Party">
+        <key-map field-name="carrierPartyId"/></relationship>
+    <field name="lastUpdatedStamp" type="date-time"/>
+
+</entity>

@@ -1,0 +1,15 @@
+
+<!-- Entity Name: moqui.security.user.NotificationTopicUser sql table: NOTIFICATION_TOPIC_USER --><entity entity-name="NotificationTopicUser" package="moqui.security.user" use="configuration" cache="true">
+    <field name="topic" type="text-medium" is-pk="true"/>
+    <field name="userId" type="id" is-pk="true"/>
+    <field name="receiveNotifications" type="text-indicator">
+        <description><![CDATA[If notification sent to user only actually notify if this is Y]]></description></field>
+    <field name="allNotifications" type="text-indicator">
+        <description><![CDATA[If Y user receives all notifications on topic even if not sent directly]]></description></field>
+    <field name="emailNotifications" type="text-indicator">
+        <description><![CDATA[If Y sends an email to user using UserAccount.emailAddress]]></description></field>
+    <relationship type="one-nofk" related="moqui.security.user.NotificationTopic" short-alias="notificationTopic"/>
+    <relationship type="one-nofk" related="moqui.security.UserAccount" short-alias="user"/>
+    <field name="lastUpdatedStamp" type="date-time"/>
+
+</entity>

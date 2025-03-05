@@ -1,0 +1,5 @@
+<!--Service Location org.moqui.search.SearchServices.delete#ElasticIndex--><service verb="delete" noun="ElasticIndex"><in-parameters><parameter name="indexName" required="true"/><parameter name="clusterName" default-value="default"/></in-parameters><out-parameters/><actions><script><![CDATA[import org.moqui.context.ExecutionContext
+            ExecutionContext ec = context.ec
+
+            def elasticClient = ec.factory.elastic.getClient((String) clusterName)
+            elasticClient.deleteIndex((String) indexName)]]></script></actions></service>

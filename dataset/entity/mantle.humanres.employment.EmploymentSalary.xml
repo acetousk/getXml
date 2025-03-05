@@ -1,0 +1,20 @@
+
+<!-- Entity Name: mantle.humanres.employment.EmploymentSalary sql table: EMPLOYMENT_SALARY --><entity entity-name="EmploymentSalary" package="mantle.humanres.employment" use="configuration">
+    <description><![CDATA[The current and past actual salary amounts for Employment. Current salary found by standard date
+            filter and sort (filter by fromDate, thruDate; sort by ascending fromDate; use first result).]]></description>
+    <field name="partyRelationshipId" type="id" is-pk="true"/>
+    <field name="fromDate" type="date-time" is-pk="true"/>
+    <field name="thruDate" type="date-time"/>
+    <field name="payGradeId" type="id"/>
+    <field name="comments" type="text-medium"/>
+    <field name="amount" type="currency-amount" enable-audit-log="true"/>
+    <field name="currencyUomId" type="id"/>
+    <field name="timePeriodTypeId" type="id"/>
+    <relationship type="one" related="mantle.humanres.employment.Employment"/>
+    <relationship type="one" related="mantle.humanres.rate.PayGrade"/>
+    <relationship type="one" title="Currency" related="moqui.basic.Uom">
+        <key-map field-name="currencyUomId"/></relationship>
+    <relationship type="one" related="mantle.party.time.TimePeriodType"/>
+    <field name="lastUpdatedStamp" type="date-time"/>
+
+</entity>

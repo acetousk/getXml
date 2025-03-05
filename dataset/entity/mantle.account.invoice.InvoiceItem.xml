@@ -1,0 +1,128 @@
+
+<!-- Entity Name: mantle.account.invoice.InvoiceItem sql table: INVOICE_ITEM --><entity entity-name="InvoiceItem" package="mantle.account.invoice" cache="never" has-dependents="true">
+    <field name="invoiceId" type="id" is-pk="true"/>
+    <field name="invoiceItemSeqId" type="id" is-pk="true"/>
+    <field name="parentItemSeqId" type="id"/>
+    <field name="itemTypeEnumId" type="id" enable-audit-log="update"/>
+    <field name="overrideGlAccountId" type="id" enable-audit-log="update">
+        <description><![CDATA[The override or actual glAccountId used for the
+            AcctgTransEntry based on the InvoiceItem. If empty the glAccountId will be determined based on configuration
+            or custom code.]]></description></field>
+    <field name="assetId" type="id">
+        <description><![CDATA[For sale of a particular asset, required for fixed assets]]></description></field>
+    <field name="productId" type="id" enable-audit-log="update"/>
+    <field name="otherPartyProductId" type="text-short"/>
+    <field name="parentInvoiceId" type="id"/>
+    <field name="parentInvoiceItemSeqId" type="id"/>
+    <field name="taxableFlag" type="text-indicator"/>
+    <field name="quantity" type="number-decimal" enable-audit-log="update"/>
+    <field name="quantityUomId" type="id"/>
+    <field name="amount" type="currency-precise" enable-audit-log="update"/>
+    <field name="description" type="text-medium"/>
+    <field name="itemDate" type="date-time" enable-audit-log="update"/>
+    <field name="isAdjustment" type="text-indicator"/>
+    <field name="salesOpportunityId" type="id"/>
+    <field name="taxAuthorityId" type="id"/>
+    <field name="payrollAdjustmentId" type="id"/>
+    <field name="finAccountId" type="id"/>
+    <field name="finAccountTransId" type="id"/>
+    <field name="billThruVendorName" type="text-medium">
+        <description><![CDATA[For tracking purposes when there is no associated bill through invoice with InvoiceItemAssoc records]]></description></field>
+    <field name="billThruVendorRef" type="text-short"/>
+    <relationship type="one" related="mantle.account.invoice.Invoice" short-alias="invoice"/>
+    <relationship type="one-nofk" title="Parent" related="mantle.account.invoice.InvoiceItem" short-alias="parent">
+        <key-map field-name="invoiceId"/>
+        <key-map field-name="parentItemSeqId" related="invoiceItemSeqId"/>
+    </relationship>
+    <relationship type="many" title="Child" related="mantle.account.invoice.InvoiceItem" short-alias="children">
+        <key-map field-name="invoiceId"/>
+        <key-map field-name="invoiceItemSeqId" related="parentItemSeqId"/>
+    </relationship>
+    <relationship type="one" title="ItemType" related="moqui.basic.Enumeration" short-alias="type">
+        <key-map field-name="itemTypeEnumId"/></relationship>
+    <relationship type="one" related="mantle.product.asset.Asset" short-alias="asset"/>
+    <relationship type="one" related="mantle.product.Product" short-alias="product"/>
+    <relationship type="one" title="OtherParent" related="mantle.account.invoice.InvoiceItem" short-alias="otherParent">
+        <key-map field-name="parentInvoiceId" related="invoiceId"/>
+        <key-map field-name="parentInvoiceItemSeqId" related="invoiceItemSeqId"/>
+    </relationship>
+    <relationship type="one" title="Override" related="mantle.ledger.account.GlAccount" short-alias="overrideGlAccount">
+        <key-map field-name="overrideGlAccountId"/></relationship>
+    <relationship type="one" title="Quantity" related="moqui.basic.Uom" short-alias="quantityUom">
+        <key-map field-name="quantityUomId"/></relationship>
+    <relationship type="one" related="mantle.sales.opportunity.SalesOpportunity" short-alias="salesOpportunity"/>
+    <relationship type="one" related="mantle.other.tax.TaxAuthority" short-alias="taxAuthority"/>
+    <relationship type="one" related="mantle.humanres.employment.PayrollAdjustment" short-alias="payrollAdjustment"/>
+    <relationship type="one" related="mantle.account.financial.FinancialAccount" short-alias="financialAccount"/>
+    <relationship type="one" related="mantle.account.financial.FinancialAccountTrans" short-alias="financialAccountTrans"/>
+    <relationship type="many" related="mantle.account.invoice.InvoiceItemDetail" short-alias="details">
+        <key-map field-name="invoiceId"/>
+        <key-map field-name="invoiceItemSeqId"/>
+    </relationship>
+    <relationship type="many" related="mantle.order.OrderItemBilling" short-alias="orderItemBillings">
+        <key-map field-name="invoiceId"/>
+        <key-map field-name="invoiceItemSeqId"/>
+    </relationship>
+    <relationship type="many" related="mantle.shipment.ShipmentItemSource" short-alias="shipmentItemSources">
+        <key-map field-name="invoiceId"/>
+        <key-map field-name="invoiceItemSeqId"/>
+    </relationship>
+    <relationship type="many" related="mantle.product.issuance.AssetIssuance" short-alias="issuances">
+        <key-map field-name="invoiceId"/>
+        <key-map field-name="invoiceItemSeqId"/>
+    </relationship>
+    <relationship type="many" related="mantle.product.receipt.AssetReceipt" short-alias="receipts">
+        <key-map field-name="invoiceId"/>
+        <key-map field-name="invoiceItemSeqId"/>
+    </relationship>
+    <field name="lastUpdatedStamp" type="date-time"/>
+    <relationship related="mantle.account.invoice.InvoiceItemAssoc" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="invoiceId" related="invoiceId"/>
+        <key-map field-name="invoiceItemSeqId" related="invoiceItemSeqId"/>
+    </relationship>
+    <relationship related="mantle.account.invoice.InvoiceItemAssoc" type="many" is-auto-reverse="true" mutable="true" title="To">
+        <key-map field-name="invoiceId" related="toInvoiceId"/>
+        <key-map field-name="invoiceItemSeqId" related="toInvoiceItemSeqId"/>
+    </relationship>
+    <relationship related="mantle.account.invoice.InvoiceTerm" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="invoiceId" related="invoiceId"/>
+        <key-map field-name="invoiceItemSeqId" related="invoiceItemSeqId"/>
+    </relationship>
+    <relationship related="mantle.account.payment.PaymentApplication" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="invoiceId" related="invoiceId"/>
+        <key-map field-name="invoiceItemSeqId" related="invoiceItemSeqId"/>
+    </relationship>
+    <relationship related="mantle.order.return.ReturnItemBilling" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="invoiceId" related="invoiceId"/>
+        <key-map field-name="invoiceItemSeqId" related="invoiceItemSeqId"/>
+    </relationship>
+    <relationship related="mantle.work.effort.WorkEffortBilling" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="invoiceId" related="invoiceId"/>
+        <key-map field-name="invoiceItemSeqId" related="invoiceItemSeqId"/>
+    </relationship>
+    <relationship related="mantle.work.time.TimeEntry" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="invoiceId" related="invoiceId"/>
+        <key-map field-name="invoiceItemSeqId" related="invoiceItemSeqId"/>
+    </relationship>
+    <relationship related="mantle.work.time.TimeEntry" type="many" is-auto-reverse="true" mutable="true" title="Vendor">
+        <key-map field-name="invoiceId" related="vendorInvoiceId"/>
+        <key-map field-name="invoiceItemSeqId" related="vendorInvoiceItemSeqId"/>
+    </relationship>
+
+<!-- seca <seca id="InvoiceAdjustGlPost" service="create#mantle.account.invoice.InvoiceItem" when="post-service" run-on-error="false">
+    <condition>
+        <expression><![CDATA[isAdjustment == 'Y']]></expression></condition>
+    <actions>
+        <service-call name="mantle.ledger.InvoiceAutoPostServices.post#InvoiceAdjustment" in-map="context"/></actions>
+</seca>-->
+<!-- seca <seca id="InvoiceAdjustUpdateGlPost" service="update#mantle.account.invoice.InvoiceItem" when="post-service" run-on-error="false">
+    <actions>
+        <if condition="!isAdjustment">
+            <entity-find-one entity-name="mantle.account.invoice.InvoiceItem" value-field="invoiceItem"/>
+            <set field="isAdjustment" from="invoiceItem?.isAdjustment"/>
+        </if>
+        <if condition="isAdjustment == 'Y'">
+            <service-call name="mantle.ledger.InvoiceAutoPostServices.repost#InvoiceAdjustment" in-map="context"/></if>
+    </actions></seca>-->
+<!-- eeca org.moqui.impl.entity.EntityEcaRule@4276b324-->
+</entity>

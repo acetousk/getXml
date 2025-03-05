@@ -1,0 +1,299 @@
+
+<!-- Entity Name: mantle.account.payment.Payment sql table: PAYMENT --><entity entity-name="Payment" package="mantle.account.payment" short-alias="payments" cache="never" optimistic-lock="true" has-dependents="true">
+    <field name="paymentId" type="id" is-pk="true"/>
+    <field name="paymentTypeEnumId" type="id"/>
+    <field name="fromPartyId" type="id" enable-audit-log="update"/>
+    <field name="toPartyId" type="id" enable-audit-log="update"/>
+    <field name="paymentInstrumentEnumId" type="id">
+        <description><![CDATA[The payment instrument used for the payment; for
+            non-cash and other instruments represented by an account specify details of it with paymentMethodId]]></description></field>
+    <field name="paymentMethodId" type="id">
+        <description><![CDATA[The from PaymentMethod (owned by fromPartyId)]]></description></field>
+    <field name="toPaymentMethodId" type="id">
+        <description><![CDATA[The to PaymentMethod (owned by toPartyId), if applicable,
+            the account the payment goes to]]></description></field>
+    <field name="paymentGatewayConfigId" type="id">
+        <description><![CDATA[Use this PaymentGatewayConfig for auth/etc. For Payments
+            by CC/etc that are not from an order and/or the order is not associated with a ProductStore. Also set
+            automatically on auth for capture, etc.]]></description></field>
+    <field name="orderId" type="id">
+        <description><![CDATA[Set if the Payment represents the payment settings for an Order.]]></description></field>
+    <field name="orderPartSeqId" type="id">
+        <description><![CDATA[Set if the Payment represents the payment settings for an OrderPart.]]></description></field>
+    <field name="orderItemSeqId" type="id">
+        <description><![CDATA[Set if the Payment represents the payment settings for an OrderItem.]]></description></field>
+    <field name="statusId" type="id" enable-audit-log="true"/>
+    <field name="effectiveDate" type="date-time" enable-audit-log="update">
+        <description><![CDATA[When the payment is issued (delivered)]]></description></field>
+    <field name="settlementDate" type="date-time">
+        <description><![CDATA[When the payment is settled (confirmed)]]></description></field>
+    <field name="dueDate" type="date-time">
+        <description><![CDATA[Due Date for this Payment, different concept than Invoice Due Date for planned split payments, etc]]></description></field>
+    <field name="paymentAuthCode" type="text-short"/>
+    <field name="paymentRefNum" type="text-short" enable-audit-log="update"/>
+    <field name="comments" type="text-medium"/>
+    <field name="memo" type="text-medium"/>
+    <field name="distGroupEnumId" type="id"/>
+    <field name="amount" type="currency-amount" enable-audit-log="update"/>
+    <field name="amountUomId" type="id"/>
+    <field name="appliedTotal" type="currency-amount"/>
+    <field name="unappliedTotal" type="currency-amount"/>
+    <field name="forInvoiceId" type="id" enable-audit-log="update"/>
+    <field name="refundForPaymentId" type="id"/>
+    <field name="finAccountId" type="id"/>
+    <field name="finAccountAuthId" type="id"/>
+    <field name="finAccountTransId" type="id"/>
+    <field name="overrideGlAccountId" type="id">
+        <description><![CDATA[Overrides the GlAccount for the PaymentMethod entry,
+            ie for the cash account the payment goes into.]]></description></field>
+    <field name="overrideOrgPartyId" type="id">
+        <description><![CDATA[Used to specify the organization override rather than
+            using the fromPartyId and/or toPartyId (depending on which is an internal org).]]></description></field>
+    <field name="partyRelationshipId" type="id">
+        <description><![CDATA[For Payroll payments, points to Employment record]]></description></field>
+    <field name="timePeriodId" type="id">
+        <description><![CDATA[For Payroll payments, points to Payroll TimePeriod]]></description></field>
+    <field name="originalCurrencyAmount" type="currency-amount"/>
+    <field name="originalCurrencyUomId" type="id"/>
+    <field name="presentFlag" type="text-indicator"/>
+    <field name="swipedFlag" type="text-indicator"/>
+    <field name="processAttempt" type="number-integer"/>
+    <field name="needsNsfRetry" type="text-indicator"/>
+    <field name="visitId" type="id">
+        <description><![CDATA[Track the Visit so we know the session info, including client IP,
+            for audit and fraud purposes.]]></description></field>
+    <field name="acctgTransResultEnumId" type="id"/>
+    <field name="reconcileStatusId" type="id" default="'PmtrNot'"/>
+    <field name="paymentMethodFileId" type="id">
+        <description><![CDATA[If included in a file for processing, file ID goes here]]></description></field>
+    <relationship type="one" title="PaymentType" related="moqui.basic.Enumeration" short-alias="type">
+        <key-map field-name="paymentTypeEnumId"/></relationship>
+    <relationship type="one" title="PaymentInstrument" related="moqui.basic.Enumeration" short-alias="instrument">
+        <key-map field-name="paymentInstrumentEnumId"/></relationship>
+    <relationship type="one" related="mantle.account.method.PaymentMethod" short-alias="method"/>
+    <relationship type="one" title="To" related="mantle.account.method.PaymentMethod" short-alias="toMethod">
+        <key-map field-name="toPaymentMethodId"/></relationship>
+    <relationship type="one-nofk" related="mantle.account.method.CreditCard" short-alias="creditCard"/>
+    <relationship type="one" related="mantle.account.method.PaymentGatewayConfig" short-alias="paymentGatewayConfig"/>
+    <relationship type="one" related="mantle.order.OrderHeader" short-alias="orderHeader"/>
+    <relationship type="one-nofk" related="mantle.order.OrderPart" short-alias="orderPart"/>
+    <relationship type="one-nofk" related="mantle.order.OrderItem" short-alias="orderItem"/>
+    <relationship type="one" title="PayDistributionGroup" related="moqui.basic.Enumeration" short-alias="distGroup">
+        <key-map field-name="distGroupEnumId"/></relationship>
+    <relationship type="one" title="Amount" related="moqui.basic.Uom" short-alias="amountUom">
+        <key-map field-name="amountUomId"/></relationship>
+    <relationship type="one" title="From" related="mantle.party.Party" short-alias="fromParty">
+        <key-map field-name="fromPartyId"/></relationship>
+    <relationship type="one" title="To" related="mantle.party.Party" short-alias="toParty">
+        <key-map field-name="toPartyId"/></relationship>
+    <relationship type="one" title="Payment" related="moqui.basic.StatusItem" short-alias="status"/>
+    <relationship type="one" title="For" related="mantle.account.invoice.Invoice" short-alias="forInvoice">
+        <key-map field-name="forInvoiceId"/></relationship>
+    <relationship type="one" title="RefundFor" related="mantle.account.payment.Payment" short-alias="refundForPayment">
+        <key-map field-name="refundForPaymentId"/></relationship>
+    <relationship type="one" related="mantle.account.financial.FinancialAccount" short-alias="financialAccount"/>
+    <relationship type="one" related="mantle.account.financial.FinancialAccountAuth" short-alias="financialAccountAuth"/>
+    <relationship type="one" related="mantle.account.financial.FinancialAccountTrans" short-alias="financialAccountTrans"/>
+    <relationship type="one" title="Override" related="mantle.ledger.account.GlAccount" short-alias="overrideGlAccount">
+        <key-map field-name="overrideGlAccountId"/></relationship>
+    <relationship type="one" title="OverrideOrg" related="mantle.party.Party" short-alias="overrideOrgParty">
+        <key-map field-name="overrideOrgPartyId"/></relationship>
+    <relationship type="one" related="mantle.humanres.employment.Employment" short-alias="employment"/>
+    <relationship type="one" related="mantle.party.time.TimePeriod" short-alias="timePeriod"/>
+    <relationship type="one" title="OriginalCurrency" related="moqui.basic.Uom" short-alias="originalCurrencyUom">
+        <key-map field-name="originalCurrencyUomId"/></relationship>
+    <relationship type="one" related="moqui.server.Visit"/>
+    <relationship type="one" title="AcctgTransResult" related="moqui.basic.Enumeration" short-alias="acctgTransResultEnum">
+        <key-map field-name="acctgTransResultEnumId"/></relationship>
+    <relationship type="one" title="AcctgTransEntryReconcile" related="moqui.basic.StatusItem" short-alias="reconcileStatus">
+        <key-map field-name="reconcileStatusId"/></relationship>
+    <relationship type="one" related="mantle.account.method.PaymentMethodFile" short-alias="paymentMethodFile"/>
+    <relationship type="many" related="mantle.account.payment.PaymentApplication" short-alias="applications">
+        <key-map field-name="paymentId"/></relationship>
+    <relationship type="many" title="To" related="mantle.account.payment.PaymentApplication" short-alias="toApplications">
+        <key-map field-name="paymentId" related="toPaymentId"/></relationship>
+    <relationship type="many" related="mantle.account.payment.PaymentContent" short-alias="contents">
+        <key-map field-name="paymentId"/></relationship>
+    <index name="PAYMENT_REFNUM">
+        <index-field name="paymentRefNum"/></index>
+    <seed-data>
+        <moqui.basic.EnumerationType description="Payment Type" enumTypeId="PaymentType"/>
+        <moqui.basic.Enumeration description="Disbursement" enumId="PtDisbursement" enumTypeId="PaymentType"/>
+        <moqui.basic.Enumeration description="Refund" enumId="PtRefund" enumTypeId="PaymentType"/>
+        <moqui.basic.Enumeration description="Invoice Payment" enumId="PtInvoicePayment" enumTypeId="PaymentType"/>
+        <moqui.basic.Enumeration description="Pre Payment - Expense" enumId="PtPrePayment" parentEnumId="PtInvoicePayment" enumTypeId="PaymentType"/>
+        <moqui.basic.Enumeration description="Pre Payment - Inventory" enumId="PtPrePaymentInventory" parentEnumId="PtInvoicePayment" enumTypeId="PaymentType"/>
+        <moqui.basic.Enumeration description="Financial Account Transaction" enumId="PtFinancialAccount" enumTypeId="PaymentType"/>
+        <moqui.basic.Enumeration description="Order Payment Preference" enumId="PtOrderPref" enumTypeId="PaymentType"/>
+        <moqui.basic.Enumeration description="Payroll Employee Payment" enumId="PtPayrollPayment" enumTypeId="PaymentType" parentEnumId="PtInvoicePayment"/>
+        <moqui.basic.Enumeration description="Payroll Other Payment" enumId="PtPayrollOtherPayment" enumTypeId="PaymentType" parentEnumId="PtInvoicePayment"/>
+        <moqui.basic.EnumerationType description="Payment Instrument" enumTypeId="PaymentInstrument"/>
+        <moqui.basic.Enumeration description="ACH Direct" enumId="PiAch" enumTypeId="PaymentInstrument" relatedEnumId="PmtBankAccount"/>
+        <moqui.basic.Enumeration description="Amazon Pay" enumId="PiAmazonPay" enumTypeId="PaymentInstrument" relatedEnumId="PmtAmazonPayAccount"/>
+        <moqui.basic.Enumeration description="Bitcoin" enumId="PiBitcoinWallet" enumTypeId="PaymentInstrument" relatedEnumId="PmtBitcoinWallet"/>
+        <moqui.basic.Enumeration description="Credit Card" enumId="PiCreditCard" enumTypeId="PaymentInstrument" relatedEnumId="PmtCreditCard"/>
+        <moqui.basic.Enumeration description="Debit Card" enumId="PiDebitCard" enumTypeId="PaymentInstrument" relatedEnumId="PmtCreditCard"/>
+        <moqui.basic.Enumeration description="PayPal Account" enumId="PiPayPalAccount" enumTypeId="PaymentInstrument" relatedEnumId="PmtPayPalAccount"/>
+        <moqui.basic.Enumeration description="Gift Card" enumId="PiGiftCard" enumTypeId="PaymentInstrument" relatedEnumId="PmtGiftCard"/>
+        <moqui.basic.Enumeration description="Gift Certificate" enumId="PiGiftCertificate" enumTypeId="PaymentInstrument"/>
+        <moqui.basic.Enumeration description="Cash" enumId="PiCash" enumTypeId="PaymentInstrument"/>
+        <moqui.basic.Enumeration description="Financial Account" enumId="PiFinancialAccount" enumTypeId="PaymentInstrument" relatedEnumId="PmtFinancialAccount"/>
+        <moqui.basic.Enumeration description="Personal Check" enumId="PiPersonalCheck" enumTypeId="PaymentInstrument" relatedEnumId="PmtBankAccount"/>
+        <moqui.basic.Enumeration description="Company Check" enumId="PiCompanyCheck" enumTypeId="PaymentInstrument" relatedEnumId="PmtBankAccount"/>
+        <moqui.basic.Enumeration description="Certified Check" enumId="PiCertifiedCheck" enumTypeId="PaymentInstrument" relatedEnumId="PmtBankAccount"/>
+        <moqui.basic.Enumeration description="Money Order" enumId="PiMoneyOrder" enumTypeId="PaymentInstrument"/>
+        <moqui.basic.Enumeration description="Company Account" enumId="PiCompanyAccount" enumTypeId="PaymentInstrument" relatedEnumId="PmtFinancialAccount"/>
+        <moqui.basic.Enumeration description="Billing Account" enumId="PiBillingAccount" enumTypeId="PaymentInstrument"/>
+        <moqui.basic.Enumeration description="Cash On Delivery" enumId="PiCod" enumTypeId="PaymentInstrument"/>
+        <moqui.basic.Enumeration description="Wire Transfer" enumId="PiWireTransfer" enumTypeId="PaymentInstrument"/>
+        <moqui.basic.Enumeration description="Other" enumId="PiOther" enumTypeId="PaymentInstrument"/>
+        <moqui.basic.EnumerationType description="Payment Distribution Group" enumTypeId="PayDistributionGroup"/>
+        <moqui.basic.Enumeration sequenceNum="1" description="Employee - Executive" enumId="PdgEmployeeExecutive" enumTypeId="PayDistributionGroup"/>
+        <moqui.basic.Enumeration sequenceNum="2" description="Employee - Regular" enumId="PdgEmployeeRegular" enumTypeId="PayDistributionGroup"/>
+        <moqui.basic.Enumeration sequenceNum="3" description="Employee - Labor" enumId="PdgEmployeeLabor" enumTypeId="PayDistributionGroup"/>
+        <moqui.basic.Enumeration sequenceNum="9" description="Supplier - General" enumId="PdgSupplierGeneral" enumTypeId="PayDistributionGroup"/>
+        <moqui.basic.StatusType description="Payment Status" statusTypeId="Payment"/>
+        <moqui.basic.StatusItem description="Proposed" sequenceNum="1" statusId="PmntProposed" statusTypeId="Payment"/>
+        <moqui.basic.StatusItem description="Promised" sequenceNum="2" statusId="PmntPromised" statusTypeId="Payment"/>
+        <moqui.basic.StatusItem description="Authorized" sequenceNum="3" statusId="PmntAuthorized" statusTypeId="Payment"/>
+        <moqui.basic.StatusItem description="Delivered" sequenceNum="4" statusId="PmntDelivered" statusTypeId="Payment"/>
+        <moqui.basic.StatusItem description="Confirmed Paid" sequenceNum="6" statusId="PmntConfirmed" statusTypeId="Payment"/>
+        <moqui.basic.StatusItem description="Cancelled" sequenceNum="91" statusId="PmntCancelled" statusTypeId="Payment"/>
+        <moqui.basic.StatusItem description="Void" sequenceNum="92" statusId="PmntVoid" statusTypeId="Payment"/>
+        <moqui.basic.StatusItem description="Declined" sequenceNum="93" statusId="PmntDeclined" statusTypeId="Payment"/>
+        <moqui.basic.StatusFlowTransition statusFlowId="Default" statusId="PmntProposed" toStatusId="PmntPromised" transitionName="Promise"/>
+        <moqui.basic.StatusFlowTransition statusFlowId="Default" statusId="PmntProposed" toStatusId="PmntCancelled" transitionName="Cancel"/>
+        <moqui.basic.StatusFlowTransition statusFlowId="Default" statusId="PmntPromised" toStatusId="PmntAuthorized" transitionName="Authorize"/>
+        <moqui.basic.StatusFlowTransition statusFlowId="Default" statusId="PmntPromised" toStatusId="PmntDelivered" transitionName="Deliver"/>
+        <moqui.basic.StatusFlowTransition statusFlowId="Default" statusId="PmntPromised" toStatusId="PmntCancelled" transitionName="Cancel"/>
+        <moqui.basic.StatusFlowTransition statusFlowId="Default" statusId="PmntPromised" toStatusId="PmntDeclined" transitionName="Decline"/>
+        <moqui.basic.StatusFlowTransition statusFlowId="Default" statusId="PmntDeclined" toStatusId="PmntPromised" transitionName="Promise"/>
+        <moqui.basic.StatusFlowTransition statusFlowId="Default" statusId="PmntDeclined" toStatusId="PmntAuthorized" transitionName="Authorize"/>
+        <moqui.basic.StatusFlowTransition statusFlowId="Default" statusId="PmntAuthorized" toStatusId="PmntPromised" transitionName="Unauthorize"/>
+        <moqui.basic.StatusFlowTransition statusFlowId="Default" statusId="PmntAuthorized" toStatusId="PmntDelivered" transitionName="Deliver"/>
+        <moqui.basic.StatusFlowTransition statusFlowId="Default" statusId="PmntAuthorized" toStatusId="PmntCancelled" transitionName="Cancel"/>
+        <moqui.basic.StatusFlowTransition statusFlowId="Default" statusId="PmntAuthorized" toStatusId="PmntVoid" transitionName="Void"/>
+        <moqui.basic.StatusFlowTransition statusFlowId="Default" statusId="PmntAuthorized" toStatusId="PmntDeclined" transitionName="Decline"/>
+        <moqui.basic.StatusFlowTransition statusFlowId="Default" statusId="PmntDelivered" toStatusId="PmntAuthorized" transitionName="Undeliver"/>
+        <moqui.basic.StatusFlowTransition statusFlowId="Default" statusId="PmntDelivered" toStatusId="PmntPromised" transitionName="Undeliver and Unauthorize"/>
+        <moqui.basic.StatusFlowTransition statusFlowId="Default" statusId="PmntDelivered" toStatusId="PmntConfirmed" transitionName="Confirm"/>
+        <moqui.basic.StatusFlowTransition statusFlowId="Default" statusId="PmntDelivered" toStatusId="PmntCancelled" transitionName="Cancel"/>
+        <moqui.basic.StatusFlowTransition statusFlowId="Default" statusId="PmntDelivered" toStatusId="PmntVoid" transitionName="Void"/>
+        <moqui.basic.StatusFlowTransition statusFlowId="Default" statusId="PmntDelivered" toStatusId="PmntDeclined" transitionName="Decline"/>
+        <moqui.basic.StatusFlowTransition statusFlowId="Default" statusId="PmntConfirmed" toStatusId="PmntDelivered" transitionName="Unconfirm"/>
+        <moqui.basic.StatusType description="Payment Reconcile Status" statusTypeId="PaymentReconcile"/>
+        <moqui.basic.StatusItem description="Not Reconciled" sequenceNum="1" statusId="PmtrNot" statusTypeId="PaymentReconcile"/>
+        <moqui.basic.StatusItem description="Partly Reconciled" sequenceNum="2" statusId="PmtrPartly" statusTypeId="PaymentReconcile"/>
+        <moqui.basic.StatusItem description="Reconciled" sequenceNum="3" statusId="PmtrRec" statusTypeId="PaymentReconcile"/>
+        <moqui.basic.StatusFlowTransition statusFlowId="Default" statusId="PmtrNot" toStatusId="PmtrPartly" transitionName="Partly Reconcile"/>
+        <moqui.basic.StatusFlowTransition statusFlowId="Default" statusId="PmtrNot" toStatusId="PmtrRec" transitionName="Reconcile"/>
+        <moqui.basic.StatusFlowTransition statusFlowId="Default" statusId="PmtrPartly" toStatusId="PmtrRec" transitionName="Reconcile"/>
+        <moqui.basic.StatusFlowTransition statusFlowId="Default" statusId="PmtrPartly" toStatusId="PmtrNot" transitionName="Unreconcile"/>
+        <moqui.basic.StatusFlowTransition statusFlowId="Default" statusId="PmtrRec" toStatusId="PmtrNot" transitionName="Unreconcile"/>
+    </seed-data>
+    <master>
+        <detail relationship="type"/>
+        <detail relationship="instrument"/>
+        <detail relationship="method" use-master="default"/>
+        <detail relationship="toMethod" use-master="default"/>
+        <detail relationship="distGroup"/>
+        <detail relationship="amountUom"/>
+        <detail relationship="fromParty" use-master="basic"/>
+        <detail relationship="toParty" use-master="basic"/>
+        <detail relationship="status"/>
+        <detail relationship="applications"/>
+        <detail relationship="contents"/>
+    </master>
+    <field name="lastUpdatedStamp" type="date-time"/>
+    <relationship related="mantle.account.method.BankAccountCheck" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="paymentId" related="paymentId"/></relationship>
+    <relationship related="mantle.account.method.PaymentGatewayResponse" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="paymentId" related="paymentId"/></relationship>
+    <relationship related="mantle.account.method.PaymentMethodTrans" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="paymentId" related="paymentId"/></relationship>
+    <relationship related="mantle.account.payment.Deduction" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="paymentId" related="paymentId"/></relationship>
+    <relationship related="mantle.account.payment.PaymentBudgetAllocation" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="paymentId" related="paymentId"/></relationship>
+    <relationship related="mantle.account.payment.PaymentFraudEvidence" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="paymentId" related="paymentId"/></relationship>
+    <relationship related="mantle.ledger.transaction.AcctgTrans" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="paymentId" related="paymentId"/></relationship>
+    <relationship related="mantle.ledger.transaction.AcctgTrans" type="many" is-auto-reverse="true" mutable="true" title="To">
+        <key-map field-name="paymentId" related="toPaymentId"/></relationship>
+    <relationship related="mantle.order.return.ReturnItem" type="many" is-auto-reverse="true" mutable="true" title="Refund">
+        <key-map field-name="paymentId" related="refundPaymentId"/></relationship>
+
+<!-- seca <seca id="PaymentCheckEffectiveDate" service="update#mantle.account.payment.Payment" when="post-service" run-on-error="false" priority="2">
+    <condition>
+        <expression><![CDATA[statusChanged && statusId == 'PmntDelivered']]></expression></condition>
+    <actions>
+        <if condition="effectiveDate == null">
+            <entity-find-one entity-name="mantle.account.payment.Payment" value-field="payment"/>
+            <if condition="payment.effectiveDate == null">
+                <return error="true" message="Effective Date is not set"/></if>
+        </if></actions>
+</seca>-->
+<!-- seca <seca id="PaymentApplyForInvoice" service="update#mantle.account.payment.Payment" when="post-service" run-on-error="false" priority="3">
+    <condition>
+        <expression><![CDATA[statusChanged && (statusId in ['PmntDelivered', 'PmntConfirmed'])]]></expression></condition>
+    <actions>
+        <service-call name="mantle.account.PaymentServices.apply#PaymentForInvoice" in-map="context"/></actions>
+</seca>-->
+<!-- seca <seca id="PaymentUnDeliverCleanup" service="update#mantle.account.payment.Payment" when="post-service" run-on-error="false">
+    <condition>
+        <expression><![CDATA[statusChanged && oldStatusId == 'PmntDelivered' && statusId in ['PmntPromised', 'PmntAuthorized']]]></expression></condition>
+    <actions>
+        <service-call name="mantle.account.PaymentServices.void#Payment" in-map="context"/></actions>
+</seca>-->
+<!-- seca <seca id="PaymentCancelClearMethodTrans" service="update#mantle.account.payment.Payment" when="post-service" run-on-error="false">
+    <condition>
+        <expression><![CDATA[statusChanged && (statusId in ['PmntCancelled', 'PmntVoid'])]]></expression></condition>
+    <actions>
+        <service-call name="mantle.account.ReconciliationServices.clear#PaymentTrans" in-map="context"/></actions>
+</seca>-->
+<!-- seca <seca id="PaymentCancelRevertGlPost" service="update#mantle.account.payment.Payment" when="post-service" run-on-error="false">
+    <condition>
+        <expression><![CDATA[statusChanged && (statusId in ['PmntCancelled', 'PmntVoid'])]]></expression></condition>
+    <actions>
+        <service-call name="mantle.ledger.PaymentAutoPostServices.revert#PaymentPost" in-map="context"/></actions>
+</seca>-->
+<!-- seca <seca id="PaymentUndeliverReverGlPost" service="update#mantle.account.payment.Payment" when="post-service" run-on-error="false">
+    <condition>
+        <expression><![CDATA[statusChanged && oldStatusId == 'PmntDelivered' && statusId in ['PmntPromised', 'PmntAuthorized']]]></expression></condition>
+    <actions>
+        <service-call name="mantle.ledger.PaymentAutoPostServices.revert#PaymentPost" in-map="context"/></actions>
+</seca>-->
+<!-- seca <seca id="PaymentCreateFinAccountTx" service="update#mantle.account.payment.Payment" when="post-service" run-on-error="false">
+    <condition>
+        <expression><![CDATA[statusChanged && statusId == 'PmntDelivered' && oldStatusId != 'PmntConfirmed']]></expression></condition>
+    <actions>
+        <service-call name="mantle.account.FinancialAccountServices.checkCreate#PaymentTrans" in-map="context"/></actions>
+</seca>-->
+<!-- seca <seca id="PaymentCancelledCleanup" service="update#mantle.account.payment.Payment" when="post-service" run-on-error="false">
+    <condition>
+        <expression><![CDATA[statusChanged && (statusId in ['PmntCancelled', 'PmntVoid'])]]></expression></condition>
+    <actions>
+        <service-call name="mantle.account.PaymentServices.void#Payment" in-map="context"/></actions>
+</seca>-->
+<!-- seca <seca id="PaymentGlPost" service="update#mantle.account.payment.Payment" when="post-service" run-on-error="false">
+    <condition>
+        <expression><![CDATA[statusChanged && statusId == 'PmntDelivered' && oldStatusId != 'PmntConfirmed']]></expression></condition>
+    <actions>
+        <service-call name="mantle.ledger.PaymentAutoPostServices.post#Payment" in-map="context"/></actions>
+</seca>-->
+<!-- seca <seca id="PaymentReverseFinAccountTx" service="update#mantle.account.payment.Payment" when="post-service" run-on-error="false">
+    <condition>
+        <expression><![CDATA[statusChanged && ((statusId in ['PmntCancelled', 'PmntVoid']) ||
+            (oldStatusId == 'PmntDelivered' && statusId in ['PmntPromised', 'PmntAuthorized']))]]></expression></condition>
+    <actions>
+        <service-call name="mantle.account.FinancialAccountServices.reverse#PaymentTrans" in-map="context"/></actions>
+</seca>-->
+<!-- seca <seca id="PaymentAutoThruDate" service="update#mantle.account.payment.Payment" when="post-service">
+    <condition>
+        <expression><![CDATA[statusChanged && !(statusId in ['PmntProposed', 'PmntPromised', 'PmntAuthorized', 'PmntDeclined'])]]></expression></condition>
+    <actions>
+        <service-call name="mantle.account.PaymentMethodServices.checkDelete#PaymentPaymentMethods" in-map="context"/></actions>
+</seca>-->
+<!-- eeca org.moqui.impl.entity.EntityEcaRule@557cf07f-->
+</entity>

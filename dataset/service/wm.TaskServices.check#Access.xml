@@ -1,0 +1,1 @@
+<!--Service Location wm.TaskServices.check#Access--><service verb="check" noun="Access"><in-parameters><parameter name="workEffortId" required="true"/></in-parameters><out-parameters><parameter name="authorized"/></out-parameters><actions><set field="authorized" value="Y"/></actions></service>

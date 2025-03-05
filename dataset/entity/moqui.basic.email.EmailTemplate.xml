@@ -1,0 +1,42 @@
+
+<!-- Entity Name: moqui.basic.email.EmailTemplate sql table: EMAIL_TEMPLATE --><entity entity-name="EmailTemplate" package="moqui.basic.email" use="configuration" short-alias="emailTemplates" cache="true" has-dependents="true">
+    <field name="emailTemplateId" type="id" is-pk="true"/>
+    <field name="description" type="text-medium"/>
+    <field name="emailServerId" type="id" enable-audit-log="update"/>
+    <field name="emailTypeEnumId" type="id"/>
+    <field name="fromAddress" type="text-medium" enable-audit-log="update"/>
+    <field name="fromName" type="text-medium"/>
+    <field name="replyToAddresses" type="text-medium" enable-audit-log="update">
+        <description><![CDATA[Comma separated list of reply to email addresses]]></description></field>
+    <field name="bounceAddress" type="text-medium" enable-audit-log="update"/>
+    <field name="ccAddresses" type="text-medium" enable-audit-log="update">
+        <description><![CDATA[Comma separated list of CC email addresses]]></description></field>
+    <field name="bccAddresses" type="text-medium" enable-audit-log="update">
+        <description><![CDATA[Comma separated list of BCC email addresses]]></description></field>
+    <field name="subject" type="text-long"/>
+    <field name="bodyScreenLocation" type="text-medium"/>
+    <field name="webappName" type="text-medium"/>
+    <field name="webHostName" type="text-medium"/>
+    <field name="sendPartial" type="text-indicator"/>
+    <relationship type="one" related="moqui.basic.email.EmailServer" short-alias="server"/>
+    <relationship type="one" title="EmailType" related="moqui.basic.Enumeration" short-alias="type">
+        <key-map field-name="emailTypeEnumId"/></relationship>
+    <relationship type="many" related="moqui.basic.email.EmailTemplateAttachment" short-alias="attachments">
+        <key-map field-name="emailTemplateId"/></relationship>
+    <master>
+        <detail relationship="server"/>
+        <detail relationship="attachments"/>
+    </master>
+    <field name="lastUpdatedStamp" type="date-time"/>
+    <relationship related="mantle.marketing.contact.ContactListEmail" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="emailTemplateId" related="emailTemplateId"/></relationship>
+    <relationship related="mantle.product.store.ProductStoreEmail" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="emailTemplateId" related="emailTemplateId"/></relationship>
+    <relationship related="moqui.basic.email.EmailMessage" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="emailTemplateId" related="emailTemplateId"/></relationship>
+    <relationship related="moqui.screen.ScreenScheduled" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="emailTemplateId" related="emailTemplateId"/></relationship>
+    <relationship related="moqui.security.user.NotificationTopic" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="emailTemplateId" related="emailTemplateId"/></relationship>
+
+</entity>

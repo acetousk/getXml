@@ -1,0 +1,3 @@
+<!--Service Location mantle.order.ReturnServices.change#ReturnStatusInterface--><service verb="change" noun="ReturnStatusInterface"><in-parameters><parameter name="returnId" required="true"/></in-parameters><out-parameters><parameter name="oldStatusId"/><parameter name="statusChanged" type="Boolean"/></out-parameters>
+    null
+</service>

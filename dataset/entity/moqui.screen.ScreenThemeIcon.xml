@@ -1,0 +1,9 @@
+
+<!-- Entity Name: moqui.screen.ScreenThemeIcon sql table: SCREEN_THEME_ICON --><entity entity-name="ScreenThemeIcon" package="moqui.screen" use="configuration" cache="true">
+    <field name="screenThemeId" type="id" is-pk="true"/>
+    <field name="textPattern" type="text-medium" is-pk="true"/>
+    <field name="iconClass" type="text-medium"/>
+    <relationship type="one" related="moqui.screen.ScreenTheme" short-alias="screenTheme"/>
+    <field name="lastUpdatedStamp" type="date-time"/>
+
+</entity>

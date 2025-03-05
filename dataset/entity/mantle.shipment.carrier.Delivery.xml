@@ -1,0 +1,23 @@
+
+<!-- Entity Name: mantle.shipment.carrier.Delivery sql table: DELIVERY --><entity entity-name="Delivery" package="mantle.shipment.carrier" cache="never" has-dependents="true">
+    <field name="deliveryId" type="id" is-pk="true"/>
+    <field name="originFacilityId" type="id"/>
+    <field name="destFacilityId" type="id"/>
+    <field name="actualStartDate" type="date-time"/>
+    <field name="actualArrivalDate" type="date-time"/>
+    <field name="estimatedStartDate" type="date-time"/>
+    <field name="estimatedArrivalDate" type="date-time"/>
+    <field name="assetId" type="id"/>
+    <field name="startMileage" type="number-decimal"/>
+    <field name="endMileage" type="number-decimal"/>
+    <field name="fuelUsed" type="number-decimal"/>
+    <relationship type="one" related="mantle.product.asset.Asset"/>
+    <relationship type="one" title="Origin" related="mantle.facility.Facility">
+        <key-map field-name="originFacilityId"/></relationship>
+    <relationship type="one" title="Dest" related="mantle.facility.Facility">
+        <key-map field-name="destFacilityId"/></relationship>
+    <field name="lastUpdatedStamp" type="date-time"/>
+    <relationship related="mantle.shipment.ShipmentRouteSegment" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="deliveryId" related="deliveryId"/></relationship>
+
+</entity>

@@ -1,0 +1,12 @@
+<!--Transition Screen Location component://tools/screen/System/Cache/CacheElements.xml Transition Name clearCacheElement--><transition name="clearCacheElement"><parameter name="cacheName" required="true"/><actions><!--always-actions at component://webroot/screen/webroot.xml--><set field="html_scripts" from="new LinkedHashSet()"/><set field="footer_scripts" from="new LinkedHashSet()"/><set field="html_stylesheets" from="new LinkedHashSet()"/><!--transition actions--><script><![CDATA[ec.logger.info("Clearing cache entry with key ${key} from cache ${cacheName}")
+                javax.cache.Cache theCache = ec.cache.getCache(cacheName)
+                Iterator iter = theCache.iterator()
+                while (iter.hasNext()) {
+                    javax.cache.Cache.Entry entry = iter.next()
+                    if (key == (entry.key as String)) {
+                        cacheValue = theCache.getAndRemove(entry.key)
+                        ec.message.addMessage(ec.resource.expand('Cleared ${key} from cache [${cacheName}] had value [${cacheValue}]',''))
+                        return
+                    }
+                }
+                ec.message.addError(ec.resource.expand('No entry with key [${key}] in cache [${cacheName}]',''))]]></script></actions></transition>

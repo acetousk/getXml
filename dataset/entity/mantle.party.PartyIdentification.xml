@@ -1,0 +1,40 @@
+
+<!-- Entity Name: mantle.party.PartyIdentification sql table: PARTY_IDENTIFICATION --><entity entity-name="PartyIdentification" package="mantle.party">
+    <field name="partyId" type="id" is-pk="true"/>
+    <field name="partyIdTypeEnumId" type="id" is-pk="true"/>
+    <field name="idValue" type="text-medium" encrypt="true" enable-audit-log="update"/>
+    <field name="issuedBy" type="text-medium"/>
+    <field name="issuedByPartyId" type="id"/>
+    <field name="expireDate" type="date"/>
+    <relationship type="one" title="PartyIdType" related="moqui.basic.Enumeration" short-alias="type">
+        <key-map field-name="partyIdTypeEnumId"/></relationship>
+    <relationship type="one" related="mantle.party.Party"/>
+    <relationship type="one" title="IssuedBy" related="mantle.party.Party">
+        <key-map field-name="issuedByPartyId"/></relationship>
+    <index name="PARTY_ID_VALUE">
+        <index-field name="idValue"/></index>
+    <seed-data>
+        <moqui.basic.EnumerationType description="Party Identification Type" enumTypeId="PartyIdType"/>
+        <moqui.basic.Enumeration description="Passport Number" enumId="PtidPassport" enumTypeId="PartyIdType" optionValue="*{4,10}"/>
+        <moqui.basic.Enumeration description="Driver License Number" enumId="PtidDriverLicense" enumTypeId="PartyIdType"/>
+        <moqui.basic.Enumeration description="Social Security Number" enumId="PtidSsn" enumTypeId="PartyIdType" optionValue="999-99-9999"/>
+        <moqui.basic.Enumeration description="Federal Agent Indicator Code" enumId="PtidFaic" enumTypeId="PartyIdType"/>
+        <moqui.basic.Enumeration description="Federal EIN" enumId="PtidFein" enumTypeId="PartyIdType" optionValue="99-9999999"/>
+        <moqui.basic.Enumeration description="Federal User ID" enumId="PtidFuid" enumTypeId="PartyIdType"/>
+        <moqui.basic.Enumeration description="Matricula Consular ID" enumId="PtidMcid" enumTypeId="PartyIdType"/>
+        <moqui.basic.Enumeration description="Global Location Number" enumId="PtidGln" enumTypeId="PartyIdType"/>
+        <moqui.basic.Enumeration description="Alien Registration Number" enumId="PtidArn" enumTypeId="PartyIdType"/>
+        <moqui.basic.Enumeration description="Immigrant Admission Number" enumId="PtidIan" enumTypeId="PartyIdType"/>
+        <moqui.basic.Enumeration description="Dun and Bradstreet DUNS" enumId="PtidDuns" enumTypeId="PartyIdType" optionValue="99-999-9999"/>
+        <moqui.basic.Enumeration description="Dun and Bradstreet DUNS+4" enumId="PtidDuns4" enumTypeId="PartyIdType" optionValue="99-999-9999-9999"/>
+        <moqui.basic.Enumeration description="Customer Assigned" enumId="PtidCust" enumTypeId="PartyIdType"/>
+        <moqui.basic.Enumeration description="Vendor Assigned" enumId="PtidVend" enumTypeId="PartyIdType"/>
+        <moqui.basic.Enumeration description="Permanent Resident" enumId="PtidPermReg" enumTypeId="PartyIdType"/>
+        <moqui.basic.Enumeration description="I-551" enumId="PtidI551" enumTypeId="PartyIdType"/>
+        <moqui.basic.Enumeration description="I-766" enumId="PtidI766" enumTypeId="PartyIdType"/>
+        <moqui.basic.Enumeration description="I-94" enumId="PtidI94" enumTypeId="PartyIdType"/>
+        <moqui.basic.Enumeration description="I-94A" enumId="Ptid94A" enumTypeId="PartyIdType"/>
+    </seed-data>
+    <field name="lastUpdatedStamp" type="date-time"/>
+
+</entity>

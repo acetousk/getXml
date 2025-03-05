@@ -1,0 +1,21 @@
+
+<!-- Entity Name: coarchy.product.ProductEvaluationActivity sql table: PRODUCT_EVALUATION_ACTIVITY --><entity entity-name="ProductEvaluationActivity" package="coarchy.product">
+    <description><![CDATA[This entity represents the activities included in a product evaluation.
+            Use the excludeFlag to exclude a specific activity from a process story.]]></description>
+    <field name="productEvaluationId" type="id" is-pk="true"/>
+    <field name="processStoryId" type="id" is-pk="true"/>
+    <field name="activityId" type="id" is-pk="true"/>
+    <field name="excludeFlag" type="text-indicator"/>
+    <field name="organizationId" type="id"/>
+    <relationship type="one" related="coarchy.product.ProductEvaluation" short-alias="productEvaluation"/>
+    <relationship type="one-nofk" related="coarchy.product.ProductEvaluationStory" short-alias="evaluationStory">
+        <key-map field-name="productEvaluationId"/>
+        <key-map field-name="processStoryId"/>
+    </relationship>
+    <relationship type="one" related="coarchy.ProcessStory" short-alias="processStory"/>
+    <relationship type="one" related="coarchy.Activity" short-alias="activity"/>
+    <relationship type="one" related="mantle.party.Organization" short-alias="organization">
+        <key-map field-name="organizationId" related="partyId"/></relationship>
+    <field name="lastUpdatedStamp" type="date-time"/>
+
+</entity>

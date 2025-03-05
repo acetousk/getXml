@@ -1,0 +1,27 @@
+
+<!-- Entity Name: moqui.security.UserAuthcFactor sql table: USER_AUTHC_FACTOR --><entity entity-name="UserAuthcFactor" package="moqui.security" use="configuration">
+    <description><![CDATA[This entity is for recording User Authentication Factors.]]></description>
+    <field name="factorId" type="id" is-pk="true"/>
+    <field name="userId" type="id" not-null="true"/>
+    <field name="fromFactorId" type="id"/>
+    <field name="factorTypeEnumId" type="id"/>
+    <field name="fromDate" type="date-time"/>
+    <field name="thruDate" type="date-time"/>
+    <field name="factorOption" type="text-medium" encrypt="true">
+        <description><![CDATA[Use varies based on factor type: TOTP is shared secret, Single Use is the code, Email Code is email address]]></description></field>
+    <field name="needsValidation" type="text-indicator"/>
+    <relationship type="one-nofk" related="moqui.security.UserAccount" short-alias="user">
+        <description><![CDATA[No FK in order to allow externally authenticated users.]]></description></relationship>
+    <relationship type="one" title="UserAuthcFactorType" related="moqui.basic.Enumeration" short-alias="factorTypeEnum">
+        <key-map field-name="factorTypeEnumId"/></relationship>
+    <seed-data>
+        <moqui.basic.EnumerationType description="User Authentication Factor Type" enumTypeId="UserAuthcFactorType"/>
+        <moqui.basic.Enumeration description="Authenticator App (TOTP)" enumId="UafTotp" enumTypeId="UserAuthcFactorType"/>
+        <moqui.basic.Enumeration description="Single Use Code" enumId="UafSingleUse" enumTypeId="UserAuthcFactorType"/>
+        <moqui.basic.Enumeration description="Email Code" enumId="UafEmail" enumTypeId="UserAuthcFactorType"/>
+        <moqui.basic.Enumeration description="SMS Code" enumId="UafSms" enumTypeId="UserAuthcFactorType"/>
+        <moqui.security.UserAuthcFactor factorId="UserAccountEmail" userId="_NA_" factorTypeEnumId="UafEmail" fromDate="0" thruDate="0"/>
+    </seed-data>
+    <field name="lastUpdatedStamp" type="date-time"/>
+
+</entity>

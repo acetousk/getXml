@@ -1,0 +1,12 @@
+
+<!-- Entity Name: moqui.screen.form.DbFormFieldAttribute sql table: DB_FORM_FIELD_ATTRIBUTE --><entity entity-name="DbFormFieldAttribute" package="moqui.screen.form" use="configuration">
+    <description><![CDATA[Used to provide attribute values. For a reference of attributes available for each field type, see
+            the corresponding element in the xml-form-?.xsd file.]]></description>
+    <field name="formId" type="id" is-pk="true"/>
+    <field name="fieldName" type="text-medium" is-pk="true"/>
+    <field name="attributeName" type="text-medium" is-pk="true"/>
+    <field name="value" type="text-medium"/>
+    <relationship type="one" related="moqui.screen.form.DbFormField" short-alias="dbFormField"/>
+    <field name="lastUpdatedStamp" type="date-time"/>
+
+</entity>

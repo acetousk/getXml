@@ -1,0 +1,19 @@
+
+<!-- Entity Name: moqui.example.ExampleFeature sql table: EXAMPLE_FEATURE --><entity entity-name="ExampleFeature" package="moqui.example" short-alias="exampleFeatures" has-dependents="true">
+    <field name="exampleFeatureId" type="id" is-pk="true">
+        <description><![CDATA[primary sequenced ID]]></description></field>
+    <field name="featureSourceEnumId" type="id"/>
+    <field name="description" type="text-medium"/>
+    <relationship type="one" title="ExampleFeatureSource" related="moqui.basic.Enumeration">
+        <key-map field-name="featureSourceEnumId"/></relationship>
+    <seed-data>
+        <moqui.basic.EnumerationType description="Example Feature Source" enumTypeId="ExampleFeatureSource"/>
+        <moqui.basic.Enumeration description="Customer" enumId="EXFTSRC_CUSTOMER" sequenceNum="1" enumTypeId="ExampleFeatureSource"/>
+        <moqui.basic.Enumeration description="Partner" enumId="EXFTSRC_PARTNER" sequenceNum="2" enumTypeId="ExampleFeatureSource"/>
+        <moqui.basic.Enumeration description="Employee" enumId="EXFTSRC_EMPLOYEE" sequenceNum="3" enumTypeId="ExampleFeatureSource"/>
+    </seed-data>
+    <field name="lastUpdatedStamp" type="date-time"/>
+    <relationship related="moqui.example.ExampleFeatureAppl" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="exampleFeatureId" related="exampleFeatureId"/></relationship>
+
+</entity>

@@ -1,0 +1,12 @@
+
+<!-- Entity Name: mantle.work.effort.WorkEffortNote sql table: WORK_EFFORT_NOTE --><entity entity-name="WorkEffortNote" package="mantle.work.effort" cache="never">
+    <field name="workEffortId" type="id" is-pk="true"/>
+    <field name="noteDate" type="date-time" is-pk="true" default="ec.user.nowTimestamp"/>
+    <field name="noteText" type="text-very-long" enable-audit-log="true"/>
+    <field name="internalNote" type="text-indicator"/>
+    <field name="userId" type="id" default="ec.user.userId"/>
+    <relationship type="one" related="mantle.work.effort.WorkEffort"/>
+    <relationship type="one" related="moqui.security.UserAccount"/>
+    <field name="lastUpdatedStamp" type="date-time"/>
+
+</entity>

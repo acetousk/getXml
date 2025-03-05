@@ -1,0 +1,1 @@
+<!--Service Location wm.TaskServices.get#WikiSpaces--><service verb="get" noun="WikiSpaces"><in-parameters/><out-parameters><parameter name="spaceList" type="List"/></out-parameters><actions><entity-find entity-name="moqui.resource.wiki.WikiSpace" list="spaceList"><search-form-inputs default-order-by="wikiSpaceId"/></entity-find></actions></service>

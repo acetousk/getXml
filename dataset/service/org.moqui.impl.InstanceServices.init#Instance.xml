@@ -1,0 +1,3 @@
+<!--Service Location org.moqui.impl.InstanceServices.init#Instance--><service verb="init" noun="Instance"><in-parameters><parameter name="appInstanceId" required="true"/></in-parameters><out-parameters><parameter name="connectSuccess" type="Boolean"/><parameter name="instanceCreated" type="Boolean"/><parameter name="instanceExists" type="Boolean"/><parameter name="instanceUuid"/><parameter name="warnings"/></out-parameters>
+    null
+</service>

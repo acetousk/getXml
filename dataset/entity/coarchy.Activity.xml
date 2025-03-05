@@ -1,0 +1,35 @@
+
+<!-- Entity Name: coarchy.Activity sql table: ACTIVITY --><entity entity-name="Activity" package="coarchy" has-dependents="true">
+    <field name="activityId" type="id" is-pk="true"/>
+    <field name="condition" type="text-intermediate"/>
+    <field name="action" type="text-intermediate"/>
+    <field name="replacedByActivityId" type="id"/>
+    <field name="implementationId" type="id"/>
+    <field name="organizationId" type="id"/>
+    <relationship type="one-nofk" related="coarchy.Activity" short-alias="replacesActivity">
+        <key-map field-name="replacedByActivityId" related="activityId"/></relationship>
+    <relationship type="many" related="ActivityActor" short-alias="actors">
+        <key-map field-name="activityId"/></relationship>
+    <relationship type="one" related="mantle.party.Organization" short-alias="organization">
+        <key-map field-name="organizationId" related="partyId"/></relationship>
+    <relationship type="one" related="moqui.basic.Enumeration" short-alias="implementation">
+        <key-map field-name="implementationId" related="enumId"/></relationship>
+    <seed-data>
+        <moqui.basic.EnumerationType description="Activity Implementation Status" enumTypeId="ActivityImplementation">
+            <moqui.basic.Enumeration description="Already being done" enumId="AiDone" sequenceNum="10"/>
+            <moqui.basic.Enumeration description="To be started now" enumId="AiStarting" sequenceNum="20"/>
+            <moqui.basic.Enumeration description="To be done at some point" enumId="AiLater" sequenceNum="30"/>
+        </moqui.basic.EnumerationType></seed-data>
+    <field name="lastUpdatedStamp" type="date-time"/>
+    <relationship related="coarchy.ProcessStoryActivity" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="activityId" related="activityId"/></relationship>
+    <relationship related="coarchy.ValueStatementActivity" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="activityId" related="activityId"/></relationship>
+    <relationship related="coarchy.product.ProductEvaluationActivity" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="activityId" related="activityId"/></relationship>
+    <relationship related="coarchy.product.ProductEvaluationResponse" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="activityId" related="activityId"/></relationship>
+    <relationship related="mantle.work.effort.WorkEffort" type="many" is-auto-reverse="true" mutable="true" title="Activity">
+        <key-map field-name="activityId" related="activityId"/></relationship>
+
+</entity>

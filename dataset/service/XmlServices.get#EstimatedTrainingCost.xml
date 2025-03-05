@@ -1,0 +1,1 @@
+<!--Service Location XmlServices.get#EstimatedTrainingCost--><service verb="get" noun="EstimatedTrainingCost"><in-parameters><parameter name="modelToTrain" default-value="gpt-4o-mini-2024-07-18"/></in-parameters><out-parameters/><actions/></service>

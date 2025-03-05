@@ -1,0 +1,154 @@
+
+<!-- Entity Name: mantle.party.communication.CommunicationEvent sql table: COMMUNICATION_EVENT --><entity entity-name="CommunicationEvent" package="mantle.party.communication" short-alias="communicationEvents" cache="never" has-dependents="true">
+    <field name="communicationEventId" type="id" is-pk="true"/>
+    <field name="communicationEventTypeId" type="id"/>
+    <field name="contactMechTypeEnumId" type="id"/>
+    <field name="statusId" type="id" enable-audit-log="true"/>
+    <field name="parentCommEventId" type="id"/>
+    <field name="rootCommEventId" type="id"/>
+    <field name="fromContactMechId" type="id"/>
+    <field name="toContactMechId" type="id"/>
+    <field name="fromPartyId" type="id" enable-audit-log="update"/>
+    <field name="fromRoleTypeId" type="id"/>
+    <field name="toPartyId" type="id" enable-audit-log="update"/>
+    <field name="toRoleTypeId" type="id"/>
+    <field name="entryDate" type="date-time"/>
+    <field name="datetimeStarted" type="date-time"/>
+    <field name="datetimeEnded" type="date-time"/>
+    <field name="subject" type="text-long"/>
+    <field name="contentType" type="text-medium"/>
+    <field name="body" type="text-very-long"/>
+    <field name="note" type="text-long"/>
+    <field name="reasonEnumId" type="id"/>
+    <field name="contactListId" type="id"/>
+    <field name="emailMessageId" type="id"/>
+    <relationship type="one" related="mantle.party.communication.CommunicationEventType" short-alias="type"/>
+    <relationship type="one" title="ContactMechType" related="moqui.basic.Enumeration" short-alias="contactMechType">
+        <key-map field-name="contactMechTypeEnumId"/></relationship>
+    <relationship type="one" title="CommunicationEvent" related="moqui.basic.StatusItem" short-alias="status"/>
+    <relationship type="one" title="Parent" related="mantle.party.communication.CommunicationEvent" short-alias="parent">
+        <key-map field-name="parentCommEventId" related="communicationEventId"/></relationship>
+    <relationship type="many" title="Child" related="mantle.party.communication.CommunicationEvent" short-alias="children">
+        <key-map field-name="communicationEventId" related="parentCommEventId"/></relationship>
+    <relationship type="one" title="Root" related="mantle.party.communication.CommunicationEvent" short-alias="root">
+        <key-map field-name="rootCommEventId" related="communicationEventId"/></relationship>
+    <relationship type="one" title="From" related="mantle.party.contact.ContactMech" short-alias="fromContactMech">
+        <key-map field-name="fromContactMechId"/></relationship>
+    <relationship type="one" title="To" related="mantle.party.contact.ContactMech" short-alias="toContactMech">
+        <key-map field-name="toContactMechId"/></relationship>
+    <relationship type="one" title="From" related="mantle.party.Party" short-alias="fromParty">
+        <key-map field-name="fromPartyId"/></relationship>
+    <relationship type="many" title="From" related="moqui.security.UserAccount" short-alias="fromUserAccounts">
+        <key-map field-name="fromPartyId" related="partyId"/></relationship>
+    <relationship type="one" title="From" related="mantle.party.RoleType" short-alias="fromRole">
+        <key-map field-name="fromRoleTypeId"/></relationship>
+    <relationship type="one" title="To" related="mantle.party.Party" short-alias="toParty">
+        <key-map field-name="toPartyId"/></relationship>
+    <relationship type="many" title="From" related="moqui.security.UserAccount" short-alias="toUserAccounts">
+        <key-map field-name="toPartyId" related="partyId"/></relationship>
+    <relationship type="one" title="To" related="mantle.party.RoleType" short-alias="toRole">
+        <key-map field-name="toRoleTypeId"/></relationship>
+    <relationship type="one" related="mantle.marketing.contact.ContactList" short-alias="contactList"/>
+    <relationship type="one" title="CommunicationEventReason" related="moqui.basic.Enumeration" short-alias="reason">
+        <key-map field-name="reasonEnumId"/></relationship>
+    <relationship type="many" related="mantle.party.communication.CommunicationEventContent" short-alias="contents">
+        <key-map field-name="communicationEventId"/></relationship>
+    <relationship type="many" related="mantle.party.communication.CommunicationEventParty" short-alias="parties">
+        <key-map field-name="communicationEventId"/></relationship>
+    <relationship type="many" related="mantle.party.communication.CommunicationEventProduct" short-alias="products">
+        <key-map field-name="communicationEventId"/></relationship>
+    <relationship type="many" related="mantle.party.communication.CommunicationEventPurpose" short-alias="purposes">
+        <key-map field-name="communicationEventId"/></relationship>
+    <relationship type="many" related="mantle.order.OrderCommunicationEvent" short-alias="orders">
+        <key-map field-name="communicationEventId"/></relationship>
+    <index name="COMMEVT_TP_ST_CET" unique="false">
+        <index-field name="toPartyId"/>
+        <index-field name="statusId"/>
+        <index-field name="communicationEventTypeId"/>
+    </index>
+    <seed-data>
+        <moqui.basic.StatusType description="Communication Event" statusTypeId="CommunicationEvent"/>
+        <moqui.basic.StatusItem description="In Progress" sequenceNum="1" statusId="CeInProgress" statusTypeId="CommunicationEvent"/>
+        <moqui.basic.StatusItem description="Ready" sequenceNum="2" statusId="CeReady" statusTypeId="CommunicationEvent"/>
+        <moqui.basic.StatusItem description="Sent" sequenceNum="10" statusId="CeSent" statusTypeId="CommunicationEvent"/>
+        <moqui.basic.StatusItem description="Received" sequenceNum="11" statusId="CeReceived" statusTypeId="CommunicationEvent"/>
+        <moqui.basic.StatusItem description="Viewed" sequenceNum="12" statusId="CeViewed" statusTypeId="CommunicationEvent"/>
+        <moqui.basic.StatusItem description="Assigned" sequenceNum="13" statusId="CeAssigned" statusTypeId="CommunicationEvent"/>
+        <moqui.basic.StatusItem description="Resolved" sequenceNum="20" statusId="CeResolved" statusTypeId="CommunicationEvent"/>
+        <moqui.basic.StatusItem description="Referred" sequenceNum="21" statusId="CeReferred" statusTypeId="CommunicationEvent"/>
+        <moqui.basic.StatusItem description="Bounced" sequenceNum="50" statusId="CeBounced" statusTypeId="CommunicationEvent"/>
+        <moqui.basic.StatusItem description="Unknown Party" sequenceNum="98" statusId="CeUnknownParty" statusTypeId="CommunicationEvent"/>
+        <moqui.basic.StatusItem description="Cancelled" sequenceNum="99" statusId="CeCancelled" statusTypeId="CommunicationEvent"/>
+        <moqui.basic.StatusFlowTransition statusFlowId="Default" statusId="CeInProgress" toStatusId="CeReady" transitionName="Entered"/>
+        <moqui.basic.StatusFlowTransition statusFlowId="Default" statusId="CeInProgress" toStatusId="CeReceived" transitionName="Receive"/>
+        <moqui.basic.StatusFlowTransition statusFlowId="Default" statusId="CeReady" toStatusId="CeSent" transitionName="Send"/>
+        <moqui.basic.StatusFlowTransition statusFlowId="Default" statusId="CeReady" toStatusId="CeReceived" transitionName="Receive"/>
+        <moqui.basic.StatusFlowTransition statusFlowId="Default" statusId="CeSent" toStatusId="CeReceived" transitionName="Receive"/>
+        <moqui.basic.StatusFlowTransition statusFlowId="Default" statusId="CeSent" toStatusId="CeViewed" transitionName="View"/>
+        <moqui.basic.StatusFlowTransition statusFlowId="Default" statusId="CeReceived" toStatusId="CeViewed" transitionName="View"/>
+        <moqui.basic.StatusFlowTransition statusFlowId="Default" statusId="CeReceived" toStatusId="CeAssigned" transitionName="Assigned"/>
+        <moqui.basic.StatusFlowTransition statusFlowId="Default" statusId="CeReceived" toStatusId="CeResolved" transitionName="Resolve"/>
+        <moqui.basic.StatusFlowTransition statusFlowId="Default" statusId="CeReceived" toStatusId="CeReferred" transitionName="Refer"/>
+        <moqui.basic.StatusFlowTransition statusFlowId="Default" statusId="CeReceived" toStatusId="CeBounced" transitionName="Bounce"/>
+        <moqui.basic.StatusFlowTransition statusFlowId="Default" statusId="CeViewed" toStatusId="CeAssigned" transitionName="Assigned"/>
+        <moqui.basic.StatusFlowTransition statusFlowId="Default" statusId="CeViewed" toStatusId="CeReceived" transitionName="Un-view"/>
+        <moqui.basic.StatusFlowTransition statusFlowId="Default" statusId="CeViewed" toStatusId="CeResolved" transitionName="Resolve"/>
+        <moqui.basic.StatusFlowTransition statusFlowId="Default" statusId="CeViewed" toStatusId="CeReferred" transitionName="Refer"/>
+        <moqui.basic.StatusFlowTransition statusFlowId="Default" statusId="CeViewed" toStatusId="CeBounced" transitionName="Bounce"/>
+        <moqui.basic.StatusFlowTransition statusFlowId="Default" statusId="CeAssigned" toStatusId="CeResolved" transitionName="Resolve"/>
+        <moqui.basic.StatusFlowTransition statusFlowId="Default" statusId="CeAssigned" toStatusId="CeReferred" transitionName="Refer"/>
+        <moqui.basic.StatusFlowTransition statusFlowId="Default" statusId="CeUnknownParty" toStatusId="CeReceived" transitionName="Receive"/>
+        <moqui.basic.StatusFlowTransition statusFlowId="Default" statusId="CeUnknownParty" toStatusId="CeReady" transitionName="Correct (Ready)"/>
+        <moqui.basic.StatusFlowTransition statusFlowId="Default" statusId="CeReady" toStatusId="CeCancelled" transitionName="Cancel"/>
+        <moqui.basic.StatusFlowTransition statusFlowId="Default" statusId="CeInProgress" toStatusId="CeCancelled" transitionName="Cancel"/>
+        <moqui.basic.StatusFlowTransition statusFlowId="Default" statusId="CeReceived" toStatusId="CeCancelled" transitionName="Cancel"/>
+        <moqui.basic.StatusFlowTransition statusFlowId="Default" statusId="CeViewed" toStatusId="CeCancelled" transitionName="Cancel"/>
+        <moqui.basic.StatusFlowTransition statusFlowId="Default" statusId="CeAssigned" toStatusId="CeCancelled" transitionName="Cancel"/>
+        <moqui.basic.StatusFlowTransition statusFlowId="Default" statusId="CeResolved" toStatusId="CeCancelled" transitionName="Cancel"/>
+        <moqui.basic.StatusFlowTransition statusFlowId="Default" statusId="CeReferred" toStatusId="CeCancelled" transitionName="Cancel"/>
+        <moqui.basic.StatusFlowTransition statusFlowId="Default" statusId="CeUnknownParty" toStatusId="CeCancelled" transitionName="Cancel"/>
+        <moqui.basic.EnumerationType description="Communication Event Reason" enumTypeId="CommunicationEventReason"/>
+    </seed-data>
+    <master>
+        <detail relationship="type"/>
+        <detail relationship="contactMechType"/>
+        <detail relationship="status"/>
+        <detail relationship="parent" use-master="default"/>
+        <detail relationship="root" use-master="default"/>
+        <detail relationship="children" use-master="default"/>
+        <detail relationship="fromContactMech"/>
+        <detail relationship="toContactMech"/>
+        <detail relationship="fromParty"/>
+        <detail relationship="fromRole"/>
+        <detail relationship="toParty"/>
+        <detail relationship="toRole"/>
+        <detail relationship="contactList"/>
+        <detail relationship="reason"/>
+        <detail relationship="contents"/>
+        <detail relationship="parties">
+            <detail relationship="party" use-master="basic"/>
+            <detail relationship="role"/>
+            <detail relationship="contactMech" use-master="default"/>
+            <detail relationship="status"/>
+        </detail>
+        <detail relationship="products">
+            <detail relationship="product"/></detail>
+        <detail relationship="purposes">
+            <detail relationship="purpose"/></detail>
+        <detail relationship="orders"/>
+    </master>
+    <field name="lastUpdatedStamp" type="date-time"/>
+    <relationship related="mantle.marketing.contact.ContactListCommStatus" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="communicationEventId" related="communicationEventId"/></relationship>
+    <relationship related="mantle.party.communication.WikiPageCommunicationEvent" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="communicationEventId" related="communicationEventId"/></relationship>
+    <relationship related="mantle.product.subscription.SubscriptionDelivery" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="communicationEventId" related="communicationEventId"/></relationship>
+    <relationship related="mantle.request.RequestCommEvent" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="communicationEventId" related="communicationEventId"/></relationship>
+    <relationship related="mantle.sales.need.PartyNeed" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="communicationEventId" related="communicationEventId"/></relationship>
+    <relationship related="mantle.work.effort.WorkEffortCommEvent" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="communicationEventId" related="communicationEventId"/></relationship>
+
+</entity>

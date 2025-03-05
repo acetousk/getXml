@@ -1,0 +1,10 @@
+
+<!-- Entity Name: mantle.product.ProductClassUomDimension sql table: PRODUCT_CLASS_UOM_DIMENSION --><entity entity-name="ProductClassUomDimension" package="mantle.product">
+    <field name="productClassEnumId" type="id" is-pk="true"/>
+    <field name="uomDimensionTypeId" type="id" is-pk="true"/>
+    <relationship type="one" title="ProductClass" related="moqui.basic.Enumeration">
+        <key-map field-name="productClassEnumId"/></relationship>
+    <relationship type="one" related="moqui.basic.UomDimensionType" short-alias="type"/>
+    <field name="lastUpdatedStamp" type="date-time"/>
+
+</entity>

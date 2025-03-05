@@ -1,0 +1,1 @@
+<!-- Screen Location component://tools/screen/System/Print/PrintJob.xml --><screen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://moqui.org/xsd/xml-screen-3.xsd" default-menu-title="Print Jobs" default-menu-index="1"><subscreens default-item="PrintJobList"/><widgets><subscreens-active/></widgets></screen>

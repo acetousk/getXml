@@ -1,0 +1,63 @@
+
+<!-- Entity Name: mantle.account.method.BankAccount sql table: BANK_ACCOUNT --><entity entity-name="BankAccount" package="mantle.account.method" cache="never">
+    <field name="paymentMethodId" type="id" is-pk="true"/>
+    <field name="bankName" type="text-medium"/>
+    <field name="bankPartyId" type="id"/>
+    <field name="typeEnumId" type="id"/>
+    <field name="routingNumber" type="text-short"/>
+    <field name="accountNumber" type="text-medium"/>
+    <field name="lastCheckNumber" type="number-integer"/>
+    <field name="nachaImmedDest" type="text-short">
+        <description><![CDATA[Must be 9 digits, generally assigned by bank,
+            usually bank routing/transit number]]></description></field>
+    <field name="nachaImmedOrig" type="text-short">
+        <description><![CDATA[Must be 9 digits, generally assigned by bank,
+            ID identifying company as source/origin for NACHA files]]></description></field>
+    <field name="nachaImmedDestName" type="text-short">
+        <description><![CDATA[Defaults to bankName, upper-cased;
+            must not be more than 23 characters]]></description></field>
+    <field name="nachaImmedOrigName" type="text-short">
+        <description><![CDATA[Defaults to companyNameOnAccount, upper-cased;
+            must not be more than 23 characters]]></description></field>
+    <field name="nachaCompanyName" type="text-short">
+        <description><![CDATA[Used to identify company in ACH transactions.
+            Defaults to companyNameOnAccount, upper-cased; must not be more than 16 characters for NACHA files]]></description></field>
+    <field name="nachaDiscrData" type="text-short">
+        <description><![CDATA[Discretionary data, may be sub account or other;
+            must not be more than 20 characters]]></description></field>
+    <field name="nachaCompanyId" type="text-short">
+        <description><![CDATA[Bank-assigned Company ID for ACH transactions;
+            must not be more than 10 characters]]></description></field>
+    <field name="nachaOdfiId" type="text-short">
+        <description><![CDATA[Batch ODFI ID (Originating Depository Financial Institution),
+            8 digits, defaults to first 8 digits of nachaImmedDest (Immediate Destination ID)]]></description></field>
+    <field name="nachaEntryDescription" type="text-short">
+        <description><![CDATA[A description to be added to ACH transactions
+            (such as Payroll, Order); must not be more than 10 characters]]></description></field>
+    <field name="nachaAddNewLine" type="text-indicator"/>
+    <field name="nachaAddOffsetRecord" type="text-indicator"/>
+    <field name="posPayBankNumber" type="text-short">
+        <description><![CDATA[Number specified by bank to identify bank in positive pay files]]></description></field>
+    <field name="posPayFormatEnumId" type="id"/>
+    <relationship type="one" related="mantle.account.method.PaymentMethod"/>
+    <relationship type="one" title="Bank" related="mantle.party.Party">
+        <key-map field-name="bankPartyId"/></relationship>
+    <relationship type="one" title="BankAccountType" related="moqui.basic.Enumeration">
+        <key-map field-name="typeEnumId"/></relationship>
+    <relationship type="one" title="PaymentMethodFileType" related="moqui.basic.Enumeration">
+        <key-map field-name="posPayFormatEnumId"/></relationship>
+    <seed-data>
+        <moqui.basic.EnumerationType description="Bank Account Type" enumTypeId="BankAccountType"/>
+        <moqui.basic.Enumeration description="Checking" enumId="BatChecking" enumTypeId="BankAccountType"/>
+        <moqui.basic.Enumeration description="Savings" enumId="BatSavings" enumTypeId="BankAccountType"/>
+        <moqui.basic.Enumeration description="Money Market" enumId="BatMoneyMarket" enumTypeId="BankAccountType"/>
+        <moqui.basic.Enumeration description="Certificate of Deposit" enumId="BatCertDep" enumTypeId="BankAccountType"/>
+        <moqui.basic.Enumeration description="Retirement" enumId="BatRetirement" enumTypeId="BankAccountType"/>
+        <moqui.basic.Enumeration description="Credit Installment" enumId="BatCreditInstallment" enumTypeId="BankAccountType"/>
+        <moqui.basic.Enumeration description="Credit Open" enumId="BatCreditOpen" enumTypeId="BankAccountType"/>
+        <moqui.basic.Enumeration description="Credit Revolving" enumId="BatCreditRevolving" enumTypeId="BankAccountType"/>
+        <moqui.basic.Enumeration description="Credit Secured" enumId="BatCreditSecured" enumTypeId="BankAccountType"/>
+    </seed-data>
+    <field name="lastUpdatedStamp" type="date-time"/>
+
+</entity>

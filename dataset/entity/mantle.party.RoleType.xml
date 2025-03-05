@@ -1,0 +1,312 @@
+
+<!-- Entity Name: mantle.party.RoleType sql table: ROLE_TYPE --><entity entity-name="RoleType" package="mantle.party" cache="true" has-dependents="true">
+    <field name="roleTypeId" type="id" is-pk="true"/>
+    <field name="parentTypeId" type="id"/>
+    <field name="description" type="text-medium"/>
+    <relationship type="one" title="Parent" related="mantle.party.RoleType">
+        <key-map field-name="parentTypeId" related="roleTypeId"/></relationship>
+    <seed-data>
+        <mantle.party.RoleType description="Not Applicable" roleTypeId="_NA_"/>
+        <mantle.party.RoleType description="Agent" roleTypeId="Agent"/>
+        <mantle.party.RoleType description="Affiliate" roleTypeId="Affiliate"/>
+        <mantle.party.RoleType description="Asset Owner" roleTypeId="AssetOwner"/>
+        <mantle.party.RoleType description="Bad Actor (Banned)" roleTypeId="BadActor"/>
+        <mantle.party.RoleType description="Carrier" roleTypeId="Carrier"/>
+        <mantle.party.RoleType description="Competitor" roleTypeId="Competitor"/>
+        <mantle.party.RoleType description="Consumer" roleTypeId="Consumer"/>
+        <mantle.party.RoleType description="Contractor" roleTypeId="Contractor"/>
+        <mantle.party.RoleType description="Distributor" roleTypeId="Distributor"/>
+        <mantle.party.RoleType description="Garnishment Payee" roleTypeId="GarnishmentPayee"/>
+        <mantle.party.RoleType description="Internet Service Provider" roleTypeId="InternetSp"/>
+        <mantle.party.RoleType description="Hosting Provider" roleTypeId="HostingProvider"/>
+        <mantle.party.RoleType description="Manufacturer" roleTypeId="Manufacturer"/>
+        <mantle.party.RoleType description="Owner" roleTypeId="Owner"/>
+        <mantle.party.RoleType description="Partner" roleTypeId="Partner"/>
+        <mantle.party.RoleType description="Payroll Other Payee" roleTypeId="PayrollOtherPayee"/>
+        <mantle.party.RoleType description="Prospect" roleTypeId="Prospect"/>
+        <mantle.party.RoleType description="Referrer" roleTypeId="Referrer"/>
+        <mantle.party.RoleType description="Sales Account" roleTypeId="Account"/>
+        <mantle.party.RoleType description="Sales Account Lead" roleTypeId="AccountLead"/>
+        <mantle.party.RoleType description="Shareholder" roleTypeId="Shareholder"/>
+        <mantle.party.RoleType description="Subscriber" roleTypeId="Subscriber"/>
+        <mantle.party.RoleType description="Supplier" roleTypeId="Supplier"/>
+        <mantle.party.RoleType description="Visitor" roleTypeId="Visitor"/>
+        <mantle.party.RoleType description="Web Master" roleTypeId="WebMaster"/>
+        <mantle.party.RoleType description="Accountant" roleTypeId="Accountant"/>
+        <mantle.party.RoleType description="Administrator" roleTypeId="Administrator"/>
+        <mantle.party.RoleType description="Assignee" roleTypeId="Assignee"/>
+        <mantle.party.RoleType description="Buyer" roleTypeId="Buyer"/>
+        <mantle.party.RoleType description="Cashier" roleTypeId="Cashier"/>
+        <mantle.party.RoleType description="Client Billing Rep" roleTypeId="ClientBilling"/>
+        <mantle.party.RoleType description="Client Manager" roleTypeId="ClientManager"/>
+        <mantle.party.RoleType description="Email Administrator" roleTypeId="EmailAdmin"/>
+        <mantle.party.RoleType description="Employee" roleTypeId="Employee"/>
+        <mantle.party.RoleType description="Executive" roleTypeId="Executive"/>
+        <mantle.party.RoleType description="Family Member" roleTypeId="FamilyMember"/>
+        <mantle.party.RoleType description="Human Resources Manager" roleTypeId="HumanResourcesManager"/>
+        <mantle.party.RoleType description="Inventory Manager" roleTypeId="InventoryManager"/>
+        <mantle.party.RoleType description="Manager" roleTypeId="Manager"/>
+        <mantle.party.RoleType description="Operator" roleTypeId="Operator"/>
+        <mantle.party.RoleType description="Order Clerk" roleTypeId="OrderClerk"/>
+        <mantle.party.RoleType description="Packer" roleTypeId="Packer"/>
+        <mantle.party.RoleType description="Payroll" roleTypeId="Payroll"/>
+        <mantle.party.RoleType description="Picker" roleTypeId="Picker"/>
+        <mantle.party.RoleType description="Production Manager" roleTypeId="ProductionManager"/>
+        <mantle.party.RoleType description="Production Worker" roleTypeId="ProductionWorker"/>
+        <mantle.party.RoleType description="Receiver" roleTypeId="Receiver"/>
+        <mantle.party.RoleType description="Reporter" roleTypeId="Reporter"/>
+        <mantle.party.RoleType description="Sales Contact" roleTypeId="Contact"/>
+        <mantle.party.RoleType description="Sales Representative" roleTypeId="SalesRepresentative"/>
+        <mantle.party.RoleType description="Shipment Clerk" roleTypeId="ShipmentClerk"/>
+        <mantle.party.RoleType description="Sponsor" roleTypeId="Sponsor"/>
+        <mantle.party.RoleType description="Spouse" roleTypeId="Spouse"/>
+        <mantle.party.RoleType description="Stocker" roleTypeId="Stocker"/>
+        <mantle.party.RoleType description="Supplier Agent" roleTypeId="SupplierAgent"/>
+        <mantle.party.RoleType description="Technical Contact" roleTypeId="TechContact"/>
+        <mantle.party.RoleType description="Watcher" roleTypeId="Watcher"/>
+        <mantle.party.RoleType description="Worker" roleTypeId="Worker"/>
+        <mantle.party.RoleType description="Business Analyst" roleTypeId="BusinessAnalyst"/>
+        <mantle.party.RoleType description="Default Assignee" roleTypeId="DefaultAssignee"/>
+        <mantle.party.RoleType description="Expert User" roleTypeId="ExpertUser"/>
+        <mantle.party.RoleType description="Programmer" roleTypeId="Programmer"/>
+        <mantle.party.RoleType description="Programmer Lead" roleTypeId="ProgrammerLead"/>
+        <mantle.party.RoleType description="Project Manager" roleTypeId="ProjectManager"/>
+        <mantle.party.RoleType description="Quality Analyst" roleTypeId="QualityAnalyst"/>
+        <mantle.party.RoleType description="Quality Lead" roleTypeId="QualityLead"/>
+        <mantle.party.RoleType description="System Administrator" roleTypeId="SysAdmin"/>
+        <mantle.party.RoleType description="System Architect" roleTypeId="SysArchitect"/>
+        <mantle.party.RoleType description="UI Designer" roleTypeId="UiDesigner"/>
+        <moqui.basic.Enumeration description="Person Roles" enumId="RgpPerson" enumTypeId="RoleGroup"/>
+        <mantle.party.RoleGroupMember roleGroupEnumId="RgpPerson" roleTypeId="Accountant"/>
+        <mantle.party.RoleGroupMember roleGroupEnumId="RgpPerson" roleTypeId="Administrator"/>
+        <mantle.party.RoleGroupMember roleGroupEnumId="RgpPerson" roleTypeId="Assignee"/>
+        <mantle.party.RoleGroupMember roleGroupEnumId="RgpPerson" roleTypeId="Buyer"/>
+        <mantle.party.RoleGroupMember roleGroupEnumId="RgpPerson" roleTypeId="Cashier"/>
+        <mantle.party.RoleGroupMember roleGroupEnumId="RgpPerson" roleTypeId="ClientBilling"/>
+        <mantle.party.RoleGroupMember roleGroupEnumId="RgpPerson" roleTypeId="ClientManager"/>
+        <mantle.party.RoleGroupMember roleGroupEnumId="RgpPerson" roleTypeId="Contact"/>
+        <mantle.party.RoleGroupMember roleGroupEnumId="RgpPerson" roleTypeId="EmailAdmin"/>
+        <mantle.party.RoleGroupMember roleGroupEnumId="RgpPerson" roleTypeId="Employee"/>
+        <mantle.party.RoleGroupMember roleGroupEnumId="RgpPerson" roleTypeId="FamilyMember"/>
+        <mantle.party.RoleGroupMember roleGroupEnumId="RgpPerson" roleTypeId="HumanResourcesManager"/>
+        <mantle.party.RoleGroupMember roleGroupEnumId="RgpPerson" roleTypeId="InventoryManager"/>
+        <mantle.party.RoleGroupMember roleGroupEnumId="RgpPerson" roleTypeId="Manager"/>
+        <mantle.party.RoleGroupMember roleGroupEnumId="RgpPerson" roleTypeId="Operator"/>
+        <mantle.party.RoleGroupMember roleGroupEnumId="RgpPerson" roleTypeId="OrderClerk"/>
+        <mantle.party.RoleGroupMember roleGroupEnumId="RgpPerson" roleTypeId="Packer"/>
+        <mantle.party.RoleGroupMember roleGroupEnumId="RgpPerson" roleTypeId="Picker"/>
+        <mantle.party.RoleGroupMember roleGroupEnumId="RgpPerson" roleTypeId="ProductionManager"/>
+        <mantle.party.RoleGroupMember roleGroupEnumId="RgpPerson" roleTypeId="Receiver"/>
+        <mantle.party.RoleGroupMember roleGroupEnumId="RgpPerson" roleTypeId="Reporter"/>
+        <mantle.party.RoleGroupMember roleGroupEnumId="RgpPerson" roleTypeId="SalesRepresentative"/>
+        <mantle.party.RoleGroupMember roleGroupEnumId="RgpPerson" roleTypeId="ShipmentClerk"/>
+        <mantle.party.RoleGroupMember roleGroupEnumId="RgpPerson" roleTypeId="Sponsor"/>
+        <mantle.party.RoleGroupMember roleGroupEnumId="RgpPerson" roleTypeId="Spouse"/>
+        <mantle.party.RoleGroupMember roleGroupEnumId="RgpPerson" roleTypeId="Stocker"/>
+        <mantle.party.RoleGroupMember roleGroupEnumId="RgpPerson" roleTypeId="SupplierAgent"/>
+        <mantle.party.RoleGroupMember roleGroupEnumId="RgpPerson" roleTypeId="Watcher"/>
+        <mantle.party.RoleGroupMember roleGroupEnumId="RgpPerson" roleTypeId="Worker"/>
+        <mantle.party.RoleGroupMember roleGroupEnumId="RgpPerson" roleTypeId="BusinessAnalyst"/>
+        <mantle.party.RoleGroupMember roleGroupEnumId="RgpPerson" roleTypeId="DefaultAssignee"/>
+        <mantle.party.RoleGroupMember roleGroupEnumId="RgpPerson" roleTypeId="ExpertUser"/>
+        <mantle.party.RoleGroupMember roleGroupEnumId="RgpPerson" roleTypeId="Programmer"/>
+        <mantle.party.RoleGroupMember roleGroupEnumId="RgpPerson" roleTypeId="ProgrammerLead"/>
+        <mantle.party.RoleGroupMember roleGroupEnumId="RgpPerson" roleTypeId="ProjectManager"/>
+        <mantle.party.RoleGroupMember roleGroupEnumId="RgpPerson" roleTypeId="QualityAnalyst"/>
+        <mantle.party.RoleGroupMember roleGroupEnumId="RgpPerson" roleTypeId="QualityLead"/>
+        <mantle.party.RoleGroupMember roleGroupEnumId="RgpPerson" roleTypeId="SysAdmin"/>
+        <mantle.party.RoleGroupMember roleGroupEnumId="RgpPerson" roleTypeId="SysArchitect"/>
+        <mantle.party.RoleGroupMember roleGroupEnumId="RgpPerson" roleTypeId="UiDesigner"/>
+        <mantle.party.RoleType description="Association" roleTypeId="OrgAssociation"/>
+        <mantle.party.RoleType description="Corporation" roleTypeId="OrgCorporation"/>
+        <mantle.party.RoleType description="Department" roleTypeId="OrgDepartment"/>
+        <mantle.party.RoleType description="Division" roleTypeId="OrgDivision"/>
+        <mantle.party.RoleType description="Employer" roleTypeId="OrgEmployer"/>
+        <mantle.party.RoleType description="Family" roleTypeId="OrgFamily"/>
+        <mantle.party.RoleType description="Government" roleTypeId="OrgGovernment"/>
+        <mantle.party.RoleType description="Government Agency" roleTypeId="OrgGovernmentAgency"/>
+        <mantle.party.RoleType description="Household" roleTypeId="OrgHousehold"/>
+        <mantle.party.RoleType description="Internal Organization" roleTypeId="OrgInternal"/>
+        <mantle.party.RoleType description="Team" roleTypeId="OrgTeam"/>
+        <mantle.party.RoleType description="Unit" roleTypeId="OrgUnit"/>
+        <mantle.party.RoleType description="Parent" roleTypeId="OrgParent"/>
+        <mantle.party.RoleType description="Regulatory Agency" roleTypeId="OrgRegulatoryAgency"/>
+        <mantle.party.RoleType description="Subsidiary" roleTypeId="OrgSubsidiary"/>
+        <mantle.party.RoleType description="Tax Authority" roleTypeId="OrgTaxAuthority"/>
+        <mantle.party.RoleType description="Union" roleTypeId="OrgUnion"/>
+        <moqui.basic.Enumeration description="Organization Roles" enumId="RgpOrganization" enumTypeId="RoleGroup"/>
+        <mantle.party.RoleGroupMember roleGroupEnumId="RgpOrganization" roleTypeId="OrgAssociation"/>
+        <mantle.party.RoleGroupMember roleGroupEnumId="RgpOrganization" roleTypeId="OrgCorporation"/>
+        <mantle.party.RoleGroupMember roleGroupEnumId="RgpOrganization" roleTypeId="OrgDepartment"/>
+        <mantle.party.RoleGroupMember roleGroupEnumId="RgpOrganization" roleTypeId="OrgDivision"/>
+        <mantle.party.RoleGroupMember roleGroupEnumId="RgpOrganization" roleTypeId="OrgFamily"/>
+        <mantle.party.RoleGroupMember roleGroupEnumId="RgpOrganization" roleTypeId="OrgGovernment"/>
+        <mantle.party.RoleGroupMember roleGroupEnumId="RgpOrganization" roleTypeId="OrgGovernmentAgency"/>
+        <mantle.party.RoleGroupMember roleGroupEnumId="RgpOrganization" roleTypeId="OrgHousehold"/>
+        <mantle.party.RoleGroupMember roleGroupEnumId="RgpOrganization" roleTypeId="OrgInternal"/>
+        <mantle.party.RoleGroupMember roleGroupEnumId="RgpOrganization" roleTypeId="OrgTeam"/>
+        <mantle.party.RoleGroupMember roleGroupEnumId="RgpOrganization" roleTypeId="OrgUnit"/>
+        <mantle.party.RoleGroupMember roleGroupEnumId="RgpOrganization" roleTypeId="OrgParent"/>
+        <mantle.party.RoleGroupMember roleGroupEnumId="RgpOrganization" roleTypeId="OrgRegulatoryAgency"/>
+        <mantle.party.RoleGroupMember roleGroupEnumId="RgpOrganization" roleTypeId="OrgSubsidiary"/>
+        <mantle.party.RoleGroupMember roleGroupEnumId="RgpOrganization" roleTypeId="OrgTaxAuthority"/>
+        <mantle.party.RoleGroupMember roleGroupEnumId="RgpOrganization" roleTypeId="OrgUnion"/>
+        <mantle.party.RoleType description="Attendee" roleTypeId="Attendee"/>
+        <mantle.party.RoleType description="Delegate" roleTypeId="Delegate"/>
+        <mantle.party.RoleType description="Host" roleTypeId="Host"/>
+        <mantle.party.RoleType description="Organizer" roleTypeId="Organizer"/>
+        <moqui.basic.Enumeration description="Calendar Roles" enumId="RgpCalendar" enumTypeId="RoleGroup"/>
+        <mantle.party.RoleGroupMember roleGroupEnumId="RgpCalendar" roleTypeId="Attendee"/>
+        <mantle.party.RoleGroupMember roleGroupEnumId="RgpCalendar" roleTypeId="Delegate"/>
+        <mantle.party.RoleGroupMember roleGroupEnumId="RgpCalendar" roleTypeId="Host"/>
+        <mantle.party.RoleGroupMember roleGroupEnumId="RgpCalendar" roleTypeId="Organizer"/>
+        <mantle.party.RoleGroupMember roleGroupEnumId="RgpCalendar" roleTypeId="Owner"/>
+        <mantle.party.RoleType description="Customer" roleTypeId="Customer"/>
+        <mantle.party.RoleType description="Customer - Bill To" parentTypeId="Customer" roleTypeId="CustomerBillTo"/>
+        <mantle.party.RoleType description="Customer - End User" parentTypeId="Customer" roleTypeId="CustomerEndUser"/>
+        <mantle.party.RoleType description="Customer - Placing" parentTypeId="Customer" roleTypeId="CustomerPlacing"/>
+        <mantle.party.RoleType description="Customer - Ship To" parentTypeId="Customer" roleTypeId="CustomerShipTo"/>
+        <mantle.party.RoleType description="Vendor" roleTypeId="Vendor"/>
+        <mantle.party.RoleType description="Vendor - Bill From" parentTypeId="Vendor" roleTypeId="VendorBillFrom"/>
+        <mantle.party.RoleType description="Vendor - Ship From" parentTypeId="Vendor" roleTypeId="VendorShipFrom"/>
+        <mantle.party.RoleType description="Vendor - Pick Up From" parentTypeId="Vendor" roleTypeId="VendorPickUpFrom"/>
+        <moqui.basic.Enumeration description="Order Roles" enumId="RgpOrder" enumTypeId="RoleGroup"/>
+        <mantle.party.RoleGroupMember roleGroupEnumId="RgpOrder" roleTypeId="Customer"/>
+        <mantle.party.RoleGroupMember roleGroupEnumId="RgpOrder" roleTypeId="CustomerBillTo"/>
+        <mantle.party.RoleGroupMember roleGroupEnumId="RgpOrder" roleTypeId="CustomerEndUser"/>
+        <mantle.party.RoleGroupMember roleGroupEnumId="RgpOrder" roleTypeId="CustomerPlacing"/>
+        <mantle.party.RoleGroupMember roleGroupEnumId="RgpOrder" roleTypeId="CustomerShipTo"/>
+        <mantle.party.RoleGroupMember roleGroupEnumId="RgpOrder" roleTypeId="Vendor"/>
+        <mantle.party.RoleGroupMember roleGroupEnumId="RgpOrder" roleTypeId="VendorBillFrom"/>
+        <mantle.party.RoleGroupMember roleGroupEnumId="RgpOrder" roleTypeId="VendorShipFrom"/>
+        <mantle.party.RoleGroupMember roleGroupEnumId="RgpOrder" roleTypeId="VendorPickUpFrom"/>
+        <mantle.party.RoleGroupMember roleGroupEnumId="RgpOrder" roleTypeId="Supplier"/>
+        <mantle.party.RoleGroupMember roleGroupEnumId="RgpOrder" roleTypeId="Account"/>
+        <mantle.party.RoleGroupMember roleGroupEnumId="RgpOrder" roleTypeId="Agent"/>
+        <mantle.party.RoleGroupMember roleGroupEnumId="RgpOrder" roleTypeId="Affiliate"/>
+        <mantle.party.RoleGroupMember roleGroupEnumId="RgpOrder" roleTypeId="Carrier"/>
+        <mantle.party.RoleGroupMember roleGroupEnumId="RgpOrder" roleTypeId="Competitor"/>
+        <mantle.party.RoleGroupMember roleGroupEnumId="RgpOrder" roleTypeId="Partner"/>
+        <mantle.party.RoleGroupMember roleGroupEnumId="RgpOrder" roleTypeId="Referrer"/>
+        <mantle.party.RoleGroupMember roleGroupEnumId="RgpOrder" roleTypeId="Buyer"/>
+        <mantle.party.RoleGroupMember roleGroupEnumId="RgpOrder" roleTypeId="Cashier"/>
+        <mantle.party.RoleGroupMember roleGroupEnumId="RgpOrder" roleTypeId="ClientBilling"/>
+        <mantle.party.RoleGroupMember roleGroupEnumId="RgpOrder" roleTypeId="OrderClerk"/>
+        <mantle.party.RoleGroupMember roleGroupEnumId="RgpOrder" roleTypeId="SalesRepresentative"/>
+        <moqui.basic.Enumeration description="Account Contact Roles" enumId="RgpAccountContact" enumTypeId="RoleGroup"/>
+        <mantle.party.RoleGroupMember roleGroupEnumId="RgpAccountContact" roleTypeId="Accountant"/>
+        <mantle.party.RoleGroupMember roleGroupEnumId="RgpAccountContact" roleTypeId="Buyer"/>
+        <mantle.party.RoleGroupMember roleGroupEnumId="RgpAccountContact" roleTypeId="ClientBilling"/>
+        <mantle.party.RoleGroupMember roleGroupEnumId="RgpAccountContact" roleTypeId="ClientManager"/>
+        <mantle.party.RoleGroupMember roleGroupEnumId="RgpAccountContact" roleTypeId="InventoryManager"/>
+        <mantle.party.RoleGroupMember roleGroupEnumId="RgpAccountContact" roleTypeId="Manager"/>
+        <mantle.party.RoleGroupMember roleGroupEnumId="RgpAccountContact" roleTypeId="OrderClerk"/>
+        <mantle.party.RoleGroupMember roleGroupEnumId="RgpAccountContact" roleTypeId="Owner"/>
+        <mantle.party.RoleGroupMember roleGroupEnumId="RgpAccountContact" roleTypeId="Receiver"/>
+        <mantle.party.RoleGroupMember roleGroupEnumId="RgpAccountContact" roleTypeId="ProductionManager"/>
+        <mantle.party.RoleGroupMember roleGroupEnumId="RgpAccountContact" roleTypeId="SalesRepresentative"/>
+        <mantle.party.RoleGroupMember roleGroupEnumId="RgpAccountContact" roleTypeId="ShipmentClerk"/>
+        <mantle.party.RoleGroupMember roleGroupEnumId="RgpAccountContact" roleTypeId="SupplierAgent"/>
+        <mantle.party.RoleGroupMember roleGroupEnumId="RgpAccountContact" roleTypeId="TechContact"/>
+        <moqui.basic.Enumeration description="Directly Applied Roles" enumId="RgpDirect" enumTypeId="RoleGroup"/>
+        <mantle.party.RoleGroupMember roleGroupEnumId="RgpDirect" roleTypeId="Customer"/>
+        <mantle.party.RoleGroupMember roleGroupEnumId="RgpDirect" roleTypeId="Account"/>
+        <mantle.party.RoleGroupMember roleGroupEnumId="RgpDirect" roleTypeId="Contact"/>
+        <mantle.party.RoleGroupMember roleGroupEnumId="RgpDirect" roleTypeId="Supplier"/>
+        <mantle.party.RoleGroupMember roleGroupEnumId="RgpDirect" roleTypeId="OrgInternal"/>
+        <mantle.party.RoleGroupMember roleGroupEnumId="RgpDirect" roleTypeId="Employee"/>
+        <mantle.party.RoleGroupMember roleGroupEnumId="RgpDirect" roleTypeId="BadActor"/>
+    </seed-data>
+    <field name="lastUpdatedStamp" type="date-time"/>
+    <relationship related="coarchy.product.ProductEvaluationParty" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="roleTypeId" related="roleTypeId"/></relationship>
+    <relationship related="mantle.account.billing.BillingAccountParty" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="roleTypeId" related="roleTypeId"/></relationship>
+    <relationship related="mantle.account.financial.FinancialAccountParty" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="roleTypeId" related="roleTypeId"/></relationship>
+    <relationship related="mantle.account.invoice.InvoiceParty" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="roleTypeId" related="roleTypeId"/></relationship>
+    <relationship related="mantle.facility.FacilityGroupParty" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="roleTypeId" related="roleTypeId"/></relationship>
+    <relationship related="mantle.facility.FacilityParty" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="roleTypeId" related="roleTypeId"/></relationship>
+    <relationship related="mantle.humanres.position.EmplPositionParty" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="roleTypeId" related="roleTypeId"/></relationship>
+    <relationship related="mantle.ledger.account.GlAccountParty" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="roleTypeId" related="roleTypeId"/></relationship>
+    <relationship related="mantle.ledger.config.GlAccountTypePartyDefault" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="roleTypeId" related="roleTypeId"/></relationship>
+    <relationship related="mantle.marketing.campaign.MarketingCampaignParty" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="roleTypeId" related="roleTypeId"/></relationship>
+    <relationship related="mantle.marketing.segment.MarketSegmentParty" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="roleTypeId" related="roleTypeId"/></relationship>
+    <relationship related="mantle.order.OrderContent" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="roleTypeId" related="roleTypeId"/></relationship>
+    <relationship related="mantle.order.OrderEmailMessage" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="roleTypeId" related="roleTypeId"/></relationship>
+    <relationship related="mantle.order.OrderItemFormResponse" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="roleTypeId" related="roleTypeId"/></relationship>
+    <relationship related="mantle.order.OrderItemParty" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="roleTypeId" related="roleTypeId"/></relationship>
+    <relationship related="mantle.order.OrderPartParty" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="roleTypeId" related="roleTypeId"/></relationship>
+    <relationship related="mantle.other.budget.BudgetParty" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="roleTypeId" related="roleTypeId"/></relationship>
+    <relationship related="mantle.party.PartyRelationship" type="many" is-auto-reverse="true" mutable="true" title="From">
+        <key-map field-name="roleTypeId" related="fromRoleTypeId"/></relationship>
+    <relationship related="mantle.party.PartyRelationship" type="many" is-auto-reverse="true" mutable="true" title="To">
+        <key-map field-name="roleTypeId" related="toRoleTypeId"/></relationship>
+    <relationship related="mantle.party.PartyRole" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="roleTypeId" related="roleTypeId"/></relationship>
+    <relationship related="mantle.party.PartySettingTypeRole" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="roleTypeId" related="roleTypeId"/></relationship>
+    <relationship related="mantle.party.RoleGroupMember" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="roleTypeId" related="roleTypeId"/></relationship>
+    <relationship related="mantle.party.agreement.Agreement" type="many" is-auto-reverse="true" mutable="true" title="Organization">
+        <key-map field-name="roleTypeId" related="organizationRoleTypeId"/></relationship>
+    <relationship related="mantle.party.agreement.Agreement" type="many" is-auto-reverse="true" mutable="true" title="Other">
+        <key-map field-name="roleTypeId" related="otherRoleTypeId"/></relationship>
+    <relationship related="mantle.party.agreement.AgreementItemParty" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="roleTypeId" related="roleTypeId"/></relationship>
+    <relationship related="mantle.party.agreement.AgreementParty" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="roleTypeId" related="roleTypeId"/></relationship>
+    <relationship related="mantle.party.communication.CommunicationEvent" type="many" is-auto-reverse="true" mutable="true" title="From">
+        <key-map field-name="roleTypeId" related="fromRoleTypeId"/></relationship>
+    <relationship related="mantle.party.communication.CommunicationEvent" type="many" is-auto-reverse="true" mutable="true" title="To">
+        <key-map field-name="roleTypeId" related="toRoleTypeId"/></relationship>
+    <relationship related="mantle.party.communication.CommunicationEventParty" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="roleTypeId" related="roleTypeId"/></relationship>
+    <relationship related="mantle.product.ProductDbForm" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="roleTypeId" related="roleTypeId"/></relationship>
+    <relationship related="mantle.product.ProductParty" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="roleTypeId" related="roleTypeId"/></relationship>
+    <relationship related="mantle.product.asset.AssetPartyAssignment" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="roleTypeId" related="roleTypeId"/></relationship>
+    <relationship related="mantle.product.asset.AssetPoolParty" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="roleTypeId" related="roleTypeId"/></relationship>
+    <relationship related="mantle.product.category.ProductCategoryParty" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="roleTypeId" related="roleTypeId"/></relationship>
+    <relationship related="mantle.product.issuance.AssetIssuanceParty" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="roleTypeId" related="roleTypeId"/></relationship>
+    <relationship related="mantle.product.store.ProductStoreGroupParty" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="roleTypeId" related="roleTypeId"/></relationship>
+    <relationship related="mantle.product.store.ProductStoreParty" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="roleTypeId" related="roleTypeId"/></relationship>
+    <relationship related="mantle.product.subscription.ProductSubscriptionResource" type="many" is-auto-reverse="true" mutable="true" title="Use">
+        <key-map field-name="roleTypeId" related="useRoleTypeId"/></relationship>
+    <relationship related="mantle.request.RequestParty" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="roleTypeId" related="roleTypeId"/></relationship>
+    <relationship related="mantle.request.requirement.RequirementParty" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="roleTypeId" related="roleTypeId"/></relationship>
+    <relationship related="mantle.sales.need.PartyNeed" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="roleTypeId" related="roleTypeId"/></relationship>
+    <relationship related="mantle.sales.opportunity.SalesOpportunityParty" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="roleTypeId" related="roleTypeId"/></relationship>
+    <relationship related="mantle.shipment.ShipmentParty" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="roleTypeId" related="roleTypeId"/></relationship>
+    <relationship related="mantle.work.effort.WorkEffortParty" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="roleTypeId" related="roleTypeId"/></relationship>
+    <relationship related="mantle.work.time.TimesheetParty" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="roleTypeId" related="roleTypeId"/></relationship>
+
+</entity>

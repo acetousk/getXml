@@ -1,0 +1,27 @@
+
+<!-- Entity Name: mantle.account.method.GiftCardFulfillment sql table: GIFT_CARD_FULFILLMENT --><entity entity-name="GiftCardFulfillment" package="mantle.account.method" cache="never">
+    <field name="fulfillmentId" type="id" is-pk="true"/>
+    <field name="typeEnumId" type="id"/>
+    <field name="merchantId" type="text-medium"/>
+    <field name="partyId" type="id"/>
+    <field name="orderId" type="id"/>
+    <field name="orderItemSeqId" type="id"/>
+    <field name="surveyResponseId" type="id"/>
+    <field name="cardNumber" type="text-medium" encrypt="true"/>
+    <field name="pinNumber" type="text-medium" encrypt="true"/>
+    <field name="amount" type="currency-amount"/>
+    <field name="responseCode" type="text-short"/>
+    <field name="referenceNum" type="text-short"/>
+    <field name="authCode" type="text-short"/>
+    <field name="fulfillmentDate" type="date-time"/>
+    <relationship type="one" title="GiftCardFulfillmentType" related="moqui.basic.Enumeration">
+        <key-map field-name="typeEnumId"/></relationship>
+    <relationship type="one" related="mantle.party.Party"/>
+    <relationship type="one" related="mantle.order.OrderHeader"/>
+    <relationship type="one" related="mantle.order.OrderItem">
+        <key-map field-name="orderId"/>
+        <key-map field-name="orderItemSeqId"/>
+    </relationship>
+    <field name="lastUpdatedStamp" type="date-time"/>
+
+</entity>

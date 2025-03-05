@@ -1,0 +1,45 @@
+
+<!-- Entity Name: moqui.server.instance.InstanceImageType sql table: INSTANCE_IMAGE_TYPE --><entity entity-name="InstanceImageType" package="moqui.server.instance" use="configuration" has-dependents="true">
+    <field name="imageTypeId" type="id" is-pk="true"/>
+    <field name="description" type="text-medium"/>
+    <field name="defaultInitCommand" type="text-medium"/>
+    <field name="defaultNetworkMode" type="text-short"/>
+    <relationship type="many" related="moqui.server.instance.InstanceImageTypeEnv" short-alias="envs">
+        <key-map field-name="imageTypeId"/></relationship>
+    <relationship type="many" related="moqui.server.instance.InstanceImageTypeLink" short-alias="links">
+        <key-map field-name="imageTypeId"/></relationship>
+    <relationship type="many" related="moqui.server.instance.InstanceImageTypeVolume" short-alias="vols">
+        <key-map field-name="imageTypeId"/></relationship>
+    <relationship type="many" related="moqui.server.instance.InstanceImageTypeHostConfig" short-alias="hostConfigs">
+        <key-map field-name="imageTypeId"/></relationship>
+    <seed-data>
+        <moqui.server.instance.InstanceImageType imageTypeId="moqui" description="Moqui Default Virtual Host" defaultInitCommand="conf=conf/MoquiProductionConf.xml" defaultNetworkMode="moqui_default">
+            <envs envName="VIRTUAL_HOST" envValue="${appInstance.hostName}"/>
+            <envs envName="webapp_http_host" envValue="${appInstance.hostName}"/>
+            <envs envName="webapp_http_port" envValue="80"/>
+            <envs envName="webapp_https_port" envValue="443"/>
+            <envs envName="webapp_https_enabled" envValue="true"/>
+            <envs envName="entity_ds_db_conf" envValue="${appInstance.database?.type?.confName?:''}"/>
+            <envs envName="entity_ds_host" envValue="${appInstance.database?.instanceAddress ?: appInstance.database?.hostAddress ?: ''}"/>
+            <envs envName="entity_ds_port" envValue="${appInstance.database?.hostPort?:''}"/>
+            <envs envName="entity_ds_database" envValue="${appInstance.hostName.replace('.', '_')}"/>
+            <envs envName="entity_ds_user" envValue="${appInstance.hostName.replace('.', '_')}"/>
+            <envs envName="entity_ds_password" envValue="${org.moqui.util.StringUtilities.getRandomString(15)}"/>
+            <links instanceName="moqui-database"/>
+            <vols mountPoint="/opt/moqui/runtime/log" volumeName="${appInstance.hostName.replace('.', '_')}-runtime_log"/>
+            <vols mountPoint="/opt/moqui/runtime/txlog" volumeName="${appInstance.hostName.replace('.', '_')}-runtime_txlog"/>
+            <vols mountPoint="/opt/moqui/runtime/sessions" volumeName="${appInstance.hostName.replace('.', '_')}-runtime_sessions"/>
+            <vols mountPoint="/opt/moqui/runtime/db" volumeName="${appInstance.hostName.replace('.', '_')}-runtime_db"/>
+            <vols mountPoint="/opt/moqui/runtime/elasticsearch" volumeName="${appInstance.hostName.replace('.', '_')}-runtime_elasticsearch"/>
+        </moqui.server.instance.InstanceImageType>
+        <moqui.server.instance.InstanceImage instanceImageId="DockerMoquiFramework" imageTypeId="moqui" hostTypeId="docker" imageName="moqui/moquiframework:latest"/>
+        <moqui.server.instance.InstanceImage instanceImageId="DockerMoquiDemo" imageTypeId="moqui" hostTypeId="docker" imageName="moqui/moquidemo:latest"/>
+        <moqui.server.instance.InstanceImage instanceImageId="DockerHiveMind" imageTypeId="moqui" hostTypeId="docker" imageName="moqui/hivemind:latest"/>
+        <moqui.server.instance.InstanceImage instanceImageId="DockerPopCommerce" imageTypeId="moqui" hostTypeId="docker" imageName="moqui/popcommerce:latest"/>
+        <moqui.server.instance.InstanceImage instanceImageId="DockerMoquiLocal" imageTypeId="moqui" hostTypeId="docker" imageName="moqui"/>
+    </seed-data>
+    <field name="lastUpdatedStamp" type="date-time"/>
+    <relationship related="moqui.server.instance.InstanceImage" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="imageTypeId" related="imageTypeId"/></relationship>
+
+</entity>

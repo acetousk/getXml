@@ -1,0 +1,42 @@
+
+<!-- Entity Name: mantle.product.asset.Container sql table: CONTAINER --><entity entity-name="Container" package="mantle.product.asset" sequence-primary-prefix="C" cache="never" has-dependents="true">
+    <field name="containerId" type="id" is-pk="true"/>
+    <field name="serialNumber" type="id" default="containerId">
+        <description><![CDATA[Serial number or license plate for the container.]]></description></field>
+    <field name="containerTypeEnumId" type="id"/>
+    <field name="createdDate" type="date-time" default="ec.user.nowTimestamp"/>
+    <field name="description" type="text-medium"/>
+    <field name="externalId" type="id">
+        <description><![CDATA[An identifier for the container in an external system (source, origin, etc).]]></description></field>
+    <field name="facilityId" type="id" enable-audit-log="update"/>
+    <field name="locationSeqId" type="id" enable-audit-log="update"/>
+    <field name="geoPointId" type="id" enable-audit-log="update"/>
+    <relationship type="one" title="ContainerType" related="moqui.basic.Enumeration">
+        <key-map field-name="containerTypeEnumId"/></relationship>
+    <relationship type="one" related="mantle.facility.Facility" short-alias="facility"/>
+    <relationship type="one-nofk" related="mantle.facility.FacilityLocation" short-alias="location"/>
+    <index name="CONTNR_SER_NUM" unique="false">
+        <index-field name="serialNumber"/></index>
+    <seed-data>
+        <moqui.basic.EnumerationType description="Container Type" enumTypeId="ContainerType"/>
+        <moqui.basic.Enumeration description="Bin - Shelf Std" enumId="CtBinShelf" enumTypeId="ContainerType"/>
+        <moqui.basic.Enumeration description="Pallet US 40x48in" enumId="CtPalletUs4048" enumTypeId="ContainerType"/>
+        <moqui.basic.Enumeration description="Pallet US 40x40in" enumId="CtPalletUs4040" enumTypeId="ContainerType"/>
+        <moqui.basic.Enumeration description="Pallet US 42x42in" enumId="CtPalletUs4242" enumTypeId="ContainerType"/>
+        <moqui.basic.Enumeration description="Pallet US 48x40in" enumId="CtPalletUs4840" enumTypeId="ContainerType"/>
+        <moqui.basic.Enumeration description="Pallet US 48x48in" enumId="CtPalletUs4848" enumTypeId="ContainerType"/>
+        <moqui.basic.Enumeration description="Pallet ISO1/EUR1 0.8x1.2m" enumId="CtPalletIso1" enumTypeId="ContainerType"/>
+        <moqui.basic.Enumeration description="Pallet ISO2/EUR2 1.2x1.0m" enumId="CtPalletIso2" enumTypeId="ContainerType"/>
+        <moqui.basic.Enumeration description="Pallet ISO0/EUR6 0.8x0.6m" enumId="CtPalletIso0" enumTypeId="ContainerType"/>
+        <moqui.basic.Enumeration description="Pallet EUR3 1.0x1.2m" enumId="CtPalletEur3" enumTypeId="ContainerType"/>
+        <moqui.basic.Enumeration description="Container ISO 40ft" enumId="CtContainerIso40" enumTypeId="ContainerType"/>
+        <moqui.basic.Enumeration description="Container ISO 20ft" enumId="CtContainerIso20" enumTypeId="ContainerType"/>
+    </seed-data>
+    <field name="lastUpdatedStamp" type="date-time"/>
+    <relationship related="mantle.product.asset.Asset" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="containerId" related="containerId"/></relationship>
+    <relationship related="mantle.shipment.Shipment" type="many" is-auto-reverse="true" mutable="true" title="Pick">
+        <key-map field-name="containerId" related="pickContainerId"/></relationship>
+
+<!-- eeca org.moqui.impl.entity.EntityEcaRule@78674a44-->
+</entity>

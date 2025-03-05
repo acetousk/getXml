@@ -1,0 +1,35 @@
+
+<!-- Entity Name: mantle.marketing.tracking.TrackingCode sql table: TRACKING_CODE --><entity entity-name="TrackingCode" package="mantle.marketing.tracking" has-dependents="true">
+    <field name="trackingCodeId" type="id" is-pk="true"/>
+    <field name="trackingCodeTypeEnumId" type="id"/>
+    <field name="marketingCampaignId" type="id"/>
+    <field name="redirectUrl" type="text-long"/>
+    <field name="comments" type="text-medium"/>
+    <field name="description" type="text-medium"/>
+    <field name="trackableLifetime" type="number-integer"/>
+    <field name="billableLifetime" type="number-integer"/>
+    <field name="fromDate" type="date-time"/>
+    <field name="thruDate" type="date-time"/>
+    <field name="groupId" type="id"/>
+    <field name="subgroupId" type="id"/>
+    <relationship type="one" related="mantle.marketing.campaign.MarketingCampaign"/>
+    <relationship type="one" title="TrackingCodeType" related="moqui.basic.Enumeration">
+        <key-map field-name="trackingCodeTypeEnumId"/></relationship>
+    <seed-data>
+        <moqui.basic.EnumerationType description="Tracking Code Type" enumTypeId="TrackingCodeType"/>
+        <moqui.basic.Enumeration enumId="ACCESS" description="Access Code" enumTypeId="TrackingCodeType"/>
+        <moqui.basic.Enumeration enumId="INTERNAL" description="Internal" enumTypeId="TrackingCodeType"/>
+        <moqui.basic.Enumeration enumId="EXTERNAL" description="External" enumTypeId="TrackingCodeType"/>
+        <moqui.basic.Enumeration enumId="PARTNER_MGD" description="Partner Managed" enumTypeId="TrackingCodeType"/>
+    </seed-data>
+    <field name="lastUpdatedStamp" type="date-time"/>
+    <relationship related="mantle.marketing.tracking.TrackingCodeOrder" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="trackingCodeId" related="trackingCodeId"/></relationship>
+    <relationship related="mantle.marketing.tracking.TrackingCodeOrderReturn" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="trackingCodeId" related="trackingCodeId"/></relationship>
+    <relationship related="mantle.marketing.tracking.TrackingCodeVisit" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="trackingCodeId" related="trackingCodeId"/></relationship>
+    <relationship related="mantle.sales.opportunity.SalesOpportunityTracking" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="trackingCodeId" related="trackingCodeId"/></relationship>
+
+</entity>

@@ -1,0 +1,39 @@
+<!--Service Location org.moqui.impl.InstanceServices.stop#InstanceDocker--><service verb="stop" noun="InstanceDocker"><in-parameters><parameter name="appInstanceId" required="true"/></in-parameters><out-parameters><parameter name="instanceStopped" type="Boolean"/><parameter name="instanceRunning" type="Boolean"/></out-parameters><actions><script><![CDATA[import org.moqui.context.ExecutionContext
+            import org.moqui.entity.EntityValue
+            import org.moqui.util.RestClient
+
+            instanceStopped = false
+            instanceRunning = null
+
+            ExecutionContext ec = context.ec
+            EntityValue appInstance = ec.entity.find("moqui.server.instance.AppInstance").condition("appInstanceId", appInstanceId).one()
+            EntityValue instanceHost = appInstance.findRelatedOne("instanceHost", null, null)
+
+            RestClient restClient = ec.service.rest().method("POST")
+            restClient.uri().protocol(instanceHost.hostProtocol ? (String) instanceHost.hostProtocol : "http")
+                    .host(instanceHost.hostAddress as String).port(instanceHost.adminPort ? (instanceHost.adminPort as int) : 2375)
+                    .path("containers").path(appInstance.instanceUuid ? (String) appInstance.instanceUuid : (String) appInstance.instanceName)
+                    .path("stop").build()
+
+            try {
+                RestClient.RestResponse restResponse = restClient.call()
+                if (restResponse.statusCode == 204) {
+                    instanceStopped = true
+                    instanceRunning = false
+                    ec.message.addMessage("Docker container ${appInstance.instanceName} (${appInstance.instanceUuid}) stopped")
+                } else if (restResponse.statusCode == 304) {
+                    instanceStopped = false
+                    instanceRunning = false
+                    ec.message.addMessage("Docker container ${appInstance.instanceName} (${appInstance.instanceUuid}) was not running")
+                } else if (restResponse.statusCode == 404) {
+                    instanceStopped = false
+                    instanceRunning = false
+                    ec.message.addMessage("Docker container ${appInstance.instanceName} (${appInstance.instanceUuid}) does not exist, init first")
+                } else {
+                    errorString = restResponse.getReasonPhrase()
+                    ec.message.addMessage("Server error on Docker host: ${errorString}")
+                }
+            } catch (Exception e) {
+                ec.logger.log(ec.logger.ERROR_INT, "Error connecting to Docker host", e)
+                ec.message.addError("Error connecting to Docker host: ${e.toString()}")
+            }]]></script></actions></service>

@@ -1,0 +1,16 @@
+
+<!-- Entity Name: mantle.product.asset.AssetStandardCost sql table: ASSET_STANDARD_COST --><entity entity-name="AssetStandardCost" package="mantle.product.asset" cache="never">
+    <field name="assetId" type="id" is-pk="true"/>
+    <field name="assetStandardCostTypeEnumId" type="id" is-pk="true"/>
+    <field name="fromDate" type="date-time" is-pk="true"/>
+    <field name="thruDate" type="date-time"/>
+    <field name="amountUomId" type="id"/>
+    <field name="amount" type="currency-amount"/>
+    <relationship type="one" related="mantle.product.asset.Asset"/>
+    <relationship type="one" title="AssetStandardCostType" related="moqui.basic.Enumeration">
+        <key-map field-name="assetStandardCostTypeEnumId"/></relationship>
+    <relationship type="one" related="moqui.basic.Uom">
+        <key-map field-name="amountUomId"/></relationship>
+    <field name="lastUpdatedStamp" type="date-time"/>
+
+</entity>

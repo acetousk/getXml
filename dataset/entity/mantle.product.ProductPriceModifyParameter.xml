@@ -1,0 +1,9 @@
+
+<!-- Entity Name: mantle.product.ProductPriceModifyParameter sql table: PRODUCT_PRICE_MODIFY_PARAMETER --><entity entity-name="ProductPriceModifyParameter" package="mantle.product" use="configuration" cache="true">
+    <field name="priceModifyId" type="id" is-pk="true"/>
+    <field name="parameterName" type="text-short" is-pk="true"/>
+    <field name="parameterValue" type="text-medium"/>
+    <relationship type="one" related="mantle.product.ProductPriceModify" short-alias="priceModify"/>
+    <field name="lastUpdatedStamp" type="date-time"/>
+
+</entity>

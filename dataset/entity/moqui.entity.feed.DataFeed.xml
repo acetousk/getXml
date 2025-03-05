@@ -1,0 +1,28 @@
+
+<!-- Entity Name: moqui.entity.feed.DataFeed sql table: DATA_FEED --><entity entity-name="DataFeed" package="moqui.entity.feed" use="configuration">
+    <field name="dataFeedId" type="id" is-pk="true"/>
+    <field name="dataFeedTypeEnumId" type="id"/>
+    <field name="indexOnStartEmpty" type="text-indicator">
+        <description><![CDATA[If Y index the feed on start if the index does not yet
+            exist (for servers where ES data not persisted between restarts)]]></description></field>
+    <field name="feedName" type="text-medium"/>
+    <field name="feedReceiveServiceName" type="text-medium">
+        <description><![CDATA[The service named here should implement the
+            org.moqui.EntityServices.receive#DataFeed interface; defaults in some cases to 'org.moqui.search.SearchServices.index#DataDocuments']]></description></field>
+    <field name="feedDeleteServiceName" type="text-medium">
+        <description><![CDATA[The service named here should implement the
+            org.moqui.EntityServices.receive#DataFeedDelete interface; defaults in some cases to 'org.moqui.search.SearchServices.delete#DataDocument']]></description></field>
+    <field name="lastFeedStamp" type="date-time">
+        <description><![CDATA[Used only for periodic feeds.]]></description></field>
+    <relationship type="one" title="DataFeedType" related="moqui.basic.Enumeration" short-alias="type">
+        <key-map field-name="dataFeedTypeEnumId"/></relationship>
+    <relationship type="many" related="moqui.entity.feed.DataFeedDocument" short-alias="documents">
+        <key-map field-name="dataFeedId"/></relationship>
+    <seed-data>
+        <moqui.basic.EnumerationType description="Data Feed Type" enumTypeId="DataFeedType"/>
+        <moqui.basic.Enumeration description="Real-time Service Push" enumId="DTFDTP_RT_PUSH" enumTypeId="DataFeedType"/>
+        <moqui.basic.Enumeration description="Manual Pull (through API)" enumId="DTFDTP_MAN_PULL" enumTypeId="DataFeedType"/>
+    </seed-data>
+    <field name="lastUpdatedStamp" type="date-time"/>
+
+</entity>

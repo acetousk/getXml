@@ -1,0 +1,12 @@
+
+<!-- Entity Name: mantle.ledger.config.FinancialAccountTypeGlAccount sql table: FINANCIAL_ACCOUNT_TYPE_GL_ACCOUNT --><entity entity-name="FinancialAccountTypeGlAccount" package="mantle.ledger.config" use="configuration">
+    <field name="finAccountTypeId" type="id" is-pk="true"/>
+    <field name="organizationPartyId" type="id" is-pk="true"/>
+    <field name="glAccountId" type="id"/>
+    <relationship type="one" related="mantle.account.financial.FinancialAccountType"/>
+    <relationship type="one" title="Organization" related="mantle.party.Party">
+        <key-map field-name="organizationPartyId"/></relationship>
+    <relationship type="one" related="mantle.ledger.account.GlAccount"/>
+    <field name="lastUpdatedStamp" type="date-time"/>
+
+</entity>

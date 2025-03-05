@@ -1,0 +1,195 @@
+
+<!-- Entity Name: moqui.basic.Uom sql table: UOM --><entity entity-name="Uom" package="moqui.basic" use="configuration" short-alias="uoms" cache="true" has-dependents="true">
+    <field name="uomId" type="id" is-pk="true"/>
+    <field name="uomTypeEnumId" type="id"/>
+    <field name="abbreviation" type="text-short"/>
+    <field name="description" type="text-medium" enable-localization="true"/>
+    <field name="fractionDigits" type="number-integer"/>
+    <field name="symbol" type="text-short" enable-localization="true"/>
+    <relationship type="one" title="UomType" related="moqui.basic.Enumeration" short-alias="type">
+        <key-map field-name="uomTypeEnumId"/></relationship>
+    <relationship type="many" related="moqui.basic.UomConversion" short-alias="conversions">
+        <key-map field-name="uomId"/></relationship>
+    <relationship type="many" related="moqui.basic.UomConversion" short-alias="toConversions">
+        <key-map field-name="uomId" related="toUomId"/></relationship>
+    <seed-data>
+        <moqui.basic.EnumerationType description="UOM Type" enumTypeId="UomType"/>
+        <moqui.basic.Enumeration description="Currency" enumId="UT_CURRENCY_MEASURE" enumTypeId="UomType"/>
+        <moqui.basic.Enumeration description="Data Size" enumId="UT_DATA_MEASURE" enumTypeId="UomType"/>
+        <moqui.basic.Enumeration description="Data Speed" enumId="UT_DATASPD_MEASURE" enumTypeId="UomType"/>
+        <moqui.basic.Enumeration description="Time/Frequency" enumId="UT_TIME_FREQ_MEASURE" enumTypeId="UomType"/>
+        <moqui.basic.Enumeration description="Length" enumId="UT_LENGTH_MEASURE" enumTypeId="UomType"/>
+        <moqui.basic.Enumeration description="Velocity" enumId="UT_VELOCITY_MEASURE" enumTypeId="UomType"/>
+        <moqui.basic.Enumeration description="Area" enumId="UT_AREA_MEASURE" enumTypeId="UomType"/>
+        <moqui.basic.Enumeration description="Liquid Volume" enumId="UT_VOLUME_LIQ_MEAS" enumTypeId="UomType"/>
+        <moqui.basic.Enumeration description="Dry Volume" enumId="UT_VOLUME_DRY_MEAS" enumTypeId="UomType"/>
+        <moqui.basic.Enumeration description="Density" enumId="UT_DENSITY_MEAS" enumTypeId="UomType"/>
+        <moqui.basic.Enumeration description="Weight" enumId="UT_WEIGHT_MEASURE" enumTypeId="UomType"/>
+        <moqui.basic.Enumeration description="Energy" enumId="UT_ENERGY_MEASURE" enumTypeId="UomType"/>
+        <moqui.basic.Enumeration description="Power" enumId="UT_POWER_MEASURE" enumTypeId="UomType"/>
+        <moqui.basic.Enumeration description="Pressure" enumId="UT_PRESSURE_MEASURE" enumTypeId="UomType"/>
+        <moqui.basic.Enumeration description="Temperature" enumId="UT_TEMP_MEASURE" enumTypeId="UomType"/>
+        <moqui.basic.Enumeration description="Other" enumId="UT_OTHER_MEASURE" enumTypeId="UomType"/>
+    </seed-data>
+    <master>
+        <detail relationship="type"/>
+        <detail relationship="conversions">
+            <detail relationship="toUom"/></detail>
+        <detail relationship="toConversions">
+            <detail relationship="uom"/></detail>
+    </master>
+    <field name="lastUpdatedStamp" type="date-time"/>
+    <relationship related="mantle.account.billing.BillingAccount" type="many" is-auto-reverse="true" mutable="true" title="AccountLimit">
+        <key-map field-name="uomId" related="accountLimitUomId"/></relationship>
+    <relationship related="mantle.account.billing.BillingAccountTerm" type="many" is-auto-reverse="true" mutable="true" title="Term">
+        <key-map field-name="uomId" related="termUomId"/></relationship>
+    <relationship related="mantle.account.financial.FinancialAccount" type="many" is-auto-reverse="true" mutable="true" title="Currency">
+        <key-map field-name="uomId" related="currencyUomId"/></relationship>
+    <relationship related="mantle.account.invoice.Invoice" type="many" is-auto-reverse="true" mutable="true" title="Currency">
+        <key-map field-name="uomId" related="currencyUomId"/></relationship>
+    <relationship related="mantle.account.invoice.InvoiceItem" type="many" is-auto-reverse="true" mutable="true" title="Quantity">
+        <key-map field-name="uomId" related="quantityUomId"/></relationship>
+    <relationship related="mantle.account.invoice.SettlementTerm" type="many" is-auto-reverse="true" mutable="true" title="TermValue">
+        <key-map field-name="uomId" related="termValueUomId"/></relationship>
+    <relationship related="mantle.account.method.PaymentGatewayResponse" type="many" is-auto-reverse="true" mutable="true" title="Amount">
+        <key-map field-name="uomId" related="amountUomId"/></relationship>
+    <relationship related="mantle.account.method.PaymentMethod" type="many" is-auto-reverse="true" mutable="true" title="Currency">
+        <key-map field-name="uomId" related="currencyUomId"/></relationship>
+    <relationship related="mantle.account.payment.Payment" type="many" is-auto-reverse="true" mutable="true" title="Amount">
+        <key-map field-name="uomId" related="amountUomId"/></relationship>
+    <relationship related="mantle.account.payment.Payment" type="many" is-auto-reverse="true" mutable="true" title="OriginalCurrency">
+        <key-map field-name="uomId" related="originalCurrencyUomId"/></relationship>
+    <relationship related="mantle.facility.Facility" type="many" is-auto-reverse="true" mutable="true" title="FacilitySize">
+        <key-map field-name="uomId" related="facilitySizeUomId"/></relationship>
+    <relationship related="mantle.facility.FacilityLocation" type="many" is-auto-reverse="true" mutable="true" title="Capacity">
+        <key-map field-name="uomId" related="capacityUomId"/></relationship>
+    <relationship related="mantle.humanres.employment.EmploymentPayHistory" type="many" is-auto-reverse="true" mutable="true" title="Currency">
+        <key-map field-name="uomId" related="currencyUomId"/></relationship>
+    <relationship related="mantle.humanres.employment.EmploymentSalary" type="many" is-auto-reverse="true" mutable="true" title="Currency">
+        <key-map field-name="uomId" related="currencyUomId"/></relationship>
+    <relationship related="mantle.humanres.rate.PayGradeSalary" type="many" is-auto-reverse="true" mutable="true" title="Currency">
+        <key-map field-name="uomId" related="currencyUomId"/></relationship>
+    <relationship related="mantle.humanres.rate.RateAmount" type="many" is-auto-reverse="true" mutable="true" title="RateCurrency">
+        <key-map field-name="uomId" related="rateCurrencyUomId"/></relationship>
+    <relationship related="mantle.humanres.rate.RateAmount" type="many" is-auto-reverse="true" mutable="true" title="TimePeriod">
+        <key-map field-name="uomId" related="timePeriodUomId"/></relationship>
+    <relationship related="mantle.ledger.config.PartyAcctgPreference" type="many" is-auto-reverse="true" mutable="true" title="BaseCurrency">
+        <key-map field-name="uomId" related="baseCurrencyUomId"/></relationship>
+    <relationship related="mantle.ledger.config.PartyAcctgPreference" type="many" is-auto-reverse="true" mutable="true" title="LocalCurrency">
+        <key-map field-name="uomId" related="localCurrencyUomId"/></relationship>
+    <relationship related="mantle.ledger.transaction.AcctgTrans" type="many" is-auto-reverse="true" mutable="true" title="Amount">
+        <key-map field-name="uomId" related="amountUomId"/></relationship>
+    <relationship related="mantle.ledger.transaction.AcctgTrans" type="many" is-auto-reverse="true" mutable="true" title="LocalCurrency">
+        <key-map field-name="uomId" related="localCurrencyUomId"/></relationship>
+    <relationship related="mantle.ledger.transaction.AcctgTrans" type="many" is-auto-reverse="true" mutable="true" title="OriginalCurrency">
+        <key-map field-name="uomId" related="originalCurrencyUomId"/></relationship>
+    <relationship related="mantle.marketing.campaign.MarketingCampaign" type="many" is-auto-reverse="true" mutable="true" title="Cost">
+        <key-map field-name="uomId" related="costUomId"/></relationship>
+    <relationship related="mantle.marketing.segment.MarketSegmentDimension" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="uomId" related="uomId"/></relationship>
+    <relationship related="mantle.order.OrderHeader" type="many" is-auto-reverse="true" mutable="true" title="Currency">
+        <key-map field-name="uomId" related="currencyUomId"/></relationship>
+    <relationship related="mantle.order.OrderItem" type="many" is-auto-reverse="true" mutable="true" title="Quantity">
+        <key-map field-name="uomId" related="quantityUomId"/></relationship>
+    <relationship related="mantle.order.return.ReturnHeader" type="many" is-auto-reverse="true" mutable="true" title="Currency">
+        <key-map field-name="uomId" related="currencyUomId"/></relationship>
+    <relationship related="mantle.other.budget.Budget" type="many" is-auto-reverse="true" mutable="true" title="Currency">
+        <key-map field-name="uomId" related="currencyUomId"/></relationship>
+    <relationship related="mantle.other.budget.BudgetItem" type="many" is-auto-reverse="true" mutable="true" title="Quantity">
+        <key-map field-name="uomId" related="quantityUomId"/></relationship>
+    <relationship related="mantle.party.PartyDimension" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="uomId" related="uomId"/></relationship>
+    <relationship related="mantle.party.agreement.Agreement" type="many" is-auto-reverse="true" mutable="true" title="Currency">
+        <key-map field-name="uomId" related="currencyUomId"/></relationship>
+    <relationship related="mantle.party.agreement.AgreementItem" type="many" is-auto-reverse="true" mutable="true" title="Quantity">
+        <key-map field-name="uomId" related="quantityUomId"/></relationship>
+    <relationship related="mantle.party.time.TimePeriodType" type="many" is-auto-reverse="true" mutable="true" title="Length">
+        <key-map field-name="uomId" related="lengthUomId"/></relationship>
+    <relationship related="mantle.product.Product" type="many" is-auto-reverse="true" mutable="true" title="Amount">
+        <key-map field-name="uomId" related="amountUomId"/></relationship>
+    <relationship related="mantle.product.ProductDimension" type="many" is-auto-reverse="true" mutable="true" title="Value">
+        <key-map field-name="uomId" related="valueUomId"/></relationship>
+    <relationship related="mantle.product.ProductDimensionType" type="many" is-auto-reverse="true" mutable="true" title="Default">
+        <key-map field-name="uomId" related="defaultUomId"/></relationship>
+    <relationship related="mantle.product.ProductParameterValue" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="uomId" related="uomId"/></relationship>
+    <relationship related="mantle.product.ProductPrice" type="many" is-auto-reverse="true" mutable="true" title="Price">
+        <key-map field-name="uomId" related="priceUomId"/></relationship>
+    <relationship related="mantle.product.ProductPrice" type="many" is-auto-reverse="true" mutable="true" title="Term">
+        <key-map field-name="uomId" related="termUomId"/></relationship>
+    <relationship related="mantle.product.ProductPrice" type="many" is-auto-reverse="true" mutable="true" title="Quantity">
+        <key-map field-name="uomId" related="quantityUomId"/></relationship>
+    <relationship related="mantle.product.ProductUomDimension" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="uomId" related="uomId"/></relationship>
+    <relationship related="mantle.product.asset.Asset" type="many" is-auto-reverse="true" mutable="true" title="OriginalQuantity">
+        <key-map field-name="uomId" related="originalQuantityUomId"/></relationship>
+    <relationship related="mantle.product.asset.Asset" type="many" is-auto-reverse="true" mutable="true" title="AcquireCost">
+        <key-map field-name="uomId" related="acquireCostUomId"/></relationship>
+    <relationship related="mantle.product.asset.AssetStandardCost" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="uomId" related="amountUomId"/></relationship>
+    <relationship related="mantle.product.feature.ProductFeature" type="many" is-auto-reverse="true" mutable="true" title="Number">
+        <key-map field-name="uomId" related="numberUomId"/></relationship>
+    <relationship related="mantle.product.maintenance.AssetMaintenance" type="many" is-auto-reverse="true" mutable="true" title="Interval">
+        <key-map field-name="uomId" related="intervalUomId"/></relationship>
+    <relationship related="mantle.product.maintenance.ProductMaintenance" type="many" is-auto-reverse="true" mutable="true" title="Interval">
+        <key-map field-name="uomId" related="intervalUomId"/></relationship>
+    <relationship related="mantle.product.maintenance.ProductMeter" type="many" is-auto-reverse="true" mutable="true" title="Meter">
+        <key-map field-name="uomId" related="meterUomId"/></relationship>
+    <relationship related="mantle.product.maintenance.ProductMeterType" type="many" is-auto-reverse="true" mutable="true" title="Default">
+        <key-map field-name="uomId" related="defaultUomId"/></relationship>
+    <relationship related="mantle.product.store.ProductStore" type="many" is-auto-reverse="true" mutable="true" title="DefaultCurrency">
+        <key-map field-name="uomId" related="defaultCurrencyUomId"/></relationship>
+    <relationship related="mantle.product.subscription.ProductSubscriptionResource" type="many" is-auto-reverse="true" mutable="true" title="UseTime">
+        <key-map field-name="uomId" related="useTimeUomId"/></relationship>
+    <relationship related="mantle.product.subscription.ProductSubscriptionResource" type="many" is-auto-reverse="true" mutable="true" title="AvailableTime">
+        <key-map field-name="uomId" related="availableTimeUomId"/></relationship>
+    <relationship related="mantle.product.subscription.Subscription" type="many" is-auto-reverse="true" mutable="true" title="AvailableTime">
+        <key-map field-name="uomId" related="availableTimeUomId"/></relationship>
+    <relationship related="mantle.product.subscription.Subscription" type="many" is-auto-reverse="true" mutable="true" title="UseTime">
+        <key-map field-name="uomId" related="useTimeUomId"/></relationship>
+    <relationship related="mantle.request.Request" type="many" is-auto-reverse="true" mutable="true" title="MaximumAmount">
+        <key-map field-name="uomId" related="maximumAmountUomId"/></relationship>
+    <relationship related="mantle.request.Request" type="many" is-auto-reverse="true" mutable="true" title="Currency">
+        <key-map field-name="uomId" related="currencyUomId"/></relationship>
+    <relationship related="mantle.sales.forecast.SalesForecast" type="many" is-auto-reverse="true" mutable="true" title="Currency">
+        <key-map field-name="uomId" related="currencyUomId"/></relationship>
+    <relationship related="mantle.sales.forecast.SalesForecastDetail" type="many" is-auto-reverse="true" mutable="true" title="Quantity">
+        <key-map field-name="uomId" related="quantityUomId"/></relationship>
+    <relationship related="mantle.sales.opportunity.SalesOpportunity" type="many" is-auto-reverse="true" mutable="true" title="Currency">
+        <key-map field-name="uomId" related="currencyUomId"/></relationship>
+    <relationship related="mantle.shipment.Shipment" type="many" is-auto-reverse="true" mutable="true" title="Cost">
+        <key-map field-name="uomId" related="costUomId"/></relationship>
+    <relationship related="mantle.shipment.ShipmentBoxType" type="many" is-auto-reverse="true" mutable="true" title="Dimension">
+        <key-map field-name="uomId" related="dimensionUomId"/></relationship>
+    <relationship related="mantle.shipment.ShipmentBoxType" type="many" is-auto-reverse="true" mutable="true" title="Weight">
+        <key-map field-name="uomId" related="weightUomId"/></relationship>
+    <relationship related="mantle.shipment.ShipmentBoxType" type="many" is-auto-reverse="true" mutable="true" title="Capacity">
+        <key-map field-name="uomId" related="capacityUomId"/></relationship>
+    <relationship related="mantle.shipment.ShipmentPackage" type="many" is-auto-reverse="true" mutable="true" title="Weight">
+        <key-map field-name="uomId" related="weightUomId"/></relationship>
+    <relationship related="mantle.shipment.ShipmentRouteSegment" type="many" is-auto-reverse="true" mutable="true" title="Cost">
+        <key-map field-name="uomId" related="costUomId"/></relationship>
+    <relationship related="mantle.shipment.ShipmentRouteSegment" type="many" is-auto-reverse="true" mutable="true" title="BillingWeight">
+        <key-map field-name="uomId" related="billingWeightUomId"/></relationship>
+    <relationship related="mantle.work.effort.WorkEffort" type="many" is-auto-reverse="true" mutable="true" title="Time">
+        <key-map field-name="uomId" related="timeUomId"/></relationship>
+    <relationship related="mantle.work.effort.WorkEffort" type="many" is-auto-reverse="true" mutable="true" title="Cost">
+        <key-map field-name="uomId" related="costUomId"/></relationship>
+    <relationship related="mantle.work.estimate.ProductionEstimate" type="many" is-auto-reverse="true" mutable="true" title="Quantity">
+        <key-map field-name="uomId" related="quantityUomId"/></relationship>
+    <relationship related="mantle.work.measurement.Measurement" type="many" is-auto-reverse="true" mutable="true" title="Measurement">
+        <key-map field-name="uomId" related="measurementUomId"/></relationship>
+    <relationship related="moqui.basic.GeoPoint" type="many" is-auto-reverse="true" mutable="true" title="Elevation">
+        <key-map field-name="uomId" related="elevationUomId"/></relationship>
+    <relationship related="moqui.basic.UomConversion" type="many" is-auto-reverse="true" mutable="true" title="To">
+        <key-map field-name="uomId" related="toUomId"/></relationship>
+    <relationship related="moqui.basic.UomDimensionType" type="many" is-auto-reverse="true" mutable="true" title="Default">
+        <key-map field-name="uomId" related="defaultUomId"/></relationship>
+    <relationship related="moqui.basic.UomGroupMember" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="uomId" related="uomId"/></relationship>
+    <relationship related="moqui.example.ExampleItem" type="many" is-auto-reverse="true" mutable="true" title="Amount">
+        <key-map field-name="uomId" related="amountUomId"/></relationship>
+    <relationship related="moqui.security.UserAccount" type="many" is-auto-reverse="true" mutable="true" title="Currency">
+        <key-map field-name="uomId" related="currencyUomId"/></relationship>
+
+</entity>

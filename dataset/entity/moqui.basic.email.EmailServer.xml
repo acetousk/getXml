@@ -1,0 +1,30 @@
+
+<!-- Entity Name: moqui.basic.email.EmailServer sql table: EMAIL_SERVER --><entity entity-name="EmailServer" package="moqui.basic.email" use="configuration" cache="true" has-dependents="true">
+    <field name="emailServerId" type="id" is-pk="true"/>
+    <field name="smtpHost" type="text-medium" enable-audit-log="update"/>
+    <field name="smtpPort" type="text-short"/>
+    <field name="smtpStartTls" type="text-indicator"/>
+    <field name="smtpSsl" type="text-indicator"/>
+    <field name="storeHost" type="text-medium" enable-audit-log="update"/>
+    <field name="storePort" type="text-short"/>
+    <field name="storeProtocol" type="text-short"/>
+    <field name="storeFolder" type="text-medium">
+        <description><![CDATA[Defaults to INBOX]]></description></field>
+    <field name="storeDelete" type="text-indicator"/>
+    <field name="storeMarkSeen" type="text-indicator"/>
+    <field name="storeSkipSeen" type="text-indicator"/>
+    <field name="mailUsername" type="text-medium" enable-audit-log="update"/>
+    <field name="mailPassword" type="text-medium" encrypt="true" enable-audit-log="update"/>
+    <field name="allowedToDomains" type="text-long" enable-audit-log="update">
+        <description><![CDATA[Comma separated list of domain names to allow (like: moqui.org, dejc.com), matched by ends with; if no value specified all domains allowed]]></description></field>
+    <seed-data>
+        <moqui.basic.email.EmailServer emailServerId="MOQUI_LOCAL" smtpHost="localhost" smtpPort="2525" smtpStartTls="N" smtpSsl="N" storeHost="" storePort="" storeProtocol="" storeFolder="" storeDelete="N" storeMarkSeen="Y" storeSkipSeen="Y" mailUsername="email.root" mailPassword="EMAIL_CHANGEME"/>
+        <moqui.basic.email.EmailServer emailServerId="SYSTEM"/>
+    </seed-data>
+    <field name="lastUpdatedStamp" type="date-time"/>
+    <relationship related="moqui.basic.email.EmailMessage" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="emailServerId" related="emailServerId"/></relationship>
+    <relationship related="moqui.basic.email.EmailTemplate" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="emailServerId" related="emailServerId"/></relationship>
+
+</entity>

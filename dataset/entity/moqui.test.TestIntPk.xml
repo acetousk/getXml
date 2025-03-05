@@ -1,0 +1,7 @@
+
+<!-- Entity Name: moqui.test.TestIntPk sql table: TEST_INT_PK --><entity entity-name="TestIntPk" package="moqui.test">
+    <field name="intId" type="number-integer" is-pk="true"/>
+    <field name="testMedium" type="text-medium"/>
+    <field name="lastUpdatedStamp" type="date-time"/>
+
+</entity>

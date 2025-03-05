@@ -1,0 +1,5 @@
+<!--Transition Screen Location component://tools/screen/Tools/Entity/DataSnapshot.xml Transition Name actions--><transition name="actions"><actions><!--always-actions at component://webroot/screen/webroot.xml--><set field="html_scripts" from="new LinkedHashSet()"/><set field="footer_scripts" from="new LinkedHashSet()"/><set field="html_stylesheets" from="new LinkedHashSet()"/><!--actions--><script><![CDATA[File snapshotDir = new File((String) ec.factory.getRuntimePath() + '/db/snapshot')
+            snapshotFiles = snapshotDir.exists() ? snapshotDir.listFiles() : null
+            snapshotList = []
+            if (snapshotFiles) for (File sfile in snapshotFiles)
+                if (!sfile.isDirectory() && sfile.getName().endsWith(".zip") && sfile.length() > 0) snapshotList.add(sfile)]]></script></actions></transition>

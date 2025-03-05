@@ -1,0 +1,12 @@
+
+<!-- Entity Name: mantle.facility.FacilityGroupMember sql table: FACILITY_GROUP_MEMBER --><entity entity-name="FacilityGroupMember" package="mantle.facility">
+    <field name="facilityId" type="id" is-pk="true"/>
+    <field name="facilityGroupId" type="id" is-pk="true"/>
+    <field name="fromDate" type="date-time" is-pk="true"/>
+    <field name="thruDate" type="date-time"/>
+    <field name="sequenceNum" type="number-integer"/>
+    <relationship type="one" related="mantle.facility.Facility" short-alias="facility"/>
+    <relationship type="one" related="mantle.facility.FacilityGroup" short-alias="group"/>
+    <field name="lastUpdatedStamp" type="date-time"/>
+
+</entity>

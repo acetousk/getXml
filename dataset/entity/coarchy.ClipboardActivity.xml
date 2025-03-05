@@ -1,0 +1,18 @@
+
+<!-- Entity Name: coarchy.ClipboardActivity sql table: CLIPBOARD_ACTIVITY --><entity entity-name="ClipboardActivity" package="coarchy" has-dependents="true">
+    <field name="clipboardEntryId" type="id" is-pk="true"/>
+    <field name="activitySeqId" type="id" is-pk="true"/>
+    <field name="condition" type="text-intermediate"/>
+    <field name="action" type="text-intermediate"/>
+    <field name="implementationId" type="id"/>
+    <relationship type="one" title="Clipboard" related="coarchy.ClipboardEntry" short-alias="clipboard">
+        <key-map field-name="clipboardEntryId"/></relationship>
+    <relationship type="one" related="moqui.basic.Enumeration" short-alias="implementation">
+        <key-map field-name="implementationId" related="enumId"/></relationship>
+    <field name="lastUpdatedStamp" type="date-time"/>
+    <relationship related="coarchy.ClipboardActivityStatement" type="many" is-auto-reverse="true" mutable="true" title="ClipboardActivity">
+        <key-map field-name="clipboardEntryId" related="clipboardEntryId"/>
+        <key-map field-name="activitySeqId" related="activitySeqId"/>
+    </relationship>
+
+</entity>

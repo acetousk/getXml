@@ -1,0 +1,22 @@
+
+<!-- Entity Name: mantle.humanres.position.EmplPositionResponsibility sql table: EMPL_POSITION_RESPONSIBILITY --><entity entity-name="EmplPositionResponsibility" package="mantle.humanres.position" use="configuration">
+    <field name="emplPositionId" type="id" is-pk="true"/>
+    <field name="responsibilityEnumId" type="id" is-pk="true"/>
+    <field name="fromDate" type="date-time" is-pk="true"/>
+    <field name="thruDate" type="date-time"/>
+    <field name="comments" type="text-medium"/>
+    <relationship type="one" related="mantle.humanres.position.EmplPosition"/>
+    <relationship type="one" title="EmploymentResponsibility" related="moqui.basic.Enumeration">
+        <key-map field-name="responsibilityEnumId"/></relationship>
+    <seed-data>
+        <moqui.basic.EnumerationType description="Employment Responsibility" enumTypeId="EmploymentResponsibility"/>
+        <moqui.basic.Enumeration description="Finance Management" enumId="EmRspFinanceMgmt" enumTypeId="EmploymentResponsibility"/>
+        <moqui.basic.Enumeration description="Inventory Management" enumId="EmRspInventoryMgmt" enumTypeId="EmploymentResponsibility"/>
+        <moqui.basic.Enumeration description="Purchase Management" enumId="EmRspPurchaseMgmt" enumTypeId="EmploymentResponsibility"/>
+        <moqui.basic.Enumeration description="Resource Management" enumId="EmRspResourceMgmt" enumTypeId="EmploymentResponsibility"/>
+        <moqui.basic.Enumeration description="Production Management" enumId="EmRspProductionMgmt" enumTypeId="EmploymentResponsibility"/>
+        <moqui.basic.Enumeration description="Sales Management" enumId="EmRspSalesMgmt" enumTypeId="EmploymentResponsibility"/>
+    </seed-data>
+    <field name="lastUpdatedStamp" type="date-time"/>
+
+</entity>

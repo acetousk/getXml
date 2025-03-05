@@ -1,0 +1,14 @@
+
+<!-- Entity Name: mantle.humanres.position.EmplPositionClassParty sql table: EMPL_POSITION_CLASS_PARTY --><entity entity-name="EmplPositionClassParty" package="mantle.humanres.position" use="nontransactional">
+    <description><![CDATA[An alternative to EmplPosition and Employment to represent an employee in a position class for
+            billing purposes, etc. Can be used in addition to EmplPosition or instead of.]]></description>
+    <field name="emplPositionClassId" type="id" is-pk="true"/>
+    <field name="partyId" type="id" is-pk="true"/>
+    <field name="fromDate" type="date-time" is-pk="true"/>
+    <field name="thruDate" type="date-time"/>
+    <field name="comments" type="text-medium"/>
+    <relationship type="one" related="mantle.humanres.position.EmplPositionClass"/>
+    <relationship type="one" related="mantle.party.Party"/>
+    <field name="lastUpdatedStamp" type="date-time"/>
+
+</entity>

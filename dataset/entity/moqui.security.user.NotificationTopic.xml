@@ -1,0 +1,32 @@
+
+<!-- Entity Name: moqui.security.user.NotificationTopic sql table: NOTIFICATION_TOPIC --><entity entity-name="NotificationTopic" package="moqui.security.user" use="configuration" cache="true" has-dependents="true">
+    <field name="topic" type="text-medium" is-pk="true"/>
+    <field name="description" type="text-medium"/>
+    <field name="titleTemplate" type="text-long"/>
+    <field name="errorTitleTemplate" type="text-long">
+        <description><![CDATA[If populated used when type=danger]]></description></field>
+    <field name="linkTemplate" type="text-long"/>
+    <field name="typeString" type="text-short">
+        <description><![CDATA[One of: info, success, warning, danger]]></description></field>
+    <field name="showAlert" type="text-indicator"/>
+    <field name="alertNoAutoHide" type="text-indicator"/>
+    <field name="persistOnSend" type="text-indicator"/>
+    <field name="isPrivate" type="text-indicator">
+        <description><![CDATA[If Y user must be associated to see it or receive notifications.]]></description></field>
+    <field name="receiveNotifications" type="text-indicator">
+        <description><![CDATA[For each User if there is no NotificationTopicUser.receiveNotifications value then use this as the default, this defaults to N.]]></description></field>
+    <field name="emailNotifications" type="text-indicator">
+        <description><![CDATA[For each User if there is no NotificationTopicUser.emailNotifications value then use this as the default, this defaults to N.]]></description></field>
+    <field name="emailTemplateId" type="id">
+        <description><![CDATA[If is specified use this template to send a notification email to each user with emailNotifications=Y]]></description></field>
+    <field name="emailMessageSave" type="text-indicator"/>
+    <relationship type="one" related="moqui.basic.email.EmailTemplate"/>
+    <field name="lastUpdatedStamp" type="date-time"/>
+    <relationship related="moqui.security.user.NotificationMessage" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="topic" related="topic"/></relationship>
+    <relationship related="moqui.security.user.NotificationTopicUser" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="topic" related="topic"/></relationship>
+    <relationship related="moqui.service.job.ServiceJob" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="topic" related="topic"/></relationship>
+
+</entity>

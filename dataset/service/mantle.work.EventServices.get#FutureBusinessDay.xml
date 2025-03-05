@@ -1,0 +1,13 @@
+<!--Service Location mantle.work.EventServices.get#FutureBusinessDay--><service verb="get" noun="FutureBusinessDay"><in-parameters><parameter name="startDate" type="Date" required="true"/><parameter name="businessDays" type="Integer" required="true"/><parameter name="skipSaturday" type="Boolean" default="true"/><parameter name="skipSunday" type="Boolean" default="true"/><parameter name="organizationPartyId"/><parameter name="workEffortCategoryIds" type="List"/></in-parameters><out-parameters><parameter name="futureDayDate" type="Date"/><parameter name="calendarDays" type="Integer"/><parameter name="skipWeekends" type="Integer"/><parameter name="skipHolidays" type="Integer"/></out-parameters><actions><script><![CDATA[futureDayDate = startDate
+            calendarDays = 0
+            skipWeekends = 0
+            skipHolidays = 0
+            for (int i = businessDays; i > 0; i--) {
+                Map nextOut = ec.service.sync().name("mantle.work.EventServices.get#NextBusinessDay")
+                        .parameters(context + [startDate:futureDayDate]).call()
+                futureDayDate = nextOut.nextDayDate
+                calendarDays += nextOut.calendarDays
+                skipWeekends += nextOut.skipWeekends
+                skipHolidays += nextOut.skipHolidays
+                // ec.logger.warn("business days left ${i-1} futureDayDate ${futureDayDate} calendarDays ${calendarDays} skipWeekends ${skipWeekends} skipHolidays ${skipHolidays}")
+            }]]></script></actions></service>

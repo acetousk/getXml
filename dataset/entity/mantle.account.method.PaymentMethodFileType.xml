@@ -1,0 +1,18 @@
+
+<!-- Entity Name: mantle.account.method.PaymentMethodFileType sql table: PAYMENT_METHOD_FILE_TYPE --><entity entity-name="PaymentMethodFileType" package="mantle.account.method" has-dependents="true">
+    <field name="paymentMethodId" type="id" is-pk="true"/>
+    <field name="fileTypeEnumId" type="id" is-pk="true"/>
+    <field name="systemMessageTypeId" type="id"/>
+    <field name="systemMessageRemoteId" type="id"/>
+    <relationship type="one" related="mantle.account.method.PaymentMethod" short-alias="paymentMethod"/>
+    <relationship type="one" title="PaymentMethodFileType" related="moqui.basic.Enumeration" short-alias="fileTypeEnum">
+        <key-map field-name="fileTypeEnumId"/></relationship>
+    <relationship type="one" related="moqui.service.message.SystemMessageType" short-alias="type"/>
+    <relationship type="one" related="moqui.service.message.SystemMessageRemote" short-alias="remote"/>
+    <field name="lastUpdatedStamp" type="date-time"/>
+    <relationship related="mantle.account.method.PaymentMethodFile" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="paymentMethodId" related="paymentMethodId"/>
+        <key-map field-name="fileTypeEnumId" related="fileTypeEnumId"/>
+    </relationship>
+
+</entity>

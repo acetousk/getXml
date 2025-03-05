@@ -1,0 +1,60 @@
+<!--Service Location mantle.account.PositivePayServices.generate#PmftCityBankCnb--><service verb="generate" noun="PmftCityBankCnb"><in-parameters><parameter name="paymentMethodFileId" required="true"/><parameter name="bankAccount" type="Map" required="true"/><parameter name="paymentList" type="List" required="true"/><parameter name="thruDate" type="Timestamp" required="true"/><parameter name="fileDate" type="Timestamp" required="true"/><parameter name="entryCount" type="Long" required="true"/><parameter name="debitAmountTotal" type="BigDecimal" required="true"/><parameter name="debitAmountTotalWithCancels" type="BigDecimal" required="true"/><parameter name="checkNumberSum" type="Long" required="true"/></in-parameters><out-parameters><parameter name="fileText"/></out-parameters><actions><if condition="!bankAccount.posPayBankNumber || bankAccount.posPayBankNumber.length() != 3"><return error="true" message="Pos. Pay Bank Number must be set and be 3 digits (for bank account [${bankAccount.paymentMethodId}])"/></if><script><![CDATA[import org.moqui.context.ExecutionContext
+                import org.moqui.entity.EntityValue
+                ExecutionContext ec = context.ec
+
+                // Handy output checking lines, paste below to line up output
+                // 0        10        20        30        40        50        60        70        80
+                // 123456789+123456789+123456789+123456789+123456789+123456789+123456789+123456789+1234567
+
+                String accountNumber =  bankAccount.accountNumber
+                if (accountNumber.length() > 9) accountNumber = accountNumber.substring(accountNumber.length() - 9, accountNumber.length())
+
+                List<StringBuilder> lines = []
+
+                // NOTE: No Header for City Bank CNB file
+
+                for (Map payment in paymentList) {
+                    // Get amount String (10 chars, last 2 are cents)
+                    String amountStr = payment.getBigDecimal("amount").movePointRight(2).longValue() as String
+
+                    // NOTE: for City Bank treat void and cancel as "Void"
+                    boolean isVoid = payment.statusId == 'PmntVoid'
+                    boolean isCancel = payment.statusId == 'PmntCancelled'
+
+                    String payeeName = ""
+                    EntityValue otherParty = payment.toPartyId ? ec.entity.find("mantle.party.PartyDetail").condition("partyId", payment.toPartyId).one() : null
+                    if (otherParty) {
+                        payeeName = otherParty.firstName ? otherParty.firstName + " " + otherParty.lastName : otherParty.organizationName
+                        if (payeeName.length() > 50) payeeName = payeeName.substring(0, 50)
+                    }
+
+                    // Detail Line
+                    StringBuilder detailLine = new StringBuilder(87)
+                    // 01-03: Bank ID, assigned by bank (3 digits)
+                    detailLine.append(bankAccount.posPayBankNumber)
+                    // 04-12: Account Number (9 digits, left 0 padded)
+                    detailLine.append(accountNumber.padLeft(9, '0'))
+                    // 13-20: Check number (8 digits, left 0 padded)
+                    detailLine.append(payment.paymentRefNum.padLeft(8, '0'))
+                    // 21-30: Check amount (10 digits, last 2 are cents, left 0 padded); for voids enter all 0s
+                    detailLine.append((isVoid ? '0' : amountStr).padLeft(10, '0'))
+                    // 31-36: Date of issue (MMddyy)
+                    detailLine.append(ec.l10n.format(payment.effectiveDate, 'MMddyy'))
+                    // 37-86: Additional data; Payee information (50 chars; pad right with spaces)
+                    detailLine.append(payeeName.padRight(50, ' '))
+                    // 87-87: Void indicator Blank for issue record, 'V' for void/cancel, 'I' for issue
+                    detailLine.append((isVoid || isCancel ? 'V' : 'I'))
+
+                    lines.add(detailLine)
+                }
+
+                // NOTE: No Trailer for City Bank CNB file
+
+                // combine the lines
+                StringBuilder ftSb = new StringBuilder(81 * lines.size())
+                for (StringBuilder line in lines) {
+                    if (line.length() != 87) ec.message.addError(ec.resource.expand('Generated line does not have exactly 87 chars: ${line}',''))
+                    ftSb.append(line).append('\n')
+                }
+                // get the String value
+                fileText = ftSb.toString()]]></script></actions></service>

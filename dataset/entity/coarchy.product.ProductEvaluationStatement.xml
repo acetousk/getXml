@@ -1,0 +1,14 @@
+
+<!-- Entity Name: coarchy.product.ProductEvaluationStatement sql table: PRODUCT_EVALUATION_STATEMENT --><entity entity-name="ProductEvaluationStatement" package="coarchy.product">
+    <description><![CDATA[This entity represents the value statements included in a product evaluation.]]></description>
+    <field name="productEvaluationId" type="id" is-pk="true"/>
+    <field name="statementId" type="id" is-pk="true"/>
+    <field name="organizationId" type="id"/>
+    <relationship type="one" related="coarchy.product.ProductEvaluation" short-alias="productEvaluation"/>
+    <relationship type="one" related="coarchy.ValueStatement" short-alias="statement">
+        <key-map field-name="statementId" related="valueStatementId"/></relationship>
+    <relationship type="one" related="mantle.party.Organization" short-alias="organization">
+        <key-map field-name="organizationId" related="partyId"/></relationship>
+    <field name="lastUpdatedStamp" type="date-time"/>
+
+</entity>

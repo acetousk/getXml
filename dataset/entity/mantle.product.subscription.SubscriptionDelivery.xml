@@ -1,0 +1,11 @@
+
+<!-- Entity Name: mantle.product.subscription.SubscriptionDelivery sql table: SUBSCRIPTION_DELIVERY --><entity entity-name="SubscriptionDelivery" package="mantle.product.subscription" cache="never">
+    <field name="subscriptionId" type="id" is-pk="true"/>
+    <field name="dateSent" type="date-time" is-pk="true"/>
+    <field name="communicationEventId" type="id"/>
+    <field name="comments" type="text-medium"/>
+    <relationship type="one" related="mantle.product.subscription.Subscription"/>
+    <relationship type="one" related="mantle.party.communication.CommunicationEvent"/>
+    <field name="lastUpdatedStamp" type="date-time"/>
+
+</entity>

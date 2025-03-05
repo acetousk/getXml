@@ -1,0 +1,46 @@
+<!--Service Location mantle.party.DuplicateServices.check#AllPartyDuplicates--><service verb="check" noun="AllPartyDuplicates"><in-parameters/><out-parameters/><actions><script><![CDATA[import org.moqui.entity.EntityList
+                import org.moqui.entity.EntityValue
+                import java.util.concurrent.Future
+
+                long startTime = System.currentTimeMillis()
+                long oneDayAgo = startTime - (24 * 60 * 60 * 1000)
+                int threads = 10
+                duplicatesFound = 0
+                partiesChecked = 0
+                // NOTE: no limit on this query, for really big databases this may blow up!
+                EntityList partyList = ec.entity.find("mantle.party.Party")
+                        .condition((org.moqui.entity.EntityCondition) ec.entity.conditionFactory.makeActionConditionDirect("disabled", "equals", null, "N", null, false, false, true, "false"))
+                        .condition((org.moqui.entity.EntityCondition) ec.entity.conditionFactory.makeActionConditionDirect("hasDuplicates", "equals", null, "N", null, false, false, true, "false"))
+                        .condition((org.moqui.entity.EntityCondition) ec.entity.conditionFactory.makeActionConditionDirect("lastDupCheckDate", "less", new Timestamp(oneDayAgo), null, null, false, false, true, "false"))
+                        .selectField("partyId").list()
+                ec.logger.info("Found ${partyList.size()} parties to check for duplicates")
+                ArrayList partyIdList = new ArrayList(threads)
+                Iterator<EntityValue> iterator = partyList.iterator()
+                while (iterator.hasNext()) {
+                    EntityValue party = iterator.next()
+                    partyIdList.add(party.partyId)
+                    int partyIdListSize = partyIdList.size()
+                    if (partyIdListSize == threads || !iterator.hasNext()) {
+                        ArrayList<Future> futureList = new ArrayList(partyIdListSize)
+                        for (int i = 0; i < partyIdListSize; i++) {
+                            String partyId = partyIdList.get(i)
+                            // party may have already been checked since the original query
+                            EntityValue curParty = ec.entity.find("mantle.party.Party").condition("partyId", partyId).one()
+                            if (curParty == null || curParty.hasDuplicates == "Y") continue
+                            Future curFuture = ec.service.async().name("mantle.party.DuplicateServices.find#PartyDuplicates")
+                                    .parameters([partyId:partyId]).callFuture()
+                            futureList.add(curFuture)
+                        }
+                        for (Future dupFuture in futureList) { try {
+                            Map dupOut = dupFuture.get()
+                            if (ec.message.hasError()) return
+                            if (dupOut?.matchingInfoByPartyId) duplicatesFound = (duplicatesFound + 1)
+                            partiesChecked = (partiesChecked + 1)
+                        } catch (Throwable t) { ec.logger.log("warn", "Error checking party duplicate results", t) } }
+                        if (partiesChecked % 100 == 0) ec.logger.log("info", "Progress: checked ${partiesChecked} parties at ${System.currentTimeMillis() - startTime}ms, found ${duplicatesFound} duplicates", null)
+                        // clear out list for next set
+                        partyIdList.clear()
+                    }
+                }
+                if (partyList instanceof org.moqui.entity.EntityListIterator) partyList.close()
+                ec.logger.log("info", "Completed. Checked ${partiesChecked} parties in ${System.currentTimeMillis() - startTime}ms, found ${duplicatesFound} duplicates", null)]]></script></actions></service>

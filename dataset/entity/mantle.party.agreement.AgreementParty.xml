@@ -1,0 +1,11 @@
+
+<!-- Entity Name: mantle.party.agreement.AgreementParty sql table: AGREEMENT_PARTY --><entity entity-name="AgreementParty" package="mantle.party.agreement">
+    <field name="agreementId" type="id" is-pk="true"/>
+    <field name="partyId" type="id" is-pk="true"/>
+    <field name="roleTypeId" type="id" is-pk="true"/>
+    <relationship type="one" related="mantle.party.agreement.Agreement" short-alias="agreement"/>
+    <relationship type="one" related="mantle.party.Party" short-alias="party"/>
+    <relationship type="one" related="mantle.party.RoleType" short-alias="roleType"/>
+    <field name="lastUpdatedStamp" type="date-time"/>
+
+</entity>

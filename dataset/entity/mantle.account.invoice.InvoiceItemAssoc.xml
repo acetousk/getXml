@@ -1,0 +1,38 @@
+
+<!-- Entity Name: mantle.account.invoice.InvoiceItemAssoc sql table: INVOICE_ITEM_ASSOC --><entity entity-name="InvoiceItemAssoc" package="mantle.account.invoice" cache="never">
+    <field name="invoiceItemAssocId" type="id" is-pk="true"/>
+    <field name="invoiceId" type="id"/>
+    <field name="invoiceItemSeqId" type="id"/>
+    <field name="toInvoiceId" type="id"/>
+    <field name="toInvoiceItemSeqId" type="id"/>
+    <field name="invoiceItemAssocTypeEnumId" type="id"/>
+    <field name="fromDate" type="date-time"/>
+    <field name="thruDate" type="date-time"/>
+    <field name="fromPartyId" type="id"/>
+    <field name="toPartyId" type="id"/>
+    <field name="quantity" type="number-decimal"/>
+    <field name="amount" type="currency-amount"/>
+    <relationship type="one" title="InvoiceItemAssocType" related="moqui.basic.Enumeration">
+        <key-map field-name="invoiceItemAssocTypeEnumId"/></relationship>
+    <relationship type="one" related="mantle.account.invoice.InvoiceItem">
+        <key-map field-name="invoiceId"/>
+        <key-map field-name="invoiceItemSeqId"/>
+    </relationship>
+    <relationship type="one" title="To" related="mantle.account.invoice.InvoiceItem">
+        <key-map field-name="toInvoiceId" related="invoiceId"/>
+        <key-map field-name="toInvoiceItemSeqId" related="invoiceItemSeqId"/>
+    </relationship>
+    <relationship type="one" title="From" related="mantle.party.Party">
+        <key-map field-name="fromPartyId"/></relationship>
+    <relationship type="one" title="To" related="mantle.party.Party">
+        <key-map field-name="toPartyId"/></relationship>
+    <seed-data>
+        <moqui.basic.EnumerationType description="Invoice Item Assoc Type" enumTypeId="InvoiceItemAssocType"/>
+        <moqui.basic.Enumeration description="Commission" enumId="IiatCommission" enumTypeId="InvoiceItemAssocType"/>
+        <moqui.basic.Enumeration description="Withdraw" enumId="IiatWithdraw" enumTypeId="InvoiceItemAssocType"/>
+        <moqui.basic.Enumeration description="Bill Through" enumId="IiatBillThrough" enumTypeId="InvoiceItemAssocType"/>
+        <moqui.basic.Enumeration description="Related" enumId="IiatRelated" enumTypeId="InvoiceItemAssocType"/>
+    </seed-data>
+    <field name="lastUpdatedStamp" type="date-time"/>
+
+</entity>

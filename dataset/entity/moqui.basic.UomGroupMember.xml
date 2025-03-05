@@ -1,0 +1,12 @@
+
+<!-- Entity Name: moqui.basic.UomGroupMember sql table: UOM_GROUP_MEMBER --><entity entity-name="UomGroupMember" package="moqui.basic" use="configuration" cache="true">
+    <field name="uomGroupEnumId" type="id" is-pk="true"/>
+    <field name="uomId" type="id" is-pk="true"/>
+    <relationship type="one" title="UomGroup" related="moqui.basic.Enumeration">
+        <key-map field-name="uomGroupEnumId"/></relationship>
+    <relationship type="one" related="moqui.basic.Uom"/>
+    <seed-data>
+        <moqui.basic.EnumerationType description="UOM Group" enumTypeId="UomGroup"/></seed-data>
+    <field name="lastUpdatedStamp" type="date-time"/>
+
+</entity>

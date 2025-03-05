@@ -1,0 +1,16 @@
+
+<!-- Entity Name: mantle.ledger.account.GlAccountCategory sql table: GL_ACCOUNT_CATEGORY --><entity entity-name="GlAccountCategory" package="mantle.ledger.account" has-dependents="true">
+    <field name="glAccountCategoryId" type="id" is-pk="true"/>
+    <field name="categoryTypeEnumId" type="id"/>
+    <field name="description" type="text-medium"/>
+    <relationship type="one" title="GlAccountCategoryType" related="moqui.basic.Enumeration">
+        <key-map field-name="categoryTypeEnumId"/></relationship>
+    <seed-data>
+        <moqui.basic.EnumerationType description="GL Account Category Type" enumTypeId="GlAccountCategoryType"/>
+        <moqui.basic.Enumeration enumId="COST_CENTER" description="Cost Center Category" enumTypeId="GlAccountCategoryType"/>
+    </seed-data>
+    <field name="lastUpdatedStamp" type="date-time"/>
+    <relationship related="mantle.ledger.account.GlAccountCategoryMember" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="glAccountCategoryId" related="glAccountCategoryId"/></relationship>
+
+</entity>

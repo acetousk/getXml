@@ -1,0 +1,13 @@
+
+<!-- Entity Name: moqui.resource.wiki.WikiSpaceUser sql table: WIKI_SPACE_USER --><entity entity-name="WikiSpaceUser" package="moqui.resource.wiki" use="nontransactional">
+    <field name="wikiSpaceId" type="id" is-pk="true"/>
+    <field name="userId" type="id" is-pk="true"/>
+    <field name="receiveNotifications" type="text-indicator"/>
+    <field name="allowAdmin" type="text-indicator"/>
+    <field name="allowView" type="text-indicator"/>
+    <field name="allowUpdate" type="text-indicator"/>
+    <relationship type="one" related="moqui.resource.wiki.WikiSpace"/>
+    <relationship type="one-nofk" related="moqui.security.UserAccount"/>
+    <field name="lastUpdatedStamp" type="date-time"/>
+
+</entity>

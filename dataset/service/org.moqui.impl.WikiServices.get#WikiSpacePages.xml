@@ -1,0 +1,21 @@
+<!--Service Location org.moqui.impl.WikiServices.get#WikiSpacePages--><service verb="get" noun="WikiSpacePages"><in-parameters><parameter name="wikiSpaceId" required="true"/><parameter name="currentPagePath"><description><![CDATA[If specified all pages starting with this path will be excluded]]></description></parameter><parameter name="wikiPageCategoryId"><description><![CDATA[If specified then flat list contains only items with this category assigned.]]></description></parameter></in-parameters><out-parameters><parameter name="allChildFileFlatList" type="List"><parameter name="childInfo" type="Map"><parameter name="path"/><parameter name="name"/><parameter name="location"/></parameter></parameter><parameter name="rootChildResourceList" type="List"><parameter name="childInfo" type="Map"><parameter name="path"/><parameter name="name"/><parameter name="location"/></parameter></parameter></out-parameters><actions><entity-find-one entity-name="WikiSpace" value-field="wikiSpace" cache="true"/><set field="rootPageRef" from="ec.resource.getLocationReference(wikiSpace.rootPageLocation)"/><set field="rootPageDirRef" from="rootPageRef.findMatchingDirectory()"/><set field="allChildFileFlatList" from="new ArrayList()"/><script><![CDATA[allChildFileFlatList.add([path:'', name:'Root Page', location:rootPageRef.getLocation()])]]></script><set field="rootChildResourceList" from="new ArrayList()"/><script><![CDATA[rootPageDirRef.walkChildTree(allChildFileFlatList, rootChildResourceList)]]></script><if condition="currentPagePath"><script><![CDATA[// don't use this, want to remove any that start with currentPagePath, not just equal it: filterMapList(allChildFileFlatList, [path:pagePath], true)
+                    int allChildFileFlatSize = allChildFileFlatList.size()
+                    for (int i = 0; i < allChildFileFlatSize; ) {
+                        Map allChildFileFlat = (Map) allChildFileFlatList.get(i)
+                        if (allChildFileFlat.path.startsWith(currentPagePath)) { allChildFileFlatList.remove(i); allChildFileFlatSize-- }
+                        else { i++ }
+                    }]]></script><script><![CDATA[filterMapList(rootChildResourceList, [path:currentPagePath], true)]]></script></if><if condition="wikiPageCategoryId"><script><![CDATA[int allChildFileFlatSize = allChildFileFlatList.size()
+                    for (int i = 0; i < allChildFileFlatSize;) {
+                        Map allChildFileFlat = (Map) allChildFileFlatList.get(i)
+                        if (allChildFileFlat) {
+                            resultMap = ec.service.sync().name('org.moqui.impl.WikiServices.get#WikiPageId')
+                                .parameters([wikiSpaceId:wikiSpaceId, pagePath:allChildFileFlat.path, createIfMissing: false]).call()
+                            def wikiPageId = resultMap.wikiPageId
+                            if (wikiPageId && ec.entity.find("moqui.resource.wiki.WikiPageCategoryMember").conditionDate(null, null, null)
+                                    .condition([wikiPageId:wikiPageId, wikiPageCategoryId:wikiPageCategoryId]).one() != null) {
+                                i++
+                            } else {
+                                allChildFileFlatList.remove(i); allChildFileFlatSize--
+                            }
+                        }
+                    }]]></script></if></actions></service>

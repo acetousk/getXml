@@ -1,0 +1,1 @@
+<!--Service Location org.moqui.impl.WikiServices.set#PublishedVersion--><service verb="set" noun="PublishedVersion"><in-parameters><parameter name="wikiPageId" required="true"/><parameter name="publishedVersionName"/></in-parameters><out-parameters/><actions><service-call name="update#moqui.resource.wiki.WikiPage" in-map="context"/></actions></service>

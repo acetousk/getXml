@@ -1,0 +1,9 @@
+
+<!-- Entity Name: moqui.test.Bar sql table: BAR --><entity entity-name="Bar" package="moqui.test" sequence-bank-size="100">
+    <field name="barId" type="id" is-pk="true"/>
+    <field name="fooId" type="id"/>
+    <field name="barRank" type="number-integer"/>
+    <field name="score" column-name="BAR_SCORE" type="number-decimal"/>
+    <field name="lastUpdatedStamp" type="date-time"/>
+
+</entity>

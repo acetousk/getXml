@@ -1,0 +1,11 @@
+
+<!-- Entity Name: mantle.account.method.GiftCard sql table: GIFT_CARD --><entity entity-name="GiftCard" package="mantle.account.method" cache="never">
+    <description><![CDATA[For externally managed gift cards (not locally managed in a FinancialAccount)]]></description>
+    <field name="paymentMethodId" type="id" is-pk="true"/>
+    <field name="cardNumber" type="text-medium" encrypt="true"/>
+    <field name="pinNumber" type="text-medium" encrypt="true"/>
+    <field name="expireDate" type="text-short"/>
+    <relationship type="one" related="mantle.account.method.PaymentMethod"/>
+    <field name="lastUpdatedStamp" type="date-time"/>
+
+</entity>

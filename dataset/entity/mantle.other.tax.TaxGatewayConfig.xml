@@ -1,0 +1,22 @@
+
+<!-- Entity Name: mantle.other.tax.TaxGatewayConfig sql table: TAX_GATEWAY_CONFIG --><entity entity-name="TaxGatewayConfig" package="mantle.other.tax" has-dependents="true">
+    <field name="taxGatewayConfigId" type="id" is-pk="true"/>
+    <field name="taxGatewayTypeEnumId" type="id">
+        <description><![CDATA[Each payment gateway integration should define a
+            TaxGatewayType Enumeration record plus an entity with a shared PK (ie PK is taxGatewayTypeEnumId).]]></description></field>
+    <field name="description" type="text-medium"/>
+    <field name="calculateServiceName" type="text-medium">
+        <description><![CDATA[Service implementing
+            mantle.other.TaxServices.calculate#SalesTax interface.]]></description></field>
+    <relationship type="one" title="TaxGatewayType" related="moqui.basic.Enumeration">
+        <key-map field-name="taxGatewayTypeEnumId"/></relationship>
+    <seed-data>
+        <moqui.basic.EnumerationType description="Tax Gateway Type" enumTypeId="TaxGatewayType"/>
+        <moqui.basic.Enumeration description="Local Tax Gateway" enumId="TaxGtwyLocal" enumTypeId="TaxGatewayType"/>
+        <mantle.other.tax.TaxGatewayConfig taxGatewayConfigId="LOCAL" taxGatewayTypeEnumId="TaxGtwyLocal" description="Local gateway for sales tax calc" calculateServiceName="mantle.other.TaxServices.calculate#SalesTaxLocal"/>
+    </seed-data>
+    <field name="lastUpdatedStamp" type="date-time"/>
+    <relationship related="mantle.product.store.ProductStore" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="taxGatewayConfigId" related="taxGatewayConfigId"/></relationship>
+
+</entity>

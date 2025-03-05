@@ -1,0 +1,16 @@
+
+<!-- Entity Name: mantle.ledger.config.ItemTypeGlAccount sql table: ITEM_TYPE_GL_ACCOUNT --><entity entity-name="ItemTypeGlAccount" package="mantle.ledger.config" use="configuration">
+    <field name="itemTypeEnumId" type="id" is-pk="true"/>
+    <field name="organizationPartyId" type="id" is-pk="true"/>
+    <field name="direction" type="text-indicator" is-pk="true">
+        <description><![CDATA[If I for Incoming (Purchase) Invoices
+            and if O for Outgoing (Sales) Invoices. If E is for either.]]></description></field>
+    <field name="glAccountId" type="id"/>
+    <relationship type="one" title="ItemType" related="moqui.basic.Enumeration">
+        <key-map field-name="itemTypeEnumId"/></relationship>
+    <relationship type="one" title="Organization" related="mantle.party.Party">
+        <key-map field-name="organizationPartyId"/></relationship>
+    <relationship type="one" related="mantle.ledger.account.GlAccount"/>
+    <field name="lastUpdatedStamp" type="date-time"/>
+
+</entity>

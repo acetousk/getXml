@@ -1,0 +1,38 @@
+<!--Service Location org.moqui.impl.InstanceServices.get#DockerLog--><service verb="get" noun="DockerLog"><in-parameters><parameter name="appInstanceId"/></in-parameters><out-parameters><parameter name="instanceLog"/></out-parameters><actions><script><![CDATA[import org.moqui.context.ExecutionContext
+            import org.moqui.entity.EntityValue
+            import org.moqui.util.RestClient
+
+            instanceLog = null
+
+            ExecutionContext ec = context.ec
+            EntityValue appInstance = ec.entity.find("moqui.server.instance.AppInstance").condition("appInstanceId", appInstanceId).one()
+            EntityValue instanceHost = appInstance.findRelatedOne("instanceHost", null, null)
+            if (instanceHost == null) { ec.message.addMessage("No InstanceHost found for AppInstance ${appInstanceId}"); return; }
+
+            RestClient restClient = ec.service.rest().method("GET")
+            restClient.uri().protocol(instanceHost.hostProtocol ? (String) instanceHost.hostProtocol : "http")
+                    .host(instanceHost.hostAddress as String).port(instanceHost.adminPort ? (instanceHost.adminPort as int) : 2375)
+                    .path("containers").path(appInstance.instanceUuid ? (String) appInstance.instanceUuid : (String) appInstance.instanceName)
+                    .path("logs").parameter("stdout", "true").parameter("tail", "50").build()
+
+            try {
+                RestClient.RestResponse restResponse = restClient.call()
+                connectSuccess = true
+
+                if (restResponse.statusCode == 200) {
+                    instanceExists = true
+
+                    instanceLog = restResponse.text().replaceAll("\u0001\u0000{5}[\u0000\u0001][\u003c\ufffd]", "").replaceAll("\u001b\\[[0-9]{0,2}m", "")
+
+                } else if (restResponse.statusCode == 404) {
+                    instanceExists = false
+                    ec.message.addMessage("Docker container ${appInstance.instanceName} (${appInstance.instanceUuid}) does not exist")
+                } else {
+                    errorString = restResponse.getReasonPhrase()
+                    ec.message.addMessage("Server error on Docker host: ${errorString}")
+                }
+            } catch (Exception e) {
+                connectSuccess = false
+                ec.logger.log(ec.logger.ERROR_INT, "Error connecting to Docker host", e)
+                ec.message.addError("Error connecting to Docker host: ${e.toString()}")
+            }]]></script></actions></service>

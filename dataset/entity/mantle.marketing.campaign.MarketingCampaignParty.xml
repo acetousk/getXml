@@ -1,0 +1,13 @@
+
+<!-- Entity Name: mantle.marketing.campaign.MarketingCampaignParty sql table: MARKETING_CAMPAIGN_PARTY --><entity entity-name="MarketingCampaignParty" package="mantle.marketing.campaign">
+    <field name="marketingCampaignId" type="id" is-pk="true"/>
+    <field name="partyId" type="id" is-pk="true"/>
+    <field name="roleTypeId" type="id" is-pk="true"/>
+    <field name="fromDate" type="date-time" is-pk="true"/>
+    <field name="thruDate" type="date-time"/>
+    <relationship type="one" related="mantle.marketing.campaign.MarketingCampaign"/>
+    <relationship type="one" related="mantle.party.Party"/>
+    <relationship type="one" related="mantle.party.RoleType"/>
+    <field name="lastUpdatedStamp" type="date-time"/>
+
+</entity>

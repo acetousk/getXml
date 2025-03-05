@@ -1,0 +1,43 @@
+
+<!-- Entity Name: mantle.sales.opportunity.SalesOpportunity sql table: SALES_OPPORTUNITY --><entity entity-name="SalesOpportunity" package="mantle.sales.opportunity" has-dependents="true">
+    <field name="salesOpportunityId" type="id" is-pk="true"/>
+    <field name="typeEnumId" type="id"/>
+    <field name="accountPartyId" type="id"/>
+    <field name="opportunityName" type="text-medium"/>
+    <field name="description" type="text-very-long"/>
+    <field name="nextStep" type="text-long"/>
+    <field name="estimatedAmount" type="currency-amount" enable-audit-log="true"/>
+    <field name="estimatedProbability" type="number-decimal" enable-audit-log="true"/>
+    <field name="estimatedCloseDate" type="date-time"/>
+    <field name="currencyUomId" type="id"/>
+    <field name="marketingCampaignId" type="id"/>
+    <field name="dataSourceId" type="id"/>
+    <field name="opportunityStageId" type="id" enable-audit-log="true"/>
+    <relationship type="one" title="SalesOpportunityType" related="moqui.basic.Enumeration">
+        <key-map field-name="typeEnumId"/></relationship>
+    <relationship type="one" title="Account" related="mantle.party.Party">
+        <key-map field-name="accountPartyId"/></relationship>
+    <relationship type="one" title="Currency" related="moqui.basic.Uom">
+        <key-map field-name="currencyUomId"/></relationship>
+    <relationship type="one" related="mantle.sales.opportunity.SalesOpportunityStage">
+        <key-map field-name="opportunityStageId"/></relationship>
+    <relationship type="one" related="mantle.marketing.campaign.MarketingCampaign"/>
+    <field name="lastUpdatedStamp" type="date-time"/>
+    <relationship related="mantle.account.invoice.InvoiceItem" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="salesOpportunityId" related="salesOpportunityId"/></relationship>
+    <relationship related="mantle.order.OrderItem" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="salesOpportunityId" related="salesOpportunityId"/></relationship>
+    <relationship related="mantle.sales.opportunity.SalesOpportunityCompetitor" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="salesOpportunityId" related="salesOpportunityId"/></relationship>
+    <relationship related="mantle.sales.opportunity.SalesOpportunityNote" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="salesOpportunityId" related="salesOpportunityId"/></relationship>
+    <relationship related="mantle.sales.opportunity.SalesOpportunityOrder" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="salesOpportunityId" related="salesOpportunityId"/></relationship>
+    <relationship related="mantle.sales.opportunity.SalesOpportunityParty" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="salesOpportunityId" related="salesOpportunityId"/></relationship>
+    <relationship related="mantle.sales.opportunity.SalesOpportunityTracking" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="salesOpportunityId" related="salesOpportunityId"/></relationship>
+    <relationship related="mantle.sales.opportunity.SalesOpportunityWorkEffort" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="salesOpportunityId" related="salesOpportunityId"/></relationship>
+
+</entity>

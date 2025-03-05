@@ -1,0 +1,17 @@
+<!--Service Location org.moqui.search.SearchServices.delete#DataDocument--><service verb="delete" noun="DataDocument"><in-parameters><parameter name="dataFeedId"/><parameter name="feedStamp" type="Timestamp"/><parameter name="dataDocumentId" required="false" entity-name="moqui.entity.document.DataDocument" field-name="dataDocumentId"><description><![CDATA[For DataFeed compatibility supports dataDocumentId that
+                if specified is converted to valid ElasticSearch index name instead of using indexName parameter]]></description></parameter><parameter name="documentId" required="true"><description><![CDATA[The combined PK field values of the primary
+                entity in the DataDocument. If there is more than one PK field the values are separated with a
+                double-colon ("::").]]></description></parameter><parameter name="indexName" entity-name="moqui.entity.document.DataDocument" field-name="indexName"/><parameter name="clusterName" default-value="default"/></in-parameters><out-parameters/><actions><script><![CDATA[import org.moqui.context.ExecutionContext
+            import org.moqui.impl.context.ElasticFacadeImpl
+            ExecutionContext ec = context.ec
+
+            // if documentType use instead of indexName to get only specific indexes (split on comma, ddIdToEsIndex, join with comma)
+            String index = indexName
+            if (dataDocumentId) index = ((String) dataDocumentId).split(",").collect({ ElasticFacadeImpl.ddIdToEsIndex(it) }).join(",")
+
+            def elasticClient = ec.factory.elastic.getClient((String) clusterName)
+            if (elasticClient == null) {
+                ec.message.addMessage("No Elastic Client found for cluster name ${clusterName}, not deleting document ${documentId}", "danger")
+                return
+            }
+            elasticClient.delete(index, (String) documentId)]]></script></actions></service>

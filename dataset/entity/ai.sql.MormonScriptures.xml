@@ -1,0 +1,26 @@
+
+<!-- Entity Name: ai.sql.MormonScriptures sql table: MORMON_SCRIPTURES --><entity entity-name="MormonScriptures" package="ai.sql">
+    <field name="volumeId" type="id" is-pk="true"/>
+    <field name="bookId" type="id" is-pk="true"/>
+    <field name="chapterId" type="id" is-pk="true"/>
+    <field name="verseId" type="id" is-pk="true"/>
+    <field name="volumeTitle" type="text-long"/>
+    <field name="bookTitle" type="text-long"/>
+    <field name="volumeLongTitle" type="text-long"/>
+    <field name="bookLongTitle" type="text-long"/>
+    <field name="volumeSubtitle" type="text-long"/>
+    <field name="bookSubtitle" type="text-long"/>
+    <field name="volumeShortTitle" type="text-long"/>
+    <field name="bookShortTitle" type="text-long"/>
+    <field name="volumeLdsUrl" type="text-long"/>
+    <field name="bookLdsUrl" type="text-long"/>
+    <field name="chapterNumber" type="number-integer"/>
+    <field name="verseNumber" type="number-integer"/>
+    <field name="scriptureText" type="text-long"/>
+    <field name="verseTitle" type="text-long"/>
+    <field name="verseShortTitle" type="text-long"/>
+    <field name="embedding" type="binary-very-long"/>
+    <field name="modelEnumId" type="id"/>
+    <field name="lastUpdatedStamp" type="date-time"/>
+
+</entity>

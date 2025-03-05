@@ -1,0 +1,17 @@
+
+<!-- Entity Name: mantle.product.asset.AssetDepreciation sql table: ASSET_DEPRECIATION --><entity entity-name="AssetDepreciation" package="mantle.product.asset" cache="never">
+    <field name="assetId" type="id" is-pk="true"/>
+    <field name="timePeriodId" type="id" is-pk="true"/>
+    <field name="monthlyDepreciation" type="currency-amount"/>
+    <field name="annualDepreciation" type="currency-amount"/>
+    <field name="yearBeginDepreciation" type="currency-amount"/>
+    <field name="isLastYearPeriod" type="text-indicator"/>
+    <field name="usefulLifeYears" type="number-integer"/>
+    <field name="yearsRemaining" type="number-integer"/>
+    <field name="acctgTransId" type="id"/>
+    <relationship type="one" related="mantle.product.asset.Asset"/>
+    <relationship type="one" related="mantle.party.time.TimePeriod"/>
+    <relationship type="one" related="mantle.ledger.transaction.AcctgTrans"/>
+    <field name="lastUpdatedStamp" type="date-time"/>
+
+</entity>

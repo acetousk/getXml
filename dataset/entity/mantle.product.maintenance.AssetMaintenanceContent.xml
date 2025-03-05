@@ -1,0 +1,15 @@
+
+<!-- Entity Name: mantle.product.maintenance.AssetMaintenanceContent sql table: ASSET_MAINTENANCE_CONTENT --><entity entity-name="AssetMaintenanceContent" package="mantle.product.maintenance" cache="never">
+    <field name="assetMaintenanceId" type="id" is-pk="true"/>
+    <field name="contentDate" type="date-time" default="ec.user.nowTimestamp" is-pk="true"/>
+    <field name="contentTypeEnumId" type="id"/>
+    <field name="contentLocation" type="text-medium"/>
+    <field name="description" type="text-long"/>
+    <field name="userId" type="id" default="ec.user.userId"/>
+    <relationship type="one" related="mantle.product.maintenance.AssetMaintenance"/>
+    <relationship type="one" title="AssetMaintContentType" related="moqui.basic.Enumeration">
+        <key-map field-name="contentTypeEnumId"/></relationship>
+    <relationship type="one" related="moqui.security.UserAccount"/>
+    <field name="lastUpdatedStamp" type="date-time"/>
+
+</entity>

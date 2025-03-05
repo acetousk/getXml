@@ -1,0 +1,58 @@
+
+<!-- Entity Name: mantle.party.agreement.AgreementItem sql table: AGREEMENT_ITEM --><entity entity-name="AgreementItem" package="mantle.party.agreement" has-dependents="true">
+    <description><![CDATA[For price lists associated with an AgreementItem use the ProducePrice entity.]]></description>
+    <field name="agreementId" type="id" is-pk="true"/>
+    <field name="agreementItemSeqId" type="id" is-pk="true"/>
+    <field name="agreementItemTypeEnumId" type="id"/>
+    <field name="fromDate" type="date-time"/>
+    <field name="thruDate" type="date-time"/>
+    <field name="productId" type="id"/>
+    <field name="quantity" type="number-decimal" enable-audit-log="true"/>
+    <field name="quantityUomId" type="id"/>
+    <field name="itemText" type="text-very-long"/>
+    <relationship type="one" related="mantle.party.agreement.Agreement"/>
+    <relationship type="one" title="AgreementItemType" related="moqui.basic.Enumeration">
+        <key-map field-name="agreementItemTypeEnumId"/></relationship>
+    <relationship type="one" related="mantle.product.Product" short-alias="product"/>
+    <relationship type="one" title="Quantity" related="moqui.basic.Uom" short-alias="quantityUom">
+        <key-map field-name="quantityUomId"/></relationship>
+    <relationship type="many" related="mantle.party.agreement.AgreementTerm" short-alias="terms">
+        <key-map field-name="agreementId"/>
+        <key-map field-name="agreementItemSeqId"/>
+    </relationship>
+    <seed-data>
+        <moqui.basic.EnumerationType description="Agreement Item Type" enumTypeId="AgreementItemType"/>
+        <moqui.basic.Enumeration enumId="AitSubAgreement" description="Sub-Agreement" enumTypeId="AgreementItemType"/>
+        <moqui.basic.Enumeration enumId="AitExhibit" description="Exhibit" enumTypeId="AgreementItemType"/>
+        <moqui.basic.Enumeration enumId="AitPricing" description="Pricing" enumTypeId="AgreementItemType"/>
+        <moqui.basic.Enumeration enumId="AitPurchase" description="Purchase" enumTypeId="AgreementItemType"/>
+        <moqui.basic.Enumeration enumId="AitSection" description="Section" enumTypeId="AgreementItemType"/>
+        <moqui.basic.Enumeration enumId="AitCommissionRate" description="Commission Rate" enumTypeId="AgreementItemType"/>
+    </seed-data>
+    <field name="lastUpdatedStamp" type="date-time"/>
+    <relationship related="mantle.party.agreement.AgreementAddendum" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="agreementId" related="agreementId"/>
+        <key-map field-name="agreementItemSeqId" related="agreementItemSeqId"/>
+    </relationship>
+    <relationship related="mantle.party.agreement.AgreementItemEmployment" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="agreementId" related="agreementId"/>
+        <key-map field-name="agreementItemSeqId" related="agreementItemSeqId"/>
+    </relationship>
+    <relationship related="mantle.party.agreement.AgreementItemGeo" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="agreementId" related="agreementId"/>
+        <key-map field-name="agreementItemSeqId" related="agreementItemSeqId"/>
+    </relationship>
+    <relationship related="mantle.party.agreement.AgreementItemParty" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="agreementId" related="agreementId"/>
+        <key-map field-name="agreementItemSeqId" related="agreementItemSeqId"/>
+    </relationship>
+    <relationship related="mantle.party.agreement.AgreementItemSubscription" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="agreementId" related="agreementId"/>
+        <key-map field-name="agreementItemSeqId" related="agreementItemSeqId"/>
+    </relationship>
+    <relationship related="mantle.party.agreement.AgreementItemWorkEffort" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="agreementId" related="agreementId"/>
+        <key-map field-name="agreementItemSeqId" related="agreementItemSeqId"/>
+    </relationship>
+
+</entity>

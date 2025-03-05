@@ -1,0 +1,17 @@
+
+<!-- Entity Name: mantle.other.budget.BudgetScenarioApplication sql table: BUDGET_SCENARIO_APPLICATION --><entity entity-name="BudgetScenarioApplication" package="mantle.other.budget">
+    <field name="budgetScenarioApplicId" type="id" is-pk="true"/>
+    <field name="budgetScenarioId" type="id" is-pk="true"/>
+    <field name="budgetId" type="id"/>
+    <field name="budgetItemSeqId" type="id"/>
+    <field name="amountChange" type="currency-amount"/>
+    <field name="percentageChange" type="number-decimal"/>
+    <relationship type="one" related="mantle.other.budget.BudgetScenario"/>
+    <relationship type="one" related="mantle.other.budget.Budget"/>
+    <relationship type="one" related="mantle.other.budget.BudgetItem">
+        <key-map field-name="budgetId"/>
+        <key-map field-name="budgetItemSeqId"/>
+    </relationship>
+    <field name="lastUpdatedStamp" type="date-time"/>
+
+</entity>

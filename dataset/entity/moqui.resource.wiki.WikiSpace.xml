@@ -1,0 +1,29 @@
+
+<!-- Entity Name: moqui.resource.wiki.WikiSpace sql table: WIKI_SPACE --><entity entity-name="WikiSpace" package="moqui.resource.wiki" use="nontransactional" has-dependents="true">
+    <field name="wikiSpaceId" type="id" is-pk="true"/>
+    <field name="description" type="text-long"/>
+    <field name="rootPageLocation" type="text-medium"/>
+    <field name="decoratorScreenLocation" type="text-medium"/>
+    <field name="publicPageUrl" type="text-medium"/>
+    <field name="publicAttachmentUrl" type="text-medium"/>
+    <field name="publicBlogUrl" type="text-medium"/>
+    <field name="restrictView" type="text-indicator"/>
+    <field name="restrictUpdate" type="text-indicator"/>
+    <field name="allowAnyHtml" type="text-indicator"/>
+    <field name="screenThemeId" type="id"/>
+    <relationship type="one" related="moqui.screen.ScreenTheme" short-alias="screenTheme"/>
+    <seed-data>
+        <moqui.resource.DbResource resourceId="WIKI_SPACE_ROOT" parentResourceId="" filename="WikiSpace" isFile="N"/></seed-data>
+    <field name="lastUpdatedStamp" type="date-time"/>
+    <relationship related="mantle.product.store.ProductStore" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="wikiSpaceId" related="wikiSpaceId"/></relationship>
+    <relationship related="mantle.product.store.ProductStoreWikiSpace" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="wikiSpaceId" related="wikiSpaceId"/></relationship>
+    <relationship related="moqui.resource.wiki.WikiPage" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="wikiSpaceId" related="wikiSpaceId"/></relationship>
+    <relationship related="moqui.resource.wiki.WikiPageAlias" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="wikiSpaceId" related="wikiSpaceId"/></relationship>
+    <relationship related="moqui.resource.wiki.WikiSpaceUser" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="wikiSpaceId" related="wikiSpaceId"/></relationship>
+
+</entity>

@@ -1,0 +1,16 @@
+
+<!-- Entity Name: mantle.humanres.employment.PayrollAdjustmentDetail sql table: PAYROLL_ADJUSTMENT_DETAIL --><entity entity-name="PayrollAdjustmentDetail" package="mantle.humanres.employment" use="configuration">
+    <field name="payrollAdjustmentId" type="id" is-pk="true"/>
+    <field name="detailSeqId" type="id" is-pk="true"/>
+    <field name="rate" type="number-float"/>
+    <field name="rateAfterYtdMin" type="text-indicator"/>
+    <field name="ytdMin" type="currency-amount"/>
+    <field name="ytdMax" type="currency-amount"/>
+    <field name="rateAfterPeriodMin" type="text-indicator"/>
+    <field name="periodMin" type="currency-amount"/>
+    <field name="periodMax" type="currency-amount"/>
+    <field name="flatAmount" type="currency-amount"/>
+    <relationship type="one" related="mantle.humanres.employment.PayrollAdjustment"/>
+    <field name="lastUpdatedStamp" type="date-time"/>
+
+</entity>

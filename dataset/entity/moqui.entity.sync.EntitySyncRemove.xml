@@ -1,0 +1,8 @@
+
+<!-- Entity Name: moqui.entity.sync.EntitySyncRemove sql table: ENTITY_SYNC_REMOVE --><entity entity-name="EntitySyncRemove" package="moqui.entity.sync" use="nontransactional" cache="never">
+    <field name="entitySyncRemoveId" type="id" is-pk="true"/>
+    <field name="entityName" type="text-medium" is-pk="true"/>
+    <field name="primaryKeyRemoved" type="text-long"/>
+    <field name="lastUpdatedStamp" type="date-time"/>
+
+</entity>

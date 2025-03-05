@@ -1,0 +1,81 @@
+
+<!-- Entity Name: mantle.product.category.ProductCategory sql table: PRODUCT_CATEGORY --><entity entity-name="ProductCategory" package="mantle.product.category" short-alias="categories" has-dependents="true">
+    <field name="productCategoryId" type="id" is-pk="true"/>
+    <field name="pseudoId" type="text-short" default="productCategoryId"/>
+    <field name="productCategoryTypeEnumId" type="id"/>
+    <field name="categoryName" type="text-medium"/>
+    <field name="description" type="text-very-long"/>
+    <field name="ownerPartyId" type="id" enable-audit-log="update" default="'_NA_'"/>
+    <relationship type="one" title="ProductCategoryType" related="moqui.basic.Enumeration" short-alias="type">
+        <key-map field-name="productCategoryTypeEnumId"/></relationship>
+    <relationship type="one" title="Owner" related="mantle.party.Party" short-alias="owner">
+        <key-map field-name="ownerPartyId"/></relationship>
+    <relationship type="many" related="mantle.product.category.ProductCategoryContent" short-alias="contents">
+        <key-map field-name="productCategoryId"/></relationship>
+    <relationship type="many" related="mantle.product.category.ProductCategoryParty" short-alias="parties">
+        <key-map field-name="productCategoryId"/></relationship>
+    <relationship type="many" related="mantle.product.category.ProductCategoryIdent" short-alias="identifications">
+        <key-map field-name="productCategoryId"/></relationship>
+    <relationship type="many" related="mantle.product.category.ProductCategoryMember" short-alias="products">
+        <key-map field-name="productCategoryId"/></relationship>
+    <relationship type="many" related="mantle.product.category.ProductCategoryRollup" short-alias="parents">
+        <key-map field-name="productCategoryId"/></relationship>
+    <relationship type="many" related="mantle.product.category.ProductCategoryRollup" short-alias="children">
+        <key-map field-name="productCategoryId" related="parentProductCategoryId"/></relationship>
+    <relationship type="many" related="mantle.product.feature.ProductCategoryFeatGrpAppl" short-alias="featureGroups">
+        <key-map field-name="productCategoryId"/></relationship>
+    <relationship type="many" related="mantle.product.store.ProductStoreCategory" short-alias="storeCategories">
+        <key-map field-name="productCategoryId"/></relationship>
+    <index name="CATEGORY_ID_PSEUDO" unique="true">
+        <index-field name="pseudoId"/>
+        <index-field name="ownerPartyId"/>
+    </index>
+    <seed-data>
+        <moqui.basic.EnumerationType description="Product Category Type" enumTypeId="ProductCategoryType"/>
+        <moqui.basic.Enumeration description="Catalog" enumId="PctCatalog" enumTypeId="ProductCategoryType"/>
+        <moqui.basic.Enumeration description="Industry" enumId="PctIndustry" enumTypeId="ProductCategoryType"/>
+        <moqui.basic.Enumeration description="Internal" enumId="PctInternal" enumTypeId="ProductCategoryType"/>
+        <moqui.basic.Enumeration description="Materials" enumId="PctMaterials" enumTypeId="ProductCategoryType"/>
+        <moqui.basic.Enumeration description="Quick Add" enumId="PctQuickAdd" enumTypeId="ProductCategoryType"/>
+        <moqui.basic.Enumeration description="Search" enumId="PctSearch" enumTypeId="ProductCategoryType"/>
+        <moqui.basic.Enumeration description="Usage" enumId="PctUsage" enumTypeId="ProductCategoryType"/>
+        <moqui.basic.Enumeration description="Mix and Match" enumId="PctMixMatch" enumTypeId="ProductCategoryType"/>
+        <moqui.basic.Enumeration description="Cross Sell" enumId="PctCrossSell" enumTypeId="ProductCategoryType"/>
+        <moqui.basic.Enumeration description="Tax" enumId="PctTax" enumTypeId="ProductCategoryType"/>
+        <moqui.basic.Enumeration description="Gift Card" enumId="PctGiftCard" enumTypeId="ProductCategoryType"/>
+        <moqui.basic.Enumeration description="Best Selling" enumId="PctBestSelling" enumTypeId="ProductCategoryType"/>
+        <moqui.basic.Enumeration description="Inventory Group" enumId="PctInventoryGroup" enumTypeId="ProductCategoryType"/>
+    </seed-data>
+    <master>
+        <detail relationship="type"/>
+        <detail relationship="contents"/>
+        <detail relationship="parties">
+            <detail relationship="party" use-master="basic"/>
+            <detail relationship="role"/>
+        </detail>
+        <detail relationship="products">
+            <detail relationship="product"/></detail>
+        <detail relationship="parents">
+            <detail relationship="parent"/></detail>
+        <detail relationship="children">
+            <detail relationship="category"/></detail>
+        <detail relationship="featureGroups">
+            <detail relationship="group"/></detail>
+    </master>
+    <field name="lastUpdatedStamp" type="date-time"/>
+    <relationship related="mantle.ledger.config.ProductCategoryGlAccount" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="productCategoryId" related="productCategoryId"/></relationship>
+    <relationship related="mantle.marketing.segment.MarketInterest" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="productCategoryId" related="productCategoryId"/></relationship>
+    <relationship related="mantle.order.OrderItem" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="productCategoryId" related="productCategoryId"/></relationship>
+    <relationship related="mantle.other.tax.TaxAuthorityCategory" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="productCategoryId" related="productCategoryId"/></relationship>
+    <relationship related="mantle.product.category.ProductCategoryRollup" type="many" is-auto-reverse="true" mutable="true" title="Parent">
+        <key-map field-name="productCategoryId" related="parentProductCategoryId"/></relationship>
+    <relationship related="mantle.sales.forecast.SalesForecastDetail" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="productCategoryId" related="productCategoryId"/></relationship>
+    <relationship related="mantle.sales.need.PartyNeed" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="productCategoryId" related="productCategoryId"/></relationship>
+
+</entity>

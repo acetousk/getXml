@@ -1,0 +1,118 @@
+
+<!-- Entity Name: mantle.shipment.ShipmentRouteSegment sql table: SHIPMENT_ROUTE_SEGMENT --><entity entity-name="ShipmentRouteSegment" package="mantle.shipment" cache="never" has-dependents="true">
+    <field name="shipmentId" type="id" is-pk="true"/>
+    <field name="shipmentRouteSegmentSeqId" type="id" is-pk="true"/>
+    <field name="deliveryId" type="id"/>
+    <field name="shippingGatewayConfigId" type="id"/>
+    <field name="originFacilityId" type="id"/>
+    <field name="originPostalContactMechId" type="id"/>
+    <field name="originTelecomContactMechId" type="id"/>
+    <field name="returnPostalContactMechId" type="id"/>
+    <field name="destinationFacilityId" type="id"/>
+    <field name="destPostalContactMechId" type="id" enable-audit-log="update"/>
+    <field name="destTelecomContactMechId" type="id"/>
+    <field name="carrierPartyId" type="id" enable-audit-log="update"/>
+    <field name="shipmentMethodEnumId" type="id" enable-audit-log="update"/>
+    <field name="tradeTermEnumId" type="id"/>
+    <field name="customsCertify" type="text-indicator"/>
+    <field name="customsCertifySigner" type="text-short"/>
+    <field name="customsContentsEnumId" type="id"/>
+    <field name="customsNonDeliveryEnumId" type="id"/>
+    <field name="statusId" type="id" enable-audit-log="true"/>
+    <field name="carrierDeliveryZone" type="text-short"/>
+    <field name="carrierRestrictionCodes" type="text-short"/>
+    <field name="carrierRestrictionDesc" type="text-very-long"/>
+    <field name="billingWeight" type="number-decimal"/>
+    <field name="billingWeightUomId" type="id"/>
+    <field name="actualTransportCost" type="currency-amount"/>
+    <field name="actualServiceCost" type="currency-amount"/>
+    <field name="actualOtherCost" type="currency-amount"/>
+    <field name="actualCost" type="currency-amount"/>
+    <field name="costUomId" type="id"/>
+    <field name="actualStartDate" type="date-time"/>
+    <field name="actualArrivalDate" type="date-time"/>
+    <field name="estimatedStartDate" type="date-time"/>
+    <field name="estimatedArrivalDate" type="date-time"/>
+    <field name="masterTrackingCode" type="text-medium" enable-audit-log="update"/>
+    <field name="masterTrackingUrl" type="text-long"/>
+    <field name="homeDeliveryType" type="id"/>
+    <field name="homeDeliveryDate" type="date-time"/>
+    <field name="thirdPartyAccountNumber" type="id"/>
+    <field name="thirdPartyPostalCode" type="id"/>
+    <field name="thirdPartyCountryGeoCode" type="id"/>
+    <field name="highValueReport" type="binary-very-long"/>
+    <relationship type="one" related="mantle.shipment.Shipment" short-alias="shipment"/>
+    <relationship type="one" related="mantle.shipment.carrier.Delivery" short-alias="delivery"/>
+    <relationship type="one" related="mantle.shipment.carrier.ShippingGatewayConfig" short-alias="shippingGatewayConfig"/>
+    <relationship type="one" title="Carrier" related="mantle.party.Party" short-alias="carrierParty">
+        <key-map field-name="carrierPartyId"/></relationship>
+    <relationship type="one" title="ShipmentMethod" related="moqui.basic.Enumeration" short-alias="shipmentMethod">
+        <key-map field-name="shipmentMethodEnumId"/></relationship>
+    <relationship type="one" title="TermType" related="moqui.basic.Enumeration" short-alias="tradeTermEnum">
+        <key-map field-name="tradeTermEnumId"/></relationship>
+    <relationship type="one" title="CustomsContents" related="moqui.basic.Enumeration" short-alias="customsContentsEnum">
+        <key-map field-name="customsContentsEnumId"/></relationship>
+    <relationship type="one" title="CustomsNonDelivery" related="moqui.basic.Enumeration" short-alias="customsNonDeliveryEnum">
+        <key-map field-name="customsNonDeliveryEnumId"/></relationship>
+    <relationship type="one" title="Origin" related="mantle.facility.Facility" short-alias="originFacility">
+        <key-map field-name="originFacilityId"/></relationship>
+    <relationship type="one-nofk" title="Origin" related="mantle.party.contact.ContactMech" short-alias="originPostal">
+        <key-map field-name="originPostalContactMechId"/></relationship>
+    <relationship type="one" title="Origin" related="mantle.party.contact.PostalAddress" short-alias="originPostalAddress">
+        <key-map field-name="originPostalContactMechId"/></relationship>
+    <relationship type="one-nofk" title="Origin" related="mantle.party.contact.ContactMech" short-alias="originTelecom">
+        <key-map field-name="originTelecomContactMechId"/></relationship>
+    <relationship type="one" title="Origin" related="mantle.party.contact.TelecomNumber">
+        <key-map field-name="originTelecomContactMechId"/></relationship>
+    <relationship type="one-nofk" title="Return" related="mantle.party.contact.ContactMech" short-alias="returnPostal">
+        <key-map field-name="returnPostalContactMechId"/></relationship>
+    <relationship type="one" title="Return" related="mantle.party.contact.PostalAddress" short-alias="returnPostalAddress">
+        <key-map field-name="returnPostalContactMechId"/></relationship>
+    <relationship type="one" title="Destination" related="mantle.facility.Facility" short-alias="destFacility">
+        <key-map field-name="destinationFacilityId"/></relationship>
+    <relationship type="one-nofk" title="Destination" related="mantle.party.contact.ContactMech" short-alias="destPostal">
+        <key-map field-name="destPostalContactMechId"/></relationship>
+    <relationship type="one" title="Destination" related="mantle.party.contact.PostalAddress" short-alias="destPostalAddress">
+        <key-map field-name="destPostalContactMechId"/></relationship>
+    <relationship type="one-nofk" title="Destination" related="mantle.party.contact.ContactMech" short-alias="destTelecom">
+        <key-map field-name="destTelecomContactMechId"/></relationship>
+    <relationship type="one" title="Destination" related="mantle.party.contact.TelecomNumber">
+        <key-map field-name="destTelecomContactMechId"/></relationship>
+    <relationship type="one" title="ShipmentRouteSegment" related="moqui.basic.StatusItem" short-alias="status"/>
+    <relationship type="one" title="Cost" related="moqui.basic.Uom" short-alias="costUom">
+        <key-map field-name="costUomId"/></relationship>
+    <relationship type="one" title="BillingWeight" related="moqui.basic.Uom" short-alias="billingWeightUom">
+        <key-map field-name="billingWeightUomId"/></relationship>
+    <relationship type="many" related="mantle.shipment.ShipmentPackageRouteSeg" short-alias="packageRouteSegments">
+        <key-map field-name="shipmentId"/>
+        <key-map field-name="shipmentRouteSegmentSeqId"/>
+    </relationship>
+    <seed-data>
+        <moqui.basic.StatusType description="Shipment Route Segment Status" statusTypeId="ShipmentRouteSegment"/>
+        <moqui.basic.StatusItem description="Not Started" sequenceNum="1" statusId="ShrssNotStarted" statusTypeId="ShipmentRouteSegment"/>
+        <moqui.basic.StatusItem description="Confirmed" sequenceNum="2" statusId="ShrssConfirmed" statusTypeId="ShipmentRouteSegment"/>
+        <moqui.basic.StatusItem description="Accepted" sequenceNum="3" statusId="ShrssAccepted" statusTypeId="ShipmentRouteSegment"/>
+        <moqui.basic.StatusItem description="Voided" sequenceNum="8" statusId="ShrssVoided" statusTypeId="ShipmentRouteSegment"/>
+        <moqui.basic.StatusFlowTransition statusFlowId="Default" statusId="ShrssNotStarted" toStatusId="ShrssConfirmed" transitionName="Confirm"/>
+        <moqui.basic.StatusFlowTransition statusFlowId="Default" statusId="ShrssConfirmed" toStatusId="ShrssAccepted" transitionName="Accept"/>
+        <moqui.basic.StatusFlowTransition statusFlowId="Default" statusId="ShrssConfirmed" toStatusId="ShrssVoided" transitionName="Void"/>
+        <moqui.basic.StatusFlowTransition statusFlowId="Default" statusId="ShrssAccepted" toStatusId="ShrssVoided" transitionName="Void"/>
+        <moqui.basic.EnumerationType description="Customs Contents Type" enumTypeId="CustomsContents"/>
+        <moqui.basic.Enumeration sequenceNum="1" description="Merchandise" enumId="CcntMerchandise" enumCode="MERCHANDISE" enumTypeId="CustomsContents"/>
+        <moqui.basic.Enumeration sequenceNum="2" description="Return Merchandise" enumId="CcntReturnMerch" enumCode="RETURN_MERCHANDISE" enumTypeId="CustomsContents"/>
+        <moqui.basic.Enumeration sequenceNum="3" description="Documents" enumId="CcntDocuments" enumCode="DOCUMENTS" enumTypeId="CustomsContents"/>
+        <moqui.basic.Enumeration sequenceNum="4" description="Gift" enumId="CcntGift" enumCode="GIFT" enumTypeId="CustomsContents"/>
+        <moqui.basic.Enumeration sequenceNum="5" description="Sample" enumId="CcntSample" enumCode="SAMPLE" enumTypeId="CustomsContents"/>
+        <moqui.basic.Enumeration sequenceNum="6" description="Humanitarian Donation" enumId="CcntDonation" enumCode="HUMANITARIAN_DONATION" enumTypeId="CustomsContents"/>
+        <moqui.basic.Enumeration sequenceNum="7" description="Other" enumId="CcntOther" enumCode="OTHER" enumTypeId="CustomsContents"/>
+        <moqui.basic.EnumerationType description="Customs Non Delivery" enumTypeId="CustomsNonDelivery"/>
+        <moqui.basic.Enumeration sequenceNum="1" description="Abandon" enumId="CndAbandon" enumCode="ABANDON" enumTypeId="CustomsNonDelivery"/>
+        <moqui.basic.Enumeration sequenceNum="2" description="Return" enumId="CndReturn" enumCode="RETURN" enumTypeId="CustomsNonDelivery"/>
+    </seed-data>
+    <field name="lastUpdatedStamp" type="date-time"/>
+    <relationship related="mantle.shipment.ShipmentContent" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="shipmentId" related="shipmentId"/>
+        <key-map field-name="shipmentRouteSegmentSeqId" related="shipmentRouteSegmentSeqId"/>
+    </relationship>
+
+</entity>

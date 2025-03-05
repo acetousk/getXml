@@ -1,0 +1,1 @@
+<!--Service Location sales.SalesServices.find#StageOptions--><service verb="find" noun="StageOptions"><in-parameters/><out-parameters><parameter name="stageList"/></out-parameters><actions><entity-find entity-name="mantle.sales.opportunity.SalesOpportunityStage" list="stageList"><order-by field-name="sequenceNum"/></entity-find></actions></service>

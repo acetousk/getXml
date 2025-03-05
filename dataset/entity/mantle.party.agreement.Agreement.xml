@@ -1,0 +1,71 @@
+
+<!-- Entity Name: mantle.party.agreement.Agreement sql table: AGREEMENT --><entity entity-name="Agreement" package="mantle.party.agreement" short-alias="agreements" has-dependents="true">
+    <field name="agreementId" type="id" is-pk="true"/>
+    <field name="agreementTypeEnumId" type="id"/>
+    <field name="statusId" type="id" enable-audit-log="true"/>
+    <field name="organizationPartyId" type="id"/>
+    <field name="organizationRoleTypeId" type="id"/>
+    <field name="otherPartyId" type="id" enable-audit-log="update"/>
+    <field name="otherRoleTypeId" type="id"/>
+    <field name="agreementDate" type="date-time"/>
+    <field name="fromDate" type="date-time" enable-audit-log="update"/>
+    <field name="thruDate" type="date-time" enable-audit-log="update"/>
+    <field name="description" type="text-medium"/>
+    <field name="currencyUomId" type="id"/>
+    <field name="isTemplate" type="text-indicator"/>
+    <field name="templateAgreementId" type="id">
+        <description><![CDATA[The template agreement this agreement was cloned from]]></description></field>
+    <field name="textData" type="text-very-long"/>
+    <relationship type="one" title="AgreementType" related="moqui.basic.Enumeration" short-alias="type">
+        <key-map field-name="agreementTypeEnumId"/></relationship>
+    <relationship type="one" title="Agreement" related="moqui.basic.StatusItem" short-alias="status"/>
+    <relationship type="one" title="Organization" related="mantle.party.Party" short-alias="organization">
+        <key-map field-name="organizationPartyId"/></relationship>
+    <relationship type="one" title="Organization" related="mantle.party.RoleType" short-alias="organizationRole">
+        <key-map field-name="organizationRoleTypeId"/></relationship>
+    <relationship type="one" title="Other" related="mantle.party.Party" short-alias="other">
+        <key-map field-name="otherPartyId"/></relationship>
+    <relationship type="one" title="Other" related="mantle.party.RoleType" short-alias="otherRole">
+        <key-map field-name="otherRoleTypeId"/></relationship>
+    <relationship type="one" title="Currency" related="moqui.basic.Uom" short-alias="currencyUom">
+        <key-map field-name="currencyUomId"/></relationship>
+    <relationship type="one" title="Template" related="mantle.party.agreement.Agreement" short-alias="templateAgreement">
+        <key-map field-name="templateAgreementId"/></relationship>
+    <relationship type="many" related="mantle.party.agreement.AgreementTerm" short-alias="terms">
+        <key-map field-name="agreementId"/></relationship>
+    <relationship type="many" related="mantle.party.agreement.AgreementItem" short-alias="items">
+        <key-map field-name="agreementId"/></relationship>
+    <relationship type="many" related="mantle.party.agreement.AgreementParty" short-alias="parties">
+        <key-map field-name="agreementId"/></relationship>
+    <seed-data>
+        <moqui.basic.EnumerationType description="Agreement Type" enumTypeId="AgreementType"/>
+        <moqui.basic.Enumeration enumId="AgrProduct" description="Product" enumTypeId="AgreementType"/>
+        <moqui.basic.Enumeration enumId="AgrSales" description="Sales" enumTypeId="AgreementType"/>
+        <moqui.basic.Enumeration enumId="AgrEmployment" description="Employment" enumTypeId="AgreementType"/>
+        <moqui.basic.Enumeration enumId="AgrOther" description="Other" enumTypeId="AgreementType"/>
+        <moqui.basic.Enumeration enumId="AgrCommission" description="Commission" enumTypeId="AgreementType"/>
+        <moqui.basic.Enumeration enumId="AgrEula" description="End User License Agreement" enumTypeId="AgreementType"/>
+        <moqui.basic.StatusType description="Agreement" statusTypeId="Agreement"/>
+        <moqui.basic.Enumeration description="Agreement Roles" enumId="RgpAgreement" enumTypeId="RoleGroup"/>
+        <mantle.party.RoleGroupMember roleGroupEnumId="RgpAgreement" roleTypeId="Carrier"/>
+        <mantle.party.RoleGroupMember roleGroupEnumId="RgpAgreement" roleTypeId="Customer"/>
+        <mantle.party.RoleGroupMember roleGroupEnumId="RgpAgreement" roleTypeId="Employee"/>
+        <mantle.party.RoleGroupMember roleGroupEnumId="RgpAgreement" roleTypeId="Supplier"/>
+    </seed-data>
+    <field name="paymentMethodId" type="id"/>
+    <relationship type="one" related="mantle.account.method.PaymentMethod"/>
+    <field name="lastUpdatedStamp" type="date-time"/>
+    <relationship related="mantle.party.agreement.AgreementAddendum" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="agreementId" related="agreementId"/></relationship>
+    <relationship related="mantle.party.agreement.AgreementAssoc" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="agreementId" related="agreementId"/></relationship>
+    <relationship related="mantle.party.agreement.AgreementAssoc" type="many" is-auto-reverse="true" mutable="true" title="To">
+        <key-map field-name="agreementId" related="toAgreementId"/></relationship>
+    <relationship related="mantle.party.agreement.AgreementContactMech" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="agreementId" related="agreementId"/></relationship>
+    <relationship related="mantle.party.agreement.AgreementContent" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="agreementId" related="agreementId"/></relationship>
+    <relationship related="mantle.party.agreement.AgreementItemSubscription" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="agreementId" related="agreementId"/></relationship>
+
+</entity>

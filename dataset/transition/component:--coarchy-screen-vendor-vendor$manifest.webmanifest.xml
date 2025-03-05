@@ -1,0 +1,20 @@
+<!--Transition Screen Location component://coarchy/screen/vendor/vendor.xml Transition Name manifest.webmanifest--><transition name="manifest.webmanifest"><actions><!--always-actions at component://webroot/screen/webroot.xml--><set field="html_scripts" from="new LinkedHashSet()"/><set field="footer_scripts" from="new LinkedHashSet()"/><set field="html_stylesheets" from="new LinkedHashSet()"/><!--transition actions--><script><![CDATA[def manifestOut = [
+                        name: "Coarchy Vendor",
+                        short_name: "Coarchy Vendor",
+                        icons: [
+                                [
+                                    src: '/vendorstatic/images/CoarchySquareBlack200.png',
+                                    type: "image/png",
+                                    sizes: "200x200"
+                                ],
+                                [
+                                    src: '/vendorstatic/images/CoarchySquareBlack500.png',
+                                    type: "image/png",
+                                    sizes: "500x500"
+                                ]
+                        ],
+                        start_url: "/vendor",
+                        display: "minimal-ui",
+                        prefer_related_applications: true
+                ];
+                ec.web.sendJsonResponse(manifestOut)]]></script></actions></transition>

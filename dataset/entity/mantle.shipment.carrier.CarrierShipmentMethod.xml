@@ -1,0 +1,31 @@
+
+<!-- Entity Name: mantle.shipment.carrier.CarrierShipmentMethod sql table: CARRIER_SHIPMENT_METHOD --><entity entity-name="CarrierShipmentMethod" package="mantle.shipment.carrier" cache="true">
+    <field name="carrierPartyId" type="id" is-pk="true"/>
+    <field name="shipmentMethodEnumId" type="id" is-pk="true"/>
+    <field name="description" type="text-medium"/>
+    <field name="sequenceNum" type="number-integer"/>
+    <field name="carrierServiceCode" type="text-short"/>
+    <field name="scaCode" type="text-short">
+        <description><![CDATA[Standard Carrier Alpha Code]]></description></field>
+    <field name="gatewayServiceCode" type="text-short"/>
+    <relationship type="one" title="Carrier" related="mantle.party.Party" short-alias="carrierParty">
+        <key-map field-name="carrierPartyId"/></relationship>
+    <relationship type="one" title="ShipmentMethod" related="moqui.basic.Enumeration" short-alias="shipmentMethodEnum">
+        <key-map field-name="shipmentMethodEnumId"/></relationship>
+    <seed-data>
+        <moqui.basic.EnumerationType description="Shipment Method" enumTypeId="ShipmentMethod"/>
+        <moqui.basic.Enumeration sequenceNum="1" description="Next Day Priority" enumId="ShMthNextDayPri" enumTypeId="ShipmentMethod"/>
+        <moqui.basic.Enumeration sequenceNum="2" description="Next Day Standard" enumId="ShMthNextDay" enumTypeId="ShipmentMethod"/>
+        <moqui.basic.Enumeration sequenceNum="3" description="Second Day" enumId="ShMthSecondDay" enumTypeId="ShipmentMethod"/>
+        <moqui.basic.Enumeration sequenceNum="4" description="Third Day" enumId="ShMthThirdDay" enumTypeId="ShipmentMethod"/>
+        <moqui.basic.Enumeration sequenceNum="5" description="Ground Parcel" enumId="ShMthGround" enumTypeId="ShipmentMethod"/>
+        <moqui.basic.Enumeration sequenceNum="5" description="Ground Commercial" enumId="ShMthGroundCom" enumTypeId="ShipmentMethod"/>
+        <moqui.basic.Enumeration sequenceNum="6" description="Motor (Common Carrier)" enumId="ShMthMotor" enumTypeId="ShipmentMethod"/>
+        <moqui.basic.Enumeration sequenceNum="9" description="Customer Pick Up" enumId="ShMthPickUp" enumTypeId="ShipmentMethod"/>
+        <mantle.shipment.carrier.CarrierShipmentMethod carrierPartyId="_NA_" shipmentMethodEnumId="ShMthPickUp" sequenceNum="0"/>
+        <mantle.shipment.carrier.CarrierShipmentMethod carrierPartyId="_NA_" shipmentMethodEnumId="ShMthGround" sequenceNum="1"/>
+        <mantle.shipment.carrier.CarrierShipmentMethod carrierPartyId="_NA_" shipmentMethodEnumId="ShMthNextDay" sequenceNum="2"/>
+    </seed-data>
+    <field name="lastUpdatedStamp" type="date-time"/>
+
+</entity>

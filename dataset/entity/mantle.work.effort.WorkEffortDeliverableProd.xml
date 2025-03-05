@@ -1,0 +1,9 @@
+
+<!-- Entity Name: mantle.work.effort.WorkEffortDeliverableProd sql table: WORK_EFFORT_DELIVERABLE_PROD --><entity entity-name="WorkEffortDeliverableProd" package="mantle.work.effort" cache="never">
+    <field name="workEffortId" type="id" is-pk="true"/>
+    <field name="deliverableId" type="id" is-pk="true"/>
+    <relationship type="one" related="mantle.work.effort.WorkEffort"/>
+    <relationship type="one" related="mantle.work.effort.Deliverable"/>
+    <field name="lastUpdatedStamp" type="date-time"/>
+
+</entity>

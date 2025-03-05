@@ -1,0 +1,62 @@
+
+<!-- Entity Name: mantle.shipment.ShipmentItemSource sql table: SHIPMENT_ITEM_SOURCE --><entity entity-name="ShipmentItemSource" package="mantle.shipment" cache="never" has-dependents="true">
+    <field name="shipmentItemSourceId" type="id" is-pk="true"/>
+    <field name="shipmentId" type="id" not-null="true"/>
+    <field name="productId" type="id" not-null="true"/>
+    <field name="binLocationNumber" type="number-integer">
+        <description><![CDATA[This overrides the corresponding Shipment.binLocationNumber so that a shipment may be split
+                across picklist bins, such as when one bin per order on the shipment is needed.]]></description></field>
+    <field name="orderId" type="id"/>
+    <field name="orderItemSeqId" type="id"/>
+    <field name="returnId" type="id"/>
+    <field name="returnItemSeqId" type="id"/>
+    <field name="statusId" type="id"/>
+    <field name="quantity" type="number-decimal"/>
+    <field name="quantityNotHandled" type="number-decimal"/>
+    <field name="quantityPicked" type="number-decimal"/>
+    <field name="invoiceId" type="id"/>
+    <field name="invoiceItemSeqId" type="id"/>
+    <relationship type="one-nofk" related="mantle.shipment.Shipment" short-alias="shipment"/>
+    <relationship type="one" related="mantle.shipment.ShipmentItem" short-alias="item"/>
+    <relationship type="one" related="mantle.product.Product" short-alias="product"/>
+    <relationship type="one-nofk" related="mantle.order.OrderHeader" short-alias="orderHeader"/>
+    <relationship type="one" related="mantle.order.OrderItem" short-alias="orderItem"/>
+    <relationship type="one" related="mantle.order.return.ReturnHeader" short-alias="returnHeader"/>
+    <relationship type="one" title="ShipmentItemSource" related="moqui.basic.StatusItem" short-alias="status"/>
+    <relationship type="one" related="mantle.account.invoice.InvoiceItem" short-alias="invoiceItem">
+        <key-map field-name="invoiceId"/>
+        <key-map field-name="invoiceItemSeqId"/>
+    </relationship>
+    <index name="SHIP_ITSRC_SHIPID">
+        <index-field name="shipmentId"/></index>
+    <seed-data>
+        <moqui.basic.StatusType description="Shipment Item Pick Status" statusTypeId="ShipmentItemSource"/>
+        <moqui.basic.StatusItem description="Pending" sequenceNum="1" statusId="SisPending" statusTypeId="ShipmentItemSource"/>
+        <moqui.basic.StatusItem description="Picked" sequenceNum="5" statusId="SisPicked" statusTypeId="ShipmentItemSource"/>
+        <moqui.basic.StatusItem description="Packed" sequenceNum="9" statusId="SisPacked" statusTypeId="ShipmentItemSource"/>
+        <moqui.basic.StatusItem description="Received" sequenceNum="20" statusId="SisReceived" statusTypeId="ShipmentItemSource"/>
+        <moqui.basic.StatusItem description="Cancelled" sequenceNum="99" statusId="SisCancelled" statusTypeId="ShipmentItemSource"/>
+        <moqui.basic.StatusFlowTransition statusFlowId="Default" statusId="SisPending" toStatusId="SisPicked" transitionName="Pick"/>
+        <moqui.basic.StatusFlowTransition statusFlowId="Default" statusId="SisPending" toStatusId="SisPacked" transitionName="Pack"/>
+        <moqui.basic.StatusFlowTransition statusFlowId="Default" statusId="SisPicked" toStatusId="SisPacked" transitionName="Pack"/>
+        <moqui.basic.StatusFlowTransition statusFlowId="Default" statusId="SisPending" toStatusId="SisReceived" transitionName="Receive"/>
+        <moqui.basic.StatusFlowTransition statusFlowId="Default" statusId="SisPicked" toStatusId="SisReceived" transitionName="Receive"/>
+        <moqui.basic.StatusFlowTransition statusFlowId="Default" statusId="SisPacked" toStatusId="SisReceived" transitionName="Receive"/>
+        <moqui.basic.StatusFlowTransition statusFlowId="Default" statusId="SisPacked" toStatusId="SisPending" transitionName="Unpack"/>
+        <moqui.basic.StatusFlowTransition statusFlowId="Default" statusId="SisPending" toStatusId="SisCancelled" transitionName="Cancel"/>
+    </seed-data>
+    <field name="lastUpdatedStamp" type="date-time"/>
+    <relationship related="mantle.order.return.ReturnItem" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="returnId" related="returnId"/>
+        <key-map field-name="returnItemSeqId" related="returnItemSeqId"/>
+    </relationship>
+    <relationship related="mantle.product.issuance.AssetIssuance" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="shipmentItemSourceId" related="shipmentItemSourceId"/></relationship>
+    <relationship related="mantle.product.receipt.AssetReceipt" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="shipmentItemSourceId" related="shipmentItemSourceId"/></relationship>
+    <relationship related="mantle.shipment.ShipmentPackageContent" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="shipmentId" related="shipmentId"/>
+        <key-map field-name="productId" related="productId"/>
+    </relationship>
+
+</entity>

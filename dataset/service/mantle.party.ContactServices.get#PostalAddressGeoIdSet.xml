@@ -1,0 +1,4 @@
+<!--Service Location mantle.party.ContactServices.get#PostalAddressGeoIdSet--><service verb="get" noun="PostalAddressGeoIdSet"><in-parameters><parameter name="contactMechId"/></in-parameters><out-parameters><parameter name="geoIdSet" type="Set"><parameter name="geoId"/></parameter></out-parameters><actions><entity-find-one entity-name="mantle.party.contact.PostalAddress" value-field="postalAddress"/><set field="geoIdSet" from="new HashSet()"/><script><![CDATA[if (postalAddress?.countyGeoId) geoIdSet.add(postalAddress.countyGeoId)
+                if (postalAddress?.stateProvinceGeoId) geoIdSet.add(postalAddress.stateProvinceGeoId)
+                if (postalAddress?.countryGeoId) geoIdSet.add(postalAddress.countryGeoId)
+                if (postalAddress?.postalCodeGeoId) geoIdSet.add(postalAddress.postalCodeGeoId)]]></script></actions></service>

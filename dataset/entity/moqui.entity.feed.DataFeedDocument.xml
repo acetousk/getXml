@@ -1,0 +1,9 @@
+
+<!-- Entity Name: moqui.entity.feed.DataFeedDocument sql table: DATA_FEED_DOCUMENT --><entity entity-name="DataFeedDocument" package="moqui.entity.feed" use="configuration">
+    <field name="dataFeedId" type="id" is-pk="true"/>
+    <field name="dataDocumentId" type="id" is-pk="true"/>
+    <relationship type="one" related="moqui.entity.feed.DataFeed" short-alias="feed"/>
+    <relationship type="one" related="moqui.entity.document.DataDocument" short-alias="document"/>
+    <field name="lastUpdatedStamp" type="date-time"/>
+
+</entity>

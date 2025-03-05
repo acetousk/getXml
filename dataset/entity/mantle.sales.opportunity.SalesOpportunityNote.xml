@@ -1,0 +1,11 @@
+
+<!-- Entity Name: mantle.sales.opportunity.SalesOpportunityNote sql table: SALES_OPPORTUNITY_NOTE --><entity entity-name="SalesOpportunityNote" package="mantle.sales.opportunity">
+    <field name="salesOpportunityId" type="id" is-pk="true"/>
+    <field name="noteDate" type="date-time" is-pk="true" default="ec.user.nowTimestamp"/>
+    <field name="noteText" type="text-long" enable-audit-log="true"/>
+    <field name="userId" type="id" default="ec.user.userId"/>
+    <relationship type="one" related="mantle.sales.opportunity.SalesOpportunity"/>
+    <relationship type="one" related="moqui.security.UserAccount"/>
+    <field name="lastUpdatedStamp" type="date-time"/>
+
+</entity>

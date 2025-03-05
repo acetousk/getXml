@@ -1,0 +1,29 @@
+<!--Service Location mantle.account.PositivePayServices.generate#PmftZionsBankCsv--><service verb="generate" noun="PmftZionsBankCsv"><in-parameters><parameter name="paymentMethodFileId" required="true"/><parameter name="bankAccount" type="Map" required="true"/><parameter name="paymentList" type="List" required="true"/><parameter name="thruDate" type="Timestamp" required="true"/><parameter name="fileDate" type="Timestamp" required="true"/><parameter name="entryCount" type="Long" required="true"/><parameter name="debitAmountTotal" type="BigDecimal" required="true"/><parameter name="debitAmountTotalWithCancels" type="BigDecimal" required="true"/><parameter name="checkNumberSum" type="Long" required="true"/></in-parameters><out-parameters><parameter name="fileText"/></out-parameters><actions><script><![CDATA[import org.apache.commons.csv.CSVPrinter
+            import org.apache.commons.csv.CSVFormat
+            import org.apache.commons.csv.CSVRecord
+
+            StringBuilder outSb = new StringBuilder()
+            CSVPrinter printer = CSVFormat.DEFAULT.withHeader("Check Number", "Amount", "Date", "Payee", "Account", "Void").print(outSb)
+
+            String accountNumber =  bankAccount.accountNumber
+
+            for (Map payment in paymentList) {
+                // Get amount String (10 chars, last 2 are cents)
+                String amountStr = ec.l10n.format(payment.amount, '0.00')
+                String dateStr = ec.l10n.format(payment.effectiveDate, 'MM/dd/yyyy')
+
+                boolean isVoid = payment.statusId == 'PmntVoid'
+                boolean isCancel = payment.statusId == 'PmntCancelled'
+                String voidStr = isVoid || isCancel ? 'V' : 'N'
+
+                String payeeName = ""
+                Map otherParty = payment.toPartyId ? ec.entity.find("mantle.party.PartyDetail").condition("partyId", payment.toPartyId).one() : null
+                if (otherParty) {
+                    payeeName = otherParty.firstName ? otherParty.firstName + " " + otherParty.lastName : otherParty.organizationName
+                    if (payeeName.length() > 40) payeeName = payeeName.substring(0, 40)
+                }
+
+                printer.printRecord(payment.paymentRefNum, amountStr, dateStr, payeeName, accountNumber, voidStr)
+            }
+
+            fileText = outSb.toString()]]></script></actions></service>

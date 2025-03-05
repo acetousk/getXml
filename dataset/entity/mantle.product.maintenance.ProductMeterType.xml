@@ -1,0 +1,32 @@
+
+<!-- Entity Name: mantle.product.maintenance.ProductMeterType sql table: PRODUCT_METER_TYPE --><entity entity-name="ProductMeterType" package="mantle.product.maintenance" has-dependents="true">
+    <field name="productMeterTypeId" type="id" is-pk="true"/>
+    <field name="description" type="text-medium"/>
+    <field name="defaultUomId" type="id">
+        <description><![CDATA[This is optional and if applicable can describe the meter better]]></description></field>
+    <relationship type="one" title="Default" related="moqui.basic.Uom">
+        <key-map field-name="defaultUomId"/></relationship>
+    <seed-data>
+        <mantle.product.maintenance.ProductMeterType description="Speedometer" productMeterTypeId="PdMtrSpeedometer"/>
+        <mantle.product.maintenance.ProductMeterType description="Tachometer" productMeterTypeId="PdMtrTachometer"/>
+        <mantle.product.maintenance.ProductMeterType description="Distance Meter" productMeterTypeId="PdMtrDistance"/>
+        <mantle.product.maintenance.ProductMeterType description="Motor Time Meter" productMeterTypeId="PdMtrMotorTime"/>
+        <mantle.product.maintenance.ProductMeterType description="Use Count Meter" productMeterTypeId="PdMtrUseCount"/>
+        <mantle.product.maintenance.ProductMeterType description="Copy Count Meter" productMeterTypeId="PdMtrCopyCount"/>
+        <mantle.product.maintenance.ProductMeterType description="Trip Meter" productMeterTypeId="PdMtrTripMeter"/>
+        <mantle.product.maintenance.ProductMeterType description="Tachograph" productMeterTypeId="PdMtrTachograph"/>
+        <mantle.product.maintenance.ProductMeterType description="Taximeter" productMeterTypeId="PdMtrTaximeter"/>
+        <mantle.product.maintenance.ProductMeterType description="Event Data Recorder" productMeterTypeId="PdMtrEventDataRec"/>
+        <mantle.product.maintenance.ProductMeterType description="Pedometer" productMeterTypeId="PdMtrPedometer"/>
+        <mantle.product.maintenance.ProductMeterType description="Odometer" productMeterTypeId="PdMtrOdometer"/>
+        <mantle.product.maintenance.ProductMeterType description="Thermometer" productMeterTypeId="PdMtrThermometer"/>
+    </seed-data>
+    <field name="lastUpdatedStamp" type="date-time"/>
+    <relationship related="mantle.product.maintenance.AssetMeter" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="productMeterTypeId" related="productMeterTypeId"/></relationship>
+    <relationship related="mantle.product.maintenance.ProductMeter" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="productMeterTypeId" related="productMeterTypeId"/></relationship>
+    <relationship related="mantle.work.measurement.MeasurementType" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="productMeterTypeId" related="productMeterTypeId"/></relationship>
+
+</entity>

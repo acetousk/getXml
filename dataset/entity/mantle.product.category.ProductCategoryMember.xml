@@ -1,0 +1,18 @@
+
+<!-- Entity Name: mantle.product.category.ProductCategoryMember sql table: PRODUCT_CATEGORY_MEMBER --><entity entity-name="ProductCategoryMember" package="mantle.product.category">
+    <field name="productCategoryId" type="id" is-pk="true"/>
+    <field name="productId" type="id" is-pk="true"/>
+    <field name="fromDate" type="date-time" is-pk="true"/>
+    <field name="thruDate" type="date-time"/>
+    <field name="comments" type="text-medium"/>
+    <field name="sequenceNum" type="number-integer"/>
+    <field name="quantity" type="number-decimal"/>
+    <relationship type="one" related="mantle.product.Product" short-alias="product"/>
+    <relationship type="one" related="mantle.product.category.ProductCategory" short-alias="category"/>
+    <relationship type="many" related="mantle.product.store.ProductStoreCategory" short-alias="stores">
+        <key-map field-name="productCategoryId"/></relationship>
+    <index name="PRD_CMBR_PCT">
+        <index-field name="productCategoryId"/></index>
+    <field name="lastUpdatedStamp" type="date-time"/>
+
+</entity>

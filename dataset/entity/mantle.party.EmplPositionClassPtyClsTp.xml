@@ -1,0 +1,10 @@
+
+<!-- Entity Name: mantle.party.EmplPositionClassPtyClsTp sql table: EMPL_POSITION_CLASS_PTY_CLS_TP --><entity entity-name="EmplPositionClassPtyClsTp" package="mantle.party">
+    <field name="emplPositionClassId" type="id" is-pk="true"/>
+    <field name="classificationTypeEnumId" type="id" is-pk="true"/>
+    <relationship type="one" related="mantle.humanres.position.EmplPositionClass" short-alias="emplPositionClass"/>
+    <relationship type="one" title="PartyClassificationType" related="moqui.basic.Enumeration" short-alias="type">
+        <key-map field-name="classificationTypeEnumId"/></relationship>
+    <field name="lastUpdatedStamp" type="date-time"/>
+
+</entity>

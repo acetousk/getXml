@@ -1,0 +1,15 @@
+
+<!-- Entity Name: moqui.basic.EnumGroupMember sql table: ENUM_GROUP_MEMBER --><entity entity-name="EnumGroupMember" package="moqui.basic" use="configuration" cache="true">
+    <field name="enumGroupEnumId" type="id" is-pk="true"/>
+    <field name="enumId" type="id" is-pk="true"/>
+    <field name="sequenceNum" type="number-integer"/>
+    <field name="memberInfo" type="text-short">
+        <description><![CDATA[General info about the member, usage is specific to the enum group]]></description></field>
+    <relationship type="one" title="EnumGroup" related="moqui.basic.Enumeration">
+        <key-map field-name="enumGroupEnumId"/></relationship>
+    <relationship type="one" related="moqui.basic.Enumeration"/>
+    <seed-data>
+        <moqui.basic.EnumerationType description="Enumeration Group" enumTypeId="EnumGroup"/></seed-data>
+    <field name="lastUpdatedStamp" type="date-time"/>
+
+</entity>

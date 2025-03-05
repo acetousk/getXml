@@ -1,0 +1,18 @@
+
+<!-- Entity Name: moqui.server.instance.InstanceImage sql table: INSTANCE_IMAGE --><entity entity-name="InstanceImage" package="moqui.server.instance" use="configuration" has-dependents="true">
+    <field name="instanceImageId" type="id" is-pk="true"/>
+    <field name="imageTypeId" type="id"/>
+    <field name="hostTypeId" type="id"/>
+    <field name="imageName" type="text-medium"/>
+    <field name="registryLocation" type="text-medium"/>
+    <field name="username" type="text-short"/>
+    <field name="password" type="text-medium" encrypt="true"/>
+    <field name="emailAddress" type="text-medium"/>
+    <field name="authTokenCmd" type="text-medium"/>
+    <relationship type="one" related="moqui.server.instance.InstanceImageType" short-alias="imageType"/>
+    <relationship type="one" related="moqui.server.instance.InstanceHostType" short-alias="hostType"/>
+    <field name="lastUpdatedStamp" type="date-time"/>
+    <relationship related="moqui.server.instance.AppInstance" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="instanceImageId" related="instanceImageId"/></relationship>
+
+</entity>

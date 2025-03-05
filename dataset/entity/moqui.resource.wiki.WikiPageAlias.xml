@@ -1,0 +1,10 @@
+
+<!-- Entity Name: moqui.resource.wiki.WikiPageAlias sql table: WIKI_PAGE_ALIAS --><entity entity-name="WikiPageAlias" package="moqui.resource.wiki" use="nontransactional">
+    <field name="wikiSpaceId" type="id" is-pk="true"/>
+    <field name="aliasPath" type="text-medium" is-pk="true"/>
+    <field name="wikiPageId" type="id"/>
+    <relationship type="one" related="moqui.resource.wiki.WikiSpace" short-alias="space"/>
+    <relationship type="one" related="moqui.resource.wiki.WikiPage" short-alias="page"/>
+    <field name="lastUpdatedStamp" type="date-time"/>
+
+</entity>

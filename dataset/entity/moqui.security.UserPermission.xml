@@ -1,0 +1,11 @@
+
+<!-- Entity Name: moqui.security.UserPermission sql table: USER_PERMISSION --><entity entity-name="UserPermission" package="moqui.security" use="configuration" short-alias="userPermissions" has-dependents="true">
+    <field name="userPermissionId" type="id-long" is-pk="true"/>
+    <field name="description" type="text-medium"/>
+    <field name="lastUpdatedStamp" type="date-time"/>
+    <relationship related="moqui.basic.StatusFlowTransition" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="userPermissionId" related="userPermissionId"/></relationship>
+    <relationship related="moqui.security.UserGroupPermission" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="userPermissionId" related="userPermissionId"/></relationship>
+
+</entity>

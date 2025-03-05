@@ -1,0 +1,6 @@
+<!--Service Location org.moqui.impl.EntitySyncServices.put#EntitySyncData--><service verb="put" noun="EntitySyncData"><in-parameters><parameter name="entityData" required="true" allow-html="any"/><parameter name="timeout" type="Integer" default="600"/><parameter name="dummyFks" type="Boolean" default="true"/><parameter name="useTryInsert" type="Boolean" default="false"/></in-parameters><out-parameters><parameter name="recordsStored" type="Long"/></out-parameters><actions><script><![CDATA[org.moqui.entity.EntityDataLoader edl = ec.entity.makeDataLoader()
+                edl.xmlText(entityData)
+                edl.transactionTimeout(timeout)
+                edl.dummyFks(dummyFks)
+                edl.useTryInsert(useTryInsert)
+                recordsStored = edl.load()]]></script></actions></service>

@@ -1,0 +1,16 @@
+
+<!-- Entity Name: mantle.product.store.ProductStoreGroup sql table: PRODUCT_STORE_GROUP --><entity entity-name="ProductStoreGroup" package="mantle.product.store" has-dependents="true">
+    <field name="productStoreGroupId" type="id" is-pk="true"/>
+    <field name="storeGroupTypeEnumId" type="id"/>
+    <field name="description" type="text-medium"/>
+    <relationship type="one" title="ProductStoreGroupType" related="moqui.basic.Enumeration">
+        <key-map field-name="storeGroupTypeEnumId"/></relationship>
+    <seed-data>
+        <moqui.basic.EnumerationType description="Product Store Group Type" enumTypeId="ProductStoreGroupType"/></seed-data>
+    <field name="lastUpdatedStamp" type="date-time"/>
+    <relationship related="mantle.product.store.ProductStoreGroupMember" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="productStoreGroupId" related="productStoreGroupId"/></relationship>
+    <relationship related="mantle.product.store.ProductStoreGroupParty" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="productStoreGroupId" related="productStoreGroupId"/></relationship>
+
+</entity>

@@ -1,0 +1,35 @@
+
+<!-- Entity Name: mantle.work.measurement.Measurement sql table: MEASUREMENT --><entity entity-name="Measurement" package="mantle.work.measurement" short-alias="measurements" cache="never">
+    <field name="measurementId" type="id" is-pk="true"/>
+    <field name="measurementTypeId" type="id"/>
+    <field name="measurementDate" type="date-time"/>
+    <field name="measurementValue" type="number-decimal"/>
+    <field name="measurementUomId" type="id"/>
+    <field name="measurementEnumId" type="id"/>
+    <field name="workEffortId" type="id"/>
+    <field name="assetId" type="id"/>
+    <field name="facilityId" type="id"/>
+    <field name="productId" type="id"/>
+    <field name="reasonEnumId" type="id"/>
+    <field name="productMeterId" type="id"/>
+    <field name="assetMaintenanceId" type="id"/>
+    <field name="userId" type="id" default="ec.user.userId"/>
+    <relationship type="one" related="mantle.work.measurement.MeasurementType"/>
+    <relationship type="one" title="Measurement" related="moqui.basic.Uom">
+        <key-map field-name="measurementUomId"/></relationship>
+    <relationship type="one" title="Measurement" related="moqui.basic.Enumeration">
+        <key-map field-name="measurementEnumId"/></relationship>
+    <relationship type="one" related="mantle.work.effort.WorkEffort"/>
+    <relationship type="one" related="mantle.product.asset.Asset"/>
+    <relationship type="one" related="mantle.facility.Facility"/>
+    <relationship type="one" related="mantle.product.Product"/>
+    <relationship type="one" title="MeasurementReason" related="moqui.basic.Enumeration">
+        <key-map field-name="reasonEnumId"/></relationship>
+    <relationship type="one" related="mantle.product.maintenance.AssetMaintenance"/>
+    <relationship type="one" related="mantle.product.maintenance.ProductMeter"/>
+    <relationship type="one" related="moqui.security.UserAccount"/>
+    <seed-data>
+        <moqui.basic.EnumerationType description="Measurement Reason" enumTypeId="MeasurementReason"/></seed-data>
+    <field name="lastUpdatedStamp" type="date-time"/>
+
+</entity>

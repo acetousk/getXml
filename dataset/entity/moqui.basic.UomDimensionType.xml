@@ -1,0 +1,27 @@
+
+<!-- Entity Name: moqui.basic.UomDimensionType sql table: UOM_DIMENSION_TYPE --><entity entity-name="UomDimensionType" package="moqui.basic" use="configuration" cache="true" has-dependents="true">
+    <field name="uomDimensionTypeId" type="id" is-pk="true"/>
+    <field name="description" type="text-medium"/>
+    <field name="uomTypeEnumId" type="id"/>
+    <field name="defaultUomId" type="id"/>
+    <relationship type="one" title="UomType" related="moqui.basic.Enumeration" short-alias="uomType">
+        <key-map field-name="uomTypeEnumId"/></relationship>
+    <relationship type="one" title="Default" related="moqui.basic.Uom" short-alias="defaultUom">
+        <key-map field-name="defaultUomId"/></relationship>
+    <field name="lastUpdatedStamp" type="date-time"/>
+    <relationship related="mantle.humanres.position.EmplPositionClassDimension" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="uomDimensionTypeId" related="uomDimensionTypeId"/></relationship>
+    <relationship related="mantle.marketing.segment.MarketSegmentDimension" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="uomDimensionTypeId" related="uomDimensionTypeId"/></relationship>
+    <relationship related="mantle.party.PartyDimension" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="uomDimensionTypeId" related="uomDimensionTypeId"/></relationship>
+    <relationship related="mantle.product.ProductClassUomDimension" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="uomDimensionTypeId" related="uomDimensionTypeId"/></relationship>
+    <relationship related="mantle.product.ProductParameter" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="uomDimensionTypeId" related="uomDimensionTypeId"/></relationship>
+    <relationship related="mantle.product.ProductUomDimension" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="uomDimensionTypeId" related="uomDimensionTypeId"/></relationship>
+    <relationship related="moqui.basic.UomDimTypeGroupMember" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="uomDimensionTypeId" related="uomDimensionTypeId"/></relationship>
+
+</entity>

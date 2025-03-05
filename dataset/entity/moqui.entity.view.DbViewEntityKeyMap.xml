@@ -1,0 +1,14 @@
+
+<!-- Entity Name: moqui.entity.view.DbViewEntityKeyMap sql table: DB_VIEW_ENTITY_KEY_MAP --><entity entity-name="DbViewEntityKeyMap" package="moqui.entity.view" use="configuration" cache="true" authorize-skip="view">
+    <field name="dbViewEntityName" type="text-medium" is-pk="true"/>
+    <field name="joinFromAlias" type="text-short" is-pk="true"/>
+    <field name="entityAlias" type="text-short" is-pk="true"/>
+    <field name="fieldName" type="text-medium" is-pk="true">
+        <description><![CDATA[The name of the field corresponding to the joinFromAlias.]]></description></field>
+    <field name="relatedFieldName" type="text-medium">
+        <description><![CDATA[The name of the field corresponding to the entityAlias, ie the related field.]]></description></field>
+    <relationship type="one" related="moqui.entity.view.DbViewEntity"/>
+    <relationship type="one" related="moqui.entity.view.DbViewEntityMember"/>
+    <field name="lastUpdatedStamp" type="date-time"/>
+
+</entity>

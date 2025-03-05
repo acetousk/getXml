@@ -1,0 +1,41 @@
+<!--Transition Screen Location component://tools/screen/Tools/Entity/DataImport.xml Transition Name load--><transition name="load"><actions><!--always-actions at component://webroot/screen/webroot.xml--><set field="html_scripts" from="new LinkedHashSet()"/><set field="footer_scripts" from="new LinkedHashSet()"/><set field="html_stylesheets" from="new LinkedHashSet()"/><!--transition actions--><script><![CDATA[org.moqui.entity.EntityDataLoader edl = ec.entity.makeDataLoader()
+            String source = ""
+            if (types || components) {
+                if (types) edl.dataTypes(new HashSet(Arrays.asList(types.split(","))))
+                if (components) edl.componentNameList(Arrays.asList(components.split(",")))
+                source = "Types: ${types?:'N/A'}, Components: ${components?:'N/A'}"
+            } else if (location) {
+                edl.location(location)
+                source = location
+            } else if (csvText) {
+                edl.csvText(csvText)
+                source = "CSV Text Box"
+            } else if (jsonText) {
+                edl.jsonText(jsonText)
+                source = "JSON Text Box"
+            } else if (xmlText) {
+                edl.xmlText(xmlText)
+                source = "XML Text Box"
+            } else {
+                ec.message.addMessage(ec.l10n.localize("No parameters specified, not loading data"))
+                return
+            }
+            if (timeout) edl.transactionTimeout(timeout as Integer)
+            if (dummyFks) edl.dummyFks(true)
+            if (useTryInsert) edl.useTryInsert(true)
+            if (hideNoActionFiles) edl.messageNoActionFiles(false)
+
+            if (checkOnly) {
+                // do nothing, checkOnly handled in screen actions before render
+            } else if (onlyCreate) {
+                edl.onlyCreate(true)
+                List<String> messages = new LinkedList<>()
+                long recordsLoaded = edl.load(messages)
+                ec.message.addMessage("Loaded ${recordsLoaded} records from [${source}]")
+                ec.web.session.setAttribute("DataImport.messages", messages)
+            } else {
+                List<String> messages = new LinkedList<>()
+                long recordsLoaded = edl.load(messages)
+                ec.message.addMessage("Loaded ${recordsLoaded} records from [${source}]")
+                ec.web.session.setAttribute("DataImport.messages", messages)
+            }]]></script></actions></transition>

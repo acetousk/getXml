@@ -1,0 +1,15 @@
+
+<!-- Entity Name: moqui.security.ArtifactGroup sql table: ARTIFACT_GROUP --><entity entity-name="ArtifactGroup" package="moqui.security" use="configuration" short-alias="artifactGroups" has-dependents="true">
+    <field name="artifactGroupId" type="id" is-pk="true"/>
+    <field name="description" type="text-medium"/>
+    <relationship type="many" related="moqui.security.ArtifactGroupMember" short-alias="artifacts">
+        <key-map field-name="artifactGroupId"/></relationship>
+    <relationship type="many" related="moqui.security.ArtifactAuthz" short-alias="authz">
+        <key-map field-name="artifactGroupId"/></relationship>
+    <field name="lastUpdatedStamp" type="date-time"/>
+    <relationship related="moqui.entity.sync.EntitySyncArtifact" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="artifactGroupId" related="artifactGroupId"/></relationship>
+    <relationship related="moqui.security.ArtifactTarpit" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="artifactGroupId" related="artifactGroupId"/></relationship>
+
+</entity>

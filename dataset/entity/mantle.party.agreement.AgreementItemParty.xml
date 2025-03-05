@@ -1,0 +1,15 @@
+
+<!-- Entity Name: mantle.party.agreement.AgreementItemParty sql table: AGREEMENT_ITEM_PARTY --><entity entity-name="AgreementItemParty" package="mantle.party.agreement">
+    <field name="agreementId" type="id" is-pk="true"/>
+    <field name="agreementItemSeqId" type="id" is-pk="true"/>
+    <field name="partyId" type="id" is-pk="true"/>
+    <field name="roleTypeId" type="id" is-pk="true"/>
+    <relationship type="one" related="mantle.party.agreement.AgreementItem">
+        <key-map field-name="agreementId"/>
+        <key-map field-name="agreementItemSeqId"/>
+    </relationship>
+    <relationship type="one" related="mantle.party.Party"/>
+    <relationship type="one" related="mantle.party.RoleType"/>
+    <field name="lastUpdatedStamp" type="date-time"/>
+
+</entity>

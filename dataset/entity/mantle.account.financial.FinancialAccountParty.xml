@@ -1,0 +1,13 @@
+
+<!-- Entity Name: mantle.account.financial.FinancialAccountParty sql table: FINANCIAL_ACCOUNT_PARTY --><entity entity-name="FinancialAccountParty" package="mantle.account.financial">
+    <field name="finAccountId" type="id" is-pk="true"/>
+    <field name="partyId" type="id" is-pk="true"/>
+    <field name="roleTypeId" type="id" is-pk="true"/>
+    <field name="fromDate" type="date-time" is-pk="true"/>
+    <field name="thruDate" type="date-time"/>
+    <relationship type="one" related="mantle.account.financial.FinancialAccount"/>
+    <relationship type="one" related="mantle.party.Party"/>
+    <relationship type="one" related="mantle.party.RoleType"/>
+    <field name="lastUpdatedStamp" type="date-time"/>
+
+</entity>

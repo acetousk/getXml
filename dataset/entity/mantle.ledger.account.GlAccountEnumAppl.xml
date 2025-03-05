@@ -1,0 +1,10 @@
+
+<!-- Entity Name: mantle.ledger.account.GlAccountEnumAppl sql table: GL_ACCOUNT_ENUM_APPL --><entity entity-name="GlAccountEnumAppl" package="mantle.ledger.account">
+    <description><![CDATA[Used to specify relevant GL Accounts for an Enumeration (expense, revenue, etc); not related to posting conf]]></description>
+    <field name="glAccountId" type="id" is-pk="true"/>
+    <field name="enumId" type="id" is-pk="true"/>
+    <relationship type="one" related="mantle.ledger.account.GlAccount" short-alias="glAccount"/>
+    <relationship type="one" related="moqui.basic.Enumeration" short-alias="enum"/>
+    <field name="lastUpdatedStamp" type="date-time"/>
+
+</entity>

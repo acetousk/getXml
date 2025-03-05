@@ -1,0 +1,38 @@
+
+<!-- Entity Name: mantle.account.method.PaymentMethodFile sql table: PAYMENT_METHOD_FILE --><entity entity-name="PaymentMethodFile" package="mantle.account.method" cache="never" has-dependents="true">
+    <field name="paymentMethodFileId" type="id" is-pk="true"/>
+    <field name="paymentMethodId" type="id"/>
+    <field name="fileTypeEnumId" type="id"/>
+    <field name="fileDate" type="date-time"/>
+    <field name="entryCount" type="number-integer"/>
+    <field name="debitAmountTotal" type="currency-amount"/>
+    <field name="creditAmountTotal" type="currency-amount"/>
+    <field name="fileText" type="text-very-long"/>
+    <field name="isCancelled" type="text-indicator"/>
+    <relationship type="one" related="mantle.account.method.PaymentMethod" short-alias="paymentMethod"/>
+    <relationship type="one" title="PaymentMethodFileType" related="moqui.basic.Enumeration" short-alias="fileTypeEnum">
+        <key-map field-name="fileTypeEnumId"/></relationship>
+    <relationship type="one-nofk" related="mantle.account.method.PaymentMethodFileType" short-alias="paymentMethodFileType">
+        <key-map field-name="paymentMethodId"/>
+        <key-map field-name="fileTypeEnumId"/>
+    </relationship>
+    <seed-data>
+        <moqui.basic.EnumerationType description="Payment Method File Type" enumTypeId="PaymentMethodFileType"/>
+        <moqui.basic.Enumeration description="NACHA" enumId="PmftNacha" enumTypeId="PaymentMethodFileType" optionIndicator="Y"/>
+        <moqui.basic.Enumeration description="OFX/QFX" enumId="PmftOfx" enumTypeId="PaymentMethodFileType"/>
+        <moqui.basic.Enumeration description="BAI 2" enumId="PmftBai2" enumTypeId="PaymentMethodFileType"/>
+        <moqui.basic.Enumeration description="Positive Pay File" enumId="PmftPositivePay" parentEnumId="PmftPositivePay" enumTypeId="PaymentMethodFileType"/>
+        <moqui.basic.Enumeration description="Bank of America AR PNV" enumId="PmftBankOfAmericaAr" parentEnumId="PmftPositivePay" enumTypeId="PaymentMethodFileType"/>
+        <moqui.basic.Enumeration description="City Bank CNB" enumId="PmftCityBankCnb" parentEnumId="PmftPositivePay" enumTypeId="PaymentMethodFileType"/>
+        <moqui.basic.Enumeration description="SunTrust CPR" enumId="PmftSunTrustCpr" parentEnumId="PmftPositivePay" enumTypeId="PaymentMethodFileType"/>
+        <moqui.basic.Enumeration description="Wachovia AR" enumId="PmftWachoviaAr" parentEnumId="PmftPositivePay" enumTypeId="PaymentMethodFileType"/>
+        <moqui.basic.Enumeration description="Wells Fargo ARP" enumId="PmftWellsFargoArp" parentEnumId="PmftPositivePay" enumTypeId="PaymentMethodFileType"/>
+        <moqui.basic.Enumeration description="Zions Bank CSV" enumId="PmftZionsBankCsv" parentEnumId="PmftPositivePay" enumTypeId="PaymentMethodFileType"/>
+    </seed-data>
+    <field name="lastUpdatedStamp" type="date-time"/>
+    <relationship related="mantle.account.payment.Payment" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="paymentMethodFileId" related="paymentMethodFileId"/></relationship>
+    <relationship related="moqui.service.message.SystemMessage" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="paymentMethodFileId" related="paymentMethodFileId"/></relationship>
+
+</entity>

@@ -1,0 +1,40 @@
+
+<!-- Entity Name: mantle.humanres.position.EmplPositionClass sql table: EMPL_POSITION_CLASS --><entity entity-name="EmplPositionClass" package="mantle.humanres.position" use="configuration" has-dependents="true">
+    <field name="emplPositionClassId" type="id" is-pk="true"/>
+    <field name="title" type="text-medium"/>
+    <field name="description" type="text-long"/>
+    <seed-data>
+        <moqui.basic.EnumerationType description="Work Type" enumTypeId="WorkType"/>
+        <moqui.basic.Enumeration description="Management" enumId="WktpManagement" enumTypeId="WorkType"/>
+        <moqui.basic.Enumeration description="General Labor" enumId="WktpGeneralLabor" enumTypeId="WorkType"/>
+        <moqui.basic.Enumeration description="General Office" enumId="WktpGeneralOffice" enumTypeId="WorkType"/>
+        <moqui.basic.Enumeration description="Paid Break" enumId="WktpPaidBreak" enumTypeId="WorkType"/>
+        <moqui.basic.Enumeration description="Paid Non-productive Time" enumId="WktpPaidNpt" enumTypeId="WorkType"/>
+        <mantle.humanres.position.EmplPositionClass title="Project Manager" emplPositionClassId="ProjectManager"/>
+        <mantle.humanres.position.EmplPositionClassWorkType emplPositionClassId="ProjectManager" workTypeEnumId="WktpManagement"/>
+        <mantle.humanres.position.EmplPositionClass title="General Manager" emplPositionClassId="GeneralManager"/>
+        <mantle.humanres.position.EmplPositionClassWorkType emplPositionClassId="GeneralManager" workTypeEnumId="WktpManagement"/>
+    </seed-data>
+    <field name="lastUpdatedStamp" type="date-time"/>
+    <relationship related="mantle.humanres.position.EmplClassResponsibility" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="emplPositionClassId" related="emplPositionClassId"/></relationship>
+    <relationship related="mantle.humanres.position.EmplPosition" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="emplPositionClassId" related="emplPositionClassId"/></relationship>
+    <relationship related="mantle.humanres.position.EmplPositionClassDimension" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="emplPositionClassId" related="emplPositionClassId"/></relationship>
+    <relationship related="mantle.humanres.position.EmplPositionClassParty" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="emplPositionClassId" related="emplPositionClassId"/></relationship>
+    <relationship related="mantle.humanres.position.EmplPositionClassSkill" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="emplPositionClassId" related="emplPositionClassId"/></relationship>
+    <relationship related="mantle.humanres.position.EmplPositionClassWorkType" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="emplPositionClassId" related="emplPositionClassId"/></relationship>
+    <relationship related="mantle.humanres.rate.RateAmount" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="emplPositionClassId" related="emplPositionClassId"/></relationship>
+    <relationship related="mantle.party.EmplPositionClassPtyClsTp" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="emplPositionClassId" related="emplPositionClassId"/></relationship>
+    <relationship related="mantle.work.effort.WorkEffortParty" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="emplPositionClassId" related="emplPositionClassId"/></relationship>
+    <relationship related="mantle.work.time.TimeEntry" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="emplPositionClassId" related="emplPositionClassId"/></relationship>
+
+</entity>

@@ -1,0 +1,7 @@
+
+<!-- Entity Name: moqui.entity.SequenceValueItem sql table: SEQUENCE_VALUE_ITEM --><entity entity-name="SequenceValueItem" package="moqui.entity" use="transactional" cache="never">
+    <field name="seqName" type="text-medium" is-pk="true"/>
+    <field name="seqNum" type="number-integer"/>
+    <field name="lastUpdatedStamp" type="date-time"/>
+
+</entity>

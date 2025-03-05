@@ -1,0 +1,16 @@
+
+<!-- Entity Name: mantle.shipment.carrier.ShippingGatewayOption sql table: SHIPPING_GATEWAY_OPTION --><entity entity-name="ShippingGatewayOption" package="mantle.shipment.carrier" use="configuration" cache="true">
+    <field name="shippingGatewayConfigId" type="id" is-pk="true"/>
+    <field name="optionEnumId" type="id" is-pk="true"/>
+    <field name="optionValue" type="text-medium"/>
+    <relationship type="one" related="mantle.shipment.carrier.ShippingGatewayConfig"/>
+    <relationship type="one" title="ShippingGatewayOption" related="moqui.basic.Enumeration">
+        <key-map field-name="optionEnumId"/></relationship>
+    <seed-data>
+        <moqui.basic.EnumerationType description="Shipping Gateway Option" enumTypeId="ShippingGatewayOption"/>
+        <moqui.basic.Enumeration description="API Token" enumId="SgoApiToken" enumTypeId="ShippingGatewayOption"/>
+        <moqui.basic.Enumeration description="Label Type" enumId="SgoLabelType" enumTypeId="ShippingGatewayOption"/>
+    </seed-data>
+    <field name="lastUpdatedStamp" type="date-time"/>
+
+</entity>

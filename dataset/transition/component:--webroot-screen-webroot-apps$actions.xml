@@ -1,0 +1,14 @@
+<!--Transition Screen Location component://webroot/screen/webroot/apps.xml Transition Name actions--><transition name="actions"><parameter name="keyRegexp"/><parameter name="message"/><parameter name="preferenceKey"/><parameter name="preferenceValue"/><parameter name="preferenceKey"/><parameter name="preferenceValue"/><actions><!--always-actions at component://webroot/screen/webroot.xml--><set field="html_scripts" from="new LinkedHashSet()"/><set field="footer_scripts" from="new LinkedHashSet()"/><set field="html_stylesheets" from="new LinkedHashSet()"/><!--pre-actions--><script><![CDATA[// jQuery, Bootstrap, Twitter TypeAhead, Form Validation (jquery-validate), Date/Time (Moment, bootstrap-datetimepicker),
+        //      Drop-down (Select2, Selectivity), Notify/Growl (Bootstrap Notify), Inline Editable, Sortable Hierarchical List
+        // Moqui Library (3rd party lib workarounds, NotificationClient, etc)
+        html_scripts.add('/js/CombinedBase.min.js')
+
+        // Form AJAX (jquery-form)
+        html_scripts.add('/libs/jquery.form/jquery.form.min.js')
+        // Tree (JSTree)
+        html_scripts.add('/libs/jstree/jstree.min.js')
+
+        // jquery-validate locale specific scripts
+        Map validateScriptsOut = ec.service.sync().name("webroot.LocaleServices.get#ValidateLocaleScripts").call()
+        if (validateScriptsOut.messagesLocation) html_scripts.add(validateScriptsOut.messagesLocation)
+        if (validateScriptsOut.methodsLocation) html_scripts.add(validateScriptsOut.methodsLocation)]]></script></actions></transition>

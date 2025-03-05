@@ -1,0 +1,14 @@
+
+<!-- Entity Name: mantle.ledger.account.GlAccountGroup sql table: GL_ACCOUNT_GROUP --><entity entity-name="GlAccountGroup" package="mantle.ledger.account" has-dependents="true">
+    <description><![CDATA[A grouping of GlAccount records for purposes of reporting and populating forms such as tax forms.
+            It is structured so that each GlAccount can be a member of at most one group of each type.]]></description>
+    <field name="glAccountGroupId" type="id" is-pk="true"/>
+    <field name="groupTypeEnumId" type="id"/>
+    <field name="description" type="text-medium"/>
+    <relationship type="one" title="GlAccountGroupType" related="moqui.basic.Enumeration">
+        <key-map field-name="groupTypeEnumId"/></relationship>
+    <field name="lastUpdatedStamp" type="date-time"/>
+    <relationship related="mantle.ledger.account.GlAccountGroupMember" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="glAccountGroupId" related="glAccountGroupId"/></relationship>
+
+</entity>

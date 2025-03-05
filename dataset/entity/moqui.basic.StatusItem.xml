@@ -1,0 +1,154 @@
+
+<!-- Entity Name: moqui.basic.StatusItem sql table: STATUS_ITEM --><entity entity-name="StatusItem" package="moqui.basic" use="configuration" short-alias="statuses" cache="true" has-dependents="true">
+    <field name="statusId" type="id" is-pk="true"/>
+    <field name="statusTypeId" type="id"/>
+    <field name="statusCode" type="text-medium"/>
+    <field name="sequenceNum" type="number-integer"/>
+    <field name="description" type="text-medium" enable-localization="true"/>
+    <relationship type="one" related="moqui.basic.StatusType" short-alias="type"/>
+    <relationship type="many" related="moqui.basic.StatusFlowItem" short-alias="flows">
+        <key-map field-name="statusId"/></relationship>
+    <relationship type="many" related="moqui.basic.StatusFlowTransition" short-alias="transitions">
+        <key-map field-name="statusId"/></relationship>
+    <relationship type="many" related="moqui.basic.StatusFlowTransition" short-alias="toTransitions">
+        <key-map field-name="statusId" related="toStatusId"/></relationship>
+    <seed-data>
+        <moqui.basic.StatusType statusTypeId="_NA_" description="Not Applicable"/>
+        <moqui.basic.StatusItem statusId="_NA_" statusTypeId="_NA_" description="Not Applicable"/>
+    </seed-data>
+    <master>
+        <detail relationship="type"/>
+        <detail relationship="flows">
+            <detail relationship="flow"/></detail>
+        <detail relationship="transitions">
+            <detail relationship="flow"/>
+            <detail relationship="toStatus"/>
+        </detail>
+        <detail relationship="toTransitions">
+            <detail relationship="flow"/>
+            <detail relationship="status"/>
+        </detail>
+    </master>
+    <field name="lastUpdatedStamp" type="date-time"/>
+    <relationship related="coarchy.product.ProductEvaluation" type="many" is-auto-reverse="true" mutable="true" title="ProductEvaluation">
+        <key-map field-name="statusId" related="statusId"/></relationship>
+    <relationship related="coarchy.product.ProductEvaluation" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="statusId" related="statusId"/></relationship>
+    <relationship related="coarchy.product.ProductEvaluationParty" type="many" is-auto-reverse="true" mutable="true" title="ProductEvaluationParty">
+        <key-map field-name="statusId" related="statusId"/></relationship>
+    <relationship related="mantle.account.financial.FinancialAccount" type="many" is-auto-reverse="true" mutable="true" title="FinancialAccount">
+        <key-map field-name="statusId" related="statusId"/></relationship>
+    <relationship related="mantle.account.invoice.Invoice" type="many" is-auto-reverse="true" mutable="true" title="Invoice">
+        <key-map field-name="statusId" related="statusId"/></relationship>
+    <relationship related="mantle.account.payment.Payment" type="many" is-auto-reverse="true" mutable="true" title="Payment">
+        <key-map field-name="statusId" related="statusId"/></relationship>
+    <relationship related="mantle.account.payment.Payment" type="many" is-auto-reverse="true" mutable="true" title="AcctgTransEntryReconcile">
+        <key-map field-name="statusId" related="reconcileStatusId"/></relationship>
+    <relationship related="mantle.facility.Facility" type="many" is-auto-reverse="true" mutable="true" title="Facility">
+        <key-map field-name="statusId" related="statusId"/></relationship>
+    <relationship related="mantle.facility.FacilityLocationType" type="many" is-auto-reverse="true" mutable="true" title="Asset">
+        <key-map field-name="statusId" related="autoStatusId"/></relationship>
+    <relationship related="mantle.humanres.employment.EmploymentApplication" type="many" is-auto-reverse="true" mutable="true" title="EmploymentApplication">
+        <key-map field-name="statusId" related="statusId"/></relationship>
+    <relationship related="mantle.humanres.employment.UnemploymentClaim" type="many" is-auto-reverse="true" mutable="true" title="UnemploymentClaim">
+        <key-map field-name="statusId" related="statusId"/></relationship>
+    <relationship related="mantle.humanres.position.EmplPosition" type="many" is-auto-reverse="true" mutable="true" title="EmplPosition">
+        <key-map field-name="statusId" related="statusId"/></relationship>
+    <relationship related="mantle.ledger.reconciliation.GlReconciliation" type="many" is-auto-reverse="true" mutable="true" title="GlReconciliation">
+        <key-map field-name="statusId" related="statusId"/></relationship>
+    <relationship related="mantle.ledger.transaction.AcctgTrans" type="many" is-auto-reverse="true" mutable="true" title="Group">
+        <key-map field-name="statusId" related="groupStatusId"/></relationship>
+    <relationship related="mantle.ledger.transaction.AcctgTransEntry" type="many" is-auto-reverse="true" mutable="true" title="AcctgTransEntryReconcile">
+        <key-map field-name="statusId" related="reconcileStatusId"/></relationship>
+    <relationship related="mantle.marketing.campaign.MarketingCampaign" type="many" is-auto-reverse="true" mutable="true" title="MarketingCampaign">
+        <key-map field-name="statusId" related="statusId"/></relationship>
+    <relationship related="mantle.marketing.contact.ContactListCommStatus" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="statusId" related="statusId"/></relationship>
+    <relationship related="mantle.marketing.contact.ContactListParty" type="many" is-auto-reverse="true" mutable="true" title="ContactListParty">
+        <key-map field-name="statusId" related="statusId"/></relationship>
+    <relationship related="mantle.order.OrderDecision" type="many" is-auto-reverse="true" mutable="true" title="OrderHeader">
+        <key-map field-name="statusId" related="statusId"/></relationship>
+    <relationship related="mantle.order.OrderHeader" type="many" is-auto-reverse="true" mutable="true" title="OrderHeader">
+        <key-map field-name="statusId" related="statusId"/></relationship>
+    <relationship related="mantle.order.OrderHeader" type="many" is-auto-reverse="true" mutable="true" title="OrderProcessing">
+        <key-map field-name="statusId" related="processingStatusId"/></relationship>
+    <relationship related="mantle.order.OrderHeader" type="many" is-auto-reverse="true" mutable="true" title="Sync">
+        <key-map field-name="statusId" related="syncStatusId"/></relationship>
+    <relationship related="mantle.order.OrderItemWorkEffort" type="many" is-auto-reverse="true" mutable="true" title="OrderHeader">
+        <key-map field-name="statusId" related="forStatusId"/></relationship>
+    <relationship related="mantle.order.OrderPart" type="many" is-auto-reverse="true" mutable="true" title="OrderHeader">
+        <key-map field-name="statusId" related="statusId"/></relationship>
+    <relationship related="mantle.order.return.ReturnHeader" type="many" is-auto-reverse="true" mutable="true" title="Return">
+        <key-map field-name="statusId" related="statusId"/></relationship>
+    <relationship related="mantle.order.return.ReturnItem" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="statusId" related="statusId"/></relationship>
+    <relationship related="mantle.order.return.ReturnItem" type="many" is-auto-reverse="true" mutable="true" title="Inventory">
+        <key-map field-name="statusId" related="inventoryStatusId"/></relationship>
+    <relationship related="mantle.other.budget.Budget" type="many" is-auto-reverse="true" mutable="true" title="Budget">
+        <key-map field-name="statusId" related="statusId"/></relationship>
+    <relationship related="mantle.party.Party" type="many" is-auto-reverse="true" mutable="true" title="CustomerStatus">
+        <key-map field-name="statusId" related="customerStatusId"/></relationship>
+    <relationship related="mantle.party.PartyRelationship" type="many" is-auto-reverse="true" mutable="true" title="PartyRelationship">
+        <key-map field-name="statusId" related="statusId"/></relationship>
+    <relationship related="mantle.party.agreement.Agreement" type="many" is-auto-reverse="true" mutable="true" title="Agreement">
+        <key-map field-name="statusId" related="statusId"/></relationship>
+    <relationship related="mantle.party.communication.CommunicationEvent" type="many" is-auto-reverse="true" mutable="true" title="CommunicationEvent">
+        <key-map field-name="statusId" related="statusId"/></relationship>
+    <relationship related="mantle.party.communication.CommunicationEventParty" type="many" is-auto-reverse="true" mutable="true" title="CommunicationEventParty">
+        <key-map field-name="statusId" related="statusId"/></relationship>
+    <relationship related="mantle.product.Product" type="many" is-auto-reverse="true" mutable="true" title="Product">
+        <key-map field-name="statusId" related="statusId"/></relationship>
+    <relationship related="mantle.product.ProductReview" type="many" is-auto-reverse="true" mutable="true" title="ProductReview">
+        <key-map field-name="statusId" related="statusId"/></relationship>
+    <relationship related="mantle.product.ProductWorkEffort" type="many" is-auto-reverse="true" mutable="true" title="CloneOnOrderHeader">
+        <key-map field-name="statusId" related="forStatusId"/></relationship>
+    <relationship related="mantle.product.ProductWorkEffort" type="many" is-auto-reverse="true" mutable="true" title="OrderHeader">
+        <key-map field-name="statusId" related="forStatusId"/></relationship>
+    <relationship related="mantle.product.asset.Asset" type="many" is-auto-reverse="true" mutable="true" title="Asset">
+        <key-map field-name="statusId" related="statusId"/></relationship>
+    <relationship related="mantle.product.asset.AssetPartyAssignment" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="statusId" related="statusId"/></relationship>
+    <relationship related="mantle.product.asset.PhysicalInventory" type="many" is-auto-reverse="true" mutable="true" title="PhysicalInventory">
+        <key-map field-name="statusId" related="statusId"/></relationship>
+    <relationship related="mantle.product.maintenance.AssetMaintenance" type="many" is-auto-reverse="true" mutable="true" title="AssetMaintenance">
+        <key-map field-name="statusId" related="statusId"/></relationship>
+    <relationship related="mantle.request.Request" type="many" is-auto-reverse="true" mutable="true" title="Request">
+        <key-map field-name="statusId" related="statusId"/></relationship>
+    <relationship related="mantle.request.RequestItem" type="many" is-auto-reverse="true" mutable="true" title="Request">
+        <key-map field-name="statusId" related="statusId"/></relationship>
+    <relationship related="mantle.request.requirement.Requirement" type="many" is-auto-reverse="true" mutable="true" title="Requirement">
+        <key-map field-name="statusId" related="statusId"/></relationship>
+    <relationship related="mantle.shipment.Shipment" type="many" is-auto-reverse="true" mutable="true" title="Shipment">
+        <key-map field-name="statusId" related="statusId"/></relationship>
+    <relationship related="mantle.shipment.ShipmentItemSource" type="many" is-auto-reverse="true" mutable="true" title="ShipmentItemSource">
+        <key-map field-name="statusId" related="statusId"/></relationship>
+    <relationship related="mantle.shipment.ShipmentRouteSegment" type="many" is-auto-reverse="true" mutable="true" title="ShipmentRouteSegment">
+        <key-map field-name="statusId" related="statusId"/></relationship>
+    <relationship related="mantle.work.effort.WorkEffort" type="many" is-auto-reverse="true" mutable="true" title="WorkEffort">
+        <key-map field-name="statusId" related="statusId"/></relationship>
+    <relationship related="mantle.work.effort.WorkEffortAssetAndAssign" type="many" is-auto-reverse="true" mutable="true" title="WorkEffortAssetAssign">
+        <key-map field-name="statusId" related="statusId"/></relationship>
+    <relationship related="mantle.work.effort.WorkEffortAssetAssign" type="many" is-auto-reverse="true" mutable="true" title="WorkEffortAssetAssign">
+        <key-map field-name="statusId" related="statusId"/></relationship>
+    <relationship related="mantle.work.effort.WorkEffortParty" type="many" is-auto-reverse="true" mutable="true" title="WorkEffortParty">
+        <key-map field-name="statusId" related="statusId"/></relationship>
+    <relationship related="mantle.work.effort.WorkEffortProduct" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="statusId" related="statusId"/></relationship>
+    <relationship related="mantle.work.time.Timesheet" type="many" is-auto-reverse="true" mutable="true" title="Timesheet">
+        <key-map field-name="statusId" related="statusId"/></relationship>
+    <relationship related="moqui.basic.StatusFlowTransition" type="many" is-auto-reverse="true" mutable="true" title="To">
+        <key-map field-name="statusId" related="toStatusId"/></relationship>
+    <relationship related="moqui.basic.email.EmailMessage" type="many" is-auto-reverse="true" mutable="true" title="EmailMessage">
+        <key-map field-name="statusId" related="statusId"/></relationship>
+    <relationship related="moqui.basic.print.PrintJob" type="many" is-auto-reverse="true" mutable="true" title="PrintJob">
+        <key-map field-name="statusId" related="statusId"/></relationship>
+    <relationship related="moqui.entity.sync.EntitySync" type="many" is-auto-reverse="true" mutable="true" title="EntitySync">
+        <key-map field-name="statusId" related="statusId"/></relationship>
+    <relationship related="moqui.entity.sync.EntitySyncHistory" type="many" is-auto-reverse="true" mutable="true" title="EntitySync">
+        <key-map field-name="statusId" related="statusId"/></relationship>
+    <relationship related="moqui.example.Example" type="many" is-auto-reverse="true" mutable="true" title="Example">
+        <key-map field-name="statusId" related="statusId"/></relationship>
+    <relationship related="moqui.service.message.SystemMessage" type="many" is-auto-reverse="true" mutable="true" title="SystemMessage">
+        <key-map field-name="statusId" related="statusId"/></relationship>
+
+</entity>

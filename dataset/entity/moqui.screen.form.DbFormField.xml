@@ -1,0 +1,72 @@
+
+<!-- Entity Name: moqui.screen.form.DbFormField sql table: DB_FORM_FIELD --><entity entity-name="DbFormField" package="moqui.screen.form" use="configuration" has-dependents="true">
+    <field name="formId" type="id" is-pk="true"/>
+    <field name="fieldName" type="text-medium" is-pk="true"/>
+    <field name="condition" type="text-medium">
+        <description><![CDATA[Only show this field if the condition evaluates to true (Groovy expression)]]></description></field>
+    <field name="entryName" type="text-medium"/>
+    <field name="title" type="text-medium"/>
+    <field name="tooltip" type="text-medium"/>
+    <field name="fieldTypeEnumId" type="id">
+        <description><![CDATA[Field type for presentation, validation;
+            always stored as plain text FormResponseAnswer]]></description></field>
+    <field name="layoutSequenceNum" type="number-integer"/>
+    <field name="isRequired" type="text-indicator"/>
+    <field name="printPageNumber" type="number-integer">
+        <description><![CDATA[Defaults to 1, ie one page/section for all fields if nothing higher than 1 is specified.]]></description></field>
+    <field name="printTop" type="text-short"/>
+    <field name="printLeft" type="text-short"/>
+    <field name="printBottom" type="text-short"/>
+    <field name="printRight" type="text-short"/>
+    <field name="printWidth" type="text-short"/>
+    <field name="printHeight" type="text-short"/>
+    <field name="printTextAlign" type="text-short"/>
+    <field name="printVerticalAlign" type="text-short"/>
+    <field name="printFontSize" type="text-short"/>
+    <field name="printFontFamily" type="text-short"/>
+    <relationship type="one" related="moqui.screen.form.DbForm" short-alias="dbForm"/>
+    <relationship type="one" title="DbFormFieldType" related="moqui.basic.Enumeration" short-alias="fieldTypeEnum">
+        <key-map field-name="fieldTypeEnumId" related="enumId"/></relationship>
+    <seed-data>
+        <moqui.basic.EnumerationType description="DB Form Field Type" enumTypeId="DbFormFieldType"/>
+        <moqui.basic.Enumeration description="link" enumId="DBFFT_link" enumTypeId="DbFormFieldType"/>
+        <moqui.basic.Enumeration description="image" enumId="DBFFT_image" enumTypeId="DbFormFieldType"/>
+        <moqui.basic.Enumeration description="label" enumId="DBFFT_label" enumTypeId="DbFormFieldType"/>
+        <moqui.basic.Enumeration description="check" enumId="DBFFT_check" enumTypeId="DbFormFieldType"/>
+        <moqui.basic.Enumeration description="date-find" enumId="DBFFT_date-find" enumTypeId="DbFormFieldType"/>
+        <moqui.basic.Enumeration description="date-time" enumId="DBFFT_date-time" enumTypeId="DbFormFieldType"/>
+        <moqui.basic.Enumeration description="display" enumId="DBFFT_display" enumTypeId="DbFormFieldType"/>
+        <moqui.basic.Enumeration description="display-entity" enumId="DBFFT_display-entity" enumTypeId="DbFormFieldType"/>
+        <moqui.basic.Enumeration description="drop-down" enumId="DBFFT_drop-down" enumTypeId="DbFormFieldType"/>
+        <moqui.basic.Enumeration description="file" enumId="DBFFT_file" enumTypeId="DbFormFieldType"/>
+        <moqui.basic.Enumeration description="hidden" enumId="DBFFT_hidden" enumTypeId="DbFormFieldType"/>
+        <moqui.basic.Enumeration description="ignored" enumId="DBFFT_ignored" enumTypeId="DbFormFieldType"/>
+        <moqui.basic.Enumeration description="password" enumId="DBFFT_password" enumTypeId="DbFormFieldType"/>
+        <moqui.basic.Enumeration description="radio" enumId="DBFFT_radio" enumTypeId="DbFormFieldType"/>
+        <moqui.basic.Enumeration description="range-find" enumId="DBFFT_range-find" enumTypeId="DbFormFieldType"/>
+        <moqui.basic.Enumeration description="reset" enumId="DBFFT_reset" enumTypeId="DbFormFieldType"/>
+        <moqui.basic.Enumeration description="submit" enumId="DBFFT_submit" enumTypeId="DbFormFieldType"/>
+        <moqui.basic.Enumeration description="text-line" enumId="DBFFT_text-line" enumTypeId="DbFormFieldType"/>
+        <moqui.basic.Enumeration description="text-area" enumId="DBFFT_text-area" enumTypeId="DbFormFieldType"/>
+        <moqui.basic.Enumeration description="text-find" enumId="DBFFT_text-find" enumTypeId="DbFormFieldType"/>
+    </seed-data>
+    <field name="lastUpdatedStamp" type="date-time"/>
+    <relationship related="moqui.screen.form.DbFormFieldAttribute" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="formId" related="formId"/>
+        <key-map field-name="fieldName" related="fieldName"/>
+    </relationship>
+    <relationship related="moqui.screen.form.DbFormFieldEntOpts" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="formId" related="formId"/>
+        <key-map field-name="fieldName" related="fieldName"/>
+    </relationship>
+    <relationship related="moqui.screen.form.DbFormFieldOption" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="formId" related="formId"/>
+        <key-map field-name="fieldName" related="fieldName"/>
+    </relationship>
+    <relationship related="moqui.screen.form.FormResponseAnswer" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="formId" related="formId"/>
+        <key-map field-name="fieldName" related="fieldName"/>
+    </relationship>
+
+<!-- eeca org.moqui.impl.entity.EntityEcaRule@517549b1-->
+</entity>

@@ -1,0 +1,13 @@
+
+<!-- Entity Name: moqui.resource.wiki.WikiPageCategory sql table: WIKI_PAGE_CATEGORY --><entity entity-name="WikiPageCategory" package="moqui.resource.wiki" use="nontransactional" has-dependents="true">
+    <field name="wikiPageCategoryId" type="id" is-pk="true"/>
+    <field name="categoryName" type="text-medium"/>
+    <field name="lastUpdatedStamp" type="date-time"/>
+    <relationship related="mantle.marketing.contact.ContactListEmail" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="wikiPageCategoryId" related="wikiPageCategoryId"/></relationship>
+    <relationship related="moqui.resource.wiki.WikiBlogCategory" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="wikiPageCategoryId" related="wikiPageCategoryId"/></relationship>
+    <relationship related="moqui.resource.wiki.WikiPageCategoryMember" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="wikiPageCategoryId" related="wikiPageCategoryId"/></relationship>
+
+</entity>

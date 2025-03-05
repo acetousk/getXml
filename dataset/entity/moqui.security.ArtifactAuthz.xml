@@ -1,0 +1,41 @@
+
+<!-- Entity Name: moqui.security.ArtifactAuthz sql table: ARTIFACT_AUTHZ --><entity entity-name="ArtifactAuthz" package="moqui.security" use="configuration">
+    <description><![CDATA[If an artifact in the group specified is accessed by any user in the AuthzGroup maxHitsCount
+            times in maxHitsDuration seconds then the user/artifact will be blocked fir tarputDuration seconds.]]></description>
+    <field name="artifactAuthzId" type="id" is-pk="true"/>
+    <field name="userGroupId" type="id"/>
+    <field name="artifactGroupId" type="id"/>
+    <field name="authzTypeEnumId" type="id"/>
+    <field name="authzActionEnumId" type="id"/>
+    <field name="authzServiceName" type="text-medium">
+        <description><![CDATA[If specified this service will be called and it should return a authzTypeEnumId with the
+                result of the authorization.
+                Will try to pass the following fields to this service: userId, authzActionEnumId,  artifactTypeEnumId,
+                and artifactName. The service will also have access to the ArtifactExecutionFacade (ec.artifactExecution)
+                which you can use to get the current artifact stack, etc.
+                The service must return an authzTypeEnumId (AUTHZT_ALLOW, AUTHZT_ALWAYS, or AUTHZT_DENY).]]></description></field>
+    <relationship type="one" related="moqui.security.UserGroup"/>
+    <relationship type="one" related="moqui.security.ArtifactGroup"/>
+    <relationship type="one" title="AuthzType" related="moqui.basic.Enumeration">
+        <key-map field-name="authzTypeEnumId"/></relationship>
+    <relationship type="one" title="AuthzAction" related="moqui.basic.Enumeration">
+        <key-map field-name="authzActionEnumId"/></relationship>
+    <relationship type="many" related="moqui.security.ArtifactAuthzFilter" short-alias="filters">
+        <key-map field-name="artifactAuthzId"/></relationship>
+    <relationship type="many" related="moqui.security.ArtifactGroupMember" short-alias="groupMembers">
+        <key-map field-name="artifactGroupId"/></relationship>
+    <seed-data>
+        <moqui.basic.EnumerationType description="Authorization Type" enumTypeId="AuthzType"/>
+        <moqui.basic.Enumeration description="Allow" enumId="AUTHZT_ALLOW" enumTypeId="AuthzType"/>
+        <moqui.basic.Enumeration description="Deny (overrides Allow)" enumId="AUTHZT_DENY" enumTypeId="AuthzType"/>
+        <moqui.basic.Enumeration description="Always Allow (overrides Deny)" enumId="AUTHZT_ALWAYS" enumTypeId="AuthzType"/>
+        <moqui.basic.EnumerationType description="Authorization Action" enumTypeId="AuthzAction"/>
+        <moqui.basic.Enumeration description="View" enumCode="VIEW" enumId="AUTHZA_VIEW" enumTypeId="AuthzAction"/>
+        <moqui.basic.Enumeration description="Create" enumCode="CREATE" enumId="AUTHZA_CREATE" enumTypeId="AuthzAction"/>
+        <moqui.basic.Enumeration description="Update" enumCode="UPDATE" enumId="AUTHZA_UPDATE" enumTypeId="AuthzAction"/>
+        <moqui.basic.Enumeration description="Delete" enumCode="DELETE" enumId="AUTHZA_DELETE" enumTypeId="AuthzAction"/>
+        <moqui.basic.Enumeration description="All" enumCode="ALL" enumId="AUTHZA_ALL" enumTypeId="AuthzAction"/>
+    </seed-data>
+    <field name="lastUpdatedStamp" type="date-time"/>
+
+</entity>

@@ -1,0 +1,15 @@
+
+<!-- Entity Name: moqui.basic.EnumerationType sql table: ENUMERATION_TYPE --><entity entity-name="EnumerationType" package="moqui.basic" use="configuration" short-alias="enumerationTypes" cache="true" has-dependents="true">
+    <field name="enumTypeId" type="id" is-pk="true"/>
+    <field name="description" type="text-medium"/>
+    <relationship type="many" related="moqui.basic.Enumeration" short-alias="enums">
+        <key-map field-name="enumTypeId"/></relationship>
+    <field name="lastUpdatedStamp" type="date-time"/>
+    <relationship related="mantle.party.PartySettingType" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="enumTypeId" related="enumTypeId"/></relationship>
+    <relationship related="mantle.work.measurement.MeasurementType" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="enumTypeId" related="enumTypeId"/></relationship>
+    <relationship related="moqui.basic.Enumeration" type="many" is-auto-reverse="true" mutable="true" title="Related">
+        <key-map field-name="enumTypeId" related="relatedEnumTypeId"/></relationship>
+
+</entity>

@@ -1,0 +1,14 @@
+
+<!-- Entity Name: moqui.security.UserGroupPermission sql table: USER_GROUP_PERMISSION --><entity entity-name="UserGroupPermission" package="moqui.security" use="configuration" cache="true" short-alias="userGroupPermissions">
+    <field name="userGroupId" type="id" is-pk="true"/>
+    <field name="userPermissionId" type="id-long" is-pk="true"/>
+    <field name="fromDate" type="date-time" is-pk="true"/>
+    <field name="thruDate" type="date-time"/>
+    <relationship type="one" related="moqui.security.UserGroup" short-alias="group"/>
+    <relationship type="one-nofk" related="moqui.security.UserPermission" short-alias="permission">
+        <description><![CDATA[No FK in order to allow arbitrary permissions (ie not pre-configured).]]></description></relationship>
+    <field name="lastUpdatedStamp" type="date-time"/>
+    <relationship related="moqui.security.UserGroupMember" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="userGroupId" related="userGroupId"/></relationship>
+
+</entity>

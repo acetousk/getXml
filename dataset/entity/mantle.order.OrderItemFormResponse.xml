@@ -1,0 +1,15 @@
+
+<!-- Entity Name: mantle.order.OrderItemFormResponse sql table: ORDER_ITEM_FORM_RESPONSE --><entity entity-name="OrderItemFormResponse" package="mantle.order" cache="never">
+    <field name="orderId" type="id" is-pk="true"/>
+    <field name="orderItemSeqId" type="id" is-pk="true"/>
+    <field name="formResponseId" type="id" is-pk="true"/>
+    <field name="partyId" type="id">
+        <description><![CDATA[The Party who the FormResponse information is for or about]]></description></field>
+    <field name="roleTypeId" type="id"/>
+    <relationship type="one" related="mantle.order.OrderItem" short-alias="orderItem"/>
+    <relationship type="one" related="moqui.screen.form.FormResponse" short-alias="formResponse"/>
+    <relationship type="one" related="mantle.party.Party" short-alias="party"/>
+    <relationship type="one" related="mantle.party.RoleType" short-alias="role"/>
+    <field name="lastUpdatedStamp" type="date-time"/>
+
+</entity>

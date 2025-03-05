@@ -1,0 +1,17 @@
+
+<!-- Entity Name: moqui.screen.form.FormListFindField sql table: FORM_LIST_FIND_FIELD --><entity entity-name="FormListFindField" package="moqui.screen.form" use="configuration">
+    <description><![CDATA[Has fields for the various options in search-form-inputs/searchFormInputs()/searchFormMap()]]></description>
+    <field name="formListFindId" type="id" is-pk="true"/>
+    <field name="fieldName" type="text-short" is-pk="true"/>
+    <field name="fieldValue" type="text-medium"/>
+    <field name="fieldOperator" type="text-short"/>
+    <field name="fieldNot" type="text-indicator"/>
+    <field name="fieldIgnoreCase" type="text-indicator"/>
+    <field name="fieldFrom" type="text-short"/>
+    <field name="fieldThru" type="text-short"/>
+    <field name="fieldPeriod" type="text-short"/>
+    <field name="fieldPerOffset" type="number-integer"/>
+    <relationship type="one" related="moqui.screen.form.FormListFind" short-alias="formListFind"/>
+    <field name="lastUpdatedStamp" type="date-time"/>
+
+</entity>

@@ -1,0 +1,9 @@
+
+<!-- Entity Name: moqui.server.instance.InstanceImageTypeVolume sql table: INSTANCE_IMAGE_TYPE_VOLUME --><entity entity-name="InstanceImageTypeVolume" package="moqui.server.instance" use="configuration">
+    <field name="imageTypeId" type="id" is-pk="true"/>
+    <field name="mountPoint" type="text-medium" is-pk="true"/>
+    <field name="volumeName" type="text-medium"/>
+    <relationship type="one" related="moqui.server.instance.InstanceImageType"/>
+    <field name="lastUpdatedStamp" type="date-time"/>
+
+</entity>

@@ -1,0 +1,150 @@
+
+<!-- Entity Name: moqui.service.message.SystemMessage sql table: SYSTEM_MESSAGE --><entity entity-name="SystemMessage" package="moqui.service.message" short-alias="systemMessages" use="transactional" cache="never" has-dependents="true">
+    <field name="systemMessageId" type="id" is-pk="true"/>
+    <field name="systemMessageTypeId" type="id"/>
+    <field name="systemMessageRemoteId" type="id">
+        <description><![CDATA[Reference to the SystemMessageRemote record for the remote system
+            this message came from for incoming messages or should be sent to for outgoing messages.]]></description></field>
+    <field name="statusId" type="id" enable-audit-log="true"/>
+    <field name="isOutgoing" type="text-indicator"/>
+    <field name="initDate" type="date-time">
+        <description><![CDATA[For incoming the received date, for outgoing the produced date]]></description></field>
+    <field name="processedDate" type="date-time">
+        <description><![CDATA[For incoming the consumed date, for outgoing the sent date]]></description></field>
+    <field name="lastAttemptDate" type="date-time"/>
+    <field name="failCount" type="number-integer"/>
+    <field name="parentMessageId" type="id">
+        <description><![CDATA[If a received message is split this is the original message]]></description></field>
+    <field name="ackMessageId" type="id">
+        <description><![CDATA[The message received or sent to acknowledge this message]]></description></field>
+    <field name="remoteMessageId" type="text-medium">
+        <description><![CDATA[For messages to/from another Moqui system, the
+            systemMessageId on the remote system; may also be used for other system level message IDs (as opposed to
+            messageId which is for the ID in the envelope of the message)]]></description></field>
+    <field name="messageText" type="text-very-long"/>
+    <field name="senderId" type="text-short">
+        <description><![CDATA[ID of the sender (for OAGIS may be broken down into
+            logicalId, component, task, referenceId; for EDI X12 this is ISA06)]]></description></field>
+    <field name="receiverId" type="text-short">
+        <description><![CDATA[ID of the receiver (for OAGIS may also be broken down;
+            for EDI X12 this is ISA08)]]></description></field>
+    <field name="messageId" type="text-short">
+        <description><![CDATA[ID of the message; this may be globally unique (like
+            the OAGIS BODID, a GUID) or only unique relative to the senderId and the receiverId (like EDI X12 ISA13 in
+            the context of ISA06, ISA08), and may only be unique within a certain time period (ID may be reused since in
+            EDI X12 limited to 9 digits)]]></description></field>
+    <field name="messageDate" type="date-time">
+        <description><![CDATA[Date/time from message (for EDI X12 this is GS04 (date)
+            and GS05 (time))]]></description></field>
+    <field name="docType" type="text-short">
+        <description><![CDATA[For OAGIS the BSR Noun; For X12 GS01 (functional ID code)]]></description></field>
+    <field name="docSubType" type="text-short">
+        <description><![CDATA[For OAGIS the BSR Verb; For X12 ST01 (tx set ID code)]]></description></field>
+    <field name="docControl" type="text-short">
+        <description><![CDATA[Control number of the message when applicable (such as
+            GS06 in EDI X12 messages)]]></description></field>
+    <field name="docSubControl" type="text-short">
+        <description><![CDATA[Sub-Control number of the message when applicable (such as
+            ST02 in EDI X12 messages)]]></description></field>
+    <field name="docVersion" type="text-short">
+        <description><![CDATA[The document version (for OAGIS BSR Revision, for X12
+            GS08 (version/revision))]]></description></field>
+    <field name="triggerVisitId" type="id">
+        <description><![CDATA[Active visit when SystemMessage triggered (mainly produced) to track
+            the user who did so; independent of the message transport which could have separate remote system and other Visit-like data.]]></description></field>
+    <relationship type="one" related="moqui.service.message.SystemMessageType" short-alias="type"/>
+    <relationship type="one" related="moqui.service.message.SystemMessageRemote" short-alias="remote"/>
+    <relationship type="one" title="SystemMessage" related="moqui.basic.StatusItem" short-alias="status"/>
+    <relationship type="one" title="Parent" related="moqui.service.message.SystemMessage" short-alias="parent">
+        <key-map field-name="parentMessageId" related="systemMessageId"/></relationship>
+    <relationship type="one" title="Ack" related="moqui.service.message.SystemMessage" short-alias="ackMessage">
+        <key-map field-name="ackMessageId" related="systemMessageId"/></relationship>
+    <relationship type="one" title="Trigger" related="moqui.server.Visit" short-alias="triggerVisit">
+        <key-map field-name="triggerVisitId"/></relationship>
+    <relationship type="many" related="moqui.service.message.SystemMessageError" short-alias="errors">
+        <key-map field-name="systemMessageId"/></relationship>
+    <index name="SYS_MSG_MSGID">
+        <index-field name="messageId"/></index>
+    <index name="SYS_MSG_RMSGID">
+        <index-field name="remoteMessageId"/></index>
+    <seed-data>
+        <moqui.basic.StatusType description="System Message" statusTypeId="SystemMessage"/>
+        <moqui.basic.StatusItem description="Produced" sequenceNum="10" statusId="SmsgProduced" statusTypeId="SystemMessage"/>
+        <moqui.basic.StatusItem description="Sending" sequenceNum="11" statusId="SmsgSending" statusTypeId="SystemMessage"/>
+        <moqui.basic.StatusItem description="Sent" sequenceNum="12" statusId="SmsgSent" statusTypeId="SystemMessage"/>
+        <moqui.basic.StatusItem description="Received" sequenceNum="20" statusId="SmsgReceived" statusTypeId="SystemMessage"/>
+        <moqui.basic.StatusItem description="Consuming" sequenceNum="21" statusId="SmsgConsuming" statusTypeId="SystemMessage"/>
+        <moqui.basic.StatusItem description="Consumed" sequenceNum="22" statusId="SmsgConsumed" statusTypeId="SystemMessage"/>
+        <moqui.basic.StatusItem description="Confirmed" sequenceNum="90" statusId="SmsgConfirmed" statusTypeId="SystemMessage"/>
+        <moqui.basic.StatusItem description="Rejected" sequenceNum="97" statusId="SmsgRejected" statusTypeId="SystemMessage"/>
+        <moqui.basic.StatusItem description="Cancelled" sequenceNum="98" statusId="SmsgCancelled" statusTypeId="SystemMessage"/>
+        <moqui.basic.StatusItem description="Error" sequenceNum="99" statusId="SmsgError" statusTypeId="SystemMessage"/>
+        <moqui.basic.StatusFlowTransition statusFlowId="Default" statusId="SmsgProduced" toStatusId="SmsgSending" transitionName="Sending"/>
+        <moqui.basic.StatusFlowTransition statusFlowId="Default" statusId="SmsgSending" toStatusId="SmsgSent" transitionName="Send"/>
+        <moqui.basic.StatusFlowTransition statusFlowId="Default" statusId="SmsgSending" toStatusId="SmsgProduced" transitionName="Back to Produced"/>
+        <moqui.basic.StatusFlowTransition statusFlowId="Default" statusId="SmsgProduced" toStatusId="SmsgSent" transitionName="Send"/>
+        <moqui.basic.StatusFlowTransition statusFlowId="Default" statusId="SmsgSent" toStatusId="SmsgConfirmed" transitionName="Confirm"/>
+        <moqui.basic.StatusFlowTransition statusFlowId="Default" statusId="SmsgSent" toStatusId="SmsgRejected" transitionName="Reject"/>
+        <moqui.basic.StatusFlowTransition statusFlowId="Default" statusId="SmsgReceived" toStatusId="SmsgConsuming" transitionName="Consuming"/>
+        <moqui.basic.StatusFlowTransition statusFlowId="Default" statusId="SmsgConsuming" toStatusId="SmsgConsumed" transitionName="Consume"/>
+        <moqui.basic.StatusFlowTransition statusFlowId="Default" statusId="SmsgConsuming" toStatusId="SmsgReceived" transitionName="Back to Received"/>
+        <moqui.basic.StatusFlowTransition statusFlowId="Default" statusId="SmsgReceived" toStatusId="SmsgConsumed" transitionName="Consume"/>
+        <moqui.basic.StatusFlowTransition statusFlowId="Default" statusId="SmsgConsumed" toStatusId="SmsgConfirmed" transitionName="Confirm"/>
+        <moqui.basic.StatusFlowTransition statusFlowId="Default" statusId="SmsgConsumed" toStatusId="SmsgRejected" transitionName="Reject"/>
+        <moqui.basic.StatusFlowTransition statusFlowId="Default" statusId="SmsgConsuming" toStatusId="SmsgError" transitionName="Error"/>
+        <moqui.basic.StatusFlowTransition statusFlowId="Default" statusId="SmsgProduced" toStatusId="SmsgError" transitionName="Error"/>
+        <moqui.basic.StatusFlowTransition statusFlowId="Default" statusId="SmsgError" toStatusId="SmsgProduced" transitionName="Back to Produced"/>
+        <moqui.basic.StatusFlowTransition statusFlowId="Default" statusId="SmsgError" toStatusId="SmsgSending" transitionName="Sending"/>
+        <moqui.basic.StatusFlowTransition statusFlowId="Default" statusId="SmsgError" toStatusId="SmsgSent" transitionName="Send"/>
+        <moqui.basic.StatusFlowTransition statusFlowId="Default" statusId="SmsgSent" toStatusId="SmsgError" transitionName="Error"/>
+        <moqui.basic.StatusFlowTransition statusFlowId="Default" statusId="SmsgReceived" toStatusId="SmsgError" transitionName="Error"/>
+        <moqui.basic.StatusFlowTransition statusFlowId="Default" statusId="SmsgError" toStatusId="SmsgReceived" transitionName="Back to Received"/>
+        <moqui.basic.StatusFlowTransition statusFlowId="Default" statusId="SmsgError" toStatusId="SmsgConsuming" transitionName="Consuming"/>
+        <moqui.basic.StatusFlowTransition statusFlowId="Default" statusId="SmsgError" toStatusId="SmsgConsumed" transitionName="Consume"/>
+        <moqui.basic.StatusFlowTransition statusFlowId="Default" statusId="SmsgConsumed" toStatusId="SmsgError" transitionName="Error"/>
+        <moqui.basic.StatusFlowTransition statusFlowId="Default" statusId="SmsgConfirmed" toStatusId="SmsgError" transitionName="Error"/>
+        <moqui.basic.StatusFlowTransition statusFlowId="Default" statusId="SmsgError" toStatusId="SmsgError" transitionName="Error"/>
+        <moqui.basic.StatusFlowTransition statusFlowId="Default" statusId="SmsgProduced" toStatusId="SmsgCancelled" transitionName="Cancel"/>
+        <moqui.basic.StatusFlowTransition statusFlowId="Default" statusId="SmsgSending" toStatusId="SmsgCancelled" transitionName="Cancel"/>
+        <moqui.basic.StatusFlowTransition statusFlowId="Default" statusId="SmsgSent" toStatusId="SmsgCancelled" transitionName="Cancel"/>
+        <moqui.basic.StatusFlowTransition statusFlowId="Default" statusId="SmsgReceived" toStatusId="SmsgCancelled" transitionName="Cancel"/>
+        <moqui.basic.StatusFlowTransition statusFlowId="Default" statusId="SmsgConsuming" toStatusId="SmsgCancelled" transitionName="Cancel"/>
+        <moqui.basic.StatusFlowTransition statusFlowId="Default" statusId="SmsgConsumed" toStatusId="SmsgCancelled" transitionName="Cancel"/>
+        <moqui.basic.StatusFlowTransition statusFlowId="Default" statusId="SmsgError" toStatusId="SmsgCancelled" transitionName="Cancel"/>
+        <moqui.basic.StatusFlowTransition statusFlowId="Default" statusId="SmsgRejected" toStatusId="SmsgCancelled" transitionName="Cancel"/>
+        <moqui.basic.StatusFlowTransition statusFlowId="Default" statusId="SmsgCancelled" toStatusId="SmsgProduced" transitionName="Back to Produced"/>
+        <moqui.basic.StatusFlowTransition statusFlowId="Default" statusId="SmsgCancelled" toStatusId="SmsgReceived" transitionName="Back to Received"/>
+    </seed-data>
+    <master>
+        <detail relationship="type"/>
+        <detail relationship="status"/>
+        <detail relationship="parent"/>
+        <detail relationship="remote"/>
+        <detail relationship="errors"/>
+    </master>
+    <field name="invoiceId" type="id"/>
+    <relationship type="one" related="mantle.account.invoice.Invoice"/>
+    <field name="paymentMethodFileId" type="id"/>
+    <relationship type="one" related="mantle.account.method.PaymentMethodFile"/>
+    <field name="orderId" type="id"/>
+    <field name="orderPartSeqId" type="id"/>
+    <field name="orderRevision" type="number-integer"/>
+    <relationship type="one" related="mantle.order.OrderHeader" short-alias="orderHeader"/>
+    <relationship type="one-nofk" related="mantle.order.OrderPart" short-alias="orderPart"/>
+    <field name="returnId" type="id"/>
+    <relationship type="one" related="mantle.order.return.ReturnHeader"/>
+    <field name="shipmentId" type="id"/>
+    <relationship type="one" related="mantle.shipment.Shipment" short-alias="shipment"/>
+    <field name="lastUpdatedStamp" type="date-time"/>
+    <relationship related="mantle.account.invoice.InvoiceSystemMessage" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="systemMessageId" related="systemMessageId"/></relationship>
+    <relationship related="mantle.order.OrderSystemMessage" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="systemMessageId" related="systemMessageId"/></relationship>
+    <relationship related="mantle.order.return.ReturnSystemMessage" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="systemMessageId" related="systemMessageId"/></relationship>
+    <relationship related="mantle.party.PartySystemMessage" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="systemMessageId" related="systemMessageId"/></relationship>
+    <relationship related="mantle.shipment.ShipmentSystemMessage" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="systemMessageId" related="systemMessageId"/></relationship>
+
+</entity>

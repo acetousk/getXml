@@ -1,0 +1,21 @@
+
+<!-- Entity Name: mantle.account.payment.PaymentContent sql table: PAYMENT_CONTENT --><entity entity-name="PaymentContent" package="mantle.account.payment" cache="never">
+    <field name="paymentContentId" type="id" is-pk="true"/>
+    <field name="paymentId" type="id"/>
+    <field name="contentLocation" type="text-medium"/>
+    <field name="contentTypeEnumId" type="id"/>
+    <field name="description" type="text-long"/>
+    <field name="contentDate" type="date-time" default="ec.user.nowTimestamp"/>
+    <field name="userId" type="id" default="ec.user.userId"/>
+    <relationship type="one" related="mantle.account.payment.Payment" short-alias="payment"/>
+    <relationship type="one" title="PaymentContentType" related="moqui.basic.Enumeration" short-alias="contentTypeEnum">
+        <key-map field-name="contentTypeEnumId"/></relationship>
+    <seed-data>
+        <moqui.basic.EnumerationType description="Payment Content Type" enumTypeId="PaymentContentType"/>
+        <moqui.basic.Enumeration enumId="PctPaymentDocument" description="Payment Document" enumTypeId="PaymentContentType"/>
+        <moqui.basic.Enumeration enumId="PctReceipt" description="Receipt" enumTypeId="PaymentContentType"/>
+        <moqui.basic.Enumeration enumId="PctCheckImage" description="Check Image" enumTypeId="PaymentContentType"/>
+    </seed-data>
+    <field name="lastUpdatedStamp" type="date-time"/>
+
+</entity>

@@ -1,0 +1,49 @@
+
+<!-- Entity Name: mantle.party.Organization sql table: ORGANIZATION --><entity entity-name="Organization" package="mantle.party" has-dependents="true">
+    <field name="partyId" type="id" is-pk="true"/>
+    <field name="organizationName" type="text-medium"/>
+    <field name="officeSiteName" type="text-medium"/>
+    <field name="annualRevenue" type="currency-amount"/>
+    <field name="numEmployees" type="number-integer"/>
+    <relationship type="one" related="mantle.party.Party"/>
+    <relationship type="many" title="Owner" related="mantle.facility.Facility" short-alias="ownerFacilities">
+        <key-map field-name="partyId" related="ownerPartyId"/></relationship>
+    <index name="PTY_ORG_NAME_IDX">
+        <index-field name="organizationName"/></index>
+    <field name="lastUpdatedStamp" type="date-time"/>
+    <relationship related="coarchy.Activity" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="partyId" related="organizationId"/></relationship>
+    <relationship related="coarchy.Actor" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="partyId" related="organizationId"/></relationship>
+    <relationship related="coarchy.ProcessStory" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="partyId" related="organizationId"/></relationship>
+    <relationship related="coarchy.product.ProductEvaluation" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="partyId" related="organizationId"/></relationship>
+    <relationship related="coarchy.product.ProductEvaluationActivity" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="partyId" related="organizationId"/></relationship>
+    <relationship related="coarchy.product.ProductEvaluationParty" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="partyId" related="organizationId"/></relationship>
+    <relationship related="coarchy.product.ProductEvaluationResponse" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="partyId" related="organizationId"/></relationship>
+    <relationship related="coarchy.product.ProductEvaluationStatement" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="partyId" related="organizationId"/></relationship>
+    <relationship related="coarchy.product.ProductEvaluationStory" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="partyId" related="organizationId"/></relationship>
+    <relationship related="mantle.account.invoice.Invoice" type="many" is-auto-reverse="true" mutable="true" title="From">
+        <key-map field-name="partyId" related="fromPartyId"/></relationship>
+    <relationship related="mantle.account.invoice.Invoice" type="many" is-auto-reverse="true" mutable="true" title="To">
+        <key-map field-name="partyId" related="toPartyId"/></relationship>
+    <relationship related="mantle.order.OrderItemParty" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="partyId" related="partyId"/></relationship>
+    <relationship related="mantle.order.OrderPartParty" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="partyId" related="partyId"/></relationship>
+    <relationship related="mantle.request.RequestParty" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="partyId" related="partyId"/></relationship>
+    <relationship related="mantle.shipment.Shipment" type="many" is-auto-reverse="true" mutable="true" title="From">
+        <key-map field-name="partyId" related="fromPartyId"/></relationship>
+    <relationship related="mantle.shipment.Shipment" type="many" is-auto-reverse="true" mutable="true" title="To">
+        <key-map field-name="partyId" related="toPartyId"/></relationship>
+    <relationship related="mantle.work.effort.WorkEffortParty" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="partyId" related="partyId"/></relationship>
+
+</entity>

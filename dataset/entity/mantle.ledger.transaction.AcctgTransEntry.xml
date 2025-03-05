@@ -1,0 +1,53 @@
+
+<!-- Entity Name: mantle.ledger.transaction.AcctgTransEntry sql table: ACCTG_TRANS_ENTRY --><entity entity-name="AcctgTransEntry" package="mantle.ledger.transaction" use="transactional" cache="never" has-dependents="true">
+    <field name="acctgTransId" type="id" is-pk="true"/>
+    <field name="acctgTransEntrySeqId" type="id" is-pk="true"/>
+    <field name="debitCreditFlag" type="text-indicator">
+        <description><![CDATA[If D is a debit, if C is a credit.]]></description></field>
+    <field name="amount" type="currency-amount" enable-audit-log="update"/>
+    <field name="localCurrencyAmount" type="currency-amount" enable-audit-log="update"/>
+    <field name="originalCurrencyAmount" type="currency-amount"/>
+    <field name="description" type="text-medium"/>
+    <field name="voucherRef" type="text-short"/>
+    <field name="glAccountTypeEnumId" type="id"/>
+    <field name="glAccountId" type="id" enable-audit-log="update"/>
+    <field name="dueDate" type="date"/>
+    <field name="reconcileStatusId" type="id" default="'AterNot'"/>
+    <field name="settlementTermId" type="id"/>
+    <field name="isSummary" type="text-indicator">
+        <description><![CDATA[Set to Y if this is a summary entry from a sub-ledger.]]></description></field>
+    <field name="productId" type="id"/>
+    <field name="externalProductId" type="id"/>
+    <field name="assetId" type="id"/>
+    <field name="invoiceItemSeqId" type="id"/>
+    <relationship type="one" related="mantle.ledger.transaction.AcctgTrans" short-alias="trans"/>
+    <relationship type="one" title="GlAccountType" related="moqui.basic.Enumeration" short-alias="glAccountType">
+        <key-map field-name="glAccountTypeEnumId"/></relationship>
+    <relationship type="one" related="mantle.ledger.account.GlAccount" short-alias="glAccount"/>
+    <relationship type="one" title="AcctgTransEntryReconcile" related="moqui.basic.StatusItem" short-alias="reconcileStatus">
+        <key-map field-name="reconcileStatusId"/></relationship>
+    <relationship type="one" related="mantle.account.invoice.SettlementTerm" short-alias="settlementTerm"/>
+    <relationship type="one" related="mantle.product.Product" short-alias="product"/>
+    <relationship type="one" related="mantle.product.asset.Asset" short-alias="asset"/>
+    <seed-data>
+        <moqui.basic.StatusType description="Accounting Transaction Entry Reconcile Status" statusTypeId="AcctgTransEntryReconcile"/>
+        <moqui.basic.StatusItem description="Not Reconciled" sequenceNum="1" statusId="AterNot" statusTypeId="AcctgTransEntryReconcile"/>
+        <moqui.basic.StatusItem description="Partly Reconciled" sequenceNum="2" statusId="AterPartly" statusTypeId="AcctgTransEntryReconcile"/>
+        <moqui.basic.StatusItem description="Reconciled" sequenceNum="3" statusId="AterRec" statusTypeId="AcctgTransEntryReconcile"/>
+        <moqui.basic.StatusFlowTransition statusFlowId="Default" statusId="AterNot" toStatusId="AterPartly" transitionName="Partly Reconcile"/>
+        <moqui.basic.StatusFlowTransition statusFlowId="Default" statusId="AterNot" toStatusId="AterRec" transitionName="Reconcile"/>
+        <moqui.basic.StatusFlowTransition statusFlowId="Default" statusId="AterPartly" toStatusId="AterRec" transitionName="Reconcile"/>
+        <moqui.basic.StatusFlowTransition statusFlowId="Default" statusId="AterPartly" toStatusId="AterNot" transitionName="Unreconcile"/>
+        <moqui.basic.StatusFlowTransition statusFlowId="Default" statusId="AterRec" toStatusId="AterNot" transitionName="Unreconcile"/>
+    </seed-data>
+    <field name="lastUpdatedStamp" type="date-time"/>
+    <relationship related="mantle.account.method.PaymentMethodTrans" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="acctgTransId" related="acctgTransId"/>
+        <key-map field-name="acctgTransEntrySeqId" related="acctgTransEntrySeqId"/>
+    </relationship>
+    <relationship related="mantle.ledger.reconciliation.GlReconciliationEntry" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="acctgTransId" related="acctgTransId"/>
+        <key-map field-name="acctgTransEntrySeqId" related="acctgTransEntrySeqId"/>
+    </relationship>
+
+</entity>

@@ -1,0 +1,13 @@
+
+<!-- Entity Name: mantle.humanres.position.EmplClassResponsibility sql table: EMPL_CLASS_RESPONSIBILITY --><entity entity-name="EmplClassResponsibility" package="mantle.humanres.position" use="configuration">
+    <field name="emplPositionClassId" type="id" is-pk="true"/>
+    <field name="responsibilityEnumId" type="id" is-pk="true"/>
+    <field name="fromDate" type="date-time" is-pk="true"/>
+    <field name="thruDate" type="date-time"/>
+    <field name="comments" type="text-medium"/>
+    <relationship type="one" related="mantle.humanres.position.EmplPositionClass"/>
+    <relationship type="one" title="EmploymentResponsibility" related="moqui.basic.Enumeration">
+        <key-map field-name="responsibilityEnumId"/></relationship>
+    <field name="lastUpdatedStamp" type="date-time"/>
+
+</entity>

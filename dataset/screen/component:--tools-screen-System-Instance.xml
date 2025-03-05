@@ -1,0 +1,1 @@
+<!-- Screen Location component://tools/screen/System/Instance.xml --><screen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://moqui.org/xsd/xml-screen-3.xsd" default-menu-title="Instances" default-menu-index="15"><subscreens default-item="InstanceList"/><widgets><subscreens-panel id="InstancePanel" type="tab"/></widgets></screen>

@@ -1,0 +1,24 @@
+
+<!-- Entity Name: mantle.ledger.transaction.GlJournal sql table: GL_JOURNAL --><entity entity-name="GlJournal" package="mantle.ledger.transaction" use="transactional" cache="never" has-dependents="true">
+    <field name="glJournalId" type="id" is-pk="true"/>
+    <field name="glJournalTypeEnumId" type="id"/>
+    <field name="glJournalName" type="text-medium"/>
+    <field name="organizationPartyId" type="id"/>
+    <field name="isPosted" type="text-indicator"/>
+    <field name="postedDate" type="date-time"/>
+    <relationship type="one" title="GlJournalType" related="moqui.basic.Enumeration" short-alias="glJournalTypeEnum">
+        <key-map field-name="glJournalTypeEnumId"/></relationship>
+    <relationship type="one" title="Organization" related="mantle.party.Party" short-alias="organizationParty">
+        <key-map field-name="organizationPartyId"/></relationship>
+    <seed-data>
+        <moqui.basic.EnumerationType description="GL Journal Type" enumTypeId="GlJournalType"/>
+        <moqui.basic.Enumeration enumId="GLJRNL_ERROR" description="Error Journal" enumTypeId="GlJournalType"/>
+        <moqui.basic.Enumeration enumId="GLJRNL_MANUAL" description="Manual Transactions Journal" enumTypeId="GlJournalType"/>
+    </seed-data>
+    <field name="lastUpdatedStamp" type="date-time"/>
+    <relationship related="mantle.ledger.config.PartyAcctgPreference" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="glJournalId" related="errorGlJournalId"/></relationship>
+    <relationship related="mantle.ledger.transaction.AcctgTrans" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="glJournalId" related="glJournalId"/></relationship>
+
+</entity>

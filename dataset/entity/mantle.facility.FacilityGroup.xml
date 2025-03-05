@@ -1,0 +1,22 @@
+
+<!-- Entity Name: mantle.facility.FacilityGroup sql table: FACILITY_GROUP --><entity entity-name="FacilityGroup" package="mantle.facility" short-alias="facilityGroups" has-dependents="true">
+    <field name="facilityGroupId" type="id" is-pk="true"/>
+    <field name="parentGroupId" type="id"/>
+    <field name="facilityGroupTypeEnumId" type="id"/>
+    <field name="description" type="text-medium"/>
+    <relationship type="one" title="Parent" related="mantle.facility.FacilityGroup">
+        <key-map field-name="parentGroupId" related="facilityGroupId"/></relationship>
+    <relationship type="one" title="FacilityGroupType" related="moqui.basic.Enumeration">
+        <key-map field-name="facilityGroupTypeEnumId"/></relationship>
+    <seed-data>
+        <moqui.basic.EnumerationType description="Facility Group Type" enumTypeId="FacilityGroupType"/>
+        <moqui.basic.Enumeration description="Management Structure" enumId="MGMT_STRUCTURE" enumTypeId="FacilityGroupType"/>
+        <moqui.basic.Enumeration description="Pricing Group" enumId="PRICING_GROUP" enumTypeId="FacilityGroupType"/>
+    </seed-data>
+    <field name="lastUpdatedStamp" type="date-time"/>
+    <relationship related="mantle.facility.FacilityGroupMember" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="facilityGroupId" related="facilityGroupId"/></relationship>
+    <relationship related="mantle.facility.FacilityGroupParty" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="facilityGroupId" related="facilityGroupId"/></relationship>
+
+</entity>

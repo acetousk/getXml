@@ -1,0 +1,16 @@
+
+<!-- Entity Name: coarchy.ActivityActor sql table: ACTIVITY_ACTOR --><entity entity-name="ActivityActor" package="coarchy">
+    <field name="activityId" type="id" is-pk="true"/>
+    <field name="actorId" type="id" is-pk="true"/>
+    <field name="organizationId" type="id"/>
+    <relationship type="one" related="coarchy.Activity" short-alias="activity">
+        <key-map field-name="activityId"/></relationship>
+    <relationship type="one" related="coarchy.Actor" short-alias="actor">
+        <key-map field-name="actorId"/></relationship>
+    <field name="lastUpdatedStamp" type="date-time"/>
+    <relationship related="coarchy.ProcessStoryActivity" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="activityId" related="activityId"/></relationship>
+    <relationship related="mantle.work.effort.WorkEffort" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="activityId" related="activityId"/></relationship>
+
+</entity>

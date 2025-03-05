@@ -1,0 +1,9 @@
+
+<!-- Entity Name: moqui.olap.CurrencyDimension sql table: CURRENCY_DIMENSION --><entity entity-name="CurrencyDimension" package="moqui.olap" use="analytical">
+    <description><![CDATA[Currency Dimension. The natural key is [currencyId]]]></description>
+    <field name="dimensionId" type="id" is-pk="true"/>
+    <field name="currencyId" type="id"/>
+    <field name="description" type="text-medium"/>
+    <field name="lastUpdatedStamp" type="date-time"/>
+
+</entity>

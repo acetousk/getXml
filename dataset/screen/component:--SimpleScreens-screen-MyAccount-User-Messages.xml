@@ -1,0 +1,1 @@
+<!-- Screen Location component://SimpleScreens/screen/MyAccount/User/Messages.xml --><screen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://moqui.org/xsd/xml-screen-3.xsd" default-menu-title="Messages" default-menu-index="2"><subscreens default-item="FindMessage"/><widgets><subscreens-active/></widgets></screen>

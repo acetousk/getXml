@@ -1,0 +1,28 @@
+
+<!-- Entity Name: mantle.work.estimate.ProductionEstimate sql table: PRODUCTION_ESTIMATE --><entity entity-name="ProductionEstimate" package="mantle.work.estimate" cache="never" has-dependents="true">
+    <field name="productionEstimateId" type="id" is-pk="true"/>
+    <field name="estimateName" type="text-medium"/>
+    <field name="productId" type="id"/>
+    <field name="facilityId" type="id"/>
+    <field name="destinationFacilityId" type="id"/>
+    <field name="quantity" type="number-decimal"/>
+    <field name="quantityUomId" type="id"/>
+    <field name="readyDate" type="date"/>
+    <relationship type="one" related="mantle.product.Product"/>
+    <relationship type="one" related="mantle.facility.Facility"/>
+    <relationship type="one" title="Destination" related="mantle.facility.Facility">
+        <key-map field-name="destinationFacilityId"/></relationship>
+    <relationship type="one" title="Quantity" related="moqui.basic.Uom">
+        <key-map field-name="quantityUomId"/></relationship>
+    <index name="PRODEST_PDDFRD">
+        <index-field name="productId"/>
+        <index-field name="destinationFacilityId"/>
+        <index-field name="readyDate"/>
+    </index>
+    <field name="lastUpdatedStamp" type="date-time"/>
+    <relationship related="mantle.work.estimate.ProductionEstimateAsset" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="productionEstimateId" related="productionEstimateId"/></relationship>
+    <relationship related="mantle.work.estimate.ProductionEstimateWorkEff" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="productionEstimateId" related="productionEstimateId"/></relationship>
+
+</entity>

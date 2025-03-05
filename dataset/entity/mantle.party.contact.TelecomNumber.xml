@@ -1,0 +1,37 @@
+
+<!-- Entity Name: mantle.party.contact.TelecomNumber sql table: TELECOM_NUMBER --><entity entity-name="TelecomNumber" package="mantle.party.contact" use="nontransactional" cache="never" has-dependents="true">
+    <field name="contactMechId" type="id" is-pk="true"/>
+    <field name="countryCode" type="text-short"/>
+    <field name="areaCode" type="text-short"/>
+    <field name="contactNumber" type="text-short"/>
+    <field name="askForName" type="text-medium"/>
+    <relationship type="one" related="mantle.party.contact.ContactMech"/>
+    <index name="AREA_CONTACT_IDX">
+        <index-field name="areaCode"/>
+        <index-field name="contactNumber"/>
+    </index>
+    <field name="lastUpdatedStamp" type="date-time"/>
+    <relationship related="mantle.account.invoice.InvoiceContactMech" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="contactMechId" related="contactMechId"/></relationship>
+    <relationship related="mantle.account.method.PaymentMethod" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="contactMechId" related="telecomContactMechId"/></relationship>
+    <relationship related="mantle.facility.FacilityContactMech" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="contactMechId" related="contactMechId"/></relationship>
+    <relationship related="mantle.order.OrderPart" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="contactMechId" related="telecomContactMechId"/></relationship>
+    <relationship related="mantle.order.OrderPartContactMech" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="contactMechId" related="contactMechId"/></relationship>
+    <relationship related="mantle.party.agreement.AgreementContactMech" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="contactMechId" related="contactMechId"/></relationship>
+    <relationship related="mantle.party.contact.PartyContactMech" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="contactMechId" related="contactMechId"/></relationship>
+    <relationship related="mantle.party.contact.PostalAddress" type="one-nofk" is-auto-reverse="true" mutable="true" title="Telecom">
+        <key-map field-name="contactMechId" related="telecomContactMechId"/></relationship>
+    <relationship related="mantle.shipment.ShipmentRouteSegment" type="many" is-auto-reverse="true" mutable="true" title="Origin">
+        <key-map field-name="contactMechId" related="originTelecomContactMechId"/></relationship>
+    <relationship related="mantle.shipment.ShipmentRouteSegment" type="many" is-auto-reverse="true" mutable="true" title="Destination">
+        <key-map field-name="contactMechId" related="destTelecomContactMechId"/></relationship>
+    <relationship related="mantle.work.effort.WorkEffortContactMech" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="contactMechId" related="contactMechId"/></relationship>
+
+</entity>

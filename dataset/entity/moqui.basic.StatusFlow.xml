@@ -1,0 +1,18 @@
+
+<!-- Entity Name: moqui.basic.StatusFlow sql table: STATUS_FLOW --><entity entity-name="StatusFlow" package="moqui.basic" use="configuration" has-dependents="true">
+    <field name="statusFlowId" type="id" is-pk="true"/>
+    <field name="statusTypeId" type="id">
+        <description><![CDATA[Optional. If specified uses status items with this type.]]></description></field>
+    <field name="description" type="text-medium"/>
+    <relationship type="one" related="moqui.basic.StatusType" short-alias="type"/>
+    <seed-data>
+        <moqui.basic.StatusFlow statusFlowId="Default" description="Default status flow across entire system."/></seed-data>
+    <field name="lastUpdatedStamp" type="date-time"/>
+    <relationship related="moqui.basic.Enumeration" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="statusFlowId" related="statusFlowId"/></relationship>
+    <relationship related="moqui.basic.StatusFlowItem" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="statusFlowId" related="statusFlowId"/></relationship>
+    <relationship related="moqui.basic.StatusFlowTransition" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="statusFlowId" related="statusFlowId"/></relationship>
+
+</entity>

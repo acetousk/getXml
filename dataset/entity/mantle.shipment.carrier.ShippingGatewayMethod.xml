@@ -1,0 +1,15 @@
+
+<!-- Entity Name: mantle.shipment.carrier.ShippingGatewayMethod sql table: SHIPPING_GATEWAY_METHOD --><entity entity-name="ShippingGatewayMethod" package="mantle.shipment.carrier" use="configuration" cache="true">
+    <description><![CDATA[Use to override gatewayServiceCode on CarrierShipmentMethod]]></description>
+    <field name="shippingGatewayConfigId" type="id" is-pk="true"/>
+    <field name="carrierPartyId" type="id" is-pk="true"/>
+    <field name="shipmentMethodEnumId" type="id" is-pk="true"/>
+    <field name="gatewayServiceCode" type="text-short"/>
+    <relationship type="one" related="mantle.shipment.carrier.ShippingGatewayConfig"/>
+    <relationship type="one" title="Carrier" related="mantle.party.Party">
+        <key-map field-name="carrierPartyId"/></relationship>
+    <relationship type="one" title="ShipmentMethod" related="moqui.basic.Enumeration" short-alias="shipmentMethodEnum">
+        <key-map field-name="shipmentMethodEnumId"/></relationship>
+    <field name="lastUpdatedStamp" type="date-time"/>
+
+</entity>

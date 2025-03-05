@@ -1,0 +1,21 @@
+
+<!-- Entity Name: ai.ModelChatMessage sql table: MODEL_CHAT_MESSAGE --><entity entity-name="ModelChatMessage" package="ai" short-alias="modelChatMessages">
+    <field name="messageId" type="id" is-pk="true"/>
+    <field name="modelChatId" type="id"/>
+    <field name="roleTypeEnumId" type="id"/>
+    <field name="content" type="text-very-long"/>
+    <field name="time" type="date-time"/>
+    <field name="sequenceNum" type="number-integer"/>
+    <relationship type="one" related="ai.ModelChat" short-alias="chat">
+        <key-map field-name="modelChatId" related="modelChatId"/></relationship>
+    <seed-data>
+        <moqui.basic.EnumerationType description="Model Chat Message Role" enumTypeId="ModelChatMessageRole"/>
+        <moqui.basic.Enumeration optionValue="system" description="System" enumId="MCMR_System" enumTypeId="ModelChatMessageRole"/>
+        <moqui.basic.Enumeration optionValue="user" description="User" enumId="MCMR_User" enumTypeId="ModelChatMessageRole"/>
+        <moqui.basic.Enumeration optionValue="assistant" description="Assistant" enumId="MCMR_Assistant" enumTypeId="ModelChatMessageRole"/>
+    </seed-data>
+    <field name="lastUpdatedStamp" type="date-time"/>
+    <relationship related="ai.ModelChat" type="many" is-auto-reverse="true" mutable="true" title="Messages">
+        <key-map field-name="modelChatId" related="modelChatId"/></relationship>
+
+</entity>

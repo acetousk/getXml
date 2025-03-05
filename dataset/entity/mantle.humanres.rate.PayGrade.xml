@@ -1,0 +1,16 @@
+
+<!-- Entity Name: mantle.humanres.rate.PayGrade sql table: PAY_GRADE --><entity entity-name="PayGrade" package="mantle.humanres.rate" use="configuration" has-dependents="true">
+    <field name="payGradeId" type="id" is-pk="true"/>
+    <field name="description" type="text-medium"/>
+    <field name="comments" type="text-medium"/>
+    <field name="lastUpdatedStamp" type="date-time"/>
+    <relationship related="mantle.humanres.employment.EmploymentSalary" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="payGradeId" related="payGradeId"/></relationship>
+    <relationship related="mantle.humanres.position.EmplPosition" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="payGradeId" related="payGradeId"/></relationship>
+    <relationship related="mantle.humanres.rate.PayGradeSalary" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="payGradeId" related="payGradeId"/></relationship>
+    <relationship related="mantle.humanres.rate.RateAmount" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="payGradeId" related="payGradeId"/></relationship>
+
+</entity>

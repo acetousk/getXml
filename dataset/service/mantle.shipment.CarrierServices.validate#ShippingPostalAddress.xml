@@ -1,0 +1,3 @@
+<!--Service Location mantle.shipment.CarrierServices.validate#ShippingPostalAddress--><service verb="validate" noun="ShippingPostalAddress"><in-parameters><parameter name="contactMechId" required="true"/><parameter name="partyId"/><parameter name="facilityId"/><parameter name="shippingGatewayConfigId" required="true"/></in-parameters><out-parameters><parameter name="contactMechId"><description><![CDATA[Return original or if update#PartyPostalAddress is called then the new]]></description></parameter></out-parameters>
+    null
+</service>

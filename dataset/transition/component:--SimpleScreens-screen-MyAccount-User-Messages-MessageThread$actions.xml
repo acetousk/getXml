@@ -1,0 +1,7 @@
+<!--Transition Screen Location component://SimpleScreens/screen/MyAccount/User/Messages/MessageThread.xml Transition Name actions--><transition name="actions"><parameter name="communicationEventId" required="true"/><parameter name="partyId"/><actions><!--always-actions at component://webroot/screen/webroot.xml--><set field="html_scripts" from="new LinkedHashSet()"/><set field="footer_scripts" from="new LinkedHashSet()"/><set field="html_stylesheets" from="new LinkedHashSet()"/><!--actions--><entity-find-one entity-name="mantle.party.communication.CommunicationEvent" value-field="commEvent"/><set field="rootCommEventId" from="commEvent.rootCommEventId ?: commEvent.communicationEventId"/><entity-find-one entity-name="mantle.party.communication.CommunicationEvent" value-field="rootCommEvent"><field-map field-name="communicationEventId" from="rootCommEventId"/></entity-find-one><script><![CDATA[idPathSb = new StringBuilder(commEvent.communicationEventId)
+            def curCe = commEvent
+            while (curCe.parentCommEventId) {
+                idPathSb.insert(0, "/").insert(0, curCe.parentCommEventId)
+                curCe = ec.entity.find("mantle.party.communication.CommunicationEvent")
+                        .condition("communicationEventId", curCe.parentCommEventId).one()
+            }]]></script></actions></transition>

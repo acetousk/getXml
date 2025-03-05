@@ -1,0 +1,12 @@
+
+<!-- Entity Name: mantle.product.feature.ProductFeatureGroupAppl sql table: PRODUCT_FEATURE_GROUP_APPL --><entity entity-name="ProductFeatureGroupAppl" package="mantle.product.feature">
+    <field name="productFeatureGroupId" type="id" is-pk="true"/>
+    <field name="productFeatureId" type="id" is-pk="true"/>
+    <field name="fromDate" type="date-time" is-pk="true"/>
+    <field name="thruDate" type="date-time"/>
+    <field name="sequenceNum" type="number-integer"/>
+    <relationship type="one" related="mantle.product.feature.ProductFeatureGroup" short-alias="group"/>
+    <relationship type="one" related="mantle.product.feature.ProductFeature" short-alias="feature"/>
+    <field name="lastUpdatedStamp" type="date-time"/>
+
+</entity>

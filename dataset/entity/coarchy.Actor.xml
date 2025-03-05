@@ -1,0 +1,15 @@
+
+<!-- Entity Name: coarchy.Actor sql table: ACTOR --><entity entity-name="Actor" package="coarchy" has-dependents="true">
+    <field name="actorId" type="id" is-pk="true"/>
+    <field name="name" type="text-short"/>
+    <field name="description" type="text-medium"/>
+    <field name="organizationId" type="id"/>
+    <relationship type="many" related="ActivityActor" short-alias="activities">
+        <key-map field-name="actorId"/></relationship>
+    <relationship type="one" related="mantle.party.Organization" short-alias="organization">
+        <key-map field-name="organizationId" related="partyId"/></relationship>
+    <field name="lastUpdatedStamp" type="date-time"/>
+    <relationship related="coarchy.ActorParty" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="actorId" related="actorId"/></relationship>
+
+</entity>

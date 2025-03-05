@@ -1,0 +1,21 @@
+
+<!-- Entity Name: mantle.humanres.employment.PayrollAllowance sql table: PAYROLL_ALLOWANCE --><entity entity-name="PayrollAllowance" package="mantle.humanres.employment" use="configuration">
+    <field name="payrollAllowanceId" type="id" is-pk="true"/>
+    <field name="taxAuthorityId" type="id"/>
+    <field name="timePeriodTypeId" type="id"/>
+    <field name="fromDate" type="date-time"/>
+    <field name="thruDate" type="date-time"/>
+    <field name="amountTypeEnumId" type="id"/>
+    <field name="amount" type="currency-amount"/>
+    <relationship type="one" related="mantle.other.tax.TaxAuthority"/>
+    <relationship type="one" related="mantle.party.time.TimePeriodType"/>
+    <relationship type="one" title="PayrollAllowanceAmountType" related="moqui.basic.Enumeration">
+        <key-map field-name="amountTypeEnumId"/></relationship>
+    <seed-data>
+        <moqui.basic.EnumerationType description="Payroll Allowance Amount Type" enumTypeId="PayrollAllowanceAmountType"/>
+        <moqui.basic.Enumeration description="Deduction" enumId="PaatDeduction" enumTypeId="PayrollAllowanceAmountType"/>
+        <moqui.basic.Enumeration description="Exemption" enumId="PaatExemption" enumTypeId="PayrollAllowanceAmountType"/>
+    </seed-data>
+    <field name="lastUpdatedStamp" type="date-time"/>
+
+</entity>

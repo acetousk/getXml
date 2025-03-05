@@ -1,0 +1,25 @@
+
+<!-- Entity Name: mantle.party.communication.CommunicationEventPurpose sql table: COMMUNICATION_EVENT_PURPOSE --><entity entity-name="CommunicationEventPurpose" package="mantle.party.communication">
+    <field name="communicationEventId" type="id" is-pk="true"/>
+    <field name="purposeEnumId" type="id" is-pk="true"/>
+    <field name="description" type="text-medium"/>
+    <relationship type="one" related="mantle.party.communication.CommunicationEvent" short-alias="communicationEvent"/>
+    <relationship type="one" title="CommunicationPurpose" related="moqui.basic.Enumeration" short-alias="purpose">
+        <key-map field-name="purposeEnumId"/></relationship>
+    <seed-data>
+        <moqui.basic.EnumerationType description="Communication Purpose" enumTypeId="CommunicationPurpose"/>
+        <moqui.basic.Enumeration enumId="CpActivityRequest" description="Activity Request" enumTypeId="CommunicationPurpose"/>
+        <moqui.basic.Enumeration enumId="CpBilling" description="Billing" enumTypeId="CommunicationPurpose"/>
+        <moqui.basic.Enumeration enumId="CpComment" description="Comment" enumTypeId="CommunicationPurpose"/>
+        <moqui.basic.Enumeration enumId="CpConference" description="Conference" enumTypeId="CommunicationPurpose"/>
+        <moqui.basic.Enumeration enumId="CpCustomerService" description="Customer Service" enumTypeId="CommunicationPurpose"/>
+        <moqui.basic.Enumeration enumId="CpCustomerSupport" description="Customer Support" enumTypeId="CommunicationPurpose"/>
+        <moqui.basic.Enumeration enumId="CpMeeting" description="Meeting" enumTypeId="CommunicationPurpose"/>
+        <moqui.basic.Enumeration enumId="CpSalesInquiry" description="Sales Inquiry" enumTypeId="CommunicationPurpose"/>
+        <moqui.basic.Enumeration enumId="CpSalesFollowUp" description="Sales Follow-Up" enumTypeId="CommunicationPurpose"/>
+        <moqui.basic.Enumeration enumId="CpSeminar" description="Seminar" enumTypeId="CommunicationPurpose"/>
+        <moqui.basic.Enumeration enumId="CpShipments" description="Shipments" enumTypeId="CommunicationPurpose"/>
+    </seed-data>
+    <field name="lastUpdatedStamp" type="date-time"/>
+
+</entity>

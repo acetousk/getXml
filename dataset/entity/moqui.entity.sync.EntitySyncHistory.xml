@@ -1,0 +1,18 @@
+
+<!-- Entity Name: moqui.entity.sync.EntitySyncHistory sql table: ENTITY_SYNC_HISTORY --><entity entity-name="EntitySyncHistory" package="moqui.entity.sync" use="nontransactional" cache="never">
+    <field name="entitySyncId" type="id" is-pk="true"/>
+    <field name="startDate" type="date-time" is-pk="true"/>
+    <field name="finishDate" type="date-time"/>
+    <field name="statusId" type="id"/>
+    <field name="exclusiveFromTime" type="date-time"/>
+    <field name="inclusiveThruTime" type="date-time"/>
+    <field name="recordsStored" type="number-integer"/>
+    <field name="toRemoveDeleted" type="number-integer"/>
+    <field name="toRemoveAlreadyDeleted" type="number-integer"/>
+    <field name="runningTimeMillis" type="number-integer"/>
+    <field name="errorMessage" type="text-long"/>
+    <relationship type="one" related="moqui.entity.sync.EntitySync"/>
+    <relationship type="one" title="EntitySync" related="moqui.basic.StatusItem"/>
+    <field name="lastUpdatedStamp" type="date-time"/>
+
+</entity>

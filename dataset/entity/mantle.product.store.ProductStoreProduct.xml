@@ -1,0 +1,12 @@
+
+<!-- Entity Name: mantle.product.store.ProductStoreProduct sql table: PRODUCT_STORE_PRODUCT --><entity entity-name="ProductStoreProduct" package="mantle.product.store" use="configuration" cache="true">
+    <field name="productStoreId" type="id" is-pk="true"/>
+    <field name="productId" type="id" is-pk="true"/>
+    <field name="signatureRequiredEnumId" type="id"/>
+    <relationship type="one" related="mantle.product.store.ProductStore" short-alias="store"/>
+    <relationship type="one" related="mantle.product.Product" short-alias="product"/>
+    <relationship type="one" title="SignatureRequired" related="moqui.basic.Enumeration" short-alias="signatureRequiredEnum">
+        <key-map field-name="signatureRequiredEnumId"/></relationship>
+    <field name="lastUpdatedStamp" type="date-time"/>
+
+</entity>

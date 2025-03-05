@@ -1,0 +1,27 @@
+
+<!-- Entity Name: mantle.product.ProductReview sql table: PRODUCT_REVIEW --><entity entity-name="ProductReview" package="mantle.product" cache="never">
+    <field name="productReviewId" type="id" is-pk="true"/>
+    <field name="productStoreId" type="id"/>
+    <field name="productId" type="id"/>
+    <field name="userId" type="id"/>
+    <field name="statusId" type="id" enable-audit-log="true"/>
+    <field name="postedAnonymous" type="text-indicator"/>
+    <field name="postedDateTime" type="date-time"/>
+    <field name="productRating" type="number-decimal"/>
+    <field name="productReview" type="text-very-long"/>
+    <relationship type="one" related="mantle.product.store.ProductStore"/>
+    <relationship type="one" related="mantle.product.Product"/>
+    <relationship type="one" related="moqui.security.UserAccount"/>
+    <relationship type="one" title="ProductReview" related="moqui.basic.StatusItem"/>
+    <seed-data>
+        <moqui.basic.StatusType description="Product Review" statusTypeId="ProductReview"/>
+        <moqui.basic.StatusItem description="Pending" sequenceNum="1" statusId="PrvwPending" statusTypeId="ProductReview"/>
+        <moqui.basic.StatusItem description="Approved" sequenceNum="2" statusId="PrvwApproved" statusTypeId="ProductReview"/>
+        <moqui.basic.StatusItem description="Deleted" sequenceNum="99" statusId="PrvwDeleted" statusTypeId="ProductReview"/>
+        <moqui.basic.StatusFlowTransition statusFlowId="Default" statusId="PrvwPending" toStatusId="PrvwApproved" transitionName="Review Approved"/>
+        <moqui.basic.StatusFlowTransition statusFlowId="Default" statusId="PrvwPending" toStatusId="PrvwDeleted" transitionName="Review Deleted"/>
+        <moqui.basic.StatusFlowTransition statusFlowId="Default" statusId="PrvwApproved" toStatusId="PrvwDeleted" transitionName="Review Deleted"/>
+    </seed-data>
+    <field name="lastUpdatedStamp" type="date-time"/>
+
+</entity>

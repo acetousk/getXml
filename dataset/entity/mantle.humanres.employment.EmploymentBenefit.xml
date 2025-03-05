@@ -1,0 +1,15 @@
+
+<!-- Entity Name: mantle.humanres.employment.EmploymentBenefit sql table: EMPLOYMENT_BENEFIT --><entity entity-name="EmploymentBenefit" package="mantle.humanres.employment" use="nontransactional">
+    <field name="partyRelationshipId" type="id" is-pk="true"/>
+    <field name="benefitTypeId" type="id" is-pk="true"/>
+    <field name="fromDate" type="date-time" is-pk="true"/>
+    <field name="thruDate" type="date-time"/>
+    <field name="cost" type="currency-amount"/>
+    <field name="actualEmployerPaidPercent" type="number-float"/>
+    <field name="availableTime" type="number-integer"/>
+    <relationship type="one" related="mantle.humanres.employment.Employment"/>
+    <relationship type="one" related="mantle.humanres.employment.BenefitType">
+        <key-map field-name="benefitTypeId"/></relationship>
+    <field name="lastUpdatedStamp" type="date-time"/>
+
+</entity>

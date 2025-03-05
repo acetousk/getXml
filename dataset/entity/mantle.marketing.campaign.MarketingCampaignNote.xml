@@ -1,0 +1,9 @@
+
+<!-- Entity Name: mantle.marketing.campaign.MarketingCampaignNote sql table: MARKETING_CAMPAIGN_NOTE --><entity entity-name="MarketingCampaignNote" package="mantle.marketing.campaign">
+    <field name="marketingCampaignId" type="id" is-pk="true"/>
+    <field name="noteDate" type="date-time" is-pk="true"/>
+    <field name="noteText" type="text-very-long"/>
+    <relationship type="one" related="mantle.marketing.campaign.MarketingCampaign"/>
+    <field name="lastUpdatedStamp" type="date-time"/>
+
+</entity>

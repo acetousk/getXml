@@ -1,0 +1,9 @@
+
+<!-- Entity Name: moqui.screen.form.FormListFindUserGroup sql table: FORM_LIST_FIND_USER_GROUP --><entity entity-name="FormListFindUserGroup" package="moqui.screen.form" use="configuration">
+    <field name="formListFindId" type="id" is-pk="true"/>
+    <field name="userGroupId" type="id" is-pk="true"/>
+    <relationship type="one" related="moqui.screen.form.FormListFind" short-alias="formListFind"/>
+    <relationship type="one" related="moqui.security.UserGroup" short-alias="userGroup"/>
+    <field name="lastUpdatedStamp" type="date-time"/>
+
+</entity>

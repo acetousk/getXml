@@ -1,0 +1,7 @@
+<!--Service Location org.moqui.impl.WikiServices.upload#WikiPageAttachment--><service verb="upload" noun="WikiPageAttachment"><in-parameters><parameter name="wikiSpaceId"><description><![CDATA[Optional if pagePath is a wikiPageId or the first segment is a wikiSpaceId]]></description></parameter><parameter name="pagePath"><description><![CDATA[Not required, is empty for the space root page. Can be a wikiPageId or the page path within the space.]]></description></parameter><parameter name="attachmentFile" type="org.apache.commons.fileupload.FileItem"/></in-parameters><out-parameters><parameter name="attachmentReference" type="org.moqui.resource.ResourceReference"/></out-parameters><actions><if condition="attachmentFile == null"><return message="No attachment uploaded"/></if><set field="filename" from="attachmentFile.getName()"/><service-call name="org.moqui.impl.WikiServices.get#WikiPageAttachment" in-map="context" out-map="[attachmentReference:context.attachmentReference]"/><script><![CDATA[org.moqui.context.ExecutionContext ec = context.ec
+                org.apache.commons.fileupload.FileItem attachmentFile = context.attachmentFile
+                ec.logger.info("Uploading file ${filename} for page path ${pagePath} in space ${wikiSpaceId}")
+
+                InputStream fileStream = attachmentFile.getInputStream()
+                attachmentReference.putStream(fileStream)
+                fileStream.close()]]></script></actions></service>

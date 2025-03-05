@@ -1,0 +1,18 @@
+
+<!-- Entity Name: moqui.screen.form.FormResponse sql table: FORM_RESPONSE --><entity entity-name="FormResponse" package="moqui.screen.form" use="nontransactional" cache="never" has-dependents="true">
+    <field name="formResponseId" type="id" is-pk="true"/>
+    <field name="formLocation" type="text-medium"/>
+    <field name="formId" type="id"/>
+    <field name="userId" type="id"/>
+    <field name="responseDate" type="date-time"/>
+    <relationship type="one" related="moqui.screen.form.DbForm" short-alias="dbForm"/>
+    <relationship type="one" related="moqui.security.UserAccount" short-alias="userAccount"/>
+    <field name="lastUpdatedStamp" type="date-time"/>
+    <relationship related="mantle.order.OrderItemFormResponse" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="formResponseId" related="formResponseId"/></relationship>
+    <relationship related="mantle.other.tax.TaxStatement" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="formResponseId" related="formResponseId"/></relationship>
+    <relationship related="moqui.screen.form.FormResponseAnswer" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="formResponseId" related="formResponseId"/></relationship>
+
+</entity>

@@ -1,0 +1,11 @@
+
+<!-- Entity Name: mantle.party.PartyGeoPoint sql table: PARTY_GEO_POINT --><entity entity-name="PartyGeoPoint" package="mantle.party">
+    <field name="partyId" type="id" is-pk="true"/>
+    <field name="geoPointId" type="id" is-pk="true"/>
+    <field name="fromDate" type="date-time" is-pk="true"/>
+    <field name="thruDate" type="date-time"/>
+    <relationship type="one" related="mantle.party.Party"/>
+    <relationship type="one" related="moqui.basic.GeoPoint"/>
+    <field name="lastUpdatedStamp" type="date-time"/>
+
+</entity>

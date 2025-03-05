@@ -1,0 +1,17 @@
+
+<!-- Entity Name: moqui.security.UserGroupPreference sql table: USER_GROUP_PREFERENCE --><entity entity-name="UserGroupPreference" package="moqui.security" use="configuration">
+    <description><![CDATA[Use this entity for user group preferences (or properties). For all users use userGroupId="ALL_USERS".]]></description>
+    <field name="userGroupId" type="id" is-pk="true"/>
+    <field name="preferenceKey" type="text-medium" is-pk="true"/>
+    <field name="preferenceValue" type="text-long"/>
+    <field name="groupPriority" type="number-integer">
+        <description><![CDATA[For deciding which value to use when a user is a member of multiple groups with preferences with the same key.]]></description></field>
+    <relationship type="one-nofk" related="moqui.security.UserGroup" short-alias="group">
+        <description><![CDATA[No FK in order to allow externally authenticated users.]]></description></relationship>
+    <relationship type="one-nofk" title="UserPreferenceKey" related="moqui.basic.Enumeration" short-alias="keyEnum">
+        <description><![CDATA[No FK because any key can be used whether or not there is an Enumeration record for it.]]></description>
+        <key-map field-name="preferenceKey"/>
+    </relationship>
+    <field name="lastUpdatedStamp" type="date-time"/>
+
+</entity>

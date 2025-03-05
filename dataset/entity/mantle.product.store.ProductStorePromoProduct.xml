@@ -1,0 +1,10 @@
+
+<!-- Entity Name: mantle.product.store.ProductStorePromoProduct sql table: PRODUCT_STORE_PROMO_PRODUCT --><entity entity-name="ProductStorePromoProduct" package="mantle.product.store" use="configuration" cache="true">
+    <field name="storePromotionId" type="id" is-pk="true"/>
+    <field name="productId" type="id" is-pk="true"/>
+    <field name="excludeProduct" type="text-indicator"/>
+    <relationship type="one" related="mantle.product.store.ProductStorePromotion" short-alias="storePromotion"/>
+    <relationship type="one" related="mantle.product.Product" short-alias="product"/>
+    <field name="lastUpdatedStamp" type="date-time"/>
+
+</entity>

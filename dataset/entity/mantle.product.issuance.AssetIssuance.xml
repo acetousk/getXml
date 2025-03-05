@@ -1,0 +1,67 @@
+
+<!-- Entity Name: mantle.product.issuance.AssetIssuance sql table: ASSET_ISSUANCE --><entity entity-name="AssetIssuance" package="mantle.product.issuance" cache="never" has-dependents="true">
+    <field name="assetIssuanceId" type="id" is-pk="true"/>
+    <field name="assetId" type="id"/>
+    <field name="assetReservationId" type="id"/>
+    <field name="orderId" type="id"/>
+    <field name="orderItemSeqId" type="id"/>
+    <field name="shipmentId" type="id"/>
+    <field name="shipmentItemSourceId" type="id"/>
+    <field name="productId" type="id"/>
+    <field name="invoiceId" type="id"/>
+    <field name="invoiceItemSeqId" type="id"/>
+    <field name="returnId" type="id"/>
+    <field name="returnItemSeqId" type="id"/>
+    <field name="workEffortId" type="id"/>
+    <field name="facilityId" type="id"/>
+    <field name="assetMaintenanceId" type="id"/>
+    <field name="issuedByUserId" type="id"/>
+    <field name="issuedDate" type="date-time"/>
+    <field name="quantity" type="number-decimal" enable-audit-log="update"/>
+    <field name="quantityCancelled" type="number-decimal"/>
+    <field name="acctgTransResultEnumId" type="id"/>
+    <relationship type="one" related="mantle.product.asset.Asset" short-alias="asset"/>
+    <relationship type="one-nofk" related="mantle.product.issuance.AssetReservation" short-alias="assetReservation"/>
+    <relationship type="one" related="mantle.order.OrderItem" short-alias="orderItem"/>
+    <relationship type="one" related="mantle.shipment.Shipment" short-alias="shipment"/>
+    <relationship type="one-nofk" related="mantle.shipment.ShipmentItem" short-alias="shipmentItem"/>
+    <relationship type="one" related="mantle.shipment.ShipmentItemSource" short-alias="shipmentItemSource"/>
+    <relationship type="one-nofk" related="mantle.account.invoice.Invoice" short-alias="invoice"/>
+    <relationship type="one" related="mantle.account.invoice.InvoiceItem" short-alias="invoiceItem"/>
+    <relationship type="one" related="mantle.order.return.ReturnItem" short-alias="returnItem">
+        <key-map field-name="returnId"/>
+        <key-map field-name="returnItemSeqId"/>
+    </relationship>
+    <relationship type="one" related="mantle.product.Product" short-alias="product"/>
+    <relationship type="one" related="mantle.work.effort.WorkEffort" short-alias="workEffort"/>
+    <relationship type="one" related="mantle.facility.Facility" short-alias="facility"/>
+    <relationship type="one" related="mantle.product.maintenance.AssetMaintenance" short-alias="assetMaintenance"/>
+    <relationship type="many" related="mantle.work.effort.WorkEffortProduct" short-alias="workEffortProducts">
+        <key-map field-name="workEffortId"/>
+        <key-map field-name="productId"/>
+    </relationship>
+    <relationship type="one" title="IssuedBy" related="moqui.security.UserAccount" short-alias="issuedByUserAccount">
+        <key-map field-name="issuedByUserId"/></relationship>
+    <relationship type="one" title="AcctgTransResult" related="moqui.basic.Enumeration" short-alias="acctgTransResult">
+        <key-map field-name="acctgTransResultEnumId"/></relationship>
+    <index name="ASSET_ISS_SHPPRD">
+        <index-field name="shipmentId"/>
+        <index-field name="productId"/>
+    </index>
+    <field name="lastUpdatedStamp" type="date-time"/>
+    <relationship related="mantle.ledger.transaction.AcctgTrans" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="assetIssuanceId" related="assetIssuanceId"/></relationship>
+    <relationship related="mantle.order.OrderItemBilling" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="assetIssuanceId" related="assetIssuanceId"/></relationship>
+    <relationship related="mantle.product.asset.AssetDetail" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="assetIssuanceId" related="assetIssuanceId"/></relationship>
+    <relationship related="mantle.product.issuance.AssetIssuanceParty" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="assetIssuanceId" related="assetIssuanceId"/></relationship>
+
+<!-- seca <seca id="AssetIssuanceGlPost" service="create#mantle.product.issuance.AssetIssuance" when="post-service" run-on-error="false">
+    <actions>
+        <service-call name="mantle.ledger.AssetAutoPostServices.post#AssetIssuance" in-map="context"/></actions></seca>-->
+<!-- seca <seca id="AssetIssuanceGlRePost" service="update#mantle.product.issuance.AssetIssuance" when="post-service" run-on-error="false">
+    <actions>
+        <service-call name="mantle.ledger.AssetAutoPostServices.repost#AssetIssuance" in-map="context"/></actions></seca>-->
+</entity>

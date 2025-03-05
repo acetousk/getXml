@@ -1,0 +1,13 @@
+
+<!-- Entity Name: mantle.ledger.account.GlAccountParty sql table: GL_ACCOUNT_PARTY --><entity entity-name="GlAccountParty" package="mantle.ledger.account">
+    <field name="glAccountId" type="id" is-pk="true"/>
+    <field name="partyId" type="id" is-pk="true"/>
+    <field name="roleTypeId" type="id" is-pk="true"/>
+    <field name="fromDate" type="date-time" is-pk="true"/>
+    <field name="thruDate" type="date-time"/>
+    <relationship type="one" related="mantle.ledger.account.GlAccount"/>
+    <relationship type="one" related="mantle.party.Party"/>
+    <relationship type="one" related="mantle.party.RoleType"/>
+    <field name="lastUpdatedStamp" type="date-time"/>
+
+</entity>

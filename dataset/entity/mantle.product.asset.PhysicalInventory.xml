@@ -1,0 +1,27 @@
+
+<!-- Entity Name: mantle.product.asset.PhysicalInventory sql table: PHYSICAL_INVENTORY --><entity entity-name="PhysicalInventory" package="mantle.product.asset" cache="never" has-dependents="true">
+    <field name="physicalInventoryId" type="id" is-pk="true"/>
+    <field name="physicalInventoryDate" type="date-time"/>
+    <field name="statusId" type="id" default="PIInPlanning" enable-audit-log="true"/>
+    <field name="facilityId" type="id"/>
+    <field name="partyId" type="id"/>
+    <field name="comments" type="text-long"/>
+    <relationship type="one" related="mantle.party.Party" short-alias="party"/>
+    <relationship type="one" title="PhysicalInventory" related="moqui.basic.StatusItem" short-alias="status" fk-name="physicalInventoryStatusId"/>
+    <relationship type="one" related="mantle.facility.Facility" short-alias="facility"/>
+    <seed-data>
+        <moqui.basic.StatusType description="Physical Inventory Status" statusTypeId="PhysicalInventory"/>
+        <moqui.basic.StatusItem description="In Planning" sequenceNum="1" statusId="PIInPlanning" statusTypeId="PhysicalInventory"/>
+        <moqui.basic.StatusItem description="In Progress" sequenceNum="2" statusId="PIInProgress" statusTypeId="PhysicalInventory"/>
+        <moqui.basic.StatusItem description="In Validation" sequenceNum="3" statusId="PIInValidation" statusTypeId="PhysicalInventory"/>
+        <moqui.basic.StatusItem description="Complete" sequenceNum="4" statusId="PIComplete" statusTypeId="PhysicalInventory"/>
+    </seed-data>
+    <field name="lastUpdatedStamp" type="date-time"/>
+    <relationship related="mantle.ledger.transaction.AcctgTrans" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="physicalInventoryId" related="physicalInventoryId"/></relationship>
+    <relationship related="mantle.product.asset.AssetDetail" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="physicalInventoryId" related="physicalInventoryId"/></relationship>
+    <relationship related="mantle.product.asset.PhysicalInventoryCount" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="physicalInventoryId" related="physicalInventoryId"/></relationship>
+
+</entity>

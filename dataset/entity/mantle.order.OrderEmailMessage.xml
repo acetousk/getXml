@@ -1,0 +1,15 @@
+
+<!-- Entity Name: mantle.order.OrderEmailMessage sql table: ORDER_EMAIL_MESSAGE --><entity entity-name="OrderEmailMessage" package="mantle.order" cache="never">
+    <field name="orderId" type="id" is-pk="true"/>
+    <field name="emailMessageId" type="id" is-pk="true"/>
+    <field name="orderRevision" type="number-integer"/>
+    <field name="partyId" type="id">
+        <description><![CDATA[The Party the email was sent to, for different emails sent to different parties associated with an order]]></description></field>
+    <field name="roleTypeId" type="id"/>
+    <relationship type="one" related="mantle.order.OrderHeader" short-alias="orderHeader"/>
+    <relationship type="one" related="moqui.basic.email.EmailMessage" short-alias="emailMessage"/>
+    <relationship type="one" related="mantle.party.Party" short-alias="party"/>
+    <relationship type="one" related="mantle.party.RoleType" short-alias="roleType"/>
+    <field name="lastUpdatedStamp" type="date-time"/>
+
+</entity>

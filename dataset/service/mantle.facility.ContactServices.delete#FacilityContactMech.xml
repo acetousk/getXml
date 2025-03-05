@@ -1,0 +1,4 @@
+<!--Service Location mantle.facility.ContactServices.delete#FacilityContactMech--><service verb="delete" noun="FacilityContactMech"><in-parameters><parameter name="facilityId" required="true" entity-name="mantle.facility.FacilityContactMech" field-name="facilityId"/><parameter name="contactMechId" required="true" entity-name="mantle.facility.FacilityContactMech" field-name="contactMechId"/><parameter name="contactMechPurposeId" entity-name="mantle.facility.FacilityContactMech" field-name="contactMechPurposeId"/></in-parameters><out-parameters/><actions><script><![CDATA[def ef = ec.entity.find("mantle.facility.FacilityContactMech")
+                ef.condition([facilityId:facilityId, contactMechId:contactMechId])
+                if (contactMechPurposeId) ef.condition("contactMechPurposeId", contactMechPurposeId)
+                ef.updateAll([thruDate:ec.user.getNowTimestamp()])]]></script></actions></service>

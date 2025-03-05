@@ -1,0 +1,31 @@
+<!--Transition Screen Location component://tools/screen/Tools/Entity/DataImport.xml Transition Name storeSelected--><transition name="storeSelected"><actions><!--always-actions at component://webroot/screen/webroot.xml--><set field="html_scripts" from="new LinkedHashSet()"/><set field="footer_scripts" from="new LinkedHashSet()"/><set field="html_stylesheets" from="new LinkedHashSet()"/><!--transition actions--><script><![CDATA[import org.moqui.context.ExecutionContext
+                ExecutionContext ec = context.ec
+
+                int fieldsUpdated = 0
+                List rowOpList = rowOps?.split(',')
+                for (String rowOp in rowOpList) {
+                    byte[] rowOpBytes = Base64.getUrlDecoder().decode((String) rowOp)
+                    String rowOpJson = new String(rowOpBytes, 'UTF-8')
+                    Map rowOpMap = org.moqui.impl.context.ContextJavaUtil.jacksonMapper.readValue((String) rowOpJson, Map.class)
+                    if (!rowOpMap.pk) { ec.message.addMessage("No PK in row: ${rowOpJson}"); continue }
+
+                    def ed = ec.entityFacade.getEntityDefinition(rowOpMap.entity)
+                    if (ed == null) { ec.message.addMessage("Entity ${rowOpMap.entity} not found for row: ${rowOpJson}"); continue }
+
+                    if (rowOpMap.field) {
+                        Map valueMap = rowOpMap.pk + [(rowOpMap.field):rowOpMap.value]
+                        org.moqui.impl.service.runner.EntityAutoServiceRunner.storeEntity(ec, ed, valueMap, null, null)
+                        fieldsUpdated++
+                    } else if (rowOpMap.createValues) {
+                        Map valueMap = rowOpMap.createValues + rowOpMap.pk
+                        Map results = new HashMap()
+                        org.moqui.impl.service.runner.EntityAutoServiceRunner.createEntity(ec, ed, valueMap, results, null)
+                        if (results.size() > 0) ec.message.addMessage("Create entity ${rowOpMap.entity} PK ${rowOpMap.pk} was not complete, filled in values: ${results}", "warning")
+                        fieldsUpdated += (valueMap.size() - rowOpMap.pk.size())
+                    } else {
+                        // TODO: support create (at least for fields with complete PK)
+                        ec.message.addMessage("Row has no field or create values, not updating: ${rowOpJson}")
+                    }
+                }
+
+                ec.message.addMessage("Updated ${fieldsUpdated} fields")]]></script></actions></transition>

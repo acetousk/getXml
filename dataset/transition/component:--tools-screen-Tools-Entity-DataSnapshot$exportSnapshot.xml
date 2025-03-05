@@ -1,0 +1,9 @@
+<!--Transition Screen Location component://tools/screen/Tools/Entity/DataSnapshot.xml Transition Name exportSnapshot--><transition name="exportSnapshot"><actions><!--always-actions at component://webroot/screen/webroot.xml--><set field="html_scripts" from="new LinkedHashSet()"/><set field="footer_scripts" from="new LinkedHashSet()"/><set field="html_stylesheets" from="new LinkedHashSet()"/><!--transition actions--><script><![CDATA[if (!entitiesToInclude) entitiesToInclude = null
+                if (entitiesToInclude != null && !(entitiesToInclude instanceof List)) entitiesToInclude = [entitiesToInclude]
+                if (!entitiesToSkip) entitiesToSkip = null
+                if (entitiesToSkip != null && !(entitiesToSkip instanceof List)) entitiesToSkip = [entitiesToSkip]
+                if ("CSV".equals(fileType)) filePerEntity = true
+                jobRunId = ec.service.job("ExportEntityDataSnapshot")
+                    .parameters([fromDate:fromDate, thruDate:thruDate, baseFilename:baseFilename, fileType:fileType,
+                                 filePerEntity:filePerEntity, isoDateTime:isoDateTime, tableColumnNames:tableColumnNames,
+                                 entitiesToSkip:entitiesToSkip, entitiesToInclude:entitiesToInclude]).run()]]></script><message><![CDATA[Started Export Entity Data Snapshot ${baseFilename} (Job ID ${jobRunId})]]></message></actions></transition>

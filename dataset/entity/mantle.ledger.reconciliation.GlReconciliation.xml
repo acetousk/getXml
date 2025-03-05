@@ -1,0 +1,28 @@
+
+<!-- Entity Name: mantle.ledger.reconciliation.GlReconciliation sql table: GL_RECONCILIATION --><entity entity-name="GlReconciliation" package="mantle.ledger.reconciliation" cache="never" has-dependents="true">
+    <field name="glReconciliationId" type="id" is-pk="true"/>
+    <field name="glReconciliationName" type="text-medium"/>
+    <field name="description" type="text-medium"/>
+    <field name="glAccountId" type="id"/>
+    <field name="statusId" type="id" enable-audit-log="true"/>
+    <field name="organizationPartyId" type="id"/>
+    <field name="reconciledBalance" type="currency-amount"/>
+    <field name="openingBalance" type="currency-amount"/>
+    <field name="reconciledDate" type="date-time"/>
+    <relationship type="one" related="mantle.ledger.account.GlAccount"/>
+    <relationship type="one" title="Organization" related="mantle.party.Party">
+        <key-map field-name="organizationPartyId"/></relationship>
+    <relationship type="one" title="GlReconciliation" related="moqui.basic.StatusItem"/>
+    <seed-data>
+        <moqui.basic.StatusType statusTypeId="GlReconciliation" description="GL Reconciliation Status"/>
+        <moqui.basic.StatusItem statusId="GLREC_CREATED" statusTypeId="GlReconciliation" sequenceNum="1" description="Created"/>
+        <moqui.basic.StatusItem statusId="GLREC_RECONCILED" statusTypeId="GlReconciliation" sequenceNum="2" description="Reconciled"/>
+        <moqui.basic.StatusFlowTransition statusFlowId="Default" statusId="GLREC_CREATED" toStatusId="GLREC_RECONCILED" transitionName="Set Created to Reconciled"/>
+    </seed-data>
+    <field name="lastUpdatedStamp" type="date-time"/>
+    <relationship related="mantle.account.financial.FinancialAccountTrans" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="glReconciliationId" related="glReconciliationId"/></relationship>
+    <relationship related="mantle.ledger.reconciliation.GlReconciliationEntry" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="glReconciliationId" related="glReconciliationId"/></relationship>
+
+</entity>

@@ -1,0 +1,18 @@
+
+<!-- Entity Name: mantle.marketing.contact.ContactListCommStatus sql table: CONTACT_LIST_COMM_STATUS --><entity entity-name="ContactListCommStatus" package="mantle.marketing.contact">
+    <field name="contactListId" type="id" is-pk="true"/>
+    <field name="communicationEventId" type="id" is-pk="true"/>
+    <field name="contactMechId" type="id" is-pk="true"/>
+    <field name="partyId" type="id"/>
+    <field name="messageId" type="text-medium"/>
+    <field name="statusId" type="id"/>
+    <relationship type="one" related="mantle.marketing.contact.ContactList"/>
+    <relationship type="one" related="mantle.party.communication.CommunicationEvent"/>
+    <relationship type="one" related="mantle.party.contact.ContactMech"/>
+    <relationship type="one" related="mantle.party.Party"/>
+    <relationship type="one" related="moqui.basic.StatusItem"/>
+    <index name="CNTLSTCST_MSG_ID" unique="true">
+        <index-field name="messageId"/></index>
+    <field name="lastUpdatedStamp" type="date-time"/>
+
+</entity>

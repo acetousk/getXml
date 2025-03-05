@@ -1,0 +1,13 @@
+
+<!-- Entity Name: mantle.order.OrderNote sql table: ORDER_NOTE --><entity entity-name="OrderNote" package="mantle.order" cache="never">
+    <field name="orderId" type="id" is-pk="true"/>
+    <field name="noteDate" type="date-time" is-pk="true" default="ec.user.nowTimestamp"/>
+    <field name="noteText" type="text-long" enable-audit-log="update"/>
+    <field name="internalNote" type="text-indicator"/>
+    <field name="userId" type="id" default="ec.user.userId"/>
+    <relationship type="one" related="mantle.order.OrderHeader"/>
+    <relationship type="one" related="moqui.security.UserAccount"/>
+    <field name="lastUpdatedStamp" type="date-time"/>
+
+<!-- eeca org.moqui.impl.entity.EntityEcaRule@6e90906f-->
+</entity>

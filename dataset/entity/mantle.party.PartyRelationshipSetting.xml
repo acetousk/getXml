@@ -1,0 +1,14 @@
+
+<!-- Entity Name: mantle.party.PartyRelationshipSetting sql table: PARTY_RELATIONSHIP_SETTING --><entity entity-name="PartyRelationshipSetting" package="mantle.party">
+    <field name="partyRelationshipId" type="id" is-pk="true"/>
+    <field name="partySettingTypeId" type="id" is-pk="true"/>
+    <field name="settingValue" type="text-medium"/>
+    <relationship type="one" related="mantle.party.PartyRelationship" short-alias="partyRelationship"/>
+    <relationship type="one" related="mantle.party.PartySettingType" short-alias="settingType"/>
+    <relationship type="one-nofk" related="moqui.basic.Enumeration">
+        <description><![CDATA[This is one-nofk because settingValue may by an enumId or may be plain text depending on PartySettingType]]></description>
+        <key-map field-name="settingValue"/>
+    </relationship>
+    <field name="lastUpdatedStamp" type="date-time"/>
+
+</entity>

@@ -1,0 +1,127 @@
+
+<!-- Entity Name: mantle.order.OrderPart sql table: ORDER_PART --><entity entity-name="OrderPart" package="mantle.order" short-alias="orderParts" cache="never" has-dependents="true">
+    <field name="orderId" type="id" is-pk="true"/>
+    <field name="orderPartSeqId" type="id" is-pk="true"/>
+    <field name="parentPartSeqId" type="id"/>
+    <field name="partName" type="text-medium"/>
+    <field name="statusId" type="id" enable-audit-log="true"/>
+    <field name="vendorPartyId" type="id" enable-audit-log="update">
+        <description><![CDATA[The vendor (seller) of the items in the order part.]]></description></field>
+    <field name="customerPartyId" type="id" enable-audit-log="update">
+        <description><![CDATA[The customer (buyer) of the items in the order part.]]></description></field>
+    <field name="otherPartyOrderId" type="text-short"/>
+    <field name="otherPartyOrderDate" type="date-time"/>
+    <field name="facilityId" type="id" enable-audit-log="update">
+        <description><![CDATA[The Facility to fulfill the order from
+            (if null look up from ProductStore), or for purchase orders the Facility the order will be shipped to.]]></description></field>
+    <field name="carrierPartyId" type="id" enable-audit-log="update"/>
+    <field name="shipmentMethodEnumId" type="id" enable-audit-log="update"/>
+    <field name="tradeTermEnumId" type="id"/>
+    <field name="settlementTermId" type="id">
+        <description><![CDATA[Settlement (payment) term for auto order payments and set on Invoice(s) based on this OrderPart]]></description></field>
+    <field name="postalContactMechId" type="id" enable-audit-log="update"/>
+    <field name="telecomContactMechId" type="id"/>
+    <field name="trackingNumber" type="text-short"/>
+    <field name="shippingInstructions" type="text-long"/>
+    <field name="maySplit" type="text-indicator"/>
+    <field name="signatureRequiredEnumId" type="id"/>
+    <field name="giftMessage" type="text-medium"/>
+    <field name="isGift" type="text-indicator"/>
+    <field name="isNewCustomer" type="text-indicator"/>
+    <field name="partTotal" type="currency-amount"/>
+    <field name="priority" type="number-integer" default="5" enable-audit-log="update">
+        <description><![CDATA[Numeric priority, 1 to 9 where 1 is highest priority and 9 is lowest priority (like a to do list), defaults to 5]]></description></field>
+    <field name="shipAfterDate" type="date-time"/>
+    <field name="shipBeforeDate" type="date-time"/>
+    <field name="estimatedShipDate" type="date-time"/>
+    <field name="estimatedDeliveryDate" type="date-time"/>
+    <field name="estimatedPickUpDate" type="date-time"/>
+    <field name="validFromDate" type="date-time"/>
+    <field name="validThruDate" type="date-time"/>
+    <field name="autoCancelDate" type="date-time"/>
+    <field name="dontCancelSetDate" type="date-time"/>
+    <field name="dontCancelSetUserId" type="id"/>
+    <field name="disablePromotions" type="text-indicator"/>
+    <field name="disableShippingCalc" type="text-indicator"/>
+    <field name="disableTaxCalc" type="text-indicator"/>
+    <field name="reservationAutoEnumId" type="id"/>
+    <relationship type="one" related="mantle.order.OrderHeader" short-alias="orderHeader"/>
+    <relationship type="one" title="Parent" related="mantle.order.OrderPart" short-alias="parentPart">
+        <key-map field-name="orderId"/>
+        <key-map field-name="parentPartSeqId" related="orderPartSeqId"/>
+    </relationship>
+    <relationship type="one" title="OrderHeader" related="moqui.basic.StatusItem" short-alias="status"/>
+    <relationship type="one" title="Vendor" related="mantle.party.Party" short-alias="vendor">
+        <key-map field-name="vendorPartyId"/></relationship>
+    <relationship type="many" title="Vendor" related="mantle.party.PartyRole" short-alias="vendorRoles">
+        <key-map field-name="vendorPartyId" related="partyId"/></relationship>
+    <relationship type="one" title="Customer" related="mantle.party.Party" short-alias="customer">
+        <key-map field-name="customerPartyId"/></relationship>
+    <relationship type="many" title="Customer" related="mantle.party.PartyRole" short-alias="customerRoles">
+        <key-map field-name="customerPartyId" related="partyId"/></relationship>
+    <relationship type="many" title="Customer" related="mantle.party.PartyClassificationAppl" short-alias="customerClasses">
+        <key-map field-name="customerPartyId" related="partyId"/></relationship>
+    <relationship type="one" related="mantle.facility.Facility" short-alias="facility"/>
+    <relationship type="one" title="Carrier" related="mantle.party.Party" short-alias="carrier">
+        <key-map field-name="carrierPartyId"/></relationship>
+    <relationship type="one" title="ShipmentMethod" related="moqui.basic.Enumeration" short-alias="shipmentMethod">
+        <key-map field-name="shipmentMethodEnumId"/></relationship>
+    <relationship type="one" title="TermType" related="moqui.basic.Enumeration" short-alias="tradeTermEnum">
+        <key-map field-name="tradeTermEnumId"/></relationship>
+    <relationship type="one" related="mantle.account.invoice.SettlementTerm" short-alias="settlementTerm"/>
+    <relationship type="one" title="Postal" related="mantle.party.contact.ContactMech" short-alias="postal">
+        <key-map field-name="postalContactMechId"/></relationship>
+    <relationship type="one" related="mantle.party.contact.PostalAddress" short-alias="postalAddress">
+        <key-map field-name="postalContactMechId"/></relationship>
+    <relationship type="one" title="Telecom" related="mantle.party.contact.ContactMech" short-alias="telecom">
+        <key-map field-name="telecomContactMechId"/></relationship>
+    <relationship type="one" related="mantle.party.contact.TelecomNumber" short-alias="telecomNumber">
+        <key-map field-name="telecomContactMechId"/></relationship>
+    <relationship type="one" title="SignatureRequired" related="moqui.basic.Enumeration" short-alias="signatureRequiredEnum">
+        <key-map field-name="signatureRequiredEnumId"/></relationship>
+    <relationship type="one" title="AssetReservationAuto" related="moqui.basic.Enumeration" short-alias="reservationAutoEnum">
+        <key-map field-name="reservationAutoEnumId"/></relationship>
+    <relationship type="many" related="mantle.order.OrderItem" short-alias="items">
+        <key-map field-name="orderId"/>
+        <key-map field-name="orderPartSeqId"/>
+    </relationship>
+    <relationship type="many" related="mantle.order.OrderPartParty" short-alias="parties">
+        <key-map field-name="orderId"/>
+        <key-map field-name="orderPartSeqId"/>
+    </relationship>
+    <relationship type="many" related="mantle.order.OrderPartContactMech" short-alias="contactMechs">
+        <key-map field-name="orderId"/>
+        <key-map field-name="orderPartSeqId"/>
+    </relationship>
+    <relationship type="many" related="mantle.order.OrderPartTerm" short-alias="terms">
+        <key-map field-name="orderId"/>
+        <key-map field-name="orderPartSeqId"/>
+    </relationship>
+    <relationship type="many" related="mantle.account.payment.Payment" short-alias="payments">
+        <key-map field-name="orderId"/>
+        <key-map field-name="orderPartSeqId"/>
+    </relationship>
+    <index name="ORDPTOPTY_ID_IDX">
+        <index-field name="otherPartyOrderId"/></index>
+    <field name="checkoutId" type="id-long" enable-audit-log="update"/>
+    <field name="checkoutUrl" type="text-intermediate" enable-audit-log="update"/>
+    <field name="lastUpdatedStamp" type="date-time"/>
+    <relationship related="moqui.service.message.SystemMessage" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="orderId" related="orderId"/>
+        <key-map field-name="orderPartSeqId" related="orderPartSeqId"/>
+    </relationship>
+
+<!-- seca <seca id="OrderApprovedNotify" service="update#mantle.order.OrderPart" when="tx-commit">
+    <condition>
+        <expression><![CDATA[statusChanged && statusId == 'OrderApproved']]></expression></condition>
+    <actions>
+        <service-call name="mantle.order.OrderInfoServices.notify#OrderHighPriority" in-map="[orderId:orderId, orderPartSeqId:orderPartSeqId]"/></actions>
+</seca>-->
+<!-- seca <seca id="OrderPartCancelExpireStripeCheckoutSession" service="update#mantle.order.OrderPart" when="post-service">
+    <condition>
+        <expression><![CDATA[statusChanged && statusId == 'OrderCancelled']]></expression></condition>
+    <actions>
+        <service-call name="stripe.StripeServices.cancel#CheckoutFromSalesOrderPart" in-map="context"/></actions>
+</seca>-->
+<!-- eeca org.moqui.impl.entity.EntityEcaRule@7ed0ef98-->
+</entity>

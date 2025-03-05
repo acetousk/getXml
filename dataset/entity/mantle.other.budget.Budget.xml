@@ -1,0 +1,39 @@
+
+<!-- Entity Name: mantle.other.budget.Budget sql table: BUDGET --><entity entity-name="Budget" package="mantle.other.budget" has-dependents="true">
+    <field name="budgetId" type="id" is-pk="true"/>
+    <field name="budgetTypeEnumId" type="id"/>
+    <field name="timePeriodId" type="id"/>
+    <field name="subTimePeriodTypeId" type="id"/>
+    <field name="statusId" type="id" enable-audit-log="true"/>
+    <field name="currencyUomId" type="id"/>
+    <field name="description" type="text-medium"/>
+    <field name="comments" type="text-long"/>
+    <relationship type="one" title="BudgetType" related="moqui.basic.Enumeration" short-alias="type">
+        <key-map field-name="budgetTypeEnumId"/></relationship>
+    <relationship type="one" related="mantle.party.time.TimePeriod" short-alias="timePeriod"/>
+    <relationship type="one" title="Budget" related="moqui.basic.StatusItem" short-alias="status"/>
+    <relationship type="one" title="Currency" related="moqui.basic.Uom" short-alias="currencyUom">
+        <key-map field-name="currencyUomId"/></relationship>
+    <seed-data>
+        <moqui.basic.EnumerationType description="Budget Type" enumTypeId="BudgetType"/>
+        <moqui.basic.Enumeration description="Capital" enumId="BudgetCapital" enumTypeId="BudgetType"/>
+        <moqui.basic.Enumeration description="Operating" enumId="BudgetOperating" enumTypeId="BudgetType"/>
+        <moqui.basic.StatusType description="Budget" statusTypeId="Budget"/>
+    </seed-data>
+    <field name="lastUpdatedStamp" type="date-time"/>
+    <relationship related="mantle.other.budget.BudgetItem" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="budgetId" related="budgetId"/></relationship>
+    <relationship related="mantle.other.budget.BudgetItemDetail" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="budgetId" related="budgetId"/></relationship>
+    <relationship related="mantle.other.budget.BudgetParty" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="budgetId" related="budgetId"/></relationship>
+    <relationship related="mantle.other.budget.BudgetReview" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="budgetId" related="budgetId"/></relationship>
+    <relationship related="mantle.other.budget.BudgetRevision" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="budgetId" related="budgetId"/></relationship>
+    <relationship related="mantle.other.budget.BudgetRevisionImpact" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="budgetId" related="budgetId"/></relationship>
+    <relationship related="mantle.other.budget.BudgetScenarioApplication" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="budgetId" related="budgetId"/></relationship>
+
+</entity>

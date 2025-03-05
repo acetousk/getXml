@@ -1,0 +1,15 @@
+
+<!-- Entity Name: moqui.server.instance.InstanceHost sql table: INSTANCE_HOST --><entity entity-name="InstanceHost" package="moqui.server.instance" use="configuration" has-dependents="true">
+    <field name="instanceHostId" type="id" is-pk="true"/>
+    <field name="hostTypeId" type="id"/>
+    <field name="hostProtocol" type="text-short"/>
+    <field name="hostAddress" type="text-medium"/>
+    <field name="adminPort" type="number-integer"/>
+    <field name="username" type="text-short"/>
+    <field name="password" type="text-medium" encrypt="true"/>
+    <relationship type="one" related="moqui.server.instance.InstanceHostType" short-alias="hostType"/>
+    <field name="lastUpdatedStamp" type="date-time"/>
+    <relationship related="moqui.server.instance.AppInstance" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="instanceHostId" related="instanceHostId"/></relationship>
+
+</entity>

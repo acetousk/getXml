@@ -1,0 +1,1 @@
+<!-- Screen Location component://tools/screen/System/Resource.xml --><screen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://moqui.org/xsd/xml-screen-3.xsd" default-menu-title="Resource Finder" default-menu-index="10"><subscreens default-item="ElFinder"/><widgets><subscreens-active/></widgets></screen>

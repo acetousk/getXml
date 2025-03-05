@@ -1,0 +1,15 @@
+
+<!-- Entity Name: mantle.ledger.reconciliation.GlReconciliationEntry sql table: GL_RECONCILIATION_ENTRY --><entity entity-name="GlReconciliationEntry" package="mantle.ledger.reconciliation" cache="never">
+    <field name="glReconciliationId" type="id" is-pk="true"/>
+    <field name="acctgTransId" type="id" is-pk="true"/>
+    <field name="acctgTransEntrySeqId" type="id" is-pk="true"/>
+    <field name="reconciledAmount" type="currency-amount"/>
+    <relationship type="one" related="mantle.ledger.reconciliation.GlReconciliation"/>
+    <relationship type="one-nofk" related="mantle.ledger.transaction.AcctgTrans"/>
+    <relationship type="one" related="mantle.ledger.transaction.AcctgTransEntry">
+        <key-map field-name="acctgTransId"/>
+        <key-map field-name="acctgTransEntrySeqId"/>
+    </relationship>
+    <field name="lastUpdatedStamp" type="date-time"/>
+
+</entity>

@@ -1,0 +1,10 @@
+
+<!-- Entity Name: mantle.facility.FacilityGlAppl sql table: FACILITY_GL_APPL --><entity entity-name="FacilityGlAppl" package="mantle.facility" cache="never">
+    <description><![CDATA[Used to specify relevant GL Accounts for a Facility (expense, revenue, etc); not related to posting conf]]></description>
+    <field name="facilityId" type="id" is-pk="true"/>
+    <field name="glAccountId" type="id" is-pk="true"/>
+    <relationship type="one" related="mantle.facility.Facility" short-alias="facility"/>
+    <relationship type="one" related="mantle.ledger.account.GlAccount" short-alias="glAccount"/>
+    <field name="lastUpdatedStamp" type="date-time"/>
+
+</entity>

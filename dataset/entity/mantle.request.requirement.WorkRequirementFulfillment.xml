@@ -1,0 +1,20 @@
+
+<!-- Entity Name: mantle.request.requirement.WorkRequirementFulfillment sql table: WORK_REQUIREMENT_FULFILLMENT --><entity entity-name="WorkRequirementFulfillment" package="mantle.request.requirement" cache="never">
+    <field name="requirementId" type="id" is-pk="true"/>
+    <field name="workEffortId" type="id" is-pk="true"/>
+    <field name="fulfillmentTypeEnumId" type="id"/>
+    <relationship type="one" related="mantle.request.requirement.Requirement" short-alias="requirement"/>
+    <relationship type="one" related="mantle.work.effort.WorkEffort" short-alias="workEffort"/>
+    <relationship type="one" title="WorkRequirementFulfillmentType" related="moqui.basic.Enumeration" short-alias="type">
+        <key-map field-name="fulfillmentTypeEnumId"/></relationship>
+    <seed-data>
+        <moqui.basic.EnumerationType description="Work Requirement Fulfillment Type" enumTypeId="WorkRequirementFulfillmentType"/>
+        <moqui.basic.Enumeration description="Implements" enumId="WrfImplements" enumTypeId="WorkRequirementFulfillmentType"/>
+        <moqui.basic.Enumeration description="Fixes" enumId="WrfFixes" enumTypeId="WorkRequirementFulfillmentType"/>
+        <moqui.basic.Enumeration description="Deploys" enumId="WrfDeploys" enumTypeId="WorkRequirementFulfillmentType"/>
+        <moqui.basic.Enumeration description="Tests" enumId="WrfTests" enumTypeId="WorkRequirementFulfillmentType"/>
+        <moqui.basic.Enumeration description="Delivers" enumId="WrfDelivers" enumTypeId="WorkRequirementFulfillmentType"/>
+    </seed-data>
+    <field name="lastUpdatedStamp" type="date-time"/>
+
+</entity>

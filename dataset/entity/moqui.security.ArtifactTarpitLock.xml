@@ -1,0 +1,15 @@
+
+<!-- Entity Name: moqui.security.ArtifactTarpitLock sql table: ARTIFACT_TARPIT_LOCK --><entity entity-name="ArtifactTarpitLock" package="moqui.security" use="transactional" cache="never">
+    <description><![CDATA[Deny access to the artifact for the user until releaseDateTime is reached.]]></description>
+    <field name="artifactTarpitLockId" type="id" is-pk="true"/>
+    <field name="userId" type="id"/>
+    <field name="artifactName" type="text-medium"/>
+    <field name="artifactTypeEnumId" type="id"/>
+    <field name="releaseDateTime" type="date-time"/>
+    <relationship type="one-nofk" related="moqui.security.UserAccount">
+        <description><![CDATA[No FK in order to allow externally authenticated users.]]></description></relationship>
+    <relationship type="one" title="ArtifactType" related="moqui.basic.Enumeration">
+        <key-map field-name="artifactTypeEnumId"/></relationship>
+    <field name="lastUpdatedStamp" type="date-time"/>
+
+</entity>

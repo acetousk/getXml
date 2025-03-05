@@ -1,0 +1,20 @@
+<!--Transition Screen Location component://SimpleScreens/screen/SimpleScreens/SimpleReport/QuickViewReport.xml Transition Name DocumentExport.json--><transition name="DocumentExport.json"><parameter name="dataDocumentId"/><actions><!--always-actions at component://webroot/screen/webroot.xml--><set field="html_scripts" from="new LinkedHashSet()"/><set field="footer_scripts" from="new LinkedHashSet()"/><set field="html_stylesheets" from="new LinkedHashSet()"/><!--always-actions at component://PopCommerce/screen/PopCommerceAdmin.xml--><set field="appRoot" value="PopcAdmin"/><set field="searchIndexName" value="mantle"/><set field="searchLinkSets" value="PopcAdmin"/><set field="searchProductDocType" value="MantleProduct"/><set field="searchPartyDocType" value="MantleParty"/><set field="appUserGroupTypeEnumId" value="UgtPopcAdmin"/><service-call name="mantle.party.PartyServices.setup#UserOrganizationInfo" out-map="context"/><!--transition actions--><script><![CDATA[import org.moqui.context.ExecutionContext
+            import org.moqui.impl.entity.EntityDataDocument
+            import java.sql.Timestamp
+
+            ExecutionContext ec = context.ec
+            EntityDataDocument edd = ec.entity.getEntityDataDocument()
+
+            boolean prettyPrint = context.prettyPrint as Boolean
+            fromUpdateStamp = fromUpdateStamp ? fromUpdateStamp as Timestamp : null
+            thruUpdateStamp = thruUpdateStamp ? thruUpdateStamp as Timestamp : null
+
+            String filename = (String) dataDocumentId + ".json"
+            def response = ec.web.response
+            response.setContentType("application/json")
+            response.setCharacterEncoding("UTF-8")
+            response.setHeader("Content-Disposition", "attachment; filename=\"${filename}\"; filename*=utf-8''${encodeAsciiFilename(filename)}")
+            response.setHeader("Cache-Control", "no-cache, must-revalidate, private")
+            response.getWriter().write("[\n")
+            edd.writeDocumentsToWriter(response.getWriter(), [(String) dataDocumentId], null, fromUpdateStamp, thruUpdateStamp, prettyPrint)
+            response.getWriter().write("]\n")]]></script></actions></transition>

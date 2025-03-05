@@ -1,0 +1,6 @@
+<!--Service Location org.moqui.EntityServices.receive#DataFeed--><service verb="receive" noun="DataFeed"><in-parameters><parameter name="dataFeedId" entity-name="moqui.entity.feed.DataFeed" field-name="dataFeedId"/><parameter name="feedStamp" type="Timestamp"/><parameter name="documentList" type="List" required="true"><parameter name="document" type="Map"><parameter name="_id" required="true"><description><![CDATA[The combined PK field values of the primary
+                        entity in the DataDocument. If there is more than one PK field the values are separated with a
+                        double-colon ("::").]]></description></parameter><parameter name="_type" required="true"><description><![CDATA[The DataDocument.dataDocumentId that defines
+                        the document structure, etc.]]></description></parameter><parameter name="_index"><description><![CDATA[From DataDocument.indexName, if specified.]]></description></parameter><parameter name="_timestamp"><description><![CDATA[Document timestamp in the format yyyy-MM-dd'T'HH:mm:ss]]></description></parameter></parameter></parameter></in-parameters><out-parameters/>
+    null
+</service>

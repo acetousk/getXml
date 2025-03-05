@@ -1,0 +1,15 @@
+
+<!-- Entity Name: moqui.entity.document.DataDocumentLink sql table: DATA_DOCUMENT_LINK --><entity entity-name="DataDocumentLink" package="moqui.entity.document" use="configuration">
+    <description><![CDATA[Associate links with a DataDocument to use in applications for links to details, edit screens, etc for search results.]]></description>
+    <field name="dataDocumentId" type="id" is-pk="true"/>
+    <field name="linkSeqId" type="id" is-pk="true"/>
+    <field name="linkSet" type="text-short"/>
+    <field name="label" type="text-medium"/>
+    <field name="linkUrl" type="text-medium"/>
+    <field name="urlType" type="text-short" default="'plain'">
+        <description><![CDATA[Must match an option for the XML Screen link.@url-type attribute. Defaults to 'plain'.]]></description></field>
+    <field name="linkCondition" type="text-long"/>
+    <relationship type="one" related="moqui.entity.document.DataDocument"/>
+    <field name="lastUpdatedStamp" type="date-time"/>
+
+</entity>

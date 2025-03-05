@@ -1,0 +1,17 @@
+
+<!-- Entity Name: mantle.product.ProductUomDimension sql table: PRODUCT_UOM_DIMENSION --><entity entity-name="ProductUomDimension" package="mantle.product" has-dependents="true">
+    <field name="productUomDimensionId" type="id" is-pk="true"/>
+    <field name="productId" type="id" not-null="true"/>
+    <field name="uomDimensionTypeId" type="id"/>
+    <field name="marketSegmentId" type="id"/>
+    <field name="value" type="number-decimal"/>
+    <field name="uomId" type="id"/>
+    <relationship type="one" related="mantle.product.Product" short-alias="product"/>
+    <relationship type="one" related="moqui.basic.UomDimensionType" short-alias="type"/>
+    <relationship type="one" related="mantle.marketing.segment.MarketSegment" short-alias="marketSegment"/>
+    <relationship type="one" related="moqui.basic.Uom" short-alias="uom"/>
+    <field name="lastUpdatedStamp" type="date-time"/>
+    <relationship related="mantle.product.ProductParameterOption" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="productUomDimensionId" related="productUomDimensionId"/></relationship>
+
+</entity>

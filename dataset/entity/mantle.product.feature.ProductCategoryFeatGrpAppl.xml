@@ -1,0 +1,14 @@
+
+<!-- Entity Name: mantle.product.feature.ProductCategoryFeatGrpAppl sql table: PRODUCT_CATEGORY_FEAT_GRP_APPL --><entity entity-name="ProductCategoryFeatGrpAppl" package="mantle.product.feature">
+    <field name="productCategoryId" type="id" is-pk="true"/>
+    <field name="productFeatureGroupId" type="id" is-pk="true"/>
+    <field name="fromDate" type="date-time" is-pk="true"/>
+    <field name="thruDate" type="date-time"/>
+    <field name="applTypeEnumId" type="id"/>
+    <relationship type="one" related="mantle.product.category.ProductCategory" short-alias="category"/>
+    <relationship type="one" related="mantle.product.feature.ProductFeatureGroup" short-alias="group"/>
+    <relationship type="one" title="ProductFeatureApplType" related="moqui.basic.Enumeration" short-alias="type">
+        <key-map field-name="applTypeEnumId"/></relationship>
+    <field name="lastUpdatedStamp" type="date-time"/>
+
+</entity>

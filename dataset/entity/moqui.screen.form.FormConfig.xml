@@ -1,0 +1,26 @@
+
+<!-- Entity Name: moqui.screen.form.FormConfig sql table: FORM_CONFIG --><entity entity-name="FormConfig" package="moqui.screen.form" use="configuration" has-dependents="true">
+    <field name="formConfigId" type="id" is-pk="true"/>
+    <field name="description" type="text-medium"/>
+    <field name="formLocation" type="text-medium"/>
+    <field name="configTypeEnumId" type="id"/>
+    <relationship type="one" title="FormConfigType" related="moqui.basic.Enumeration">
+        <key-map field-name="configTypeEnumId"/></relationship>
+    <relationship type="many" related="moqui.screen.form.FormConfigField" short-alias="fields">
+        <key-map field-name="formConfigId"/></relationship>
+    <relationship type="many" related="moqui.screen.form.FormConfigUser" short-alias="users">
+        <key-map field-name="formConfigId"/></relationship>
+    <relationship type="many" related="moqui.screen.form.FormConfigUserGroup" short-alias="userGroups">
+        <key-map field-name="formConfigId"/></relationship>
+    <seed-data>
+        <moqui.basic.EnumerationType description="Form Config Type" enumTypeId="FormConfigType"/>
+        <moqui.basic.Enumeration description="Desktop" enumCode="desktop" enumId="FctDesktop" enumTypeId="FormConfigType"/>
+        <moqui.basic.Enumeration description="Mobile" enumCode="mobile" enumId="FctMobile" enumTypeId="FormConfigType"/>
+    </seed-data>
+    <field name="lastUpdatedStamp" type="date-time"/>
+    <relationship related="moqui.screen.form.FormConfigUserType" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="formConfigId" related="formConfigId"/></relationship>
+    <relationship related="moqui.screen.form.FormListFind" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="formConfigId" related="formConfigId"/></relationship>
+
+</entity>

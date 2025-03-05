@@ -1,0 +1,10 @@
+
+<!-- Entity Name: moqui.server.instance.AppInstanceHostConfig sql table: APP_INSTANCE_HOST_CONFIG --><entity entity-name="AppInstanceHostConfig" package="moqui.server.instance" use="configuration">
+    <field name="appInstanceId" type="id" is-pk="true"/>
+    <field name="hostConfigName" type="text-medium" is-pk="true"/>
+    <field name="hostConfigValue" type="text-medium"/>
+    <field name="type" type="text-short"/>
+    <relationship type="one" related="moqui.server.instance.AppInstance"/>
+    <field name="lastUpdatedStamp" type="date-time"/>
+
+</entity>

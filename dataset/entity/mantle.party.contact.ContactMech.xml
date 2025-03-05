@@ -1,0 +1,110 @@
+
+<!-- Entity Name: mantle.party.contact.ContactMech sql table: CONTACT_MECH --><entity entity-name="ContactMech" package="mantle.party.contact" short-alias="contactMechs" use="nontransactional" cache="never" has-dependents="true">
+    <field name="contactMechId" type="id" is-pk="true"/>
+    <field name="contactMechTypeEnumId" type="id"/>
+    <field name="dataSourceId" type="id"/>
+    <field name="infoString" type="text-medium"/>
+    <field name="gatewayCimId" type="text-short" enable-audit-log="update"/>
+    <field name="trustLevelEnumId" type="id"/>
+    <field name="validateMessage" type="text-medium"/>
+    <field name="paymentFraudEvidenceId" type="id">
+        <description><![CDATA[Refer to evidence here if trustLevelEnumId is gray listed or black listed]]></description></field>
+    <field name="replacesContactMechId" type="id">
+        <description><![CDATA[For update by copy-on-write this is the ID of the ContactMech it replaces]]></description></field>
+    <relationship type="one" title="ContactMechType" related="moqui.basic.Enumeration" short-alias="type">
+        <key-map field-name="contactMechTypeEnumId"/></relationship>
+    <relationship type="one" related="moqui.basic.DataSource"/>
+    <relationship type="one" title="ContactPaymentTrustLevel" related="moqui.basic.Enumeration" short-alias="trustLevel">
+        <key-map field-name="trustLevelEnumId"/></relationship>
+    <relationship type="one" related="mantle.account.payment.PaymentFraudEvidence" short-alias="fraudEvidence" mutable="true"/>
+    <relationship type="one-nofk" title="Replaces" related="mantle.party.contact.ContactMech" short-alias="replacesContactMech">
+        <key-map field-name="replacesContactMechId"/></relationship>
+    <relationship type="one-nofk" related="mantle.party.contact.TelecomNumber" short-alias="telecomNumber" mutable="true"/>
+    <relationship type="one-nofk" related="mantle.party.contact.PostalAddress" short-alias="postalAddress" mutable="true"/>
+    <relationship type="many" related="mantle.party.contact.PartyContactMech" short-alias="parties">
+        <key-map field-name="contactMechId"/></relationship>
+    <index name="CMECH_INFO_STRING">
+        <index-field name="infoString"/></index>
+    <index name="CMECH_REPL_CMECH">
+        <index-field name="replacesContactMechId"/></index>
+    <seed-data>
+        <moqui.basic.EnumerationType description="Contact/Payment Trust Level" enumTypeId="ContactPaymentTrustLevel"/>
+        <moqui.basic.Enumeration enumId="CmtlNew" description="New Data" sequenceNum="1" enumTypeId="ContactPaymentTrustLevel"/>
+        <moqui.basic.Enumeration enumId="CmtlValid" description="Valid/Complete" sequenceNum="2" enumTypeId="ContactPaymentTrustLevel"/>
+        <moqui.basic.Enumeration enumId="CmtlVerified" description="Verified" sequenceNum="3" enumTypeId="ContactPaymentTrustLevel"/>
+        <moqui.basic.Enumeration enumId="CmtlInvalid" description="Invalid" sequenceNum="6" enumTypeId="ContactPaymentTrustLevel"/>
+        <moqui.basic.Enumeration enumId="CmtlIncomplete" description="Incomplete" sequenceNum="7" enumTypeId="ContactPaymentTrustLevel"/>
+        <moqui.basic.Enumeration enumId="CmtlGreylisted" description="Greylisted" sequenceNum="8" enumTypeId="ContactPaymentTrustLevel"/>
+        <moqui.basic.Enumeration enumId="CmtlBlacklisted" description="Blacklisted" sequenceNum="9" enumTypeId="ContactPaymentTrustLevel"/>
+    </seed-data>
+    <master>
+        <detail relationship="telecomNumber"/>
+        <detail relationship="postalAddress">
+            <detail relationship="cityGeo"/>
+            <detail relationship="countyGeo"/>
+            <detail relationship="stateProvinceGeo"/>
+            <detail relationship="postalCodeGeo"/>
+            <detail relationship="countryGeo"/>
+            <detail relationship="telecomContactMech" use-master="default"/>
+            <detail relationship="emailContactMech"/>
+        </detail>
+    </master>
+    <field name="lastUpdatedStamp" type="date-time"/>
+    <relationship related="mantle.account.billing.BillingAccount" type="many" is-auto-reverse="true" mutable="true" title="Postal">
+        <key-map field-name="contactMechId" related="postalContactMechId"/></relationship>
+    <relationship related="mantle.account.invoice.InvoiceContactMech" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="contactMechId" related="contactMechId"/></relationship>
+    <relationship related="mantle.account.method.PaymentMethod" type="many" is-auto-reverse="true" mutable="true" title="Postal">
+        <key-map field-name="contactMechId" related="postalContactMechId"/></relationship>
+    <relationship related="mantle.account.method.PaymentMethod" type="many" is-auto-reverse="true" mutable="true" title="Telecom">
+        <key-map field-name="contactMechId" related="telecomContactMechId"/></relationship>
+    <relationship related="mantle.account.method.PaymentMethod" type="many" is-auto-reverse="true" mutable="true" title="Email">
+        <key-map field-name="contactMechId" related="emailContactMechId"/></relationship>
+    <relationship related="mantle.facility.FacilityContactMech" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="contactMechId" related="contactMechId"/></relationship>
+    <relationship related="mantle.marketing.contact.ContactListCommStatus" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="contactMechId" related="contactMechId"/></relationship>
+    <relationship related="mantle.marketing.contact.ContactListParty" type="many" is-auto-reverse="true" mutable="true" title="Preferred">
+        <key-map field-name="contactMechId" related="preferredContactMechId"/></relationship>
+    <relationship related="mantle.order.OrderPart" type="many" is-auto-reverse="true" mutable="true" title="Postal">
+        <key-map field-name="contactMechId" related="postalContactMechId"/></relationship>
+    <relationship related="mantle.order.OrderPart" type="many" is-auto-reverse="true" mutable="true" title="Telecom">
+        <key-map field-name="contactMechId" related="telecomContactMechId"/></relationship>
+    <relationship related="mantle.order.OrderPartContactMech" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="contactMechId" related="contactMechId"/></relationship>
+    <relationship related="mantle.order.return.ReturnContactMech" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="contactMechId" related="contactMechId"/></relationship>
+    <relationship related="mantle.order.return.ReturnHeader" type="many" is-auto-reverse="true" mutable="true" title="Postal">
+        <key-map field-name="contactMechId" related="postalContactMechId"/></relationship>
+    <relationship related="mantle.order.return.ReturnHeader" type="many" is-auto-reverse="true" mutable="true" title="Telecom">
+        <key-map field-name="contactMechId" related="telecomContactMechId"/></relationship>
+    <relationship related="mantle.party.agreement.AgreementContactMech" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="contactMechId" related="contactMechId"/></relationship>
+    <relationship related="mantle.party.communication.CommunicationEvent" type="many" is-auto-reverse="true" mutable="true" title="From">
+        <key-map field-name="contactMechId" related="fromContactMechId"/></relationship>
+    <relationship related="mantle.party.communication.CommunicationEvent" type="many" is-auto-reverse="true" mutable="true" title="To">
+        <key-map field-name="contactMechId" related="toContactMechId"/></relationship>
+    <relationship related="mantle.party.communication.CommunicationEventParty" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="contactMechId" related="contactMechId"/></relationship>
+    <relationship related="mantle.party.contact.PostalAddress" type="one-nofk" is-auto-reverse="true" mutable="true" title="Telecom">
+        <key-map field-name="contactMechId" related="telecomContactMechId"/></relationship>
+    <relationship related="mantle.party.contact.PostalAddress" type="one-nofk" is-auto-reverse="true" mutable="true" title="Email">
+        <key-map field-name="contactMechId" related="emailContactMechId"/></relationship>
+    <relationship related="mantle.product.store.ProductStore" type="many" is-auto-reverse="true" mutable="true" title="Return">
+        <key-map field-name="contactMechId" related="returnPostalContactMechId"/></relationship>
+    <relationship related="mantle.product.subscription.Subscription" type="many" is-auto-reverse="true" mutable="true" title="DeliverTo">
+        <key-map field-name="contactMechId" related="deliverToContactMechId"/></relationship>
+    <relationship related="mantle.request.Request" type="many" is-auto-reverse="true" mutable="true" title="Email">
+        <key-map field-name="contactMechId" related="emailContactMechId"/></relationship>
+    <relationship related="mantle.shipment.ShipmentContactMech" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="contactMechId" related="contactMechId"/></relationship>
+    <relationship related="mantle.shipment.ShipmentRouteSegment" type="many" is-auto-reverse="true" mutable="true" title="Origin">
+        <key-map field-name="contactMechId" related="originPostalContactMechId"/></relationship>
+    <relationship related="mantle.shipment.ShipmentRouteSegment" type="many" is-auto-reverse="true" mutable="true" title="Return">
+        <key-map field-name="contactMechId" related="returnPostalContactMechId"/></relationship>
+    <relationship related="mantle.shipment.ShipmentRouteSegment" type="many" is-auto-reverse="true" mutable="true" title="Destination">
+        <key-map field-name="contactMechId" related="destPostalContactMechId"/></relationship>
+    <relationship related="mantle.work.effort.WorkEffortContactMech" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="contactMechId" related="contactMechId"/></relationship>
+
+</entity>

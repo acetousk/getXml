@@ -1,0 +1,24 @@
+<!--Service Location XmlServices.call#OpenAi--><service verb="call" noun="OpenAi"><in-parameters><parameter name="screen" type="Map"><parameter name="name"/><parameter name="prettyName"/><parameter name="xml" allow-html="any"/></parameter></in-parameters><out-parameters><parameter name="content"/><parameter name="finishReason"/><parameter name="modelString" default="model.value()"/><parameter name="systemMessage" type="Map"/><parameter name="userMessage" type="Map"/><parameter name="assistantMessage" type="Map"/></out-parameters><actions><script><![CDATA[import com.openai.models.ChatCompletion;
+                import com.openai.models.ChatCompletionCreateParams;
+                import com.openai.models.ChatModel;
+                import com.openai.client.OpenAIClient;
+                import com.openai.client.okhttp.OpenAIOkHttpClient;
+                import com.openai.models.ChatCompletion.Choice;
+                import com.openai.models.ChatCompletionMessage;
+
+                OpenAIClient client = OpenAIOkHttpClient.builder()
+                        .apiKey("sk-proj-")
+                        .build();]]></script><set field="model" from="ChatModel.GPT_4O_MINI_2024_07_18"/><entity-find entity-name="ai.Model" list="modelList"><econdition field-name="fullName" from="model.value()"/></entity-find><entity-find entity-name="ai.ModelChat" list="modelChatList"><econdition field-name="chatTypeName" from="screen.name"/><econdition field-name="chatTypeEnumId" value="MCT_Screen"/></entity-find><if condition="modelChatList.size() > 0"><log level="warn" message="Already have a model chat for screen ${screen.name}"/><return/></if><service-call name="create#ai.ModelChat" in-map="[modelId:modelList?.getFirst()?.modelId,chatTypeEnumId:'MCT_Screen', chatTypeName:screen.name]" out-map="[modelChatId:context.modelChatId,modelId:context.modelId,chatTypeEnumId:context.chatTypeEnumId,chatTypeName:context.chatTypeName,lastUpdatedStamp:context.lastUpdatedStamp]" transaction="force-new"/><set field="systemMessageContent" value="Given the Moqui screen xml included, answer the question: What does ${screen.prettyName} do through an expert summary"/><set field="userMessageContent" value="Screen Name ${screen.name} xml ${screen.xml}"/><service-call name="create#ai.ModelChatMessage" in-map="[modelChatId:modelChatId, roleTypeEnumId:'MCMR_System', content:systemMessageContent,time:ec.user.nowTimestamp]" out-map="[messageId:systemMessage.messageId,modelChatId:systemMessage.modelChatId,roleTypeEnumId:systemMessage.roleTypeEnumId,content:systemMessage.content,time:systemMessage.time,sequenceNum:systemMessage.sequenceNum,lastUpdatedStamp:systemMessage.lastUpdatedStamp]" transaction="force-new"/><service-call name="create#ai.ModelChatMessage" in-map="[modelChatId:modelChatId, roleTypeEnumId:'MCMR_User', content:userMessageContent,time:ec.user.nowTimestamp]" out-map="[messageId:userMessage.messageId,modelChatId:userMessage.modelChatId,roleTypeEnumId:userMessage.roleTypeEnumId,content:userMessage.content,time:userMessage.time,sequenceNum:userMessage.sequenceNum,lastUpdatedStamp:userMessage.lastUpdatedStamp]" transaction="force-new"/><script><![CDATA[ChatCompletionCreateParams params = ChatCompletionCreateParams.builder()
+                        .addSystemMessage(systemMessageContent)
+                        .addUserMessage(userMessageContent)
+                        .model(model)
+                        .build();
+                ChatCompletion chatCompletion = client.chat().completions().create(params);
+
+                // Just get the response from chatCompletion
+                ChatCompletion.Choice choice = chatCompletion.choices().get(0)
+                ChatCompletionMessage message = choice.message();
+                context.content = message.content().get();
+                ec.logger.warn("--- content: " + content);
+                String finishReason = choice.finishReason();
+                ec.logger.warn("--- finishReason: " + finishReason);]]></script><service-call name="create#ai.ModelChatMessage" in-map="[modelChatId:modelChatId, roleTypeEnumId:'MCMR_Assistant',content:content,time:ec.user.nowTimestamp]" out-map="[messageId:assistantMessage.messageId,modelChatId:assistantMessage.modelChatId,roleTypeEnumId:assistantMessage.roleTypeEnumId,content:assistantMessage.content,time:assistantMessage.time,sequenceNum:assistantMessage.sequenceNum,lastUpdatedStamp:assistantMessage.lastUpdatedStamp]" transaction="force-new"/></actions></service>

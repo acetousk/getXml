@@ -1,0 +1,12 @@
+
+<!-- Entity Name: mantle.humanres.position.EmplPositionClassWorkType sql table: EMPL_POSITION_CLASS_WORK_TYPE --><entity entity-name="EmplPositionClassWorkType" package="mantle.humanres.position" use="configuration">
+    <description><![CDATA[An alternative to EmplPosition and Employment to represent an employee in a position class for
+            billing purposes, etc. Can be used in addition to EmplPosition or instead of.]]></description>
+    <field name="emplPositionClassId" type="id" is-pk="true"/>
+    <field name="workTypeEnumId" type="id" is-pk="true"/>
+    <relationship type="one" related="mantle.humanres.position.EmplPositionClass"/>
+    <relationship type="one" title="WorkType" related="moqui.basic.Enumeration">
+        <key-map field-name="workTypeEnumId"/></relationship>
+    <field name="lastUpdatedStamp" type="date-time"/>
+
+</entity>

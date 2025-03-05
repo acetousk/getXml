@@ -1,0 +1,15 @@
+
+<!-- Entity Name: mantle.account.invoice.InvoiceTerm sql table: INVOICE_TERM --><entity entity-name="InvoiceTerm" package="mantle.account.invoice" cache="never">
+    <field name="invoiceId" type="id" is-pk="true"/>
+    <field name="invoiceItemSeqId" type="id" is-pk="true"/>
+    <field name="settlementTermId" type="id" is-pk="true"/>
+    <relationship type="one" related="mantle.account.invoice.Invoice">
+        <key-map field-name="invoiceId"/></relationship>
+    <relationship type="one-nofk" related="mantle.account.invoice.InvoiceItem">
+        <key-map field-name="invoiceId"/>
+        <key-map field-name="invoiceItemSeqId"/>
+    </relationship>
+    <relationship type="one" related="mantle.account.invoice.SettlementTerm"/>
+    <field name="lastUpdatedStamp" type="date-time"/>
+
+</entity>

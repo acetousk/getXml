@@ -1,0 +1,1 @@
+<!-- Screen Location component://tools/screen/System.xml --><screen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://moqui.org/xsd/xml-screen-3.xsd" default-menu-title="System" menu-image="fa fa-cog" menu-image-type="icon"><subscreens default-item="dashboard"/><widgets><subscreens-panel id="system-panel" type="popup"/></widgets></screen>

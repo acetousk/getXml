@@ -1,0 +1,11 @@
+<!--Service Location org.moqui.impl.InstanceServices.check#AppInstanceAndDatabase--><service verb="check" noun="AppInstanceAndDatabase"><in-parameters><parameter name="appInstanceId"/></in-parameters><out-parameters><parameter name="databaseExists" type="Boolean"/><parameter name="dbUserExists" type="Boolean"/><parameter name="instanceExists" type="Boolean"/><parameter name="instanceRunning" type="Boolean"/><parameter name="statusString"/><parameter name="errorString"/><parameter name="startedAt" type="Timestamp"/><parameter name="finishedAt" type="Timestamp"/><parameter name="moquiStatusMap" type="Map"/><parameter name="instanceLog"/></out-parameters><actions><script><![CDATA[import org.moqui.context.ExecutionContext
+            import java.util.concurrent.Future
+            ExecutionContext ec = context.ec
+
+            Future<Map> dbFuture = ec.service.async().name("org.moqui.impl.InstanceServices.check#AppDatabase").parameter("appInstanceId", appInstanceId).callFuture()
+            Future<Map> instFuture = ec.service.async().name("org.moqui.impl.InstanceServices.check#AppInstance").parameter("appInstanceId", appInstanceId).callFuture()
+            Future<Map> msFuture = ec.service.async().name("org.moqui.impl.InstanceServices.check#MoquiServer").parameter("appInstanceId", appInstanceId).callFuture()
+
+            context.putAll(dbFuture.get())
+            context.putAll(instFuture.get())
+            context.putAll(msFuture.get())]]></script></actions></service>

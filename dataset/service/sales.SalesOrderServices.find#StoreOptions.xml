@@ -1,0 +1,1 @@
+<!--Service Location sales.SalesOrderServices.find#StoreOptions--><service verb="find" noun="StoreOptions"><in-parameters/><out-parameters><parameter name="storeOptions" type="list"/></out-parameters><actions><entity-find entity-name="mantle.product.store.ProductStore" list="storeOptions"><order-by field-name="storeName"/></entity-find></actions></service>

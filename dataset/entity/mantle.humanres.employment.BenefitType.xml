@@ -1,0 +1,18 @@
+
+<!-- Entity Name: mantle.humanres.employment.BenefitType sql table: BENEFIT_TYPE --><entity entity-name="BenefitType" package="mantle.humanres.employment" use="configuration" has-dependents="true">
+    <field name="benefitTypeId" type="id" is-pk="true"/>
+    <field name="parentTypeId" type="id"/>
+    <field name="description" type="text-medium"/>
+    <field name="employerPaidPercentage" type="number-float"/>
+    <relationship type="one" title="Parent" related="mantle.humanres.employment.BenefitType">
+        <key-map field-name="parentTypeId" related="benefitTypeId"/></relationship>
+    <seed-data>
+        <mantle.humanres.employment.BenefitType description="Health Insurance" benefitTypeId="Health"/>
+        <mantle.humanres.employment.BenefitType description="Vacation Paid" benefitTypeId="Vacation"/>
+        <mantle.humanres.employment.BenefitType description="Sick Leave Paid" benefitTypeId="Sick"/>
+    </seed-data>
+    <field name="lastUpdatedStamp" type="date-time"/>
+    <relationship related="mantle.humanres.employment.EmploymentBenefit" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="benefitTypeId" related="benefitTypeId"/></relationship>
+
+</entity>

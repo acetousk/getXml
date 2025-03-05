@@ -1,0 +1,98 @@
+
+<!-- Entity Name: mantle.shipment.ShipmentPackageRouteSeg sql table: SHIPMENT_PACKAGE_ROUTE_SEG --><entity entity-name="ShipmentPackageRouteSeg" package="mantle.shipment" cache="never">
+    <field name="shipmentId" type="id" is-pk="true"/>
+    <field name="shipmentPackageSeqId" type="id" is-pk="true"/>
+    <field name="shipmentRouteSegmentSeqId" type="id" is-pk="true"/>
+    <field name="trackingCode" type="text-medium" enable-audit-log="update"/>
+    <field name="trackingUrl" type="text-intermediate"/>
+    <field name="trackingStatusEnumId" type="id" enable-audit-log="true"/>
+    <field name="trackingSubStatus" type="text-short" enable-audit-log="update"/>
+    <field name="trackingStatusDate" type="date-time"/>
+    <field name="trackingEta" type="date-time"/>
+    <field name="trackingOrigEta" type="date-time"/>
+    <field name="boxNumber" type="text-short"/>
+    <field name="labelDate" type="date-time"/>
+    <field name="labelUrl" type="text-intermediate"/>
+    <field name="labelImage" type="binary-very-long"/>
+    <field name="labelIntlSignImage" type="binary-very-long"/>
+    <field name="labelHtml" type="text-very-long"/>
+    <field name="labelPrinted" type="text-indicator"/>
+    <field name="internationalInvoice" type="binary-very-long"/>
+    <field name="internationalInvoiceUrl" type="text-intermediate"/>
+    <field name="gatewayStatus" type="text-short" enable-audit-log="update"/>
+    <field name="gatewayMessage" type="text-medium"/>
+    <field name="gatewayLabelId" type="text-short" enable-audit-log="update"/>
+    <field name="gatewayRateId" type="text-short" enable-audit-log="update"/>
+    <field name="gatewayRefundId" type="text-short" enable-audit-log="update"/>
+    <field name="gatewayRefundStatus" type="text-short" enable-audit-log="update"/>
+    <field name="returnTrackingCode" type="text-medium" enable-audit-log="update"/>
+    <field name="returnTrackingUrl" type="text-intermediate"/>
+    <field name="returnTrackingStatusEnumId" type="id" enable-audit-log="update"/>
+    <field name="returnTrackingSubStatus" type="text-short" enable-audit-log="update"/>
+    <field name="returnTrackingStatusDate" type="date-time"/>
+    <field name="returnLabelDate" type="date-time"/>
+    <field name="returnLabelUrl" type="text-intermediate"/>
+    <field name="returnLabelImage" type="binary-very-long"/>
+    <field name="returnIntlInvoiceUrl" type="text-intermediate"/>
+    <field name="returnGatewayStatus" type="text-short" enable-audit-log="update"/>
+    <field name="returnGatewayMessage" type="text-medium"/>
+    <field name="returnGatewayLabelId" type="text-short" enable-audit-log="update"/>
+    <field name="returnGatewayRateId" type="text-short" enable-audit-log="update"/>
+    <field name="returnGatewayRefundStatus" type="text-short" enable-audit-log="update"/>
+    <field name="returnEstimatedAmount" type="currency-amount"/>
+    <field name="returnBaseAmount" type="currency-amount"/>
+    <field name="returnActualAmount" type="currency-amount"/>
+    <field name="estimatedAmount" type="currency-amount"/>
+    <field name="baseAmount" type="currency-amount"/>
+    <field name="actualAmount" type="currency-amount"/>
+    <field name="packageTransportAmount" type="currency-amount"/>
+    <field name="packageServiceAmount" type="currency-amount"/>
+    <field name="packageOtherAmount" type="currency-amount"/>
+    <field name="codAmount" type="currency-amount"/>
+    <field name="insuranceAmount" type="currency-amount">
+        <description><![CDATA[Usually an estimate: insuredAmount * (ProductStoreShippingGateway.insurancePercent/100)]]></description></field>
+    <field name="insuredAmount" type="currency-amount"/>
+    <relationship type="one-nofk" related="mantle.shipment.Shipment" short-alias="shipment"/>
+    <relationship type="one" related="mantle.shipment.ShipmentPackage" short-alias="package">
+        <key-map field-name="shipmentId"/>
+        <key-map field-name="shipmentPackageSeqId"/>
+    </relationship>
+    <relationship type="one" related="mantle.shipment.ShipmentRouteSegment" short-alias="routeSegment">
+        <key-map field-name="shipmentId"/>
+        <key-map field-name="shipmentRouteSegmentSeqId"/>
+    </relationship>
+    <relationship type="one" title="ShipmentTrackingStatus" related="moqui.basic.Enumeration" short-alias="trackingStatusEnum">
+        <key-map field-name="trackingStatusEnumId"/></relationship>
+    <relationship type="one" title="ReturnTrackingStatus" related="moqui.basic.Enumeration" short-alias="returnTrackingStatusEnum">
+        <key-map field-name="returnTrackingStatusEnumId"/></relationship>
+    <relationship type="many" related="mantle.shipment.ShipmentPackageContent" short-alias="contents">
+        <key-map field-name="shipmentId"/>
+        <key-map field-name="shipmentPackageSeqId"/>
+    </relationship>
+    <index name="SHIP_PKRTSG_SHIPID">
+        <index-field name="shipmentId"/></index>
+    <index name="SHIP_PKRTSG_TRKCODE">
+        <index-field name="trackingCode"/></index>
+    <index name="SHIP_PKRTSG_GTLBL">
+        <index-field name="gatewayLabelId"/></index>
+    <index name="SHIP_PKRTSG_RTTRKCD">
+        <index-field name="returnTrackingCode"/></index>
+    <index name="SHIP_PKRTSG_RTGTLBL">
+        <index-field name="returnGatewayLabelId"/></index>
+    <seed-data>
+        <moqui.basic.EnumerationType description="Shipping Tracking Status" enumTypeId="ShipmentTrackingStatus"/>
+        <moqui.basic.Enumeration description="Unknown" enumId="ShTsUnknown" enumTypeId="ShipmentTrackingStatus"/>
+        <moqui.basic.Enumeration description="In Transit" enumId="ShTsTransit" enumTypeId="ShipmentTrackingStatus"/>
+        <moqui.basic.Enumeration description="Delivered" enumId="ShTsDelivered" enumTypeId="ShipmentTrackingStatus"/>
+        <moqui.basic.Enumeration description="Returned" enumId="ShTsReturned" enumTypeId="ShipmentTrackingStatus"/>
+        <moqui.basic.Enumeration description="Failure" enumId="ShTsFailure" enumTypeId="ShipmentTrackingStatus"/>
+    </seed-data>
+    <field name="lastUpdatedStamp" type="date-time"/>
+
+<!-- seca <seca id="ShipmentPackageDeliveredCheckShipment" service="update#mantle.shipment.ShipmentPackageRouteSeg" when="post-service">
+    <condition>
+        <expression><![CDATA[trackingStatusEnumId == 'ShTsDelivered']]></expression></condition>
+    <actions>
+        <service-call name="mantle.shipment.ShipmentServices.checkSet#ShipmentDeliveredByPackages" in-map="[shipmentId:shipmentId]"/></actions>
+</seca>-->
+</entity>

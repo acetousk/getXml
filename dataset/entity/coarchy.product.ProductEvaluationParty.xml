@@ -1,0 +1,33 @@
+
+<!-- Entity Name: coarchy.product.ProductEvaluationParty sql table: PRODUCT_EVALUATION_PARTY --><entity entity-name="ProductEvaluationParty" package="coarchy.product">
+    <description><![CDATA[This entity represents the parties (mainly vendors for now) assigned to this request.]]></description>
+    <field name="productEvaluationId" type="id" is-pk="true"/>
+    <field name="partyId" type="id" is-pk="true"/>
+    <field name="roleTypeId" type="id" is-pk="true"/>
+    <field name="fromDate" type="date-time" is-pk="true"/>
+    <field name="thruDate" type="date-time"/>
+    <field name="statusId" type="id" enable-audit-log="update"/>
+    <field name="organizationId" type="id"/>
+    <relationship type="one" related="coarchy.product.ProductEvaluation" short-alias="productEvalRequest"/>
+    <relationship type="one" related="mantle.party.RoleType" short-alias="roleType">
+        <key-map field-name="roleTypeId"/></relationship>
+    <relationship type="one" title="ProductEvaluationParty" related="moqui.basic.StatusItem"/>
+    <relationship type="one" related="mantle.party.Organization" short-alias="organization">
+        <key-map field-name="organizationId" related="partyId"/></relationship>
+    <seed-data>
+        <moqui.basic.StatusType description="Product Evaluation Party" statusTypeId="ProductEvaluationParty"/>
+        <moqui.basic.StatusItem description="Planned" sequenceNum="1" statusId="PepPlanned" statusTypeId="ProductEvaluationParty"/>
+        <moqui.basic.StatusItem description="Invited" sequenceNum="2" statusId="PepInvited" statusTypeId="ProductEvaluationParty"/>
+        <moqui.basic.StatusItem description="Accepted" sequenceNum="3" statusId="PepAccepted" statusTypeId="ProductEvaluationParty"/>
+        <moqui.basic.StatusItem description="Rejected" sequenceNum="4" statusId="PepRejected" statusTypeId="ProductEvaluationParty"/>
+        <moqui.basic.StatusItem description="Withdrew" sequenceNum="5" statusId="PepWithdrew" statusTypeId="ProductEvaluationParty"/>
+        <moqui.basic.StatusFlowTransition statusFlowId="Default" statusId="PepPlanned" toStatusId="PepInvited" transitionName="Invite"/>
+        <moqui.basic.StatusFlowTransition statusFlowId="Default" statusId="PepInvited" toStatusId="PepAccepted" transitionName="Accept"/>
+        <moqui.basic.StatusFlowTransition statusFlowId="Default" statusId="PepInvited" toStatusId="PepAccepted" transitionName="Accept"/>
+        <moqui.basic.StatusFlowTransition statusFlowId="Default" statusId="PepInvited" toStatusId="PepRejected" transitionName="Reject"/>
+        <moqui.basic.StatusFlowTransition statusFlowId="Default" statusId="PepInvited" toStatusId="PepWithdrew" transitionName="Withdraw Invitation"/>
+        <moqui.basic.StatusFlowTransition statusFlowId="Default" statusId="PepPlanned" toStatusId="PepAccepted" transitionName="Fast Accept"/>
+    </seed-data>
+    <field name="lastUpdatedStamp" type="date-time"/>
+
+</entity>

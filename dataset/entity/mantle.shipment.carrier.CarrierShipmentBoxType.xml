@@ -1,0 +1,12 @@
+
+<!-- Entity Name: mantle.shipment.carrier.CarrierShipmentBoxType sql table: CARRIER_SHIPMENT_BOX_TYPE --><entity entity-name="CarrierShipmentBoxType" package="mantle.shipment.carrier" cache="true">
+    <field name="carrierPartyId" type="id" is-pk="true"/>
+    <field name="shipmentBoxTypeId" type="id" is-pk="true"/>
+    <field name="packagingTypeCode" type="id"/>
+    <field name="oversizeCode" type="text-short"/>
+    <relationship type="one" related="mantle.shipment.ShipmentBoxType"/>
+    <relationship type="one" title="Carrier" related="mantle.party.Party">
+        <key-map field-name="carrierPartyId"/></relationship>
+    <field name="lastUpdatedStamp" type="date-time"/>
+
+</entity>

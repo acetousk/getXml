@@ -1,0 +1,12 @@
+
+<!-- Entity Name: mantle.ledger.account.GlAccountOrganization sql table: GL_ACCOUNT_ORGANIZATION --><entity entity-name="GlAccountOrganization" package="mantle.ledger.account" use="transactional" cache="never">
+    <field name="glAccountId" type="id" is-pk="true"/>
+    <field name="organizationPartyId" type="id" is-pk="true"/>
+    <field name="postedBalance" type="currency-amount"/>
+    <field name="balanceLastUpdated" type="date-time"/>
+    <relationship type="one" related="mantle.ledger.account.GlAccount"/>
+    <relationship type="one" title="Organization" related="mantle.party.Party">
+        <key-map field-name="organizationPartyId"/></relationship>
+    <field name="lastUpdatedStamp" type="date-time"/>
+
+</entity>

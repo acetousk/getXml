@@ -1,0 +1,17 @@
+
+<!-- Entity Name: mantle.work.effort.WorkEffortFacility sql table: WORK_EFFORT_FACILITY --><entity entity-name="WorkEffortFacility" package="mantle.work.effort" cache="never">
+    <field name="workEffortId" type="id" is-pk="true"/>
+    <field name="facilityId" type="id" is-pk="true"/>
+    <field name="typeEnumId" type="id"/>
+    <relationship type="one" related="mantle.work.effort.WorkEffort" short-alias="workEffort"/>
+    <relationship type="one" related="mantle.facility.Facility" short-alias="facility"/>
+    <relationship type="one" title="WorkEffortFacilityType" related="moqui.basic.Enumeration" short-alias="type">
+        <key-map field-name="typeEnumId"/></relationship>
+    <seed-data>
+        <moqui.basic.EnumerationType description="Work Effort Facility Type" enumTypeId="WorkEffortFacilityType"/>
+        <moqui.basic.Enumeration enumId="WeftOrigin" description="Inventory Origin" enumTypeId="WorkEffortFacilityType"/>
+        <moqui.basic.Enumeration enumId="WeftUsed" description="Also Used" enumTypeId="WorkEffortFacilityType"/>
+    </seed-data>
+    <field name="lastUpdatedStamp" type="date-time"/>
+
+</entity>

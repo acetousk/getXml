@@ -1,0 +1,25 @@
+
+<!-- Entity Name: mantle.product.subscription.ProductSubscriptionResource sql table: PRODUCT_SUBSCRIPTION_RESOURCE --><entity entity-name="ProductSubscriptionResource" package="mantle.product.subscription">
+    <field name="productId" type="id" is-pk="true"/>
+    <field name="subscriptionResourceId" type="id" is-pk="true"/>
+    <field name="fromDate" type="date-time" is-pk="true"/>
+    <field name="thruDate" type="date-time"/>
+    <field name="purchaseFromDate" type="date-time"/>
+    <field name="purchaseThruDate" type="date-time"/>
+    <field name="availableTime" type="number-integer"/>
+    <field name="availableTimeUomId" type="id"/>
+    <field name="useCountLimit" type="number-integer"/>
+    <field name="useTime" type="number-integer"/>
+    <field name="useTimeUomId" type="id"/>
+    <field name="useRoleTypeId" type="id"/>
+    <relationship type="one" related="mantle.product.Product" short-alias="product"/>
+    <relationship type="one" related="mantle.product.subscription.SubscriptionResource" short-alias="resource"/>
+    <relationship type="one" title="Use" related="mantle.party.RoleType" short-alias="useRole">
+        <key-map field-name="useRoleTypeId"/></relationship>
+    <relationship type="one" title="UseTime" related="moqui.basic.Uom" short-alias="useTimeUom">
+        <key-map field-name="useTimeUomId"/></relationship>
+    <relationship type="one" title="AvailableTime" related="moqui.basic.Uom" short-alias="availableTimeUom">
+        <key-map field-name="availableTimeUomId"/></relationship>
+    <field name="lastUpdatedStamp" type="date-time"/>
+
+</entity>

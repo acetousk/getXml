@@ -1,0 +1,32 @@
+
+<!-- Entity Name: mantle.product.feature.ProductFeatureAppl sql table: PRODUCT_FEATURE_APPL --><entity entity-name="ProductFeatureAppl" package="mantle.product.feature">
+    <field name="productId" type="id" is-pk="true"/>
+    <field name="productFeatureId" type="id" is-pk="true"/>
+    <field name="fromDate" type="date-time" is-pk="true"/>
+    <field name="thruDate" type="date-time"/>
+    <field name="applTypeEnumId" type="id"/>
+    <field name="sequenceNum" type="number-integer"/>
+    <field name="amount" type="number-decimal"/>
+    <field name="recurringAmount" type="number-decimal"/>
+    <field name="featureProductId" type="id">
+        <description><![CDATA[For Optional features represented by a Product (lightweight product configuration)]]></description></field>
+    <relationship type="one" related="mantle.product.Product" short-alias="product"/>
+    <relationship type="one" related="mantle.product.feature.ProductFeature" short-alias="feature"/>
+    <relationship type="one" title="ProductFeatureApplType" related="moqui.basic.Enumeration">
+        <key-map field-name="applTypeEnumId"/></relationship>
+    <relationship type="one" title="Feature" related="mantle.product.Product" short-alias="featureProduct">
+        <key-map field-name="featureProductId"/></relationship>
+    <index name="PRODFTAP_PID_PFID" unique="false">
+        <index-field name="productId"/>
+        <index-field name="productFeatureId"/>
+    </index>
+    <seed-data>
+        <moqui.basic.EnumerationType description="Product Feature Appl Type" enumTypeId="ProductFeatureApplType"/>
+        <moqui.basic.Enumeration description="Selectable" enumId="PfatSelectable" enumTypeId="ProductFeatureApplType"/>
+        <moqui.basic.Enumeration description="Standard" enumId="PfatStandard" enumTypeId="ProductFeatureApplType"/>
+        <moqui.basic.Enumeration description="Distinguishing" enumId="PfatDistinguishing" enumTypeId="ProductFeatureApplType"/>
+        <moqui.basic.Enumeration description="Optional" enumId="PfatOptional" enumTypeId="ProductFeatureApplType"/>
+    </seed-data>
+    <field name="lastUpdatedStamp" type="date-time"/>
+
+</entity>

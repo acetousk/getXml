@@ -1,0 +1,10 @@
+
+<!-- Entity Name: moqui.service.job.ServiceJobUser sql table: SERVICE_JOB_USER --><entity entity-name="ServiceJobUser" package="moqui.service.job" use="configuration" cache="true">
+    <field name="jobName" type="text-short" is-pk="true"/>
+    <field name="userId" type="id" is-pk="true"/>
+    <field name="receiveNotifications" type="text-indicator"/>
+    <relationship type="one" related="moqui.service.job.ServiceJob"/>
+    <relationship type="one-nofk" related="moqui.security.UserAccount"/>
+    <field name="lastUpdatedStamp" type="date-time"/>
+
+</entity>

@@ -1,0 +1,27 @@
+
+<!-- Entity Name: mantle.shipment.ShipmentPackageContent sql table: SHIPMENT_PACKAGE_CONTENT --><entity entity-name="ShipmentPackageContent" package="mantle.shipment" cache="never">
+    <field name="shipmentId" type="id" is-pk="true"/>
+    <field name="shipmentPackageSeqId" type="id" is-pk="true"/>
+    <field name="productId" type="id" is-pk="true"/>
+    <field name="quantity" type="number-decimal"/>
+    <relationship type="one-nofk" related="mantle.shipment.Shipment" short-alias="shipment"/>
+    <relationship type="one" related="mantle.shipment.ShipmentPackage" short-alias="package">
+        <key-map field-name="shipmentId"/>
+        <key-map field-name="shipmentPackageSeqId"/>
+    </relationship>
+    <relationship type="one" related="mantle.shipment.ShipmentItem" short-alias="item">
+        <key-map field-name="shipmentId"/>
+        <key-map field-name="productId"/>
+    </relationship>
+    <relationship type="one-nofk" related="mantle.product.Product" short-alias="product"/>
+    <relationship type="many" related="mantle.shipment.ShipmentItemSource" short-alias="itemSources">
+        <key-map field-name="shipmentId"/>
+        <key-map field-name="productId"/>
+    </relationship>
+    <field name="lastUpdatedStamp" type="date-time"/>
+    <relationship related="mantle.shipment.ShipmentPackageRouteSeg" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="shipmentId" related="shipmentId"/>
+        <key-map field-name="shipmentPackageSeqId" related="shipmentPackageSeqId"/>
+    </relationship>
+
+</entity>

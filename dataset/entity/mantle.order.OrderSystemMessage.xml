@@ -1,0 +1,12 @@
+
+<!-- Entity Name: mantle.order.OrderSystemMessage sql table: ORDER_SYSTEM_MESSAGE --><entity entity-name="OrderSystemMessage" package="mantle.order" cache="never">
+    <field name="orderId" type="id" is-pk="true"/>
+    <field name="systemMessageId" type="id" is-pk="true"/>
+    <field name="externalId" type="text-short"/>
+    <field name="originId" type="text-short"/>
+    <field name="displayId" type="text-short"/>
+    <relationship type="one" related="mantle.order.OrderHeader" short-alias="orderHeader"/>
+    <relationship type="one" related="moqui.service.message.SystemMessage" short-alias="systemMessage"/>
+    <field name="lastUpdatedStamp" type="date-time"/>
+
+</entity>

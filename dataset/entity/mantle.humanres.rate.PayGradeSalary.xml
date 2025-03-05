@@ -1,0 +1,17 @@
+
+<!-- Entity Name: mantle.humanres.rate.PayGradeSalary sql table: PAY_GRADE_SALARY --><entity entity-name="PayGradeSalary" package="mantle.humanres.rate" use="configuration">
+    <field name="payGradeId" type="id" is-pk="true"/>
+    <field name="fromDate" type="date-time" is-pk="true"/>
+    <field name="thruDate" type="date-time"/>
+    <field name="amount" type="currency-amount"/>
+    <field name="minAmount" type="currency-amount"/>
+    <field name="maxAmount" type="currency-amount"/>
+    <field name="currencyUomId" type="id"/>
+    <field name="timePeriodTypeId" type="id"/>
+    <relationship type="one" related="mantle.humanres.rate.PayGrade"/>
+    <relationship type="one" title="Currency" related="moqui.basic.Uom">
+        <key-map field-name="currencyUomId"/></relationship>
+    <relationship type="one" related="mantle.party.time.TimePeriodType"/>
+    <field name="lastUpdatedStamp" type="date-time"/>
+
+</entity>

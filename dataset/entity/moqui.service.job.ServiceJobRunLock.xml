@@ -1,0 +1,12 @@
+
+<!-- Entity Name: moqui.service.job.ServiceJobRunLock sql table: SERVICE_JOB_RUN_LOCK --><entity entity-name="ServiceJobRunLock" package="moqui.service.job" use="transactional" cache="never">
+    <description><![CDATA[Runtime data for a scheduled ServiceJob (with a cronExpression), managed automatically by the service job runner.]]></description>
+    <field name="jobName" type="text-short" is-pk="true"/>
+    <field name="jobRunId" type="id">
+        <description><![CDATA[If not null this is the currently running job instance.]]></description></field>
+    <field name="lastRunTime" type="date-time"/>
+    <relationship type="one" related="moqui.service.job.ServiceJob"/>
+    <relationship type="one" related="moqui.service.job.ServiceJobRun"/>
+    <field name="lastUpdatedStamp" type="date-time"/>
+
+</entity>

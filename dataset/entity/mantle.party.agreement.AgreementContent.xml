@@ -1,0 +1,21 @@
+
+<!-- Entity Name: mantle.party.agreement.AgreementContent sql table: AGREEMENT_CONTENT --><entity entity-name="AgreementContent" package="mantle.party.agreement">
+    <field name="agreementContentId" type="id" is-pk="true"/>
+    <field name="agreementId" type="id"/>
+    <field name="contentLocation" type="text-medium"/>
+    <field name="contentTypeEnumId" type="id"/>
+    <field name="description" type="text-long"/>
+    <field name="contentDate" type="date-time" default="ec.user.nowTimestamp"/>
+    <field name="userId" type="id" default="ec.user.userId"/>
+    <relationship type="one" related="mantle.party.agreement.Agreement"/>
+    <relationship type="one" title="AgreementContentType" related="moqui.basic.Enumeration" short-alias="type">
+        <key-map field-name="contentTypeEnumId"/></relationship>
+    <seed-data>
+        <moqui.basic.EnumerationType description="Agreement Content Type" enumTypeId="AgreementContentType"/>
+        <moqui.basic.Enumeration description="Agreement Document" enumId="AcntDocument" enumTypeId="AgreementContentType"/>
+        <moqui.basic.Enumeration description="Supporting Document" enumId="AcntSupporting" enumTypeId="AgreementContentType"/>
+        <moqui.basic.Enumeration description="Price Sheet" enumId="AcntPriceSheet" enumTypeId="AgreementContentType"/>
+    </seed-data>
+    <field name="lastUpdatedStamp" type="date-time"/>
+
+</entity>

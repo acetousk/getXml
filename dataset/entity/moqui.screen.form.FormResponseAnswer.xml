@@ -1,0 +1,14 @@
+
+<!-- Entity Name: moqui.screen.form.FormResponseAnswer sql table: FORM_RESPONSE_ANSWER --><entity entity-name="FormResponseAnswer" package="moqui.screen.form" use="nontransactional" cache="never">
+    <field name="formResponseAnswerId" type="id" is-pk="true"/>
+    <field name="formResponseId" type="id"/>
+    <field name="formId" type="id"/>
+    <field name="fieldName" type="text-medium"/>
+    <field name="sequenceNum" type="number-integer"/>
+    <field name="valueText" type="text-long"/>
+    <relationship type="one" related="moqui.screen.form.FormResponse"/>
+    <relationship type="one" related="moqui.screen.form.DbForm" short-alias="dbForm"/>
+    <relationship type="one-nofk" related="moqui.screen.form.DbFormField" short-alias="dbFormField"/>
+    <field name="lastUpdatedStamp" type="date-time"/>
+
+</entity>

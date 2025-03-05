@@ -1,0 +1,11 @@
+
+<!-- Entity Name: mantle.sales.opportunity.SalesOpportunityStage sql table: SALES_OPPORTUNITY_STAGE --><entity entity-name="SalesOpportunityStage" package="mantle.sales.opportunity" has-dependents="true">
+    <field name="opportunityStageId" type="id" is-pk="true"/>
+    <field name="description" type="text-medium"/>
+    <field name="defaultProbability" type="number-decimal"/>
+    <field name="sequenceNum" type="number-integer"/>
+    <field name="lastUpdatedStamp" type="date-time"/>
+    <relationship related="mantle.sales.opportunity.SalesOpportunity" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="opportunityStageId" related="opportunityStageId"/></relationship>
+
+</entity>

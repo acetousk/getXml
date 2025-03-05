@@ -1,0 +1,23 @@
+
+<!-- Entity Name: moqui.server.ArtifactHitBin sql table: ARTIFACT_HIT_BIN --><entity entity-name="ArtifactHitBin" package="moqui.server" use="nontransactional" cache="never" sequence-bank-size="100">
+    <field name="hitBinId" type="id" is-pk="true"/>
+    <field name="artifactType" type="text-medium"/>
+    <field name="artifactSubType" type="text-medium"/>
+    <field name="artifactName" type="text-medium"/>
+    <field name="serverIpAddress" type="id"/>
+    <field name="serverHostName" type="text-medium"/>
+    <field name="binStartDateTime" type="date-time"/>
+    <field name="binEndDateTime" type="date-time"/>
+    <field name="hitCount" type="number-integer"/>
+    <field name="totalTimeMillis" type="number-decimal"/>
+    <field name="totalSquaredTime" type="number-decimal">
+        <description><![CDATA[Total (sum) of the squared running times for
+            calculating incremental standard deviation.]]></description></field>
+    <field name="minTimeMillis" type="number-decimal"/>
+    <field name="maxTimeMillis" type="number-decimal"/>
+    <field name="slowHitCount" type="number-integer">
+        <description><![CDATA[After 100 hits count of hits more that 2.6
+            standard deviations above average (both avg and std dev adjusted incrementally).]]></description></field>
+    <field name="lastUpdatedStamp" type="date-time"/>
+
+</entity>

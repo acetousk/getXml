@@ -1,0 +1,23 @@
+<!--Service Location org.moqui.impl.InstanceServices.check#MoquiServer--><service verb="check" noun="MoquiServer"><in-parameters><parameter name="appInstanceId"/></in-parameters><out-parameters><parameter name="moquiConnectSuccess" type="Boolean"/><parameter name="moquiStatusMap" type="Map"/></out-parameters><actions><script><![CDATA[import groovy.json.JsonSlurper
+            import org.moqui.context.ExecutionContext
+            import org.moqui.entity.EntityValue
+            import org.moqui.util.RestClient
+            ExecutionContext ec = context.ec
+
+            EntityValue appInstance = ec.entity.find("moqui.server.instance.AppInstance").condition("appInstanceId", appInstanceId).one()
+            RestClient restClient = ec.service.rest().method("GET").uri().host(appInstance.hostName as String).path("status").build()
+
+            try {
+                RestClient.RestResponse restResponse = restClient.call()
+                if (restResponse.statusCode == 200) {
+                    moquiConnectSuccess = true
+                    moquiStatusMap = (Map) restResponse.jsonObject()
+                } else {
+                    moquiConnectSuccess = false
+                    ec.message.addMessage("Server error on Moqui server: ${restResponse.getReasonPhrase()}")
+                }
+            } catch (Exception e) {
+                moquiConnectSuccess = false
+                ec.logger.log(ec.logger.ERROR_INT, "Error connecting to Moqui server at ${restClient.getUri()?.toString()}", e)
+                ec.message.addMessage("Error connecting to Moqui server at ${restClient.getUri()?.toString()}: ${e.toString()}")
+            }]]></script></actions></service>

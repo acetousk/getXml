@@ -1,0 +1,11 @@
+
+<!-- Entity Name: moqui.basic.StatusFlowItem sql table: STATUS_FLOW_ITEM --><entity entity-name="StatusFlowItem" package="moqui.basic" use="configuration">
+    <field name="statusFlowId" type="id" is-pk="true"/>
+    <field name="statusId" type="id" is-pk="true"/>
+    <field name="isInitial" type="text-indicator">
+        <description><![CDATA[If true can be an initial status in this flow.]]></description></field>
+    <relationship type="one" related="moqui.basic.StatusFlow" short-alias="flow"/>
+    <relationship type="one" related="moqui.basic.StatusItem" short-alias="status"/>
+    <field name="lastUpdatedStamp" type="date-time"/>
+
+</entity>

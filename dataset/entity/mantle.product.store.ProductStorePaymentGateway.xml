@@ -1,0 +1,12 @@
+
+<!-- Entity Name: mantle.product.store.ProductStorePaymentGateway sql table: PRODUCT_STORE_PAYMENT_GATEWAY --><entity entity-name="ProductStorePaymentGateway" package="mantle.product.store">
+    <field name="productStoreId" type="id" is-pk="true"/>
+    <field name="paymentInstrumentEnumId" type="id" is-pk="true"/>
+    <field name="paymentGatewayConfigId" type="id"/>
+    <relationship type="one" related="mantle.product.store.ProductStore" short-alias="store"/>
+    <relationship type="one" title="PaymentInstrument" related="moqui.basic.Enumeration" short-alias="paymentInstrument">
+        <key-map field-name="paymentInstrumentEnumId"/></relationship>
+    <relationship type="one" related="mantle.account.method.PaymentGatewayConfig" short-alias="config"/>
+    <field name="lastUpdatedStamp" type="date-time"/>
+
+</entity>

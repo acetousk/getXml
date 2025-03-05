@@ -1,0 +1,15 @@
+
+<!-- Entity Name: mantle.request.RequestItemAssoc sql table: REQUEST_ITEM_ASSOC --><entity entity-name="RequestItemAssoc" package="mantle.request" cache="never">
+    <field name="requestId" type="id" is-pk="true"/>
+    <field name="requestItemSeqId" type="id" is-pk="true"/>
+    <field name="otherRequestId" type="id" is-pk="true"/>
+    <field name="otherRequestItemSeqId" type="id" is-pk="true"/>
+    <field name="quantity" type="number-decimal"/>
+    <relationship type="one" related="mantle.request.RequestItem" short-alias="item"/>
+    <relationship type="one" title="Other" related="mantle.request.RequestItem" short-alias="otherItem">
+        <key-map field-name="otherRequestId" related="requestId"/>
+        <key-map field-name="otherRequestItemSeqId" related="requestItemSeqId"/>
+    </relationship>
+    <field name="lastUpdatedStamp" type="date-time"/>
+
+</entity>

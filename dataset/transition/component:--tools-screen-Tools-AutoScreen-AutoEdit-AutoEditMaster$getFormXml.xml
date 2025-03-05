@@ -1,0 +1,17 @@
+<!--Transition Screen Location component://tools/screen/Tools/AutoScreen/AutoEdit/AutoEditMaster.xml Transition Name getFormXml--><transition name="getFormXml"><parameter name="aen" required="true"/><parameter name="den"/><actions><!--always-actions at component://webroot/screen/webroot.xml--><set field="html_scripts" from="new LinkedHashSet()"/><set field="footer_scripts" from="new LinkedHashSet()"/><set field="html_stylesheets" from="new LinkedHashSet()"/><!--transition actions--><script><![CDATA[import org.moqui.util.MNode
+
+            StringBuilder xmlBuilder = new StringBuilder()
+            xmlBuilder.append('<?xml version="1.0" encoding="UTF-8"?>\n')
+
+            MNode screenNode = new MNode("screen", ["xmlns:xsi":"http://www.w3.org/2001/XMLSchema-instance", "xsi:noNamespaceSchemaLocation":"http://moqui.org/xsd/xml-screen-3.xsd"])
+            MNode updateTransNode = screenNode.append("transition", [name:"update"])
+            updateTransNode.append("service-call", [name:"update#${aen}".toString()])
+            updateTransNode.append("default-response", [url:"."])
+
+            MNode actionsNode = screenNode.append("actions", null)
+            actionsNode.append("entity-find-one", ["entity-name":aen, "value-field":"fieldValues"])
+            MNode widgetsNode = screenNode.append("widgets", null)
+            widgetsNode.append(sri.getActiveScreenDef().getForm("UpdateMasterEntityValue").getAutoCleanedNode())
+            screenNode.addToSb(xmlBuilder, 0)
+
+            ec.web.sendTextResponse(xmlBuilder.toString(), "text/xml", "Edit${ec.entity.getEntityDefinition(aen).entityName}.xml")]]></script></actions></transition>

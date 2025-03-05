@@ -1,0 +1,84 @@
+
+<!-- Entity Name: mantle.product.feature.ProductFeature sql table: PRODUCT_FEATURE --><entity entity-name="ProductFeature" package="mantle.product.feature" short-alias="features" has-dependents="true">
+    <field name="productFeatureId" type="id" is-pk="true"/>
+    <field name="productFeatureTypeEnumId" type="id"/>
+    <field name="description" type="text-medium" enable-localization="true"/>
+    <field name="numberSpecified" type="number-decimal"/>
+    <field name="numberUomId" type="id"/>
+    <field name="defaultAmount" type="currency-amount"/>
+    <field name="defaultSequenceNum" type="number-integer"/>
+    <field name="abbrev" type="id" enable-localization="true"/>
+    <field name="idCode" type="text-short"/>
+    <field name="ownerPartyId" type="id" enable-audit-log="update" default="'_NA_'"/>
+    <field name="numberPerPallet" type="number-decimal"/>
+    <field name="perPalletTier" type="number-decimal"/>
+    <field name="tiersPerPallet" type="number-decimal"/>
+    <relationship type="one" title="ProductFeatureType" related="moqui.basic.Enumeration" short-alias="type">
+        <key-map field-name="productFeatureTypeEnumId"/></relationship>
+    <relationship type="one" title="Number" related="moqui.basic.Uom" short-alias="numberUom">
+        <key-map field-name="numberUomId"/></relationship>
+    <relationship type="one" title="Owner" related="mantle.party.Party" short-alias="owner">
+        <key-map field-name="ownerPartyId"/></relationship>
+    <relationship type="many" related="mantle.product.feature.ProductFeatureAppl" short-alias="products">
+        <key-map field-name="productFeatureId"/></relationship>
+    <relationship type="many" related="mantle.product.feature.ProductFeatureIactn" short-alias="iactns">
+        <key-map field-name="productFeatureId"/></relationship>
+    <relationship type="many" related="mantle.product.feature.ProductFeatureIactn" short-alias="toIactns">
+        <key-map field-name="productFeatureId" related="toProductFeatureId"/></relationship>
+    <relationship type="many" related="mantle.product.feature.ProductFeatureGroupAppl" short-alias="groups">
+        <key-map field-name="productFeatureId"/></relationship>
+    <seed-data>
+        <moqui.basic.EnumerationType description="Product Feature Type" enumTypeId="ProductFeatureType"/>
+        <moqui.basic.Enumeration description="Accessory" enumId="PftAccessory" enumTypeId="ProductFeatureType"/>
+        <moqui.basic.Enumeration description="Amount" enumId="PftAmount" enumTypeId="ProductFeatureType"/>
+        <moqui.basic.Enumeration description="Net Weight" enumId="PftNetWeight" enumTypeId="ProductFeatureType"/>
+        <moqui.basic.Enumeration description="Artist" enumId="PftArtist" enumTypeId="ProductFeatureType"/>
+        <moqui.basic.Enumeration description="Billing" enumId="PftBilling" enumTypeId="ProductFeatureType"/>
+        <moqui.basic.Enumeration description="Brand" enumId="PftBrand" enumTypeId="ProductFeatureType"/>
+        <moqui.basic.Enumeration description="Care" enumId="PftCare" enumTypeId="ProductFeatureType"/>
+        <moqui.basic.Enumeration description="Color" enumId="PftColor" enumTypeId="ProductFeatureType"/>
+        <moqui.basic.Enumeration description="Dimension" enumId="PftDimension" enumTypeId="ProductFeatureType"/>
+        <moqui.basic.Enumeration description="Equipment Class" enumId="PftEquipClass" enumTypeId="ProductFeatureType"/>
+        <moqui.basic.Enumeration description="Fabric" enumId="PftFabric" enumTypeId="ProductFeatureType"/>
+        <moqui.basic.Enumeration description="Genre" enumId="PftGenre" enumTypeId="ProductFeatureType"/>
+        <moqui.basic.Enumeration description="Hardware" enumId="PftHardware" enumTypeId="ProductFeatureType"/>
+        <moqui.basic.Enumeration description="License" enumId="PftLicense" enumTypeId="ProductFeatureType"/>
+        <moqui.basic.Enumeration description="Origin" enumId="PftOrigin" enumTypeId="ProductFeatureType"/>
+        <moqui.basic.Enumeration description="Other" enumId="PftOther" enumTypeId="ProductFeatureType"/>
+        <moqui.basic.Enumeration description="Packaging Component" enumId="PftPackagingComponent" enumTypeId="ProductFeatureType"/>
+        <moqui.basic.Enumeration description="Packaging Type" enumId="PftPackagingType" enumTypeId="ProductFeatureType"/>
+        <moqui.basic.Enumeration description="Product Quality" enumId="PftProdQuality" enumTypeId="ProductFeatureType"/>
+        <moqui.basic.Enumeration description="Size" enumId="PftSize" enumTypeId="ProductFeatureType"/>
+        <moqui.basic.Enumeration description="Software" enumId="PftSoftware" enumTypeId="ProductFeatureType"/>
+        <moqui.basic.Enumeration description="Style" enumId="PftStyle" enumTypeId="ProductFeatureType"/>
+        <moqui.basic.Enumeration description="Symptom" enumId="PftSymptom" enumTypeId="ProductFeatureType"/>
+        <moqui.basic.Enumeration description="Topic" enumId="PftTopic" enumTypeId="ProductFeatureType"/>
+        <moqui.basic.Enumeration description="Type" enumId="PftType" enumTypeId="ProductFeatureType"/>
+        <moqui.basic.Enumeration description="Warranty" enumId="PftWarranty" enumTypeId="ProductFeatureType"/>
+        <moqui.basic.Enumeration description="Model Year" enumId="PftModelYear" enumTypeId="ProductFeatureType"/>
+        <moqui.basic.Enumeration description="Year Made" enumId="PftYearMade" enumTypeId="ProductFeatureType"/>
+    </seed-data>
+    <master>
+        <detail relationship="type"/>
+        <detail relationship="numberUom"/>
+        <detail relationship="products"/>
+        <detail relationship="iactns">
+            <detail relationship="type"/>
+            <detail relationship="toFeature"/>
+        </detail>
+        <detail relationship="toIactns">
+            <detail relationship="type"/>
+            <detail relationship="feature"/>
+        </detail>
+        <detail relationship="groups">
+            <detail relationship="group"/></detail>
+    </master>
+    <field name="lastUpdatedStamp" type="date-time"/>
+    <relationship related="mantle.order.OrderItem" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="productFeatureId" related="productFeatureId"/></relationship>
+    <relationship related="mantle.product.ProductContent" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="productFeatureId" related="productFeatureId"/></relationship>
+    <relationship related="mantle.product.feature.ProductFeatureIactn" type="many" is-auto-reverse="true" mutable="true" title="To">
+        <key-map field-name="productFeatureId" related="toProductFeatureId"/></relationship>
+
+</entity>

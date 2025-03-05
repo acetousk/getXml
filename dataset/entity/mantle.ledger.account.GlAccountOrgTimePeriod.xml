@@ -1,0 +1,19 @@
+
+<!-- Entity Name: mantle.ledger.account.GlAccountOrgTimePeriod sql table: GL_ACCOUNT_ORG_TIME_PERIOD --><entity entity-name="GlAccountOrgTimePeriod" package="mantle.ledger.account" use="transactional" cache="never">
+    <field name="glAccountId" type="id" is-pk="true"/>
+    <field name="organizationPartyId" type="id" is-pk="true"/>
+    <field name="timePeriodId" type="id" is-pk="true"/>
+    <field name="postedDebits" type="currency-amount"/>
+    <field name="postedCredits" type="currency-amount"/>
+    <field name="postedDebitsNoClosing" type="currency-amount"/>
+    <field name="postedCreditsNoClosing" type="currency-amount"/>
+    <field name="beginningBalance" type="currency-amount"/>
+    <field name="endingBalance" type="currency-amount"/>
+    <field name="balanceLastUpdated" type="date-time"/>
+    <relationship type="one" related="mantle.ledger.account.GlAccount"/>
+    <relationship type="one" title="Organization" related="mantle.party.Party">
+        <key-map field-name="organizationPartyId"/></relationship>
+    <relationship type="one" related="mantle.party.time.TimePeriod"/>
+    <field name="lastUpdatedStamp" type="date-time"/>
+
+</entity>

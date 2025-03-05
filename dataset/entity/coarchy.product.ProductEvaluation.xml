@@ -1,0 +1,44 @@
+
+<!-- Entity Name: coarchy.product.ProductEvaluation sql table: PRODUCT_EVALUATION --><entity entity-name="ProductEvaluation" package="coarchy.product" has-dependents="true">
+    <field name="productEvaluationId" type="id" is-pk="true"/>
+    <field name="productId" type="id"/>
+    <field name="organizationId" type="id"/>
+    <field name="statusId" type="id" enable-audit-log="update"/>
+    <field name="evaluationName" type="text-intermediate"/>
+    <field name="createdDate" type="date-time" default="ec.user.nowTimestamp"/>
+    <field name="requirementsSetDate" type="date-time"/>
+    <field name="completedDate" type="date-time"/>
+    <relationship type="one" title="Product" related="mantle.product.Product" short-alias="product"/>
+    <relationship type="one" title="ProductEvaluation" related="moqui.basic.StatusItem" short-alias="statusEnum"/>
+    <relationship type="one" related="moqui.basic.StatusItem" short-alias="status"/>
+    <relationship type="one" related="mantle.party.Organization" short-alias="organization">
+        <key-map field-name="organizationId" related="partyId"/></relationship>
+    <seed-data>
+        <moqui.basic.StatusType description="Product Evaluation" statusTypeId="ProductEvaluation"/>
+        <moqui.basic.StatusItem description="Requirements Selection" sequenceNum="1" statusId="PeRequirementsSelection" statusTypeId="ProductEvaluation"/>
+        <moqui.basic.StatusItem description="Invite Vendors" sequenceNum="2" statusId="PeInviteVendors" statusTypeId="ProductEvaluation"/>
+        <moqui.basic.StatusItem description="Awaiting Vendor Responses" sequenceNum="2" statusId="PeAwaitingVendorResponse" statusTypeId="ProductEvaluation"/>
+        <moqui.basic.StatusItem description="Completed" sequenceNum="3" statusId="PeCompleted" statusTypeId="ProductEvaluation"/>
+        <moqui.basic.StatusItem description="Cancelled" sequenceNum="4" statusId="PeCancelled" statusTypeId="ProductEvaluation"/>
+        <moqui.basic.StatusFlowTransition statusFlowId="Default" statusId="PeRequirementsSelection" toStatusId="PeInviteVendors" transitionName="Finalize Requirements Selection"/>
+        <moqui.basic.StatusFlowTransition statusFlowId="Default" statusId="PeInviteVendors" toStatusId="PeRequirementsSelection" transitionName="Modify Requirements"/>
+        <moqui.basic.StatusFlowTransition statusFlowId="Default" statusId="PeInviteVendors" toStatusId="PeAwaitingVendorResponse" transitionName="Request Information"/>
+        <moqui.basic.StatusFlowTransition statusFlowId="Default" statusId="PeAwaitingVendorResponse" toStatusId="PeCompleted" transitionName="Complete"/>
+        <moqui.basic.StatusFlowTransition statusFlowId="Default" statusId="PeCompleted" toStatusId="PeInviteVendors" transitionName="Re-open"/>
+        <moqui.basic.StatusFlowTransition statusFlowId="Default" statusId="PeRequirementsSelection" toStatusId="PeCancelled" transitionName="Cancel"/>
+        <moqui.basic.StatusFlowTransition statusFlowId="Default" statusId="PeInviteVendors" toStatusId="PeCancelled" transitionName="Cancel"/>
+        <moqui.basic.StatusFlowTransition statusFlowId="Default" statusId="PeAwaitingVendorResponse" toStatusId="PeCancelled" transitionName="Withdraw Request"/>
+    </seed-data>
+    <field name="lastUpdatedStamp" type="date-time"/>
+    <relationship related="coarchy.product.ProductEvaluationActivity" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="productEvaluationId" related="productEvaluationId"/></relationship>
+    <relationship related="coarchy.product.ProductEvaluationParty" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="productEvaluationId" related="productEvaluationId"/></relationship>
+    <relationship related="coarchy.product.ProductEvaluationResponse" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="productEvaluationId" related="productEvaluationId"/></relationship>
+    <relationship related="coarchy.product.ProductEvaluationStatement" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="productEvaluationId" related="productEvaluationId"/></relationship>
+    <relationship related="coarchy.product.ProductEvaluationStory" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="productEvaluationId" related="productEvaluationId"/></relationship>
+
+</entity>

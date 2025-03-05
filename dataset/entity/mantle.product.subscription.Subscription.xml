@@ -1,0 +1,61 @@
+
+<!-- Entity Name: mantle.product.subscription.Subscription sql table: SUBSCRIPTION --><entity entity-name="Subscription" package="mantle.product.subscription" short-alias="subscriptions" cache="never" has-dependents="true">
+    <field name="subscriptionId" type="id" is-pk="true"/>
+    <field name="subscriptionTypeEnumId" type="id"/>
+    <field name="subscriptionResourceId" type="id"/>
+    <field name="subscriberPartyId" type="id"/>
+    <field name="deliverToContactMechId" type="id"/>
+    <field name="orderId" type="id"/>
+    <field name="orderItemSeqId" type="id"/>
+    <field name="productId" type="id"/>
+    <field name="externalSubscriptionId" type="text-short"/>
+    <field name="resourceInstanceId" type="text-short">
+        <description><![CDATA[ID of an instance of a resource, like a serial
+            number or executing instance ID.]]></description></field>
+    <field name="description" type="text-medium"/>
+    <field name="fromDate" type="date-time"/>
+    <field name="thruDate" type="date-time"/>
+    <field name="purchaseFromDate" type="date-time"/>
+    <field name="purchaseThruDate" type="date-time"/>
+    <field name="availableTime" type="number-integer"/>
+    <field name="availableTimeUomId" type="id"/>
+    <field name="useTime" type="number-integer"/>
+    <field name="useTimeUomId" type="id"/>
+    <field name="useCountLimit" type="number-integer"/>
+    <relationship type="one" title="SubscriptionType" related="moqui.basic.Enumeration" short-alias="type">
+        <key-map field-name="subscriptionTypeEnumId"/></relationship>
+    <relationship type="one" related="mantle.product.subscription.SubscriptionResource" short-alias="resource">
+        <key-map field-name="subscriptionResourceId"/></relationship>
+    <relationship type="one" title="Subscriber" related="mantle.party.Party" short-alias="subscriber">
+        <key-map field-name="subscriberPartyId"/></relationship>
+    <relationship type="one" title="DeliverTo" related="mantle.party.contact.ContactMech" short-alias="deliverTo">
+        <key-map field-name="deliverToContactMechId"/></relationship>
+    <relationship type="one" related="mantle.order.OrderItem" short-alias="orderItem">
+        <key-map field-name="orderId"/>
+        <key-map field-name="orderItemSeqId"/>
+    </relationship>
+    <relationship type="one" related="mantle.product.Product" short-alias="product"/>
+    <relationship type="one" title="AvailableTime" related="moqui.basic.Uom" short-alias="availableTimeUom">
+        <key-map field-name="availableTimeUomId"/></relationship>
+    <relationship type="one" title="UseTime" related="moqui.basic.Uom" short-alias="useTimeUom">
+        <key-map field-name="useTimeUomId"/></relationship>
+    <seed-data>
+        <moqui.basic.EnumerationType description="Subscription Type" enumTypeId="SubscriptionType"/>
+        <moqui.basic.Enumeration description="Product" enumId="StProduct" enumTypeId="SubscriptionType"/>
+    </seed-data>
+    <master>
+        <detail relationship="type"/>
+        <detail relationship="resource"/>
+        <detail relationship="subscriber" use-master="basic"/>
+        <detail relationship="deliverTo" use-master="default"/>
+        <detail relationship="product"/>
+        <detail relationship="availableTimeUom"/>
+        <detail relationship="useTimeUom"/>
+    </master>
+    <field name="lastUpdatedStamp" type="date-time"/>
+    <relationship related="mantle.party.agreement.AgreementItemSubscription" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="subscriptionId" related="subscriptionId"/></relationship>
+    <relationship related="mantle.product.subscription.SubscriptionDelivery" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="subscriptionId" related="subscriptionId"/></relationship>
+
+</entity>

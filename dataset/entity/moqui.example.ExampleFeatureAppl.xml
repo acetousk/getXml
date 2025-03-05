@@ -1,0 +1,21 @@
+
+<!-- Entity Name: moqui.example.ExampleFeatureAppl sql table: EXAMPLE_FEATURE_APPL --><entity entity-name="ExampleFeatureAppl" package="moqui.example">
+    <field name="exampleId" type="id" is-pk="true"/>
+    <field name="exampleFeatureId" type="id" is-pk="true"/>
+    <field name="fromDate" type="date-time" is-pk="true"/>
+    <field name="thruDate" type="date-time"/>
+    <field name="exampleFeatureApplEnumId" type="id"/>
+    <field name="sequenceNum" type="number-integer"/>
+    <relationship type="one" related="moqui.example.Example" short-alias="moqui.example" mutable="true"/>
+    <relationship type="one" related="moqui.example.ExampleFeature" short-alias="feature" mutable="true"/>
+    <relationship type="one" title="ExampleFeatureAppl" related="moqui.basic.Enumeration">
+        <key-map field-name="exampleFeatureApplEnumId"/></relationship>
+    <seed-data>
+        <moqui.basic.EnumerationType description="Example Feature Application" enumTypeId="ExampleFeatureAppl"/>
+        <moqui.basic.Enumeration description="Required" enumId="EFA_REQUIRED" enumTypeId="ExampleFeatureAppl"/>
+        <moqui.basic.Enumeration description="Desired" enumId="EFA_DESIRED" enumTypeId="ExampleFeatureAppl"/>
+        <moqui.basic.Enumeration description="Not Allowed" enumId="EFA_NOT_ALLOWED" enumTypeId="ExampleFeatureAppl"/>
+    </seed-data>
+    <field name="lastUpdatedStamp" type="date-time"/>
+
+</entity>

@@ -1,0 +1,16 @@
+
+<!-- Entity Name: moqui.server.instance.DatabaseHost sql table: DATABASE_HOST --><entity entity-name="DatabaseHost" package="moqui.server.instance" use="configuration" has-dependents="true">
+    <field name="databaseHostId" type="id" is-pk="true"/>
+    <field name="databaseTypeId" type="id"/>
+    <field name="hostAddress" type="text-medium"/>
+    <field name="hostPort" type="number-integer"/>
+    <field name="instanceAddress" type="text-medium">
+        <description><![CDATA[If instance accesses DB by different address specify here]]></description></field>
+    <field name="adminUser" type="text-short"/>
+    <field name="adminPassword" type="text-medium" encrypt="true"/>
+    <relationship type="one" related="moqui.server.instance.DatabaseType" short-alias="type"/>
+    <field name="lastUpdatedStamp" type="date-time"/>
+    <relationship related="moqui.server.instance.AppInstance" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="databaseHostId" related="databaseHostId"/></relationship>
+
+</entity>

@@ -1,0 +1,19 @@
+
+<!-- Entity Name: mantle.marketing.tracking.TrackingCodeOrderReturn sql table: TRACKING_CODE_ORDER_RETURN --><entity entity-name="TrackingCodeOrderReturn" package="mantle.marketing.tracking">
+    <field name="trackingCodeTypeEnumId" type="id" is-pk="true"/>
+    <field name="returnId" type="id" is-pk="true"/>
+    <field name="orderId" type="id" is-pk="true"/>
+    <field name="orderItemSeqId" type="id"/>
+    <field name="trackingCodeId" type="id"/>
+    <field name="isBillable" type="text-indicator"/>
+    <field name="siteId" type="text-medium"/>
+    <field name="hasExported" type="text-indicator"/>
+    <field name="affiliateReferredTimeStamp" type="date-time"/>
+    <relationship type="one" title="TrackingCodeType" related="moqui.basic.Enumeration">
+        <key-map field-name="trackingCodeTypeEnumId"/></relationship>
+    <relationship type="one" related="mantle.order.return.ReturnHeader"/>
+    <relationship type="one" related="mantle.order.OrderHeader"/>
+    <relationship type="one" related="mantle.marketing.tracking.TrackingCode"/>
+    <field name="lastUpdatedStamp" type="date-time"/>
+
+</entity>

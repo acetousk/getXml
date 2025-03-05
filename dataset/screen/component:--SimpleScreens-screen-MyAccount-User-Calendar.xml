@@ -1,0 +1,1 @@
+<!-- Screen Location component://SimpleScreens/screen/MyAccount/User/Calendar.xml --><screen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://moqui.org/xsd/xml-screen-3.xsd" default-menu-title="Calendar" default-menu-index="3"><subscreens default-item="MyCalendar"/><widgets><subscreens-active/></widgets></screen>

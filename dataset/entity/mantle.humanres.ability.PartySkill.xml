@@ -1,0 +1,16 @@
+
+<!-- Entity Name: mantle.humanres.ability.PartySkill sql table: PARTY_SKILL --><entity entity-name="PartySkill" package="mantle.humanres.ability" use="nontransactional">
+    <field name="partyId" type="id" is-pk="true"/>
+    <field name="skillTypeEnumId" type="id" is-pk="true"/>
+    <field name="rating" type="number-integer"/>
+    <field name="skillLevel" type="number-integer"/>
+    <field name="startedUsingDate" type="date-time"/>
+    <field name="yearsExperience" type="number-integer"/>
+    <relationship type="one" related="mantle.party.Party" short-alias="party"/>
+    <relationship type="one" title="SkillType" related="moqui.basic.Enumeration" short-alias="skillTypeEnum">
+        <key-map field-name="skillTypeEnumId"/></relationship>
+    <seed-data>
+        <moqui.basic.EnumerationType description="Skill Type" enumTypeId="SkillType"/></seed-data>
+    <field name="lastUpdatedStamp" type="date-time"/>
+
+</entity>

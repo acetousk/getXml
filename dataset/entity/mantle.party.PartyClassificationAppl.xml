@@ -1,0 +1,15 @@
+
+<!-- Entity Name: mantle.party.PartyClassificationAppl sql table: PARTY_CLASSIFICATION_APPL --><entity entity-name="PartyClassificationAppl" package="mantle.party">
+    <field name="partyId" type="id" is-pk="true"/>
+    <field name="partyClassificationId" type="id" is-pk="true"/>
+    <field name="fromDate" type="date-time" is-pk="true"/>
+    <field name="thruDate" type="date-time"/>
+    <relationship type="one" related="mantle.party.Party" short-alias="party"/>
+    <relationship type="one" related="mantle.party.PartyClassification" short-alias="classification"/>
+    <field name="lastUpdatedStamp" type="date-time"/>
+    <relationship related="mantle.account.invoice.Invoice" type="many" is-auto-reverse="true" mutable="true" title="To">
+        <key-map field-name="partyId" related="toPartyId"/></relationship>
+    <relationship related="mantle.order.OrderPart" type="many" is-auto-reverse="true" mutable="true" title="Customer">
+        <key-map field-name="partyId" related="customerPartyId"/></relationship>
+
+</entity>

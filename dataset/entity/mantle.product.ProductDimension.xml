@@ -1,0 +1,14 @@
+
+<!-- Entity Name: mantle.product.ProductDimension sql table: PRODUCT_DIMENSION --><entity entity-name="ProductDimension" package="mantle.product">
+    <description><![CDATA[WARNING: to be deprecated by mantle.product.ProductUomDimension]]></description>
+    <field name="productId" type="id" is-pk="true"/>
+    <field name="dimensionTypeId" type="id" is-pk="true"/>
+    <field name="value" type="number-decimal"/>
+    <field name="valueUomId" type="id"/>
+    <relationship type="one" related="mantle.product.Product" short-alias="product"/>
+    <relationship type="one" related="mantle.product.ProductDimensionType" short-alias="type"/>
+    <relationship type="one" title="Value" related="moqui.basic.Uom" short-alias="valueUom">
+        <key-map field-name="valueUomId"/></relationship>
+    <field name="lastUpdatedStamp" type="date-time"/>
+
+</entity>

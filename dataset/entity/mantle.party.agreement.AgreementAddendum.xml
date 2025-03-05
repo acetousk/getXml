@@ -1,0 +1,16 @@
+
+<!-- Entity Name: mantle.party.agreement.AgreementAddendum sql table: AGREEMENT_ADDENDUM --><entity entity-name="AgreementAddendum" package="mantle.party.agreement">
+    <field name="agreementAddendumId" type="id" is-pk="true"/>
+    <field name="agreementId" type="id"/>
+    <field name="agreementItemSeqId" type="id"/>
+    <field name="addendumCreationDate" type="date-time"/>
+    <field name="addendumEffectiveDate" type="date-time"/>
+    <field name="addendumText" type="text-long"/>
+    <relationship type="one" related="mantle.party.agreement.Agreement"/>
+    <relationship type="one" related="mantle.party.agreement.AgreementItem">
+        <key-map field-name="agreementId"/>
+        <key-map field-name="agreementItemSeqId"/>
+    </relationship>
+    <field name="lastUpdatedStamp" type="date-time"/>
+
+</entity>

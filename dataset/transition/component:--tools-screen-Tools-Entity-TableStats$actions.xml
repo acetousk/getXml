@@ -1,0 +1,9 @@
+<!--Transition Screen Location component://tools/screen/Tools/Entity/TableStats.xml Transition Name actions--><transition name="actions"><actions><!--always-actions at component://webroot/screen/webroot.xml--><set field="html_scripts" from="new LinkedHashSet()"/><set field="footer_scripts" from="new LinkedHashSet()"/><set field="html_stylesheets" from="new LinkedHashSet()"/><!--actions--><set field="orderByField" from="orderByField ?: ('empty' == viewOption ? 'tableName' : '-rowCount')"/><set field="entityListOrig" from="ec.entity.getAllEntitiesInfo(orderByField, filterRegexp, false, true)"/><set field="entityInfoList" from="[]"/><iterate list="entityListOrig" entry="entityInfo"><script><![CDATA[long rowCount = ec.entity.find(entityInfo.fullEntityName).count()
+                entityInfo.put("rowCount", rowCount)
+                if ('empty' == viewOption) {
+                    if (rowCount == 0) entityInfoList.add(entityInfo)
+                } else if ('non-empty' == viewOption) {
+                    if (rowCount > 0) entityInfoList.add(entityInfo)
+                } else {
+                    entityInfoList.add(entityInfo)
+                }]]></script></iterate><if condition="orderByField && orderByField.contains('rowCount')"><script><![CDATA[orderMapList(entityInfoList, [orderByField])]]></script></if></actions></transition>

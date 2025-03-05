@@ -1,0 +1,1 @@
+<!--Service Location mantle.other.TaxServices.calculate#InvoiceSalesTax--><service verb="calculate" noun="InvoiceSalesTax"><in-parameters><parameter name="invoiceId" required="true"/></in-parameters><out-parameters/><actions/></service>

@@ -1,0 +1,19 @@
+
+<!-- Entity Name: mantle.product.feature.ProductFeatureGroup sql table: PRODUCT_FEATURE_GROUP --><entity entity-name="ProductFeatureGroup" package="mantle.product.feature" short-alias="featureGroups" has-dependents="true">
+    <field name="productFeatureGroupId" type="id" is-pk="true"/>
+    <field name="description" type="text-medium"/>
+    <relationship type="many" related="mantle.product.feature.ProductFeatureGroupAppl" short-alias="features">
+        <key-map field-name="productFeatureGroupId"/></relationship>
+    <relationship type="many" related="mantle.product.feature.ProductCategoryFeatGrpAppl" short-alias="categories">
+        <key-map field-name="productFeatureGroupId"/></relationship>
+    <master>
+        <detail relationship="features">
+            <detail relationship="feature"/></detail>
+        <detail relationship="categories">
+            <detail relationship="category"/></detail>
+    </master>
+    <field name="lastUpdatedStamp" type="date-time"/>
+    <relationship related="mantle.product.ProductClassFeatureGroup" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="productFeatureGroupId" related="productFeatureGroupId"/></relationship>
+
+</entity>

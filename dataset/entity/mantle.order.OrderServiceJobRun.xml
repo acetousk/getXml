@@ -1,0 +1,9 @@
+
+<!-- Entity Name: mantle.order.OrderServiceJobRun sql table: ORDER_SERVICE_JOB_RUN --><entity entity-name="OrderServiceJobRun" package="mantle.order" cache="never">
+    <field name="orderId" type="id" is-pk="true"/>
+    <field name="jobRunId" type="id" is-pk="true"/>
+    <relationship type="one" related="mantle.order.OrderHeader" short-alias="orderHeader"/>
+    <relationship type="one" related="moqui.service.job.ServiceJobRun" short-alias="systemMessage"/>
+    <field name="lastUpdatedStamp" type="date-time"/>
+
+</entity>

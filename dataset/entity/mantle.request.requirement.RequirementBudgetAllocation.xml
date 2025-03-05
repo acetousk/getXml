@@ -1,0 +1,14 @@
+
+<!-- Entity Name: mantle.request.requirement.RequirementBudgetAllocation sql table: REQUIREMENT_BUDGET_ALLOCATION --><entity entity-name="RequirementBudgetAllocation" package="mantle.request.requirement" cache="never">
+    <field name="requirementId" type="id" is-pk="true"/>
+    <field name="budgetId" type="id" is-pk="true"/>
+    <field name="budgetItemSeqId" type="id" is-pk="true"/>
+    <field name="amount" type="currency-amount"/>
+    <relationship type="one" related="mantle.other.budget.BudgetItem">
+        <key-map field-name="budgetId"/>
+        <key-map field-name="budgetItemSeqId"/>
+    </relationship>
+    <relationship type="one" related="mantle.request.requirement.Requirement"/>
+    <field name="lastUpdatedStamp" type="date-time"/>
+
+</entity>

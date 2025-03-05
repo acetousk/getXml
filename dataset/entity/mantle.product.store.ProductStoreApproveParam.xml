@@ -1,0 +1,9 @@
+
+<!-- Entity Name: mantle.product.store.ProductStoreApproveParam sql table: PRODUCT_STORE_APPROVE_PARAM --><entity entity-name="ProductStoreApproveParam" package="mantle.product.store" use="configuration" cache="true">
+    <field name="storeApproveId" type="id" is-pk="true"/>
+    <field name="parameterName" type="text-short" is-pk="true"/>
+    <field name="parameterValue" type="text-medium"/>
+    <relationship type="one" related="mantle.product.store.ProductStoreApprove" short-alias="storeApprove"/>
+    <field name="lastUpdatedStamp" type="date-time"/>
+
+</entity>

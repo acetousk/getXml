@@ -1,0 +1,10 @@
+
+<!-- Entity Name: mantle.humanres.employment.PayrollAdjustmentStateStts sql table: PAYROLL_ADJUSTMENT_STATE_STTS --><entity entity-name="PayrollAdjustmentStateStts" package="mantle.humanres.employment" use="configuration">
+    <field name="payrollAdjustmentId" type="id" is-pk="true"/>
+    <field name="taxStateStatusEnumId" type="id" is-pk="true"/>
+    <relationship type="one" related="mantle.humanres.employment.PayrollAdjustment"/>
+    <relationship type="one" title="TaxStateStatus" related="moqui.basic.Enumeration">
+        <key-map field-name="taxStateStatusEnumId"/></relationship>
+    <field name="lastUpdatedStamp" type="date-time"/>
+
+</entity>

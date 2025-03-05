@@ -1,0 +1,12 @@
+
+<!-- Entity Name: moqui.resource.wiki.WikiPageUser sql table: WIKI_PAGE_USER --><entity entity-name="WikiPageUser" package="moqui.resource.wiki" use="nontransactional">
+    <field name="wikiPageId" type="id" is-pk="true"/>
+    <field name="userId" type="id" is-pk="true"/>
+    <field name="receiveNotifications" type="text-indicator"/>
+    <field name="allowView" type="text-indicator"/>
+    <field name="allowUpdate" type="text-indicator"/>
+    <relationship type="one" related="moqui.resource.wiki.WikiPage"/>
+    <relationship type="one-nofk" related="moqui.security.UserAccount"/>
+    <field name="lastUpdatedStamp" type="date-time"/>
+
+</entity>

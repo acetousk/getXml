@@ -1,0 +1,21 @@
+
+<!-- Entity Name: mantle.account.method.PaymentMethodContent sql table: PAYMENT_METHOD_CONTENT --><entity entity-name="PaymentMethodContent" package="mantle.account.method" cache="never">
+    <field name="paymentMethodContentId" type="id" is-pk="true"/>
+    <field name="paymentMethodId" type="id"/>
+    <field name="contentLocation" type="text-medium"/>
+    <field name="contentTypeEnumId" type="id"/>
+    <field name="description" type="text-long"/>
+    <field name="contentDate" type="date-time" default="ec.user.nowTimestamp"/>
+    <field name="userId" type="id" default="ec.user.userId"/>
+    <relationship type="one" related="mantle.account.method.PaymentMethod"/>
+    <relationship type="one" title="PaymentMethodContentType" related="moqui.basic.Enumeration">
+        <key-map field-name="contentTypeEnumId"/></relationship>
+    <seed-data>
+        <moqui.basic.EnumerationType description="Payment Method Content Type" enumTypeId="PaymentMethodContentType"/>
+        <moqui.basic.Enumeration enumId="PmctSignaturePrimary" description="Signature Primary" enumTypeId="PaymentMethodContentType"/>
+        <moqui.basic.Enumeration enumId="PmctSignatureSecondary" description="Signature Secondary" enumTypeId="PaymentMethodContentType"/>
+        <moqui.basic.Enumeration enumId="PmctImage" description="Image" enumTypeId="PaymentMethodContentType"/>
+    </seed-data>
+    <field name="lastUpdatedStamp" type="date-time"/>
+
+</entity>

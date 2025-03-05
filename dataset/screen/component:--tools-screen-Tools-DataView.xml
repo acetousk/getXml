@@ -1,0 +1,1 @@
+<!-- Screen Location component://tools/screen/Tools/DataView.xml --><screen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://moqui.org/xsd/xml-screen-3.xsd" default-menu-title="Data View" default-menu-index="4"><subscreens default-item="FindDbView"/><widgets><subscreens-active/></widgets></screen>

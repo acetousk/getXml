@@ -1,0 +1,27 @@
+
+<!-- Entity Name: moqui.service.job.ServiceJobRun sql table: SERVICE_JOB_RUN --><entity entity-name="ServiceJobRun" package="moqui.service.job" use="transactional" cache="never" has-dependents="true">
+    <field name="jobRunId" type="id" is-pk="true"/>
+    <field name="jobName" type="text-short"/>
+    <field name="userId" type="id">
+        <description><![CDATA[The user that initiated the job run]]></description></field>
+    <field name="parameters" type="text-long"/>
+    <field name="results" type="text-very-long"/>
+    <field name="messages" type="text-long"/>
+    <field name="hasError" type="text-indicator"/>
+    <field name="errors" type="text-long"/>
+    <field name="hostAddress" type="text-short"/>
+    <field name="hostName" type="text-medium"/>
+    <field name="runThread" type="text-medium"/>
+    <field name="startTime" type="date-time"/>
+    <field name="endTime" type="date-time"/>
+    <relationship type="one" related="moqui.service.job.ServiceJob"/>
+    <relationship type="one-nofk" related="moqui.security.UserAccount"/>
+    <index name="SVC_JOBRUN_NAME" unique="false">
+        <index-field name="jobName"/></index>
+    <field name="lastUpdatedStamp" type="date-time"/>
+    <relationship related="mantle.order.OrderServiceJobRun" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="jobRunId" related="jobRunId"/></relationship>
+    <relationship related="moqui.service.job.ServiceJobRunLock" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="jobRunId" related="jobRunId"/></relationship>
+
+</entity>

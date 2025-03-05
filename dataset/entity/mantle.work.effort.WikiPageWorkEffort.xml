@@ -1,0 +1,9 @@
+
+<!-- Entity Name: mantle.work.effort.WikiPageWorkEffort sql table: WIKI_PAGE_WORK_EFFORT --><entity entity-name="WikiPageWorkEffort" package="mantle.work.effort" cache="never">
+    <field name="wikiPageId" type="id" is-pk="true"/>
+    <field name="workEffortId" type="id" is-pk="true"/>
+    <relationship type="one" related="moqui.resource.wiki.WikiPage"/>
+    <relationship type="one" related="mantle.work.effort.WorkEffort"/>
+    <field name="lastUpdatedStamp" type="date-time"/>
+
+</entity>

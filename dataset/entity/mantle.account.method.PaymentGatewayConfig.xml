@@ -1,0 +1,35 @@
+
+<!-- Entity Name: mantle.account.method.PaymentGatewayConfig sql table: PAYMENT_GATEWAY_CONFIG --><entity entity-name="PaymentGatewayConfig" package="mantle.account.method" has-dependents="true">
+    <field name="paymentGatewayConfigId" type="id" is-pk="true"/>
+    <field name="paymentGatewayTypeEnumId" type="id">
+        <description><![CDATA[Each payment gateway integration should define a
+            PaymentGatewayType Enumeration record plus an entity with a shared PK (ie PK is paymentGatewayConfigId).]]></description></field>
+    <field name="description" type="text-medium"/>
+    <field name="authorizeServiceName" type="text-medium">
+        <description><![CDATA[Service implementing the mantle.account.PaymentServices.authorize#Payment interface]]></description></field>
+    <field name="captureServiceName" type="text-medium">
+        <description><![CDATA[Service implementing the mantle.account.PaymentServices.capture#Payment interface]]></description></field>
+    <field name="releaseServiceName" type="text-medium">
+        <description><![CDATA[Service implementing the mantle.account.PaymentServices.release#Payment interface]]></description></field>
+    <field name="refundServiceName" type="text-medium">
+        <description><![CDATA[Service implementing the mantle.account.PaymentServices.refund#Payment interface]]></description></field>
+    <field name="detailsServiceName" type="text-medium">
+        <description><![CDATA[Service implementing the mantle.account.PaymentServices.get#PaymentGatewayDetails interface]]></description></field>
+    <field name="systemMessageRemoteId" type="id"/>
+    <relationship type="one" title="PaymentGatewayType" related="moqui.basic.Enumeration">
+        <key-map field-name="paymentGatewayTypeEnumId"/></relationship>
+    <relationship type="one" title="SystemMessageRemote" related="moqui.service.message.SystemMessageRemote" short-alias="remote">
+        <key-map field-name="systemMessageRemoteId"/></relationship>
+    <seed-data>
+        <moqui.basic.EnumerationType description="Payment Gateway Type" enumTypeId="PaymentGatewayType"/>
+        <moqui.basic.Enumeration description="Test" enumId="PgtTest" enumTypeId="PaymentGatewayType"/>
+    </seed-data>
+    <field name="lastUpdatedStamp" type="date-time"/>
+    <relationship related="mantle.account.method.PaymentMethod" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="paymentGatewayConfigId" related="paymentGatewayConfigId"/></relationship>
+    <relationship related="mantle.account.payment.Payment" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="paymentGatewayConfigId" related="paymentGatewayConfigId"/></relationship>
+    <relationship related="mantle.product.store.ProductStorePaymentGateway" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="paymentGatewayConfigId" related="paymentGatewayConfigId"/></relationship>
+
+</entity>

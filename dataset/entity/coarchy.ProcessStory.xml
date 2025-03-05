@@ -1,0 +1,19 @@
+
+<!-- Entity Name: coarchy.ProcessStory sql table: PROCESS_STORY --><entity entity-name="ProcessStory" package="coarchy" has-dependents="true">
+    <field name="processStoryId" type="id" is-pk="true"/>
+    <field name="name" type="text-long"/>
+    <field name="disabled" type="text-indicator" enable-audit-log="true" default="'N'"/>
+    <field name="organizationId" type="id"/>
+    <relationship type="many" related="coarchy.ProcessStoryActivity" short-alias="activities">
+        <key-map field-name="processStoryId"/></relationship>
+    <relationship type="many" related="coarchy.ProcessStoryActivity" short-alias="detailActivities">
+        <key-map field-name="processStoryId" related="detailProcessStoryId"/></relationship>
+    <relationship type="one" related="mantle.party.Organization" short-alias="organization">
+        <key-map field-name="organizationId" related="partyId"/></relationship>
+    <field name="lastUpdatedStamp" type="date-time"/>
+    <relationship related="coarchy.product.ProductEvaluationActivity" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="processStoryId" related="processStoryId"/></relationship>
+    <relationship related="coarchy.product.ProductEvaluationStory" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="processStoryId" related="processStoryId"/></relationship>
+
+</entity>

@@ -1,0 +1,33 @@
+
+<!-- Entity Name: mantle.account.billing.BillingAccount sql table: BILLING_ACCOUNT --><entity entity-name="BillingAccount" package="mantle.account.billing" has-dependents="true">
+    <field name="billingAccountId" type="id" is-pk="true"/>
+    <field name="billToPartyId" type="id"/>
+    <field name="billFromPartyId" type="id"/>
+    <field name="accountLimit" type="currency-amount"/>
+    <field name="accountLimitUomId" type="id"/>
+    <field name="postalContactMechId" type="id"/>
+    <field name="fromDate" type="date-time"/>
+    <field name="thruDate" type="date-time"/>
+    <field name="description" type="text-medium"/>
+    <field name="externalAccountId" type="id"/>
+    <relationship type="one" title="BillTo" related="mantle.party.Party">
+        <key-map field-name="billToPartyId"/></relationship>
+    <relationship type="one" title="AccountLimit" related="moqui.basic.Uom">
+        <key-map field-name="accountLimitUomId"/></relationship>
+    <relationship type="one" title="Postal" related="mantle.party.contact.ContactMech">
+        <key-map field-name="postalContactMechId"/></relationship>
+    <relationship type="one" related="mantle.party.contact.PostalAddress">
+        <key-map field-name="postalContactMechId"/></relationship>
+    <field name="lastUpdatedStamp" type="date-time"/>
+    <relationship related="mantle.account.billing.BillingAccountParty" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="billingAccountId" related="billingAccountId"/></relationship>
+    <relationship related="mantle.account.billing.BillingAccountTerm" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="billingAccountId" related="billingAccountId"/></relationship>
+    <relationship related="mantle.account.invoice.Invoice" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="billingAccountId" related="billingAccountId"/></relationship>
+    <relationship related="mantle.account.payment.PaymentApplication" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="billingAccountId" related="billingAccountId"/></relationship>
+    <relationship related="mantle.order.OrderHeader" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="billingAccountId" related="billingAccountId"/></relationship>
+
+</entity>

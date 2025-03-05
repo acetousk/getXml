@@ -1,0 +1,17 @@
+
+<!-- Entity Name: mantle.account.billing.BillingAccountTerm sql table: BILLING_ACCOUNT_TERM --><entity entity-name="BillingAccountTerm" package="mantle.account.billing">
+    <field name="billingAccountTermId" type="id" is-pk="true"/>
+    <field name="billingAccountId" type="id"/>
+    <field name="termTypeEnumId" type="id"/>
+    <field name="termValue" type="number-decimal"/>
+    <field name="termUomId" type="id"/>
+    <relationship type="one" title="BillingAccountTermType" related="moqui.basic.Enumeration">
+        <key-map field-name="termTypeEnumId"/></relationship>
+    <relationship type="one" title="Term" related="moqui.basic.Uom">
+        <key-map field-name="termUomId"/></relationship>
+    <relationship type="one" related="mantle.account.billing.BillingAccount"/>
+    <seed-data>
+        <moqui.basic.EnumerationType description="Billing Account Term Type" enumTypeId="BillingAccountTermType"/></seed-data>
+    <field name="lastUpdatedStamp" type="date-time"/>
+
+</entity>

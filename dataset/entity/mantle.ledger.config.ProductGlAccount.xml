@@ -1,0 +1,18 @@
+
+<!-- Entity Name: mantle.ledger.config.ProductGlAccount sql table: PRODUCT_GL_ACCOUNT --><entity entity-name="ProductGlAccount" package="mantle.ledger.config" use="configuration">
+    <field name="productId" type="id" is-pk="true"/>
+    <field name="organizationPartyId" type="id" is-pk="true"/>
+    <field name="glAccountTypeEnumId" type="id" is-pk="true"/>
+    <field name="glAccountId" type="id">
+        <description><![CDATA[Product Revenue account]]></description></field>
+    <field name="contraGlAccountId" type="id">
+        <description><![CDATA[Product Contra Revenue account]]></description></field>
+    <relationship type="one" related="Product"/>
+    <relationship type="one" title="Organization" related="mantle.party.Party">
+        <key-map field-name="organizationPartyId"/></relationship>
+    <relationship type="one" title="GlAccountType" related="moqui.basic.Enumeration">
+        <key-map field-name="glAccountTypeEnumId"/></relationship>
+    <relationship type="one" related="mantle.ledger.account.GlAccount"/>
+    <field name="lastUpdatedStamp" type="date-time"/>
+
+</entity>

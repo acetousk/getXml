@@ -1,0 +1,21 @@
+
+<!-- Entity Name: mantle.product.ProductParameter sql table: PRODUCT_PARAMETER --><entity entity-name="ProductParameter" package="mantle.product" has-dependents="true">
+    <description><![CDATA[Parameters for personalization and other information to track with purchase of Product]]></description>
+    <field name="productParameterId" type="id" is-pk="true"/>
+    <field name="description" type="text-medium"/>
+    <field name="uomDimensionTypeId" type="id">
+        <description><![CDATA[Optional dimension type]]></description></field>
+    <field name="productIdTypeEnumId" type="id">
+        <description><![CDATA[Optional product ID type]]></description></field>
+    <relationship type="one" related="moqui.basic.UomDimensionType" short-alias="uomDimensionType"/>
+    <relationship type="one" title="ProductIdentificationType" related="moqui.basic.Enumeration" short-alias="productIdTypeEnum">
+        <key-map field-name="productIdTypeEnumId"/></relationship>
+    <field name="lastUpdatedStamp" type="date-time"/>
+    <relationship related="mantle.product.ProductParameterOption" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="productParameterId" related="productParameterId"/></relationship>
+    <relationship related="mantle.product.ProductParameterProduct" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="productParameterId" related="productParameterId"/></relationship>
+    <relationship related="mantle.product.ProductParameterValue" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="productParameterId" related="productParameterId"/></relationship>
+
+</entity>

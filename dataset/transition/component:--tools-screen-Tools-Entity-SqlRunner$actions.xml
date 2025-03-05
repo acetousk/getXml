@@ -1,0 +1,77 @@
+<!--Transition Screen Location component://tools/screen/Tools/Entity/SqlRunner.xml Transition Name actions--><transition name="actions"><actions><!--always-actions at component://webroot/screen/webroot.xml--><set field="html_scripts" from="new LinkedHashSet()"/><set field="footer_scripts" from="new LinkedHashSet()"/><set field="html_stylesheets" from="new LinkedHashSet()"/><!--actions--><if condition="!ec.user.hasPermission('SQL_RUNNER_WEB')"><return error="true" message="User does not have permission to use the SQL Runner"/></if><if condition="!sri.getScreenUrlInfo().isPermitted(ec, null, org.moqui.context.ArtifactExecutionInfo.AUTHZA_ALL)"><return error="true" message="User must be authorized for all actions on this screen"/></if><script><![CDATA[import java.sql.Connection
+            import java.sql.ResultSet
+            import java.sql.SQLWarning
+            import org.moqui.context.ExecutionContext
+
+            ExecutionContext ec = context.ec
+
+            def rs = null
+            outerColumnsList = new ArrayList<ArrayList<String>>()
+            outerRecordsList = new ArrayList<ArrayList<ArrayList>>()
+
+            int limitInt = (limit?:"500") as int
+
+            // make sure SQL comes in secure parameter (body, etc no URL)
+            sql = ec.web.secureRequestParameters.get("sql")
+            if (sql && groupName) {
+                messageList = []
+                Connection con = ec.entity.getConnection(groupName)
+                try {
+                    stmt = con.createStatement()
+
+                    for(int i=0; i< 100; i++) {
+                        // try get 100 ResultSets, avoid infinite loop
+                        boolean isResultSet = i == 0 ? stmt.execute(sql as String) : stmt.getMoreResults()
+                        // ec.logger.info("$isResultSet")
+
+                        SQLWarning w = stmt.getWarnings()
+                        for (int j = 0; j < 100 && w != null; j++) {
+                            ec.logger.warn(w.getMessage() as String)
+                            w = w.getNextWarning()
+                        }
+
+                        stmt.clearWarnings()
+
+                        if (isResultSet) {
+                            columns = new ArrayList<String>()
+                            records = new ArrayList<ArrayList>()
+                            outerColumnsList.add(columns)
+                            outerRecordsList.add(records)
+                            rs = stmt.getResultSet()
+                            if (rs != null) {
+                                rsmd = rs.getMetaData()
+                                columnCount = rsmd.getColumnCount()
+                                for (i = 1; i <= columnCount; i++) columns.add(rsmd.getColumnName(i))
+
+                                limitReached = false
+                                while (rs.next()) {
+                                    if (limitInt > 0 && records.size() >= limitInt) {
+                                        limitReached = true
+                                        break
+                                    }
+                                    record = new ArrayList<Object>(columnCount)
+                                    for (i = 1; i <= columnCount; i++) record.add(rs.getObject(i))
+                                    records.add(record)
+                                }
+                                rs.close()
+
+                                if (limitReached) {
+                                    messageList.add(ec.resource.expand('Only showing first ${limit} rows.',''))
+                                } else {
+                                    messageList.add(ec.resource.expand('Showing all ${records.size()} results.',''))
+                                }
+                            }
+                        } else if ((rowsAffected = stmt.getUpdateCount()) != -1){
+                            messageList.add(ec.resource.expand('Query altered ${rowsAffected} rows.',''))
+                        } else {
+                            break
+                        }
+                    }
+                } catch (Exception e) {
+                    messageList.add(e.toString())
+                    ec.logger.log(200, "Error running SQL query in SqlRunner", e)
+                } finally {
+                    if (stmt != null) { try { stmt.close() } catch (Exception e) { /* Ignore */ } }
+                    if (con != null) { try { con.close() } catch (Exception e) { /* Ignore */ } }
+                }
+            }]]></script></actions></transition>

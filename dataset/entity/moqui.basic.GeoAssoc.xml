@@ -1,0 +1,21 @@
+
+<!-- Entity Name: moqui.basic.GeoAssoc sql table: GEO_ASSOC --><entity entity-name="GeoAssoc" package="moqui.basic" use="configuration" cache="true">
+    <field name="geoId" type="id" is-pk="true"/>
+    <field name="toGeoId" type="id" is-pk="true"/>
+    <field name="geoAssocTypeEnumId" type="id"/>
+    <relationship type="one" title="Main" related="moqui.basic.Geo" short-alias="geo"/>
+    <relationship type="one" title="Assoc" related="moqui.basic.Geo" short-alias="toGeo">
+        <key-map field-name="toGeoId"/></relationship>
+    <relationship type="one" title="GeoAssocType" related="moqui.basic.Enumeration" short-alias="type">
+        <key-map field-name="geoAssocTypeEnumId"/></relationship>
+    <seed-data>
+        <moqui.basic.EnumerationType description="Geo Assoc Type" enumTypeId="GeoAssocType"/>
+        <moqui.basic.Enumeration description="Geo Group Member" enumId="GAT_GROUP_MEMBER" enumTypeId="GeoAssocType"/>
+        <moqui.basic.Enumeration description="Region of a Larger Geo" enumId="GAT_REGIONS" enumTypeId="GeoAssocType"/>
+        <moqui.basic.Enumeration description="Administrative City" enumId="GAT_COUNTY_SEAT" enumTypeId="GeoAssocType"/>
+    </seed-data>
+    <field name="lastUpdatedStamp" type="date-time"/>
+    <relationship related="moqui.basic.Geo" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="geoId" related="geoId"/></relationship>
+
+</entity>

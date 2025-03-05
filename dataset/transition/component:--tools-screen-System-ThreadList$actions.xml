@@ -1,0 +1,9 @@
+<!--Transition Screen Location component://tools/screen/System/ThreadList.xml Transition Name actions--><transition name="actions"><parameter name="threadName"/><actions><!--always-actions at component://webroot/screen/webroot.xml--><set field="html_scripts" from="new LinkedHashSet()"/><set field="footer_scripts" from="new LinkedHashSet()"/><set field="html_stylesheets" from="new LinkedHashSet()"/><!--actions--><set field="workerPool" from="ec.factory.workerPool"/><set field="scheduledExecutor" from="ec.factory.scheduledExecutor"/><set field="scheduledRunnableList" from="ec.factory.scheduledRunnableList"/><set field="jobRunner" from="ec.service.getJobRunner()"/><set field="orderByField" from="orderByField ?: 'threadName'"/><set field="threadMXBean" from="java.lang.management.ManagementFactory.getThreadMXBean()"/><set field="deadlockedList" from="threadMXBean.findDeadlockedThreads()"/><set field="threadInfoList" from="threadMXBean.dumpAllThreads(false, false)"/><script><![CDATA[threadMapList = []
+        for (java.lang.management.ThreadInfo thread in threadInfoList) {
+            threadMapList.add([threadName:thread.threadName, threadId:thread.threadId, threadState:thread.threadState.name(),
+                    cpuTime:threadMXBean.getThreadCpuTime(thread.threadId), userTime:threadMXBean.getThreadUserTime(thread.threadId),
+                    lockName:thread.lockName, lockOwnerName:thread.lockOwnerName, lockOwnerId:thread.lockOwnerId,
+                    blockedTime:thread.blockedTime, waitedTime:thread.waitedTime,
+                    stackList:Arrays.asList(thread.getStackTrace()).collect({ it.toString() })])
+        }
+        orderMapList(threadMapList, [orderByField])]]></script></actions></transition>

@@ -1,0 +1,16 @@
+<!--Transition Screen Location component://example/screen/ExampleApp/Example/EditExampleContent.xml Transition Name uploadExampleContent--><transition name="uploadExampleContent"><parameter name="exampleId" required="true"/><actions><!--always-actions at component://webroot/screen/webroot.xml--><set field="html_scripts" from="new LinkedHashSet()"/><set field="footer_scripts" from="new LinkedHashSet()"/><set field="html_stylesheets" from="new LinkedHashSet()"/><!--transition actions--><script><![CDATA[import org.moqui.resource.ResourceReference
+            org.moqui.context.ExecutionContext ec = context.ec
+
+            org.apache.commons.fileupload.FileItem contentFile = context.contentFile
+            String fileName = contentFile.getName()
+            ec.logger.info("Uploading file [${fileName}] for Example [${exampleId}] in repository [${repositoryName}] with purpose [${purposeEnumId}] and locale [${locale}]")
+
+            // String contentLocation = "content://${repositoryName}/moqui/example/${exampleId}/${fileName}"
+            String contentLocation = "dbresource://moqui/example/${exampleId}/${fileName}"
+            ResourceReference newRr = ec.resource.getLocationReference(contentLocation)
+            InputStream fileStream = contentFile.getInputStream()
+            newRr.putStream(fileStream)
+            fileStream.close()
+
+            ec.service.sync().name("create", "ExampleContent").parameters([exampleId: exampleId,
+                    contentLocation: contentLocation, purposeEnumId: purposeEnumId, locale: locale]).call()]]></script></actions></transition>

@@ -1,0 +1,87 @@
+
+<!-- Entity Name: mantle.account.financial.FinancialAccountTrans sql table: FINANCIAL_ACCOUNT_TRANS --><entity entity-name="FinancialAccountTrans" package="mantle.account.financial" create-only="true" cache="never" has-dependents="true">
+    <field name="finAccountTransId" type="id" is-pk="true"/>
+    <field name="finAccountTransTypeEnumId" type="id"/>
+    <field name="finAccountId" type="id"/>
+    <field name="finAccountAuthId" type="id">
+        <description><![CDATA[Only set for withdrawals based on an auth.]]></description></field>
+    <field name="fromPartyId" type="id"/>
+    <field name="toPartyId" type="id"/>
+    <field name="glReconciliationId" type="id" create-only="false"/>
+    <field name="reasonEnumId" type="id">
+        <description><![CDATA[Used to determine the balancing GlAccount to the one based
+            on FinancialAccount.finAccountTypeId.]]></description></field>
+    <field name="transactionDate" type="date-time"/>
+    <field name="entryDate" type="date-time"/>
+    <field name="amount" type="currency-amount"/>
+    <field name="postBalance" type="currency-amount"/>
+    <field name="paymentId" type="id"/>
+    <field name="invoiceId" type="id"/>
+    <field name="invoiceItemSeqId" type="id">
+        <description><![CDATA[To be used along with invoiceId to point to an InvoiceItem that
+            this transaction is based on, such as a full or partial credit against a charge.]]></description></field>
+    <field name="orderId" type="id"/>
+    <field name="orderItemSeqId" type="id">
+        <description><![CDATA[To be used along with orderId to point to an OrderItem that
+            represents the purchase of a product to add money to the account.]]></description></field>
+    <field name="otherFinAccountTransId" type="id" create-only="false">
+        <description><![CDATA[For FinancialAccount transfer transaction pairs]]></description></field>
+    <field name="performedByUserId" type="id"/>
+    <field name="acctgTransResultEnumId" type="id" create-only="false"/>
+    <field name="reversedByTransId" type="id" create-only="false"/>
+    <field name="reverseOfTransId" type="id"/>
+    <field name="comments" type="text-medium"/>
+    <field name="externalId" type="text-short"/>
+    <relationship type="one" title="FinancialAccountTransType" related="moqui.basic.Enumeration" short-alias="finAccountTransTypeEnum">
+        <key-map field-name="finAccountTransTypeEnumId"/></relationship>
+    <relationship type="one" related="mantle.account.financial.FinancialAccount" short-alias="finAccount"/>
+    <relationship type="one" related="mantle.account.financial.FinancialAccountAuth" short-alias="finAccountAuth"/>
+    <relationship type="one" title="From" related="mantle.party.Party" short-alias="fromParty">
+        <key-map field-name="fromPartyId"/></relationship>
+    <relationship type="one" title="To" related="mantle.party.Party" short-alias="toParty">
+        <key-map field-name="toPartyId"/></relationship>
+    <relationship type="one" related="mantle.ledger.reconciliation.GlReconciliation" short-alias="glReconciliation"/>
+    <relationship type="one" title="FinancialAccountTransReason" related="moqui.basic.Enumeration" short-alias="reasonEnum">
+        <key-map field-name="reasonEnumId"/></relationship>
+    <relationship type="one" related="mantle.account.payment.Payment" short-alias="payment"/>
+    <relationship type="one" related="mantle.account.invoice.Invoice" short-alias="invoice"/>
+    <relationship type="one-nofk" related="mantle.order.OrderHeader" short-alias="orderHeader"/>
+    <relationship type="one" related="mantle.order.OrderItem" short-alias="orderItem">
+        <key-map field-name="orderId"/>
+        <key-map field-name="orderItemSeqId"/>
+    </relationship>
+    <relationship type="one" title="PerformedBy" related="moqui.security.UserAccount" short-alias="performedByUser">
+        <key-map field-name="performedByUserId"/></relationship>
+    <relationship type="one" title="AcctgTransResult" related="moqui.basic.Enumeration" short-alias="acctgTransResultEnum">
+        <key-map field-name="acctgTransResultEnumId"/></relationship>
+    <relationship type="one" title="ReversedBy" related="mantle.account.financial.FinancialAccountTrans" short-alias="reversedBy">
+        <key-map field-name="reversedByTransId" related="finAccountTransId"/></relationship>
+    <relationship type="one" title="ReverseOf" related="mantle.account.financial.FinancialAccountTrans" short-alias="reverseOf">
+        <key-map field-name="reverseOfTransId" related="finAccountTransId"/></relationship>
+    <seed-data>
+        <moqui.basic.EnumerationType description="Financial Account Trans Type" enumTypeId="FinancialAccountTransType"/>
+        <moqui.basic.Enumeration description="Deposit" enumId="FattDeposit" enumTypeId="FinancialAccountTransType"/>
+        <moqui.basic.Enumeration description="Withdraw" enumId="FattWithdraw" enumTypeId="FinancialAccountTransType"/>
+        <moqui.basic.Enumeration description="Adjustment" enumId="FattAdjustment" enumTypeId="FinancialAccountTransType"/>
+        <moqui.basic.EnumerationType description="Financial Account Trans Reason" enumTypeId="FinancialAccountTransReason"/>
+        <moqui.basic.Enumeration description="Purchase" enumId="FatrPurchase" enumTypeId="FinancialAccountTransReason"/>
+        <moqui.basic.Enumeration description="Initial Deposit" enumId="FatrInitDeposit" enumTypeId="FinancialAccountTransReason"/>
+        <moqui.basic.Enumeration description="Replenishment" enumId="FatrReplenish" enumTypeId="FinancialAccountTransReason"/>
+        <moqui.basic.Enumeration description="Refund" enumId="FatrRefund" enumTypeId="FinancialAccountTransReason"/>
+        <moqui.basic.Enumeration description="Disbursement" enumId="FatrDisbursement" enumTypeId="FinancialAccountTransReason"/>
+        <moqui.basic.Enumeration description="Account Transfer" enumId="FatrTransfer" enumTypeId="FinancialAccountTransReason"/>
+        <moqui.basic.Enumeration description="Customer Service Credit" enumId="FatrCsCredit" enumTypeId="FinancialAccountTransReason"/>
+        <moqui.basic.Enumeration description="Error Adjustment" enumId="FatrErrorAdjust" enumTypeId="FinancialAccountTransReason"/>
+    </seed-data>
+    <field name="lastUpdatedStamp" type="date-time"/>
+    <relationship related="mantle.account.invoice.InvoiceItem" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="finAccountTransId" related="finAccountTransId"/></relationship>
+    <relationship related="mantle.ledger.transaction.AcctgTrans" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="finAccountTransId" related="finAccountTransId"/></relationship>
+    <relationship related="mantle.order.return.ReturnItem" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="finAccountTransId" related="finAccountTransId"/></relationship>
+
+<!-- seca <seca id="FinancialAccountTransGlPost" service="create#mantle.account.financial.FinancialAccountTrans" when="post-service">
+    <actions>
+        <service-call name="mantle.ledger.OtherAutoPostServices.post#FinancialAccountTrans" in-map="context"/></actions></seca>-->
+</entity>

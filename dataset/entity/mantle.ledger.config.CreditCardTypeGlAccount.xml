@@ -1,0 +1,13 @@
+
+<!-- Entity Name: mantle.ledger.config.CreditCardTypeGlAccount sql table: CREDIT_CARD_TYPE_GL_ACCOUNT --><entity entity-name="CreditCardTypeGlAccount" package="mantle.ledger.config" use="configuration">
+    <field name="creditCardTypeEnumId" type="id" is-pk="true"/>
+    <field name="organizationPartyId" type="id" is-pk="true"/>
+    <field name="glAccountId" type="id"/>
+    <relationship type="one" title="CreditCardType" related="moqui.basic.Enumeration">
+        <key-map field-name="creditCardTypeEnumId"/></relationship>
+    <relationship type="one" title="Organization" related="mantle.party.Party">
+        <key-map field-name="organizationPartyId"/></relationship>
+    <relationship type="one" related="mantle.ledger.account.GlAccount"/>
+    <field name="lastUpdatedStamp" type="date-time"/>
+
+</entity>

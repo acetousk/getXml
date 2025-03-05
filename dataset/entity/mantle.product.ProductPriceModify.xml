@@ -1,0 +1,15 @@
+
+<!-- Entity Name: mantle.product.ProductPriceModify sql table: PRODUCT_PRICE_MODIFY --><entity entity-name="ProductPriceModify" package="mantle.product" use="configuration" cache="true">
+    <field name="priceModifyId" type="id" is-pk="true"/>
+    <field name="serviceRegisterId" type="id" not-null="true">
+        <description><![CDATA[Registered Service of type ProductPriceModify that implements the
+            mantle.product.PriceServices.modify#ProductPrice interface]]></description></field>
+    <field name="sequenceNum" type="number-integer"/>
+    <relationship type="one" related="moqui.service.ServiceRegister" short-alias="serviceRegister"/>
+    <relationship type="many" related="mantle.product.ProductPriceModifyParameter" short-alias="parameters">
+        <key-map field-name="priceModifyId"/></relationship>
+    <seed-data>
+        <moqui.basic.Enumeration description="Product Price Modify" enumId="ProductPriceModify" enumTypeId="ServiceRegisterType"/></seed-data>
+    <field name="lastUpdatedStamp" type="date-time"/>
+
+</entity>

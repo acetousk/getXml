@@ -1,0 +1,32 @@
+<!--Transition Screen Location component://example/screen/ExampleApp.xml Transition Name LoadAllData--><transition name="LoadAllData"><path-parameter name="exampleId"/><path-parameter name="exampleId"/><actions><!--always-actions at component://webroot/screen/webroot.xml--><set field="html_scripts" from="new LinkedHashSet()"/><set field="footer_scripts" from="new LinkedHashSet()"/><set field="html_stylesheets" from="new LinkedHashSet()"/><!--transition actions--><script><![CDATA[import org.moqui.entity.EntityDataLoader
+            import org.moqui.context.ExecutionContext
+            import org.moqui.impl.context.ArtifactExecutionInfoImpl
+            ExecutionContext ec = context.ec
+
+            ec.artifactExecution.disableAuthz()
+            ArtifactExecutionInfoImpl aei = new ArtifactExecutionInfoImpl("loadData", "AT_OTHER", "AUTHZA_ALL")
+            ec.getArtifactExecution().push(aei, false)
+            ec.getArtifactExecution().setAnonymousAuthorizedAll()
+            boolean loggedInAnonymous = ec.getUser().loginAnonymousIfNoUser()
+
+            // TODO: reject requests until this is done?
+            // at least make sure there are no Enumeration records
+            if (ec.getEntity().find("moqui.basic.Enumeration").useCache(false).count()) {
+                String errMsg = "Not loading data, found Enumeration records so database isn't empty"
+                ec.logger.info(errMsg)
+                ec.message.addMessage(errMsg)
+                return
+            }
+
+            // load all the data
+            EntityDataLoader edl = ec.getEntity().makeDataLoader()
+
+            startTime = System.currentTimeMillis()
+            records = edl.load()
+            totalSeconds = (System.currentTimeMillis() - startTime) / 1000
+
+            ec.artifactExecution.pop(aei)
+            if (loggedInAnonymous) ec.getUser().logoutAnonymousOnly()
+            ec.artifactExecution.enableAuthz()
+
+            ec.cache.clearAllCaches()]]></script><log level="info" message="Loaded [${records}] records in ${totalSeconds} seconds."/></actions></transition>

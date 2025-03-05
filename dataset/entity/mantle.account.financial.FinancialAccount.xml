@@ -1,0 +1,84 @@
+
+<!-- Entity Name: mantle.account.financial.FinancialAccount sql table: FINANCIAL_ACCOUNT --><entity entity-name="FinancialAccount" package="mantle.account.financial" short-alias="financialAccounts" cache="never" has-dependents="true">
+    <field name="finAccountId" type="id" is-pk="true"/>
+    <field name="finAccountTypeId" type="id"/>
+    <field name="statusId" type="id" enable-audit-log="true"/>
+    <field name="finAccountName" type="text-medium"/>
+    <field name="finAccountCode" type="text-medium" encrypt="true"/>
+    <field name="finAccountPin" type="text-medium" encrypt="true"/>
+    <field name="organizationPartyId" type="id">
+        <description><![CDATA[The internal organization Party that is liable for the account.]]></description></field>
+    <field name="ownerPartyId" type="id" enable-audit-log="update"/>
+    <field name="postToGlAccountId" type="id"/>
+    <field name="fromDate" type="date-time"/>
+    <field name="thruDate" type="date-time"/>
+    <field name="isRefundable" type="text-indicator"/>
+    <field name="currencyUomId" type="id"/>
+    <field name="negativeBalanceLimit" type="currency-amount" enable-audit-log="true" default="0">
+        <description><![CDATA[A positive number restricting how far the account can go negative, defaults to zero.]]></description></field>
+    <field name="actualBalance" type="currency-amount">
+        <description><![CDATA[Calculated as the sum of FinancialAccountTrans.amount]]></description></field>
+    <field name="availableBalance" type="currency-amount">
+        <description><![CDATA[Calculated as actualBalance minus sum of outstanding FinancialAccountAuth.amount]]></description></field>
+    <field name="replenishPaymentId" type="id"/>
+    <field name="replenishLevel" type="currency-amount"/>
+    <relationship type="one" related="mantle.account.financial.FinancialAccountType" short-alias="type">
+        <key-map field-name="finAccountTypeId"/></relationship>
+    <relationship type="one" title="FinancialAccount" related="moqui.basic.StatusItem" short-alias="status"/>
+    <relationship type="one" title="Organization" related="mantle.party.Party" short-alias="organization">
+        <key-map field-name="organizationPartyId"/></relationship>
+    <relationship type="one" title="Owner" related="mantle.party.Party" short-alias="owner">
+        <key-map field-name="ownerPartyId"/></relationship>
+    <relationship type="one" title="PostTo" related="mantle.ledger.account.GlAccount" short-alias="postToAccount">
+        <key-map field-name="postToGlAccountId"/></relationship>
+    <relationship type="one" title="Currency" related="moqui.basic.Uom" short-alias="currencyUom">
+        <key-map field-name="currencyUomId"/></relationship>
+    <relationship type="one" title="Replenish" related="mantle.account.method.PaymentMethod" short-alias="replenishMethod">
+        <key-map field-name="replenishPaymentId"/></relationship>
+    <relationship type="many" related="mantle.account.financial.FinancialAccountAuth" short-alias="authorizations">
+        <key-map field-name="finAccountId"/></relationship>
+    <relationship type="many" related="mantle.account.financial.FinancialAccountTrans" short-alias="transactions">
+        <key-map field-name="finAccountId"/></relationship>
+    <relationship type="many" related="mantle.account.financial.FinancialAccountParty" short-alias="parties">
+        <key-map field-name="finAccountId"/></relationship>
+    <seed-data>
+        <moqui.basic.StatusType description="Financial Account Status" statusTypeId="FinancialAccount"/>
+        <moqui.basic.StatusItem description="Active" sequenceNum="1" statusId="FaActive" statusTypeId="FinancialAccount"/>
+        <moqui.basic.StatusItem description="Negative Pending Replenishment" sequenceNum="2" statusId="FaNegPendRepl" statusTypeId="FinancialAccount"/>
+        <moqui.basic.StatusItem description="Manually Frozen" sequenceNum="3" statusId="FaManFrozen" statusTypeId="FinancialAccount"/>
+        <moqui.basic.StatusItem description="Cancelled" sequenceNum="9" statusId="FaCancelled" statusTypeId="FinancialAccount"/>
+        <moqui.basic.StatusFlowTransition statusFlowId="Default" statusId="FaActive" toStatusId="FaNegPendRepl" transitionName="Set Negative Pending Replenishment"/>
+        <moqui.basic.StatusFlowTransition statusFlowId="Default" statusId="FaActive" toStatusId="FaManFrozen" transitionName="Set Manually Frozen"/>
+        <moqui.basic.StatusFlowTransition statusFlowId="Default" statusId="FaActive" toStatusId="FaCancelled" transitionName="Cancel"/>
+        <moqui.basic.StatusFlowTransition statusFlowId="Default" statusId="FaNegPendRepl" toStatusId="FaActive" transitionName="Re-activate"/>
+        <moqui.basic.StatusFlowTransition statusFlowId="Default" statusId="FaNegPendRepl" toStatusId="FaManFrozen" transitionName="Manually Freeze"/>
+        <moqui.basic.StatusFlowTransition statusFlowId="Default" statusId="FaNegPendRepl" toStatusId="FaCancelled" transitionName="Cancel"/>
+        <moqui.basic.StatusFlowTransition statusFlowId="Default" statusId="FaManFrozen" toStatusId="FaActive" transitionName="Re-activate"/>
+        <moqui.basic.StatusFlowTransition statusFlowId="Default" statusId="FaManFrozen" toStatusId="FaCancelled" transitionName="Cancel"/>
+    </seed-data>
+    <master>
+        <detail relationship="type"/>
+        <detail relationship="status"/>
+        <detail relationship="organization"/>
+        <detail relationship="owner"/>
+        <detail relationship="postToAccount"/>
+        <detail relationship="currencyUom"/>
+        <detail relationship="replenishMethod"/>
+    </master>
+    <field name="lastUpdatedStamp" type="date-time"/>
+    <relationship related="mantle.account.invoice.InvoiceItem" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="finAccountId" related="finAccountId"/></relationship>
+    <relationship related="mantle.account.method.PaymentGatewayResponse" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="finAccountId" related="finAccountId"/></relationship>
+    <relationship related="mantle.account.method.PaymentMethod" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="finAccountId" related="finAccountId"/></relationship>
+    <relationship related="mantle.account.payment.Payment" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="finAccountId" related="finAccountId"/></relationship>
+    <relationship related="mantle.order.OrderItem" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="finAccountId" related="finAccountId"/></relationship>
+    <relationship related="mantle.order.return.ReturnHeader" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="finAccountId" related="finAccountId"/></relationship>
+    <relationship related="mantle.party.Party" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="ownerPartyId" related="partyId"/></relationship>
+
+</entity>

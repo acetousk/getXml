@@ -1,0 +1,19 @@
+
+<!-- Entity Name: mantle.account.invoice.InvoiceItemDetail sql table: INVOICE_ITEM_DETAIL --><entity entity-name="InvoiceItemDetail" package="mantle.account.invoice" cache="never">
+    <field name="invoiceItemDetailId" type="id" is-pk="true"/>
+    <field name="invoiceId" type="id" not-null="true"/>
+    <field name="invoiceItemSeqId" type="id" not-null="true"/>
+    <field name="facilityId" type="id"/>
+    <field name="assetId" type="id"/>
+    <field name="partyId" type="id"/>
+    <field name="workEffortId" type="id"/>
+    <field name="quantity" type="number-decimal"/>
+    <relationship type="one-nofk" related="mantle.account.invoice.Invoice" short-alias="invoice"/>
+    <relationship type="one" related="mantle.account.invoice.InvoiceItem" short-alias="invoiceItem"/>
+    <relationship type="one" related="mantle.facility.Facility" short-alias="facility"/>
+    <relationship type="one" related="mantle.product.asset.Asset" short-alias="asset"/>
+    <relationship type="one" related="mantle.party.Party" short-alias="party"/>
+    <relationship type="one" related="mantle.work.effort.WorkEffort" short-alias="workEffort"/>
+    <field name="lastUpdatedStamp" type="date-time"/>
+
+</entity>

@@ -1,0 +1,1 @@
+<!--Service Location mantle.ledger.OtherAutoPostServices.post#WorkEffortCost--><service verb="post" noun="WorkEffortCost"><in-parameters><parameter name="workEffortId" required="true"/></in-parameters><out-parameters><parameter name="acctgTransId"/></out-parameters><actions/></service>

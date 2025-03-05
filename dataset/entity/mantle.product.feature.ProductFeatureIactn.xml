@@ -1,0 +1,24 @@
+
+<!-- Entity Name: mantle.product.feature.ProductFeatureIactn sql table: PRODUCT_FEATURE_IACTN --><entity entity-name="ProductFeatureIactn" package="mantle.product.feature">
+    <field name="productFeatureId" type="id" is-pk="true"/>
+    <field name="toProductFeatureId" type="id" is-pk="true"/>
+    <field name="iactnTypeEnumId" type="id"/>
+    <field name="productId" type="id"/>
+    <field name="quantity" type="number-decimal"/>
+    <field name="amount" type="number-decimal"/>
+    <relationship type="one" title="ProductFeatureIactnType" related="moqui.basic.Enumeration" short-alias="type">
+        <key-map field-name="iactnTypeEnumId"/></relationship>
+    <relationship type="one" related="mantle.product.feature.ProductFeature" short-alias="feature">
+        <key-map field-name="productFeatureId"/></relationship>
+    <relationship type="one" title="To" related="mantle.product.feature.ProductFeature" short-alias="toFeature">
+        <key-map field-name="toProductFeatureId"/></relationship>
+    <seed-data>
+        <moqui.basic.EnumerationType description="Product Feature Interaction Type" enumTypeId="ProductFeatureIactnType"/>
+        <moqui.basic.Enumeration description="Dependency" enumId="PfitDependency" enumTypeId="ProductFeatureIactnType"/>
+        <moqui.basic.Enumeration description="Compatible" enumId="PfitCompatible" enumTypeId="ProductFeatureIactnType"/>
+        <moqui.basic.Enumeration description="Incompatible" enumId="PfitIncompatible" enumTypeId="ProductFeatureIactnType"/>
+        <moqui.basic.Enumeration description="Composition" enumId="PfitComposition" enumTypeId="ProductFeatureIactnType"/>
+    </seed-data>
+    <field name="lastUpdatedStamp" type="date-time"/>
+
+</entity>

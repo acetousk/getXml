@@ -1,0 +1,20 @@
+
+<!-- Entity Name: mantle.product.maintenance.ProductMeter sql table: PRODUCT_METER --><entity entity-name="ProductMeter" package="mantle.product.maintenance" has-dependents="true">
+    <field name="productMeterId" type="id" is-pk="true"/>
+    <field name="productId" type="id"/>
+    <field name="productMeterTypeId" type="id"/>
+    <field name="meterUomId" type="id"/>
+    <field name="meterName" type="text-medium"/>
+    <relationship type="one" related="mantle.product.Product"/>
+    <relationship type="one" related="mantle.product.maintenance.ProductMeterType"/>
+    <relationship type="one" title="Meter" related="moqui.basic.Uom">
+        <key-map field-name="meterUomId"/></relationship>
+    <field name="lastUpdatedStamp" type="date-time"/>
+    <relationship related="mantle.product.maintenance.AssetMaintenance" type="many" is-auto-reverse="true" mutable="true" title="Interval">
+        <key-map field-name="productMeterId" related="intervalProductMeterId"/></relationship>
+    <relationship related="mantle.product.maintenance.ProductMaintenance" type="many" is-auto-reverse="true" mutable="true" title="Interval">
+        <key-map field-name="productMeterId" related="intervalProductMeterId"/></relationship>
+    <relationship related="mantle.work.measurement.Measurement" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="productMeterId" related="productMeterId"/></relationship>
+
+</entity>

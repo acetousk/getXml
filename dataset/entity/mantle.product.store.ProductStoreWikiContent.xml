@@ -1,0 +1,43 @@
+
+<!-- Entity Name: mantle.product.store.ProductStoreWikiContent sql table: PRODUCT_STORE_WIKI_CONTENT --><entity entity-name="ProductStoreWikiContent" package="mantle.product.store">
+    <description><![CDATA[Used to configure the wiki space type and page path given a store content type.
+            An alternative to directly specifying the spaceTypeEnumId (for ProductStoreWikiSpace) and pagePath for lookup within the WikiSpace.]]></description>
+    <field name="storeWikiContentId" type="id" is-pk="true"/>
+    <field name="productStoreId" type="id"/>
+    <field name="contentTypeEnumId" type="id"/>
+    <field name="fromDate" type="date-time"/>
+    <field name="thruDate" type="date-time"/>
+    <field name="spaceTypeEnumId" type="id"/>
+    <field name="pagePath" type="text-medium"/>
+    <relationship type="one" related="mantle.product.store.ProductStore" short-alias="store"/>
+    <relationship type="one" title="ProductStoreContentType" related="moqui.basic.Enumeration" short-alias="type">
+        <key-map field-name="contentTypeEnumId"/></relationship>
+    <relationship type="one" title="ProductStoreWikiSpaceType" related="moqui.basic.Enumeration" short-alias="type">
+        <key-map field-name="spaceTypeEnumId"/></relationship>
+    <seed-data>
+        <moqui.basic.EnumerationType description="Product Store Content Type" enumTypeId="ProductStoreContentType"/>
+        <moqui.basic.Enumeration enumCode="template_client_header" description="Header Template - Client" enumId="PsctHeaderTemplate" enumTypeId="ProductStoreContentType"/>
+        <moqui.basic.Enumeration enumCode="template_client_footer" description="Footer Template - Client" enumId="PsctFooterTemplate" enumTypeId="ProductStoreContentType"/>
+        <moqui.basic.Enumeration enumCode="template_client_home" description="Home Template - Client" enumId="PsctHomeTemplate" enumTypeId="ProductStoreContentType"/>
+        <moqui.basic.Enumeration enumCode="template_client_search" description="Search Template - Client" enumId="PsctSearchTemplate" enumTypeId="ProductStoreContentType"/>
+        <moqui.basic.Enumeration enumCode="template_client_category" description="Category Template - Client" enumId="PsctCategoryTemplate" enumTypeId="ProductStoreContentType"/>
+        <moqui.basic.Enumeration enumCode="template_client_product" description="Product Template - Client" enumId="PsctProductTemplate" enumTypeId="ProductStoreContentType"/>
+        <moqui.basic.Enumeration enumCode="template_client_login" description="Login Template - Client" enumId="PsctLoginTemplate" enumTypeId="ProductStoreContentType"/>
+        <moqui.basic.Enumeration enumCode="template_client_resetPassword" description="Reset Password Template - Client" enumId="PsctResetPasswordTemplate" enumTypeId="ProductStoreContentType"/>
+        <moqui.basic.Enumeration enumCode="template_client_account" description="Account Template - Client" enumId="PsctAccountTemplate" enumTypeId="ProductStoreContentType"/>
+        <moqui.basic.Enumeration enumCode="template_client_accountCreate" description="Account Create Template - Client" enumId="PsctAccountCreateTemplate" enumTypeId="ProductStoreContentType"/>
+        <moqui.basic.Enumeration enumCode="template_client_orderHistory" description="Order History Template - Client" enumId="PsctOrderHistoryTemplate" enumTypeId="ProductStoreContentType"/>
+        <moqui.basic.Enumeration enumCode="template_client_orderDetail" description="Order Detail Template - Client" enumId="PsctOrderDetailTemplate" enumTypeId="ProductStoreContentType"/>
+        <moqui.basic.Enumeration enumCode="template_client_checkout" description="Checkout Template - Client" enumId="PsctCheckoutTemplate" enumTypeId="ProductStoreContentType"/>
+        <moqui.basic.Enumeration enumCode="template_client_checkoutHeader" description="Checkout Header Template - Client" enumId="PsctCheckoutHeaderTemplate" enumTypeId="ProductStoreContentType"/>
+        <moqui.basic.Enumeration enumCode="template_client_checkoutSuccess" description="Checkout Success Template - Client" enumId="PsctCheckoutSuccessTemplate" enumTypeId="ProductStoreContentType"/>
+        <moqui.basic.Enumeration enumCode="template_server_root" description="Root Template - Server" enumId="PsctRootTemplateServer" enumTypeId="ProductStoreContentType"/>
+        <moqui.basic.Enumeration enumCode="template_server_header" description="Header Template - Server" enumId="PsctHeaderTemplateServer" enumTypeId="ProductStoreContentType"/>
+        <moqui.basic.Enumeration enumCode="template_server_footer" description="Footer Template - Server" enumId="PsctFooterTemplateServer" enumTypeId="ProductStoreContentType"/>
+        <moqui.basic.Enumeration enumCode="template_server_home" description="Home Template - Server" enumId="PsctHomeTemplateServer" enumTypeId="ProductStoreContentType"/>
+        <moqui.basic.Enumeration enumCode="template_server_category" description="Category Template - Server" enumId="PsctCategoryTemplateServer" enumTypeId="ProductStoreContentType"/>
+        <moqui.basic.Enumeration enumCode="template_server_product" description="Product Template - Server" enumId="PsctProductTemplateServer" enumTypeId="ProductStoreContentType"/>
+    </seed-data>
+    <field name="lastUpdatedStamp" type="date-time"/>
+
+</entity>

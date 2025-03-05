@@ -1,0 +1,36 @@
+
+<!-- Entity Name: mantle.product.category.ProductCategoryContent sql table: PRODUCT_CATEGORY_CONTENT --><entity entity-name="ProductCategoryContent" package="mantle.product.category">
+    <field name="productCategoryContentId" type="id" is-pk="true"/>
+    <field name="productCategoryId" type="id"/>
+    <field name="contentLocation" type="text-medium"/>
+    <field name="categoryContentTypeEnumId" type="id"/>
+    <field name="productStoreId" type="id">
+        <description><![CDATA[For content limited to a specific store]]></description></field>
+    <field name="fromDate" type="date-time" default="ec.user.nowTimestamp"/>
+    <field name="thruDate" type="date-time"/>
+    <field name="locale" type="text-short"/>
+    <field name="description" type="text-long"/>
+    <field name="sequenceNum" type="number-integer"/>
+    <field name="userId" type="id" default="ec.user.userId"/>
+    <relationship type="one" related="mantle.product.category.ProductCategory"/>
+    <relationship type="one" title="ProductCategoryContentType" related="moqui.basic.Enumeration" short-alias="type">
+        <key-map field-name="categoryContentTypeEnumId"/></relationship>
+    <relationship type="one" related="mantle.product.store.ProductStore" short-alias="store"/>
+    <index name="PRDCAT_CNT_CTTP">
+        <index-field name="productCategoryId"/>
+        <index-field name="categoryContentTypeEnumId"/>
+    </index>
+    <seed-data>
+        <moqui.basic.EnumerationType description="Product Category Content Type" enumTypeId="ProductCategoryContentType"/>
+        <moqui.basic.Enumeration description="Category Name" enumId="PcctCategoryName" enumTypeId="ProductCategoryContentType"/>
+        <moqui.basic.Enumeration description="Description" enumId="PcctDescription" enumTypeId="ProductCategoryContentType"/>
+        <moqui.basic.Enumeration description="Description - Long" enumId="PcctDescriptionLong" enumTypeId="ProductCategoryContentType"/>
+        <moqui.basic.Enumeration description="Category Image URL" enumId="PcctImageUrl" enumTypeId="ProductCategoryContentType"/>
+        <moqui.basic.Enumeration description="Category Image Alt Text" enumId="PcctImageAltText" enumTypeId="ProductCategoryContentType"/>
+        <moqui.basic.Enumeration description="Footer" enumId="PcctFooter" enumTypeId="ProductCategoryContentType"/>
+        <moqui.basic.Enumeration description="Meta-Keywords" enumId="PcctMetaKeywords" enumTypeId="ProductCategoryContentType"/>
+        <moqui.basic.Enumeration description="Meta-Description" enumId="PcctMetaDescription" enumTypeId="ProductCategoryContentType"/>
+    </seed-data>
+    <field name="lastUpdatedStamp" type="date-time"/>
+
+</entity>

@@ -1,0 +1,11 @@
+<!--Service Location mantle.work.ShipmentWorkServices.add#ShipmentToShipmentLoad--><service verb="add" noun="ShipmentToShipmentLoad"><in-parameters><parameter name="shipmentId" required="true"/><parameter name="workEffortId" required="true"/><parameter name="binLocationNumber" type="Long"/><parameter name="allowBulkLocations" type="Boolean" default="true"/></in-parameters><out-parameters/><actions><entity-find-one entity-name="mantle.work.effort.WorkEffort" value-field="workEffort" for-update="true"/><if condition="workEffort.statusId in ['WeInProgress', 'WeComplete', 'WeClosed', 'WeCancelled']"><return type="danger" message="Cannot add Shipment to Picklist ${workEffortId} in status ${workEffort.status?.description ?: workEffort.statusId}"/></if><entity-find-one entity-name="mantle.shipment.Shipment" value-field="shipment"/><if condition="shipment.statusId in ['ShipShipped', 'ShipDelivered', 'ShipRejected','ShipCancelled']"><return type="danger" message="Cannot add Shipment ${shipmentId} in status ${shipment.status?.description ?: shipment.statusId}"/></if><if condition="!binLocationNumber"><entity-find entity-name="mantle.shipment.Shipment" list="shipBinList"><econdition field-name="shipWorkEffortId" from="workEffortId"/><econdition field-name="binLocationNumber" operator="is-not-null"/><select-field field-name="binLocationNumber"/><order-by field-name="binLocationNumber"/></entity-find><script><![CDATA[if (shipBinList) {
+                        List binNumList = shipBinList*.binLocationNumber
+                        long lastBinNum = 0
+                        for (binNum in binNumList) {
+                            if (binNum > (lastBinNum + 1)) { binLocationNumber = lastBinNum + 1; break }
+                            lastBinNum = binNum
+                        }
+                        if (!binLocationNumber) binLocationNumber = lastBinNum + 1
+                    } else {
+                        binLocationNumber = 1
+                    }]]></script></if><service-call name="update#mantle.shipment.Shipment" in-map="[shipmentId:shipmentId, shipWorkEffortId:workEffortId, binLocationNumber:binLocationNumber]"/></actions></service>

@@ -1,0 +1,13 @@
+
+<!-- Entity Name: mantle.party.agreement.AgreementItemGeo sql table: AGREEMENT_ITEM_GEO --><entity entity-name="AgreementItemGeo" package="mantle.party.agreement">
+    <field name="agreementId" type="id" is-pk="true"/>
+    <field name="agreementItemSeqId" type="id" is-pk="true"/>
+    <field name="geoId" type="id" is-pk="true"/>
+    <relationship type="one" related="mantle.party.agreement.AgreementItem">
+        <key-map field-name="agreementId"/>
+        <key-map field-name="agreementItemSeqId"/>
+    </relationship>
+    <relationship type="one" related="moqui.basic.Geo"/>
+    <field name="lastUpdatedStamp" type="date-time"/>
+
+</entity>

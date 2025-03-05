@@ -1,0 +1,51 @@
+
+<!-- Entity Name: mantle.marketing.campaign.MarketingCampaign sql table: MARKETING_CAMPAIGN --><entity entity-name="MarketingCampaign" package="mantle.marketing.campaign" has-dependents="true">
+    <field name="marketingCampaignId" type="id" is-pk="true"/>
+    <field name="parentCampaignId" type="id"/>
+    <field name="statusId" type="id" enable-audit-log="true"/>
+    <field name="campaignName" type="text-medium"/>
+    <field name="campaignSummary" type="text-long"/>
+    <field name="budgetedCost" type="currency-amount"/>
+    <field name="actualCost" type="currency-amount"/>
+    <field name="estimatedCost" type="currency-amount"/>
+    <field name="costUomId" type="id"/>
+    <field name="fromDate" type="date-time"/>
+    <field name="thruDate" type="date-time"/>
+    <field name="isActive" type="text-indicator"/>
+    <field name="convertedLeads" type="id"/>
+    <field name="expectedResponsePercent" type="number-float"/>
+    <field name="expectedRevenue" type="currency-amount"/>
+    <field name="numSent" type="number-integer"/>
+    <field name="startDate" type="date-time"/>
+    <relationship type="one" title="Parent" related="mantle.marketing.campaign.MarketingCampaign">
+        <key-map field-name="parentCampaignId" related="marketingCampaignId"/></relationship>
+    <relationship type="one" title="MarketingCampaign" related="moqui.basic.StatusItem"/>
+    <relationship type="one" title="Cost" related="moqui.basic.Uom">
+        <key-map field-name="costUomId"/></relationship>
+    <seed-data>
+        <moqui.basic.StatusType description="Marketing Campaign" statusTypeId="MarketingCampaign"/>
+        <moqui.basic.StatusItem description="Planned" sequenceNum="1" statusId="MKTG_CAMP_PLANNED" statusTypeId="MarketingCampaign"/>
+        <moqui.basic.StatusItem description="Approved" sequenceNum="2" statusId="MKTG_CAMP_APPROVED" statusTypeId="MarketingCampaign"/>
+        <moqui.basic.StatusItem description="In Progress" sequenceNum="3" statusId="MKTG_CAMP_INPROGRESS" statusTypeId="MarketingCampaign"/>
+        <moqui.basic.StatusItem description="Completed" sequenceNum="4" statusId="MKTG_CAMP_COMPLETED" statusTypeId="MarketingCampaign"/>
+        <moqui.basic.StatusItem description="Cancelled" sequenceNum="5" statusId="MKTG_CAMP_CANCELLED" statusTypeId="MarketingCampaign"/>
+        <moqui.basic.StatusFlowTransition statusFlowId="Default" statusId="MKTG_CAMP_PLANNED" toStatusId="MKTG_CAMP_APPROVED" transitionName="Approve Marketing Campaign"/>
+        <moqui.basic.StatusFlowTransition statusFlowId="Default" statusId="MKTG_CAMP_APPROVED" toStatusId="MKTG_CAMP_INPROGRESS" transitionName="Marketing Campaign In Progress"/>
+        <moqui.basic.StatusFlowTransition statusFlowId="Default" statusId="MKTG_CAMP_INPROGRESS" toStatusId="MKTG_CAMP_COMPLETED" transitionName="Complete Marketing Campaign"/>
+        <moqui.basic.StatusFlowTransition statusFlowId="Default" statusId="MKTG_CAMP_PLANNED" toStatusId="MKTG_CAMP_CANCELLED" transitionName="Cancel Marketing Campaign"/>
+        <moqui.basic.StatusFlowTransition statusFlowId="Default" statusId="MKTG_CAMP_APPROVED" toStatusId="MKTG_CAMP_CANCELLED" transitionName="Cancel Marketing Campaign"/>
+        <moqui.basic.StatusFlowTransition statusFlowId="Default" statusId="MKTG_CAMP_INPROGRESS" toStatusId="MKTG_CAMP_CANCELLED" transitionName="Cancel Marketing Campaign"/>
+    </seed-data>
+    <field name="lastUpdatedStamp" type="date-time"/>
+    <relationship related="mantle.marketing.campaign.MarketingCampaignNote" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="marketingCampaignId" related="marketingCampaignId"/></relationship>
+    <relationship related="mantle.marketing.campaign.MarketingCampaignParty" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="marketingCampaignId" related="marketingCampaignId"/></relationship>
+    <relationship related="mantle.marketing.contact.ContactList" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="marketingCampaignId" related="marketingCampaignId"/></relationship>
+    <relationship related="mantle.marketing.tracking.TrackingCode" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="marketingCampaignId" related="marketingCampaignId"/></relationship>
+    <relationship related="mantle.sales.opportunity.SalesOpportunity" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="marketingCampaignId" related="marketingCampaignId"/></relationship>
+
+</entity>

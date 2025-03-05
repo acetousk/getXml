@@ -1,0 +1,31 @@
+
+<!-- Entity Name: mantle.party.PartyClassification sql table: PARTY_CLASSIFICATION --><entity entity-name="PartyClassification" package="mantle.party" cache="true" has-dependents="true">
+    <field name="partyClassificationId" type="id" is-pk="true"/>
+    <field name="classificationTypeEnumId" type="id"/>
+    <field name="parentClassificationId" type="id"/>
+    <field name="description" type="text-medium"/>
+    <field name="standardCode" type="text-medium"/>
+    <relationship type="one" title="PartyClassificationType" related="moqui.basic.Enumeration" short-alias="type">
+        <key-map field-name="classificationTypeEnumId"/></relationship>
+    <relationship type="one" title="Parent" related="mantle.party.PartyClassification">
+        <key-map field-name="parentClassificationId" related="partyClassificationId"/></relationship>
+    <seed-data>
+        <moqui.basic.EnumerationType description="Party Classification Type" enumTypeId="PartyClassificationType"/>
+        <moqui.basic.Enumeration description="Customer" enumId="PcltCustomer" enumTypeId="PartyClassificationType"/>
+        <moqui.basic.Enumeration description="EEOC (Equal Opportunity)" enumId="PcltEeoc" enumTypeId="PartyClassificationType"/>
+        <moqui.basic.Enumeration description="Minority" enumId="PcltMinority" enumTypeId="PartyClassificationType"/>
+        <moqui.basic.Enumeration description="Income" enumId="PcltIncome" enumTypeId="PartyClassificationType"/>
+        <moqui.basic.Enumeration description="Industry" enumId="PcltIndustry" enumTypeId="PartyClassificationType"/>
+        <moqui.basic.Enumeration description="Revenue" enumId="PcltRevenue" enumTypeId="PartyClassificationType"/>
+        <moqui.basic.Enumeration description="Number of Employees" enumId="PcltNumberEmployees" enumTypeId="PartyClassificationType"/>
+        <moqui.basic.Enumeration description="SIC Code" enumId="PcltSicCode" enumTypeId="PartyClassificationType"/>
+        <moqui.basic.Enumeration description="NAICS Code" enumId="PcltNaicsCode" enumTypeId="PartyClassificationType"/>
+        <moqui.basic.Enumeration description="Ownership" enumId="PcltOwnership" enumTypeId="PartyClassificationType"/>
+    </seed-data>
+    <field name="lastUpdatedStamp" type="date-time"/>
+    <relationship related="mantle.marketing.segment.MarketSegmentClassification" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="partyClassificationId" related="partyClassificationId"/></relationship>
+    <relationship related="mantle.party.PartyClassificationAppl" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="partyClassificationId" related="partyClassificationId"/></relationship>
+
+</entity>

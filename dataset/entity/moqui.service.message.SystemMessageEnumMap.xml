@@ -1,0 +1,13 @@
+
+<!-- Entity Name: moqui.service.message.SystemMessageEnumMap sql table: SYSTEM_MESSAGE_ENUM_MAP --><entity entity-name="SystemMessageEnumMap" package="moqui.service.message" use="configuration">
+    <description><![CDATA[For runtime configurable enum mappings for a particular remote system. For bi-directional
+            integrations enumerated value mappings should be one to one or round trip results will be inconsistent.
+            The PK structure forces one mapped value for each enumId.]]></description>
+    <field name="systemMessageRemoteId" type="id" is-pk="true"/>
+    <field name="enumId" type="id" is-pk="true"/>
+    <field name="mappedValue" type="text-short"/>
+    <relationship type="one" related="moqui.service.message.SystemMessageRemote" short-alias="remote"/>
+    <relationship type="one" related="moqui.basic.Enumeration" short-alias="remote"/>
+    <field name="lastUpdatedStamp" type="date-time"/>
+
+</entity>

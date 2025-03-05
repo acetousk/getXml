@@ -1,0 +1,28 @@
+
+<!-- Entity Name: mantle.work.time.Timesheet sql table: TIMESHEET --><entity entity-name="Timesheet" package="mantle.work.time" cache="never" has-dependents="true">
+    <field name="timesheetId" type="id" is-pk="true"/>
+    <field name="partyId" type="id"/>
+    <field name="clientPartyId" type="id"/>
+    <field name="fromDate" type="date-time"/>
+    <field name="thruDate" type="date-time"/>
+    <field name="statusId" type="id" enable-audit-log="true"/>
+    <field name="comments" type="text-medium"/>
+    <relationship type="one" related="mantle.party.Party"/>
+    <relationship type="one" title="Client" related="mantle.party.Party">
+        <key-map field-name="clientPartyId"/></relationship>
+    <relationship type="one" title="Timesheet" related="moqui.basic.StatusItem"/>
+    <seed-data>
+        <moqui.basic.StatusType description="Timesheet" statusTypeId="Timesheet"/>
+        <moqui.basic.StatusItem description="In-Process" sequenceNum="1" statusId="TmshInProcess" statusTypeId="Timesheet"/>
+        <moqui.basic.StatusItem description="Completed" sequenceNum="2" statusId="TmshCompleted" statusTypeId="Timesheet"/>
+        <moqui.basic.StatusItem description="Approved" sequenceNum="3" statusId="TmshApproved" statusTypeId="Timesheet"/>
+        <moqui.basic.StatusFlowTransition statusFlowId="Default" statusId="TmshInProcess" toStatusId="TmshCompleted" transitionName="Confirm complete"/>
+        <moqui.basic.StatusFlowTransition statusFlowId="Default" statusId="TmshCompleted" toStatusId="TmshApproved" transitionName="Approve"/>
+    </seed-data>
+    <field name="lastUpdatedStamp" type="date-time"/>
+    <relationship related="mantle.work.time.TimeEntry" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="timesheetId" related="timesheetId"/></relationship>
+    <relationship related="mantle.work.time.TimesheetParty" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="timesheetId" related="timesheetId"/></relationship>
+
+</entity>

@@ -1,0 +1,12 @@
+
+<!-- Entity Name: mantle.ledger.account.GlAccountGroupMember sql table: GL_ACCOUNT_GROUP_MEMBER --><entity entity-name="GlAccountGroupMember" package="mantle.ledger.account">
+    <field name="glAccountId" type="id" is-pk="true"/>
+    <field name="groupTypeEnumId" type="id" is-pk="true"/>
+    <field name="glAccountGroupId" type="id"/>
+    <relationship type="one" related="mantle.ledger.account.GlAccount"/>
+    <relationship type="one" title="GlAccountGroupType" related="moqui.basic.Enumeration">
+        <key-map field-name="groupTypeEnumId"/></relationship>
+    <relationship type="one" related="mantle.ledger.account.GlAccountGroup"/>
+    <field name="lastUpdatedStamp" type="date-time"/>
+
+</entity>

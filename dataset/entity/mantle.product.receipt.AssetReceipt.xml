@@ -1,0 +1,76 @@
+
+<!-- Entity Name: mantle.product.receipt.AssetReceipt sql table: ASSET_RECEIPT --><entity entity-name="AssetReceipt" package="mantle.product.receipt" cache="never" has-dependents="true">
+    <field name="assetReceiptId" type="id" is-pk="true"/>
+    <field name="assetId" type="id"/>
+    <field name="productId" type="id"/>
+    <field name="orderId" type="id"/>
+    <field name="orderItemSeqId" type="id"/>
+    <field name="shipmentId" type="id"/>
+    <field name="shipmentItemSourceId" type="id"/>
+    <field name="shipmentPackageSeqId" type="id"/>
+    <field name="invoiceId" type="id"/>
+    <field name="invoiceItemSeqId" type="id"/>
+    <field name="returnId" type="id"/>
+    <field name="returnItemSeqId" type="id"/>
+    <field name="workEffortId" type="id"/>
+    <field name="receivedByUserId" type="id"/>
+    <field name="receivedDate" type="date-time"/>
+    <field name="itemDescription" type="text-medium"/>
+    <field name="quantityAccepted" type="number-decimal"/>
+    <field name="quantityRejected" type="number-decimal"/>
+    <field name="rejectionReasonEnumId" type="id"/>
+    <field name="acctgTransResultEnumId" type="id"/>
+    <relationship type="one" related="mantle.product.asset.Asset" short-alias="asset"/>
+    <relationship type="one" related="mantle.product.Product" short-alias="product"/>
+    <relationship type="one" related="mantle.order.OrderItem" short-alias="orderItem"/>
+    <relationship type="one" related="mantle.shipment.Shipment" short-alias="shipment"/>
+    <relationship type="one" related="mantle.shipment.ShipmentItemSource" short-alias="shipmentItemSource"/>
+    <relationship type="one-nofk" related="mantle.shipment.ShipmentItem" short-alias="shipmentItem"/>
+    <relationship type="one-nofk" related="mantle.shipment.ShipmentPackage" short-alias="shipmentPackage">
+        <key-map field-name="shipmentId"/>
+        <key-map field-name="shipmentPackageSeqId"/>
+    </relationship>
+    <relationship type="one" related="mantle.account.invoice.InvoiceItem" short-alias="invoiceItem"/>
+    <relationship type="one" related="mantle.order.return.ReturnItem" short-alias="returnItem">
+        <key-map field-name="returnId"/>
+        <key-map field-name="returnItemSeqId"/>
+    </relationship>
+    <relationship type="one" related="mantle.work.effort.WorkEffort" short-alias="workEffort"/>
+    <relationship type="many" related="mantle.work.effort.WorkEffortProduct" short-alias="workEffortProducts">
+        <key-map field-name="workEffortId"/>
+        <key-map field-name="productId"/>
+    </relationship>
+    <relationship type="one" title="ReceivedBy" related="moqui.security.UserAccount" short-alias="receivedByUserAccount">
+        <key-map field-name="receivedByUserId"/></relationship>
+    <relationship type="one" title="RejectionReason" related="moqui.basic.Enumeration" short-alias="rejectionReason">
+        <key-map field-name="rejectionReasonEnumId"/></relationship>
+    <relationship type="one" title="AcctgTransResult" related="moqui.basic.Enumeration" short-alias="acctgTransResult">
+        <key-map field-name="acctgTransResultEnumId"/></relationship>
+    <index name="ASSET_REC_ORDID">
+        <index-field name="orderId"/></index>
+    <index name="ASSET_REC_SHPPRD">
+        <index-field name="shipmentId"/>
+        <index-field name="productId"/>
+    </index>
+    <seed-data>
+        <moqui.basic.EnumerationType description="Rejection Reason" enumTypeId="RejectionReason"/>
+        <moqui.basic.Enumeration enumId="ArjDamaged" description="Damaged" enumTypeId="RejectionReason"/>
+        <moqui.basic.Enumeration enumId="ArjLost" description="Lost in Transit" enumTypeId="RejectionReason"/>
+        <moqui.basic.Enumeration enumId="ArjNotOrdered" description="Not Ordered" enumTypeId="RejectionReason"/>
+        <moqui.basic.Enumeration enumId="ArjOverShipped" description="Over Shipped" enumTypeId="RejectionReason"/>
+        <moqui.basic.Enumeration enumId="ArjNotToSpec" description="Not to Specification" enumTypeId="RejectionReason"/>
+    </seed-data>
+    <field name="lastUpdatedStamp" type="date-time"/>
+    <relationship related="mantle.ledger.transaction.AcctgTrans" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="assetReceiptId" related="assetReceiptId"/></relationship>
+    <relationship related="mantle.order.OrderItemBilling" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="assetReceiptId" related="assetReceiptId"/></relationship>
+    <relationship related="mantle.order.return.ReturnItemBilling" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="assetReceiptId" related="assetReceiptId"/></relationship>
+    <relationship related="mantle.product.asset.AssetDetail" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="assetReceiptId" related="assetReceiptId"/></relationship>
+
+<!-- seca <seca id="AssetReceiptGlPost" service="create#mantle.product.receipt.AssetReceipt" when="post-service" run-on-error="false">
+    <actions>
+        <service-call name="mantle.ledger.AssetAutoPostServices.post#AssetReceipt" in-map="context"/></actions></seca>-->
+</entity>

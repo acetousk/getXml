@@ -1,0 +1,10 @@
+
+<!-- Entity Name: mantle.humanres.position.EmplPositionClassSkill sql table: EMPL_POSITION_CLASS_SKILL --><entity entity-name="EmplPositionClassSkill" package="mantle.humanres.position" use="configuration">
+    <field name="emplPositionClassId" type="id" is-pk="true"/>
+    <field name="skillTypeEnumId" type="id" is-pk="true"/>
+    <relationship type="one" related="mantle.humanres.position.EmplPositionClass"/>
+    <relationship type="one" title="SkillType" related="moqui.basic.Enumeration" short-alias="skillTypeEnum">
+        <key-map field-name="skillTypeEnumId"/></relationship>
+    <field name="lastUpdatedStamp" type="date-time"/>
+
+</entity>

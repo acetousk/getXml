@@ -1,0 +1,85 @@
+
+<!-- Entity Name: mantle.product.ProductPrice sql table: PRODUCT_PRICE --><entity entity-name="ProductPrice" package="mantle.product" has-dependents="true">
+    <field name="productPriceId" type="id" is-pk="true"/>
+    <field name="productId" type="id" not-null="true"/>
+    <field name="productStoreId" type="id">
+        <description><![CDATA[For pricing per store. Leave null to apply to all stores.]]></description></field>
+    <field name="vendorPartyId" type="id">
+        <description><![CDATA[For sales from internal organization (ie company) set to internal organization's ID.
+            For supplier prices set to supplier's ID.]]></description></field>
+    <field name="customerPartyId" type="id">
+        <description><![CDATA[For general consumer prices leave null.
+            For a price for a specific customer (or group of customers), set to that customer's ID.
+            For supplier prices this is the internal organization's (ie company's) ID.]]></description></field>
+    <field name="priceTypeEnumId" type="id"/>
+    <field name="pricePurposeEnumId" type="id"/>
+    <field name="fromDate" type="date-time"/>
+    <field name="thruDate" type="date-time"/>
+    <field name="minQuantity" type="number-decimal"/>
+    <field name="price" type="currency-precise" enable-audit-log="true"/>
+    <field name="priceUomId" type="id"/>
+    <field name="termUomId" type="id">
+        <description><![CDATA[For recurring and usage prices to specify a time/freq measure,
+            or a usage unit measure (bits, minutes, etc).]]></description></field>
+    <field name="taxInPrice" type="text-indicator">
+        <description><![CDATA[If Y the price field has tax included for the given
+            taxAuthorityId at the taxPercentage.]]></description></field>
+    <field name="taxAmount" type="currency-precise"/>
+    <field name="taxPercentage" type="number-decimal"/>
+    <field name="taxAuthorityId" type="id"/>
+    <field name="agreementId" type="id"/>
+    <field name="agreementItemSeqId" type="id">
+        <description><![CDATA[Use along with agreementId to associate the price with
+            an AgreementItem.]]></description></field>
+    <field name="otherPartyItemName" type="text-medium"/>
+    <field name="otherPartyItemId" type="text-short"/>
+    <field name="comments" type="text-long"/>
+    <field name="quantityIncrement" type="number-decimal"/>
+    <field name="quantityIncluded" type="number-decimal"/>
+    <field name="quantityUomId" type="id"/>
+    <field name="preferredOrderEnumId" type="id"/>
+    <field name="supplierRatingTypeEnumId" type="id"/>
+    <field name="standardLeadTimeDays" type="number-decimal"/>
+    <field name="canDropShip" type="text-indicator"/>
+    <relationship type="one" related="mantle.product.Product" short-alias="product"/>
+    <relationship type="one" title="ProductPriceType" related="moqui.basic.Enumeration" short-alias="type">
+        <key-map field-name="priceTypeEnumId"/></relationship>
+    <relationship type="one" title="ProductPricePurpose" related="moqui.basic.Enumeration" short-alias="purpose">
+        <key-map field-name="pricePurposeEnumId"/></relationship>
+    <relationship type="one" title="Price" related="moqui.basic.Uom" short-alias="priceUom">
+        <key-map field-name="priceUomId"/></relationship>
+    <relationship type="one" title="Term" related="moqui.basic.Uom" short-alias="termUom">
+        <key-map field-name="termUomId"/></relationship>
+    <relationship type="one" related="mantle.product.store.ProductStore" short-alias="store"/>
+    <relationship type="one" related="mantle.other.tax.TaxAuthority" short-alias="taxAuthority"/>
+    <relationship type="one" title="SupplierPreferredOrder" related="moqui.basic.Enumeration" short-alias="supplierOrder">
+        <key-map field-name="preferredOrderEnumId"/></relationship>
+    <relationship type="one" title="SupplierRatingType" related="moqui.basic.Enumeration" short-alias="supplierRating">
+        <key-map field-name="supplierRatingTypeEnumId"/></relationship>
+    <relationship type="one" title="Quantity" related="moqui.basic.Uom" short-alias="quantityUom">
+        <key-map field-name="quantityUomId"/></relationship>
+    <seed-data>
+        <moqui.basic.EnumerationType description="Product Price Type" enumTypeId="ProductPriceType"/>
+        <moqui.basic.Enumeration description="List Price" enumId="PptList" enumTypeId="ProductPriceType"/>
+        <moqui.basic.Enumeration description="Current Price" enumId="PptCurrent" enumTypeId="ProductPriceType"/>
+        <moqui.basic.Enumeration description="Average Cost" enumId="PptAverage" enumTypeId="ProductPriceType"/>
+        <moqui.basic.Enumeration description="Minimum Price" enumId="PptMinimum" enumTypeId="ProductPriceType"/>
+        <moqui.basic.Enumeration description="Maximum Price" enumId="PptMaximum" enumTypeId="ProductPriceType"/>
+        <moqui.basic.Enumeration description="Promotional Price" enumId="PptPromotional" enumTypeId="ProductPriceType"/>
+        <moqui.basic.Enumeration description="Competitive Price" enumId="PptCompetitive" enumTypeId="ProductPriceType"/>
+        <moqui.basic.Enumeration description="Wholesale Price" enumId="PptWholesale" enumTypeId="ProductPriceType"/>
+        <moqui.basic.Enumeration description="Special Promo Price" enumId="PptSpecialPromo" enumTypeId="ProductPriceType"/>
+        <moqui.basic.EnumerationType description="Product Price Purpose" enumTypeId="ProductPricePurpose"/>
+        <moqui.basic.Enumeration description="Purchase/Initial" enumId="PppPurchase" enumTypeId="ProductPricePurpose"/>
+        <moqui.basic.Enumeration description="Recurring Charge" enumId="PppRecurring" enumTypeId="ProductPricePurpose"/>
+        <moqui.basic.Enumeration description="Usage Charge" enumId="PppUsage" enumTypeId="ProductPricePurpose"/>
+        <moqui.basic.Enumeration description="Component Price" enumId="PppComponent" enumTypeId="ProductPricePurpose"/>
+        <moqui.basic.EnumerationType description="Supplier Preferred Order" enumTypeId="SupplierPreferredOrder"/>
+        <moqui.basic.Enumeration enumId="SpoMain" sequenceNum="1" description="Main Supplier" enumTypeId="SupplierPreferredOrder"/>
+        <moqui.basic.Enumeration enumId="SpoAlternate" sequenceNum="2" description="Alternate Supplier" enumTypeId="SupplierPreferredOrder"/>
+    </seed-data>
+    <field name="lastUpdatedStamp" type="date-time"/>
+    <relationship related="mantle.order.OrderItem" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="productPriceId" related="productPriceId"/></relationship>
+
+</entity>

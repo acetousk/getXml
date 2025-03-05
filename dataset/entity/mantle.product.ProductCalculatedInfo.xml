@@ -1,0 +1,10 @@
+
+<!-- Entity Name: mantle.product.ProductCalculatedInfo sql table: PRODUCT_CALCULATED_INFO --><entity entity-name="ProductCalculatedInfo" package="mantle.product" cache="never">
+    <field name="productId" type="id" is-pk="true"/>
+    <field name="totalQuantityOrdered" type="number-decimal"/>
+    <field name="totalTimesViewed" type="number-integer"/>
+    <field name="averageCustomerRating" type="number-decimal"/>
+    <relationship type="one" related="mantle.product.Product"/>
+    <field name="lastUpdatedStamp" type="date-time"/>
+
+</entity>

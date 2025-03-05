@@ -1,0 +1,18 @@
+
+<!-- Entity Name: moqui.security.ArtifactAuthzFailure sql table: ARTIFACT_AUTHZ_FAILURE --><entity entity-name="ArtifactAuthzFailure" package="moqui.security" use="nontransactional" cache="never">
+    <field name="failureId" type="text-medium" is-pk="true"/>
+    <field name="artifactName" type="text-medium"/>
+    <field name="artifactTypeEnumId" type="id"/>
+    <field name="authzActionEnumId" type="id"/>
+    <field name="userId" type="id"/>
+    <field name="failureDate" type="date-time"/>
+    <field name="isDeny" type="text-indicator"/>
+    <relationship type="one" title="ArtifactType" related="moqui.basic.Enumeration">
+        <key-map field-name="artifactTypeEnumId"/></relationship>
+    <relationship type="one" title="AuthzAction" related="moqui.basic.Enumeration">
+        <key-map field-name="authzActionEnumId"/></relationship>
+    <relationship type="one-nofk" related="moqui.security.UserAccount">
+        <description><![CDATA[No FK in order to allow externally authenticated users.]]></description></relationship>
+    <field name="lastUpdatedStamp" type="date-time"/>
+
+</entity>

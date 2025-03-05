@@ -1,0 +1,20 @@
+
+<!-- Entity Name: mantle.product.store.ProductStoreDataDocument sql table: PRODUCT_STORE_DATA_DOCUMENT --><entity entity-name="ProductStoreDataDocument" package="mantle.product.store">
+    <description><![CDATA[Relationship between the ProductStore and DataDocument Entities meant to replace ProductStore.productDataDocumentId fields and the like. See: https://forum.moqui.org/t/productstore-datadocument-options/303.]]></description>
+    <field name="productStoreId" type="id" is-pk="true"/>
+    <field name="typeEnumId" type="id" is-pk="true"/>
+    <field name="dataDocumentId" type="id"/>
+    <relationship type="one" related="mantle.product.store.ProductStore" short-alias="store"/>
+    <relationship type="one" related="moqui.entity.document.DataDocument" short-alias="dataDocument"/>
+    <relationship type="one" title="StoreDataDocumentType" related="moqui.basic.Enumeration" short-alias="type">
+        <key-map field-name="typeEnumId"/></relationship>
+    <seed-data>
+        <moqui.basic.EnumerationType description="Product Store Data Document Type" enumTypeId="ProductStoreDataDocumentType"/>
+        <moqui.basic.Enumeration description="Product Search" enumId="PsdtProduct" enumTypeId="ProductStoreDataDocumentType"/>
+        <moqui.basic.Enumeration description="Category Search" enumId="PsdtCategory" enumTypeId="ProductStoreDataDocumentType"/>
+        <moqui.basic.Enumeration description="Blog Search" enumId="PsdtBlog" enumTypeId="ProductStoreDataDocumentType"/>
+        <moqui.basic.Enumeration description="Content Search" enumId="PsdtContent" enumTypeId="ProductStoreDataDocumentType"/>
+    </seed-data>
+    <field name="lastUpdatedStamp" type="date-time"/>
+
+</entity>

@@ -1,0 +1,39 @@
+<!--Service Location mantle.product.InventoryReportServices.get#PriceHistoryInfo--><service verb="get" noun="PriceHistoryInfo"><in-parameters><parameter name="productIdList" type="List" required="true"/><parameter name="facilityId"/><parameter name="fromDate" type="Timestamp"/><parameter name="thruDate" type="Timestamp" default="ec.user.nowTimestamp"/><parameter name="maxResults" type="Integer" default="1000"/><parameter name="indexName" default-value="mantle_inventory"/><parameter name="orderItemDocumentName" default-value="MantleInventoryOrderItem"/></in-parameters><out-parameters><parameter name="infoByProductId" type="Map"><description><![CDATA[A Map where the key is a productId and the value
+                is a Map with: orderQuantitySum, unitAmountMin, unitAmountMax, weightedAmountSum, and weightedAmountAvg.]]></description></parameter></out-parameters><actions><script><![CDATA[import org.elasticsearch.action.search.SearchResponse
+            import org.elasticsearch.script.Script
+            import org.elasticsearch.script.ScriptType
+            import org.elasticsearch.search.aggregations.AggregationBuilder
+            import org.elasticsearch.search.aggregations.AggregationBuilders
+            import org.moqui.elasticsearch.ElasticSearchUtil
+
+            String fromDateStr = fromDate ? (fromDate.getTime() as String) : null
+            String thruDateStr = thruDate.getTime() as String
+
+            List andList = [[terms: [productId: productIdList]], [bool: [must_not: [terms: [partStatusId: ['OrderRejected', 'OrderCancelled']]]]]]
+            if (facilityId) andList.add([term: [facilityId: facilityId]])
+            // alternative to allow placedDate to be null: if (fromDateStr) andList.add([or: [[missing:[field:'placedDate']], [range:['placedDate':[gte:fromDateStr]]]]])
+            if (fromDateStr) andList.add([range: ['placedDate': [gte: fromDateStr, format: 'epoch_millis']]])
+            andList.add([range: ['placedDate': [lte: thruDateStr, format: 'epoch_millis']]])
+
+            AggregationBuilder aggBuilder = AggregationBuilders.terms("products").field("productId").size(maxResults)
+                    .subAggregation(AggregationBuilders.sum("orderQuantitySum").field("orderQuantity"))
+                    .subAggregation(AggregationBuilders.min("unitAmountMin").field("unitAmount"))
+                    .subAggregation(AggregationBuilders.max("unitAmountMax").field("unitAmount"))
+                    .subAggregation(AggregationBuilders.sum("weightedAmountSum").field("orderItemTotal"))
+
+            SearchResponse searchResponse = ElasticSearchUtil.aggregationSearch((String) indexName, [(String) orderItemDocumentName],
+                    maxResults, [bool: [filter: andList]], aggBuilder, ec)
+
+            // consolidate the results into a single Map by productId
+            infoByProductId = [:]
+            for (def bucket in searchResponse.getAggregations().get('products').getBuckets()) {
+                String productId = bucket.getKey()
+                BigDecimal orderQuantitySum = bucket.getAggregations().get('orderQuantitySum').getValue()
+                BigDecimal weightedAmountSum = bucket.getAggregations().get('weightedAmountSum').getValue()
+                BigDecimal weightedAmountAvg = (weightedAmountSum / orderQuantitySum).setScale(2, BigDecimal.ROUND_HALF_UP)
+                addToMapInMap(productId, 'orderQuantitySum', orderQuantitySum, infoByProductId)
+                addToMapInMap(productId, 'unitAmountMin', bucket.getAggregations().get('unitAmountMin').getValue(), infoByProductId)
+                addToMapInMap(productId, 'unitAmountMax', bucket.getAggregations().get('unitAmountMax').getValue(), infoByProductId)
+                addToMapInMap(productId, 'weightedAmountSum', weightedAmountSum, infoByProductId)
+                addToMapInMap(productId, 'weightedAmountAvg', weightedAmountAvg, infoByProductId)
+            }]]></script></actions></service>

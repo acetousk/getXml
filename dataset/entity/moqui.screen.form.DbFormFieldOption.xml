@@ -1,0 +1,12 @@
+
+<!-- Entity Name: moqui.screen.form.DbFormFieldOption sql table: DB_FORM_FIELD_OPTION --><entity entity-name="DbFormFieldOption" package="moqui.screen.form" use="configuration">
+    <field name="formId" type="id" is-pk="true"/>
+    <field name="fieldName" type="text-medium" is-pk="true"/>
+    <field name="sequenceNum" type="number-integer" is-pk="true"/>
+    <field name="keyValue" type="text-medium"/>
+    <field name="text" type="text-medium"/>
+    <relationship type="one" related="moqui.screen.form.DbFormField" short-alias="dbFormField"/>
+    <field name="lastUpdatedStamp" type="date-time"/>
+
+<!-- eeca org.moqui.impl.entity.EntityEcaRule@723d9c59-->
+</entity>

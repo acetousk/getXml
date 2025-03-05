@@ -1,0 +1,29 @@
+<!-- Screen Location component://SimpleScreens/screen/SimpleScreens/Wiki/WikiCompare.xml --><screen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://moqui.org/xsd/xml-screen-3.xsd" allow-extra-path="true" default-menu-include="false"><parameter name="wikiSpaceId" required="true"/><parameter name="pagePath"/><parameter name="versionNameLhs" required="true"/><parameter name="versionNameRhs" required="true"/><actions><service-call name="org.moqui.impl.WikiServices.get#WikiPageInfo" in-map="context" out-map="context"/><set field="pageTextLhs" from="pageReference?.getText(versionNameLhs) ?: ''"/><set field="pageTextRhs" from="pageReference?.getText(versionNameRhs) ?: ''"/><set field="wikiType" from="wikiType ?: 'md'"/></actions><widgets><container-box><box-header title="Compare ${pageName} versions ${versionNameLhs} and ${versionNameRhs}"/><box-toolbar><link url="../wiki" text="Back to View"/></box-toolbar><box-body><render-mode><text type="html,vuet,qvt"><![CDATA[<pre id="result" class="compare"></pre><textarea id="pageTextLhs" style="display: none;">${pageTextLhs?html}</textarea><textarea id="pageTextRhs" style="display: none;">${pageTextRhs?html}</textarea><script src="https://cdnjs.cloudflare.com/ajax/libs/jsdiff/3.2.0/diff.min.js" type="text/javascript"></script><script>
+    var a = document.getElementById('pageTextLhs');
+    var b = document.getElementById('pageTextRhs');
+    var result = document.getElementById('result');
+    // diffChars, diffWords, diffLines
+	var diff = JsDiff['diffChars'](a.textContent, b.textContent);
+	var fragment = document.createDocumentFragment();
+	for (var i=0; i < diff.length; i++) {
+		if (diff[i].added && diff[i + 1] && diff[i + 1].removed) {
+			var swap = diff[i];
+			diff[i] = diff[i + 1];
+			diff[i + 1] = swap;
+		}
+		var node;
+		if (diff[i].removed) {
+			node = document.createElement('del');
+			node.appendChild(document.createTextNode(diff[i].value));
+		} else if (diff[i].added) {
+			node = document.createElement('ins');
+			node.appendChild(document.createTextNode(diff[i].value));
+		} else {
+			node = document.createTextNode(diff[i].value);
+		}
+		fragment.appendChild(node);
+	}
+
+	result.textContent = '';
+	result.appendChild(fragment);
+            </script>]]></text></render-mode></box-body></container-box></widgets></screen>

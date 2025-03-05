@@ -1,0 +1,27 @@
+
+<!-- Entity Name: mantle.account.payment.PaymentFraudEvidence sql table: PAYMENT_FRAUD_EVIDENCE --><entity entity-name="PaymentFraudEvidence" package="mantle.account.payment" cache="never" has-dependents="true">
+    <description><![CDATA[Evidence of payment fraud with references to the Payment and possibly OrderHeader that represents the fraud.
+
+            Other entities like ContactMech and PaymentMethod have a reference to this entity when they are gray- or
+            black-listed based on this evidence.]]></description>
+    <field name="paymentFraudEvidenceId" type="id" is-pk="true"/>
+    <field name="fraudTypeEnumId" type="id"/>
+    <field name="comments" type="text-medium"/>
+    <field name="contentLocation" type="text-medium"/>
+    <field name="paymentId" type="id"/>
+    <field name="orderId" type="id"/>
+    <field name="partyId" type="id"/>
+    <field name="visitId" type="id"/>
+    <relationship type="one" title="FraudType" related="moqui.basic.Enumeration">
+        <key-map field-name="fraudTypeEnumId"/></relationship>
+    <relationship type="one" related="mantle.account.payment.Payment"/>
+    <relationship type="one" related="mantle.order.OrderHeader"/>
+    <relationship type="one" related="mantle.party.Party"/>
+    <relationship type="one" related="moqui.server.Visit"/>
+    <field name="lastUpdatedStamp" type="date-time"/>
+    <relationship related="mantle.account.method.PaymentMethod" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="paymentFraudEvidenceId" related="paymentFraudEvidenceId"/></relationship>
+    <relationship related="mantle.party.contact.ContactMech" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="paymentFraudEvidenceId" related="paymentFraudEvidenceId"/></relationship>
+
+</entity>

@@ -1,0 +1,4 @@
+<!--Transition Screen Location component://webroot/screen/webroot/error.xml Transition Name actions--><transition name="actions"><actions><!--always-actions at component://webroot/screen/webroot.xml--><set field="html_scripts" from="new LinkedHashSet()"/><set field="footer_scripts" from="new LinkedHashSet()"/><set field="html_stylesheets" from="new LinkedHashSet()"/><!--pre-actions--><script><![CDATA[html_stylesheets.add('/libs/twitter-bootstrap/css/bootstrap.min.css')
+
+        html_scripts.add('/libs/jquery/jquery.min.js')
+        html_scripts.add('/libs/twitter-bootstrap/js/bootstrap.min.js')]]></script></actions></transition>

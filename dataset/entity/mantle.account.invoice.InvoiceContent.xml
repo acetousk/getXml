@@ -1,0 +1,22 @@
+
+<!-- Entity Name: mantle.account.invoice.InvoiceContent sql table: INVOICE_CONTENT --><entity entity-name="InvoiceContent" package="mantle.account.invoice" cache="never">
+    <field name="invoiceContentId" type="id" is-pk="true"/>
+    <field name="invoiceId" type="id"/>
+    <field name="contentLocation" type="text-medium"/>
+    <field name="contentTypeEnumId" type="id"/>
+    <field name="description" type="text-long"/>
+    <field name="contentDate" type="date-time" default="ec.user.nowTimestamp"/>
+    <field name="userId" type="id" default="ec.user.userId"/>
+    <relationship type="one" related="mantle.account.invoice.Invoice"/>
+    <relationship type="one" title="InvoiceContentType" related="moqui.basic.Enumeration">
+        <key-map field-name="contentTypeEnumId"/></relationship>
+    <seed-data>
+        <moqui.basic.EnumerationType description="Invoice Content Type" enumTypeId="InvoiceContentType"/>
+        <moqui.basic.Enumeration enumId="IctInvoiceDocument" description="Invoice Document" enumTypeId="InvoiceContentType"/>
+        <moqui.basic.Enumeration enumId="IctReceipt" description="Receipt" enumTypeId="InvoiceContentType"/>
+        <moqui.basic.Enumeration enumId="IctItemImage" description="Item Image" enumTypeId="InvoiceContentType"/>
+        <moqui.basic.Enumeration enumId="IctNote" description="Note" enumTypeId="InvoiceContentType"/>
+    </seed-data>
+    <field name="lastUpdatedStamp" type="date-time"/>
+
+</entity>

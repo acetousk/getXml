@@ -1,0 +1,295 @@
+
+<!-- Entity Name: mantle.order.OrderHeader sql table: ORDER_HEADER --><entity entity-name="OrderHeader" package="mantle.order" short-alias="orders" cache="never" has-dependents="true">
+    <field name="orderId" type="id" is-pk="true"/>
+    <field name="orderName" type="text-medium"/>
+    <field name="entryDate" type="date-time"/>
+    <field name="placedDate" type="date-time"/>
+    <field name="approvedDate" type="date-time"/>
+    <field name="completedDate" type="date-time"/>
+    <field name="statusId" type="id" enable-audit-log="true"/>
+    <field name="processingStatusId" type="id" enable-audit-log="true">
+        <description><![CDATA[Sub-status for use when statusId=OrderProcessing for custom pre-approve status flows]]></description></field>
+    <field name="orderRevision" type="number-integer"/>
+    <field name="currencyUomId" type="id"/>
+    <field name="billingAccountId" type="id"/>
+    <field name="productStoreId" type="id"/>
+    <field name="salesChannelEnumId" type="id"/>
+    <field name="terminalId" type="text-short">
+        <description><![CDATA[ID for the terminal, such as a POS system, where the order was recorded]]></description></field>
+    <field name="displayId" type="text-short">
+        <description><![CDATA[ID to display to customers, can be different from orderId and/or externalId]]></description></field>
+    <field name="externalId" type="text-short">
+        <description><![CDATA[ID for the order in the direct upstream system it came from if it came from an external system]]></description></field>
+    <field name="externalRevision" type="text-short"/>
+    <field name="originId" type="text-short">
+        <description><![CDATA[ID for the order in the original system it came from (system of record) if not the direct upstream system]]></description></field>
+    <field name="originUrl" type="text-medium">
+        <description><![CDATA[URL to view the order on the original system it came from]]></description></field>
+    <field name="syncStatusId" type="id"/>
+    <field name="systemMessageRemoteId" type="id"/>
+    <field name="visitId" type="id"/>
+    <field name="enteredByPartyId" type="id"/>
+    <field name="parentOrderId" type="id">
+        <description><![CDATA[The original/parent order this is based on, used for all order clones including recurring orders]]></description></field>
+    <field name="recurCronExpression" type="text-medium">
+        <description><![CDATA[If populated is a recurring order, automatically cloned if in Approved status]]></description></field>
+    <field name="lastOrderedDate" type="date-time">
+        <description><![CDATA[For recurring orders the date/time of the most recent clone/recurrence]]></description></field>
+    <field name="recurAutoInvoice" type="text-indicator">
+        <description><![CDATA[If Y and cloned recurring order successfully auto-approved then also invoice/bill the order immediately]]></description></field>
+    <field name="remainingSubTotal" type="currency-amount"/>
+    <field name="grandTotal" type="currency-amount"/>
+    <relationship type="one" title="OrderHeader" related="moqui.basic.StatusItem" short-alias="status"/>
+    <relationship type="one" title="OrderProcessing" related="moqui.basic.StatusItem" short-alias="processingStatus">
+        <key-map field-name="processingStatusId"/></relationship>
+    <relationship type="one" title="Currency" related="moqui.basic.Uom" short-alias="currencyUom">
+        <key-map field-name="currencyUomId"/></relationship>
+    <relationship type="one" related="mantle.account.billing.BillingAccount" short-alias="billingAccount"/>
+    <relationship type="one" related="mantle.product.store.ProductStore" short-alias="productStore"/>
+    <relationship type="one" title="SalesChannel" related="moqui.basic.Enumeration" short-alias="salesChannel">
+        <key-map field-name="salesChannelEnumId"/></relationship>
+    <relationship type="one" title="Sync" related="moqui.basic.StatusItem" short-alias="syncStatus">
+        <key-map field-name="syncStatusId"/></relationship>
+    <relationship type="one" related="moqui.service.message.SystemMessageRemote" short-alias="systemMessageRemote"/>
+    <relationship type="one" related="moqui.server.Visit" short-alias="visit"/>
+    <relationship type="one" title="EnteredBy" related="mantle.party.Party" short-alias="enteredByParty">
+        <key-map field-name="enteredByPartyId" related="partyId"/></relationship>
+    <relationship type="one" title="Parent" related="mantle.order.OrderHeader" short-alias="parentOrder">
+        <key-map field-name="parentOrderId" related="orderId"/></relationship>
+    <relationship type="many" related="mantle.order.OrderPart" short-alias="parts">
+        <key-map field-name="orderId"/></relationship>
+    <relationship type="many" related="mantle.order.OrderItem" short-alias="items">
+        <key-map field-name="orderId"/></relationship>
+    <relationship type="many" related="mantle.order.OrderContent" short-alias="contents">
+        <key-map field-name="orderId"/></relationship>
+    <relationship type="many" related="mantle.order.OrderNote" short-alias="notes">
+        <key-map field-name="orderId"/></relationship>
+    <relationship type="many" related="mantle.order.OrderCommunicationEvent" short-alias="communicationEvents">
+        <key-map field-name="orderId"/></relationship>
+    <relationship type="many" related="mantle.order.OrderEmailMessage" short-alias="emailMessages">
+        <key-map field-name="orderId"/></relationship>
+    <relationship type="many" related="mantle.account.payment.Payment" short-alias="payments">
+        <key-map field-name="orderId"/></relationship>
+    <relationship type="many" title="Child" related="mantle.order.OrderHeader" short-alias="childOrders">
+        <key-map field-name="orderId" related="parentOrderId"/></relationship>
+    <relationship type="many" title="Status" related="moqui.entity.EntityAuditLog" short-alias="statusLogs">
+        <key-map field-name="orderId" related="pkPrimaryValue"/>
+        <key-value related="changedEntityName" value="mantle.order.OrderHeader"/>
+        <key-value related="changedFieldName" value="statusId"/>
+    </relationship>
+    <index name="ORDERDISP_ID_IDX">
+        <index-field name="displayId"/></index>
+    <index name="ORDEREXT_ID_IDX">
+        <index-field name="externalId"/></index>
+    <index name="ORDERORIG_ID_IDX">
+        <index-field name="originId"/></index>
+    <seed-data>
+        <moqui.basic.StatusType description="Order Header Status" statusTypeId="OrderHeader"/>
+        <moqui.basic.StatusItem description="Being Changed" sequenceNum="0" statusId="OrderBeingChanged" statusTypeId="OrderHeader"/>
+        <moqui.basic.StatusItem description="Open (Tentative)" sequenceNum="1" statusId="OrderOpen" statusTypeId="OrderHeader"/>
+        <moqui.basic.StatusItem description="Quote Requested by Customer" sequenceNum="2" statusId="OrderRequested" statusTypeId="OrderHeader"/>
+        <moqui.basic.StatusItem description="Quote Proposed by Vendor" sequenceNum="3" statusId="OrderProposed" statusTypeId="OrderHeader"/>
+        <moqui.basic.StatusItem description="Placed by Customer" sequenceNum="4" statusId="OrderPlaced" statusTypeId="OrderHeader"/>
+        <moqui.basic.StatusItem description="Held" sequenceNum="5" statusId="OrderHold" statusTypeId="OrderHeader"/>
+        <moqui.basic.StatusItem description="Processing" sequenceNum="11" statusId="OrderProcessing" statusTypeId="OrderHeader"/>
+        <moqui.basic.StatusItem description="Approved" sequenceNum="12" statusId="OrderApproved" statusTypeId="OrderHeader"/>
+        <moqui.basic.StatusItem description="Sent" sequenceNum="13" statusId="OrderSent" statusTypeId="OrderHeader"/>
+        <moqui.basic.StatusItem description="Completed" sequenceNum="21" statusId="OrderCompleted" statusTypeId="OrderHeader"/>
+        <moqui.basic.StatusItem description="Rejected by Vendor" sequenceNum="98" statusId="OrderRejected" statusTypeId="OrderHeader"/>
+        <moqui.basic.StatusItem description="Cancelled by Customer" sequenceNum="99" statusId="OrderCancelled" statusTypeId="OrderHeader"/>
+        <moqui.basic.StatusItem description="Wish List" sequenceNum="101" statusId="OrderWishList" statusTypeId="OrderHeader"/>
+        <moqui.basic.StatusItem description="Gift Registry" sequenceNum="102" statusId="OrderGiftRegistry" statusTypeId="OrderHeader"/>
+        <moqui.basic.StatusItem description="Auto Reorder" sequenceNum="103" statusId="OrderAutoReorder" statusTypeId="OrderHeader"/>
+        <moqui.basic.StatusFlowTransition statusFlowId="Default" statusId="OrderBeingChanged" toStatusId="OrderOpen" transitionName="Make Open/Tentative"/>
+        <moqui.basic.StatusFlowTransition statusFlowId="Default" statusId="OrderBeingChanged" toStatusId="OrderPlaced" transitionName="Place##Order"/>
+        <moqui.basic.StatusFlowTransition statusFlowId="Default" statusId="OrderBeingChanged" toStatusId="OrderProposed" transitionName="Propose Quote"/>
+        <moqui.basic.StatusFlowTransition statusFlowId="Default" statusId="OrderOpen" toStatusId="OrderBeingChanged" transitionName="Begin Changes"/>
+        <moqui.basic.StatusFlowTransition statusFlowId="Default" statusId="OrderOpen" toStatusId="OrderPlaced" transitionName="Place##Order"/>
+        <moqui.basic.StatusFlowTransition statusFlowId="Default" statusId="OrderOpen" toStatusId="OrderHold" transitionName="Hold##Order"/>
+        <moqui.basic.StatusFlowTransition statusFlowId="Default" statusId="OrderOpen" toStatusId="OrderRejected" transitionName="Reject"/>
+        <moqui.basic.StatusFlowTransition statusFlowId="Default" statusId="OrderOpen" toStatusId="OrderCancelled" transitionName="Cancel"/>
+        <moqui.basic.StatusFlowTransition statusFlowId="Default" statusId="OrderOpen" toStatusId="OrderRequested" transitionName="Request Quote"/>
+        <moqui.basic.StatusFlowTransition statusFlowId="Default" statusId="OrderOpen" toStatusId="OrderProposed" transitionName="Propose Quote"/>
+        <moqui.basic.StatusFlowTransition statusFlowId="Default" statusId="OrderRequested" toStatusId="OrderProposed" transitionName="Propose Quote"/>
+        <moqui.basic.StatusFlowTransition statusFlowId="Default" statusId="OrderRequested" toStatusId="OrderRejected" transitionName="Reject Request"/>
+        <moqui.basic.StatusFlowTransition statusFlowId="Default" statusId="OrderProposed" toStatusId="OrderBeingChanged" transitionName="Begin Changes"/>
+        <moqui.basic.StatusFlowTransition statusFlowId="Default" statusId="OrderProposed" toStatusId="OrderPlaced" transitionName="Place from Quote"/>
+        <moqui.basic.StatusFlowTransition statusFlowId="Default" statusId="OrderProposed" toStatusId="OrderCancelled" transitionName="Cancel Quote"/>
+        <moqui.basic.StatusFlowTransition statusFlowId="Default" statusId="OrderPlaced" toStatusId="OrderProcessing" transitionName="Process"/>
+        <moqui.basic.StatusFlowTransition statusFlowId="Default" statusId="OrderPlaced" toStatusId="OrderApproved" transitionName="Approve"/>
+        <moqui.basic.StatusFlowTransition statusFlowId="Default" statusId="OrderPlaced" toStatusId="OrderHold" transitionName="Hold##Order"/>
+        <moqui.basic.StatusFlowTransition statusFlowId="Default" statusId="OrderPlaced" toStatusId="OrderRejected" transitionName="Reject"/>
+        <moqui.basic.StatusFlowTransition statusFlowId="Default" statusId="OrderPlaced" toStatusId="OrderCancelled" transitionName="Cancel"/>
+        <moqui.basic.StatusFlowTransition statusFlowId="Default" statusId="OrderProcessing" toStatusId="OrderHold" transitionName="Hold##Order"/>
+        <moqui.basic.StatusFlowTransition statusFlowId="Default" statusId="OrderProcessing" toStatusId="OrderApproved" transitionName="Approve"/>
+        <moqui.basic.StatusFlowTransition statusFlowId="Default" statusId="OrderProcessing" toStatusId="OrderRejected" transitionName="Reject"/>
+        <moqui.basic.StatusFlowTransition statusFlowId="Default" statusId="OrderProcessing" toStatusId="OrderCancelled" transitionName="Cancel"/>
+        <moqui.basic.StatusFlowTransition statusFlowId="Default" statusId="OrderApproved" toStatusId="OrderSent" transitionName="Send##Order"/>
+        <moqui.basic.StatusFlowTransition statusFlowId="Default" statusId="OrderApproved" toStatusId="OrderPlaced" transitionName="Place (un-approve)"/>
+        <moqui.basic.StatusFlowTransition statusFlowId="Default" statusId="OrderApproved" toStatusId="OrderProcessing" transitionName="Process (un-approve)"/>
+        <moqui.basic.StatusFlowTransition statusFlowId="Default" statusId="OrderApproved" toStatusId="OrderCompleted" transitionName="Complete"/>
+        <moqui.basic.StatusFlowTransition statusFlowId="Default" statusId="OrderApproved" toStatusId="OrderCancelled" transitionName="Cancel"/>
+        <moqui.basic.StatusFlowTransition statusFlowId="Default" statusId="OrderApproved" toStatusId="OrderHold" transitionName="Hold##Order"/>
+        <moqui.basic.StatusFlowTransition statusFlowId="Default" statusId="OrderHold" toStatusId="OrderProcessing" transitionName="Process"/>
+        <moqui.basic.StatusFlowTransition statusFlowId="Default" statusId="OrderHold" toStatusId="OrderPlaced" transitionName="Place"/>
+        <moqui.basic.StatusFlowTransition statusFlowId="Default" statusId="OrderHold" toStatusId="OrderApproved" transitionName="Approve"/>
+        <moqui.basic.StatusFlowTransition statusFlowId="Default" statusId="OrderHold" toStatusId="OrderCancelled" transitionName="Cancel"/>
+        <moqui.basic.StatusFlowTransition statusFlowId="Default" statusId="OrderSent" toStatusId="OrderProcessing" transitionName="Process (un-send, un-approve)"/>
+        <moqui.basic.StatusFlowTransition statusFlowId="Default" statusId="OrderSent" toStatusId="OrderApproved" transitionName="Approve (un-send)"/>
+        <moqui.basic.StatusFlowTransition statusFlowId="Default" statusId="OrderSent" toStatusId="OrderCompleted" transitionName="Complete"/>
+        <moqui.basic.StatusFlowTransition statusFlowId="Default" statusId="OrderSent" toStatusId="OrderCancelled" transitionName="Cancel"/>
+        <moqui.basic.StatusFlowTransition statusFlowId="Default" statusId="OrderCompleted" toStatusId="OrderApproved" transitionName="Approve (un-complete)"/>
+        <moqui.basic.EnumerationType description="Sales Channel" enumTypeId="SalesChannel"/>
+        <moqui.basic.Enumeration description="Web" enumId="ScWeb" enumTypeId="SalesChannel"/>
+        <moqui.basic.Enumeration description="Web External" enumId="ScWebExternal" enumTypeId="SalesChannel"/>
+        <moqui.basic.Enumeration description="POS" enumId="ScPos" enumTypeId="SalesChannel"/>
+        <moqui.basic.Enumeration description="Fax" enumId="ScFax" enumTypeId="SalesChannel"/>
+        <moqui.basic.Enumeration description="Phone" enumId="ScPhone" enumTypeId="SalesChannel"/>
+        <moqui.basic.Enumeration description="E-Mail" enumId="ScEmail" enumTypeId="SalesChannel"/>
+        <moqui.basic.Enumeration description="Postal Mail" enumId="ScPostal" enumTypeId="SalesChannel"/>
+        <moqui.basic.Enumeration description="Affiliate" enumId="ScAffiliate" enumTypeId="SalesChannel"/>
+        <moqui.basic.Enumeration description="eBay" enumId="ScEbay" enumTypeId="SalesChannel"/>
+        <moqui.basic.Enumeration description="Amazon" enumId="ScAmazon" enumTypeId="SalesChannel"/>
+        <moqui.basic.Enumeration description="EDI" enumId="ScEdi" enumTypeId="SalesChannel"/>
+        <moqui.basic.Enumeration description="OAGIS" enumId="ScOagis" enumTypeId="SalesChannel"/>
+        <moqui.basic.Enumeration description="Unknown" enumId="ScUnknown" enumTypeId="SalesChannel"/>
+        <moqui.basic.Enumeration description="Test Order" enumId="ScTest" enumTypeId="SalesChannel"/>
+        <moqui.basic.StatusType description="Sync Status" statusTypeId="Sync"/>
+        <moqui.basic.StatusType description="Order Processing Status" statusTypeId="OrderProcessing"/>
+    </seed-data>
+    <master>
+        <detail relationship="status"/>
+        <detail relationship="currencyUom"/>
+        <detail relationship="salesChannel"/>
+        <detail relationship="visit"/>
+        <detail relationship="parts">
+            <detail relationship="status"/>
+            <detail relationship="items">
+                <detail relationship="itemType"/>
+                <detail relationship="product"/>
+                <detail relationship="quantityUom"/>
+                <detail relationship="reservations"/>
+                <detail relationship="issuances"/>
+                <detail relationship="receipts"/>
+                <detail relationship="shipmentSources"/>
+                <detail relationship="billings"/>
+            </detail>
+            <detail relationship="parties">
+                <detail relationship="party" use-master="contact"/>
+                <detail relationship="roleType"/>
+            </detail>
+            <detail relationship="contactMechs">
+                <detail relationship="contactMech" use-master="default"/></detail>
+            <detail relationship="terms">
+                <detail relationship="term"/></detail>
+            <detail relationship="vendor" use-master="basic"/>
+            <detail relationship="customer" use-master="basic"/>
+            <detail relationship="carrier" use-master="basic"/>
+            <detail relationship="shipmentMethod"/>
+            <detail relationship="postal" use-master="default"/>
+            <detail relationship="telecom" use-master="default"/>
+            <detail relationship="facility"/>
+            <detail relationship="payments" use-master="default"/>
+        </detail>
+        <detail relationship="contents">
+            <detail relationship="type"/></detail>
+        <detail relationship="notes"/>
+        <detail relationship="communicationEvents"/>
+    </master>
+    <field name="lastUpdatedStamp" type="date-time"/>
+    <relationship related="mantle.account.financial.FinancialAccountTrans" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="orderId" related="orderId"/></relationship>
+    <relationship related="mantle.account.method.GiftCardFulfillment" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="orderId" related="orderId"/></relationship>
+    <relationship related="mantle.account.payment.PaymentFraudEvidence" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="orderId" related="orderId"/></relationship>
+    <relationship related="mantle.marketing.tracking.TrackingCodeOrder" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="orderId" related="orderId"/></relationship>
+    <relationship related="mantle.marketing.tracking.TrackingCodeOrderReturn" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="orderId" related="orderId"/></relationship>
+    <relationship related="mantle.order.OrderDecision" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="orderId" related="orderId"/></relationship>
+    <relationship related="mantle.order.OrderDecisionReason" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="orderId" related="orderId"/></relationship>
+    <relationship related="mantle.order.OrderPromoCode" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="orderId" related="orderId"/></relationship>
+    <relationship related="mantle.order.OrderServiceJobRun" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="orderId" related="orderId"/></relationship>
+    <relationship related="mantle.order.OrderSystemMessage" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="orderId" related="orderId"/></relationship>
+    <relationship related="mantle.order.return.ReturnItem" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="orderId" related="orderId"/></relationship>
+    <relationship related="mantle.order.return.ReturnItem" type="many" is-auto-reverse="true" mutable="true" title="Replacement">
+        <key-map field-name="orderId" related="replacementOrderId"/></relationship>
+    <relationship related="mantle.product.asset.Asset" type="many" is-auto-reverse="true" mutable="true" title="Acquire">
+        <key-map field-name="orderId" related="acquireOrderId"/></relationship>
+    <relationship related="mantle.product.issuance.AssetReservation" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="orderId" related="orderId"/></relationship>
+    <relationship related="mantle.product.maintenance.AssetMaintenance" type="many" is-auto-reverse="true" mutable="true" title="Purchase">
+        <key-map field-name="orderId" related="purchaseOrderId"/></relationship>
+    <relationship related="mantle.product.maintenance.AssetMaintenanceOrderItem" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="orderId" related="orderId"/></relationship>
+    <relationship related="mantle.sales.opportunity.SalesOpportunityOrder" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="orderId" related="orderId"/></relationship>
+    <relationship related="mantle.shipment.ShipmentItemSource" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="orderId" related="orderId"/></relationship>
+    <relationship related="moqui.service.message.SystemMessage" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="orderId" related="orderId"/></relationship>
+
+<!-- seca <seca id="OrderApprovedReserveAssets" service="update#mantle.order.OrderHeader" when="post-service">
+    <condition>
+        <expression><![CDATA[statusChanged && statusId == 'OrderApproved']]></expression></condition>
+    <actions>
+        <service-call name="mantle.product.AssetServices.reserve#AssetsForOrder" in-map="context"/>
+        <if condition="orderId">
+            <service-call name="mantle.order.OrderServices.create#DropShipPurchaseOrder" in-map="[salesOrderId:orderId]"/></if>
+    </actions>
+</seca>-->
+<!-- seca <seca id="OrderApprovedDepositFinancialAccount" service="update#mantle.order.OrderHeader" when="post-service">
+    <condition>
+        <expression><![CDATA[statusChanged && statusId == 'OrderApproved']]></expression></condition>
+    <actions>
+        <service-call name="coarchy.CoarchyServices.deposit#OrderToFinancialAccount" in-map="context"/></actions>
+</seca>-->
+<!-- seca <seca id="OrderPlacedAutoApprove" service="update#mantle.order.OrderHeader" when="post-service" run-on-error="false">
+    <condition>
+        <expression><![CDATA[statusChanged && statusId == 'OrderPlaced']]></expression></condition>
+    <actions>
+        <entity-find-one entity-name="mantle.order.OrderHeader" value-field="orderHeader"/>
+        <set field="productStore" from="orderHeader.productStore"/>
+        <set field="autoApproveDelay" from="orderHeader?.productStore?.autoApproveDelay"/>
+        <if condition="!autoApproveDelay">
+            <service-call name="mantle.order.OrderServices.autoApprove#Order" in-map="[orderId:orderId]"/></if>
+    </actions>
+</seca>-->
+<!-- seca <seca id="OrderApprovedFulfillSubscriptions" service="update#mantle.order.OrderHeader" when="post-service">
+    <condition>
+        <expression><![CDATA[statusChanged && statusId == 'OrderApproved']]></expression></condition>
+    <actions>
+        <service-call name="mantle.product.SubscriptionServices.fulfill#OrderSubscriptions" in-map="context"/></actions>
+</seca>-->
+<!-- seca <seca id="OrderPlacedAuthorizePayments" service="update#mantle.order.OrderHeader" when="post-service" run-on-error="false">
+    <condition>
+        <expression><![CDATA[statusChanged && statusId == 'OrderPlaced']]></expression></condition>
+    <actions>
+        <service-call name="mantle.account.PaymentServices.authorize#OrderPayments" in-map="context"/></actions>
+</seca>-->
+<!-- seca <seca id="OrderPlacedReserveAssets" service="update#mantle.order.OrderHeader" when="post-service">
+    <condition>
+        <expression><![CDATA[statusChanged && statusId == 'OrderPlaced']]></expression></condition>
+    <actions>
+        <service-call name="mantle.product.AssetServices.reserve#AssetsForOrder" in-map="context"/></actions>
+</seca>-->
+<!-- seca <seca id="OrderApprovedSendEmail" service="update#mantle.order.OrderHeader" when="tx-commit">
+    <condition>
+        <expression><![CDATA[statusChanged && statusId == 'OrderApproved']]></expression></condition>
+    <actions>
+        <service-call name="mantle.order.OrderInfoServices.send#OrderStoreEmail" in-map="[orderId:orderId, emailTypeEnumId:'PsetOrderApproved']"/></actions>
+</seca>-->
+<!-- seca <seca id="OrderPlacedSendEmail" service="update#mantle.order.OrderHeader" when="tx-commit">
+    <condition>
+        <expression><![CDATA[statusChanged && statusId == 'OrderPlaced']]></expression></condition>
+    <actions>
+        <service-call name="mantle.order.OrderInfoServices.send#OrderStoreEmail" in-map="[orderId:orderId, emailTypeEnumId:'PsetOrderPlaced']"/></actions>
+</seca>-->
+</entity>

@@ -1,0 +1,12 @@
+
+<!-- Entity Name: moqui.screen.form.FormConfigField sql table: FORM_CONFIG_FIELD --><entity entity-name="FormConfigField" package="moqui.screen.form" use="configuration">
+    <field name="formConfigId" type="id" is-pk="true"/>
+    <field name="fieldName" type="text-short" is-pk="true"/>
+    <field name="positionIndex" type="number-integer">
+        <description><![CDATA[The position (row for form-single, column for form-list) number to put the field in]]></description></field>
+    <field name="positionSequence" type="number-integer">
+        <description><![CDATA[The sequence within the row or column]]></description></field>
+    <relationship type="one" related="moqui.screen.form.FormConfig" short-alias="formConfig"/>
+    <field name="lastUpdatedStamp" type="date-time"/>
+
+</entity>

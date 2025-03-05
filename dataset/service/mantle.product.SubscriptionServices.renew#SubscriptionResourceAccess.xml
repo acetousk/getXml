@@ -1,0 +1,3 @@
+<!--Service Location mantle.product.SubscriptionServices.renew#SubscriptionResourceAccess--><service verb="renew" noun="SubscriptionResourceAccess"><in-parameters><parameter name="subscriptionId" required="true"/></in-parameters><out-parameters/>
+    null
+</service>

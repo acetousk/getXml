@@ -1,0 +1,13 @@
+
+<!-- Entity Name: moqui.entity.document.DataDocumentRelAlias sql table: DATA_DOCUMENT_REL_ALIAS --><entity entity-name="DataDocumentRelAlias" package="moqui.entity.document" use="configuration">
+    <field name="dataDocumentId" type="id" is-pk="true"/>
+    <field name="relationshipName" type="text-medium" is-pk="true">
+        <description><![CDATA[The name of a relationship used in
+            any fieldPath to be aliased in the output document.]]></description></field>
+    <field name="documentAlias" type="text-medium">
+        <description><![CDATA[Alias to put in document output instead of the full
+            relationship name.]]></description></field>
+    <relationship type="one" related="moqui.entity.document.DataDocument"/>
+    <field name="lastUpdatedStamp" type="date-time"/>
+
+</entity>

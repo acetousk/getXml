@@ -1,0 +1,31 @@
+
+<!-- Entity Name: mantle.product.store.ProductStoreCategory sql table: PRODUCT_STORE_CATEGORY --><entity entity-name="ProductStoreCategory" package="mantle.product.store">
+    <field name="productStoreId" type="id" is-pk="true"/>
+    <field name="productCategoryId" type="id" is-pk="true"/>
+    <field name="storeCategoryTypeEnumId" type="id" is-pk="true"/>
+    <field name="fromDate" type="date-time" is-pk="true"/>
+    <field name="thruDate" type="date-time"/>
+    <field name="sequenceNum" type="number-integer"/>
+    <relationship type="one" related="mantle.product.store.ProductStore" short-alias="store"/>
+    <relationship type="one" related="mantle.product.category.ProductCategory" short-alias="category"/>
+    <relationship type="one" title="ProductStoreCategoryType" related="moqui.basic.Enumeration" short-alias="type">
+        <key-map field-name="storeCategoryTypeEnumId"/></relationship>
+    <seed-data>
+        <moqui.basic.EnumerationType description="Product Store Category Type" enumTypeId="ProductStoreCategoryType"/>
+        <moqui.basic.Enumeration description="Home Page (One)" enumId="PsctHomePage" enumTypeId="ProductStoreCategoryType"/>
+        <moqui.basic.Enumeration description="Browse Root (One)" enumId="PsctBrowseRoot" enumTypeId="ProductStoreCategoryType"/>
+        <moqui.basic.Enumeration description="Default Search (One)" enumId="PsctSearch" enumTypeId="ProductStoreCategoryType"/>
+        <moqui.basic.Enumeration description="Quick Add (Many)" enumId="PsctQuickAdd" enumTypeId="ProductStoreCategoryType"/>
+        <moqui.basic.Enumeration description="Quick Add Internal (Many)" enumId="PsctQuickInternal" enumTypeId="ProductStoreCategoryType"/>
+        <moqui.basic.Enumeration description="Promotions (One)" enumId="PsctPromotions" enumTypeId="ProductStoreCategoryType"/>
+        <moqui.basic.Enumeration description="New Products (One)" enumId="PsctNewProducts" enumTypeId="ProductStoreCategoryType"/>
+        <moqui.basic.Enumeration description="Featured (One)" enumId="PsctFeatured" enumTypeId="ProductStoreCategoryType"/>
+        <moqui.basic.Enumeration description="View Allow (One)" enumId="PsctViewAllow" enumTypeId="ProductStoreCategoryType"/>
+        <moqui.basic.Enumeration description="Purchase Allow (One)" enumId="PsctPurchaseAllow" enumTypeId="ProductStoreCategoryType"/>
+        <moqui.basic.Enumeration description="Admin Allow (One)" enumId="PsctAdminAllow" enumTypeId="ProductStoreCategoryType"/>
+    </seed-data>
+    <field name="lastUpdatedStamp" type="date-time"/>
+    <relationship related="mantle.product.category.ProductCategoryMember" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="productCategoryId" related="productCategoryId"/></relationship>
+
+</entity>

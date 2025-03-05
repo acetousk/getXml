@@ -1,0 +1,39 @@
+
+<!-- Entity Name: mantle.account.method.CreditCard sql table: CREDIT_CARD --><entity entity-name="CreditCard" package="mantle.account.method" cache="never" has-dependents="true">
+    <field name="paymentMethodId" type="id" is-pk="true"/>
+    <field name="creditCardTypeEnumId" type="id"/>
+    <field name="cardNumber" type="text-medium" encrypt="true"/>
+    <field name="cardNumberLookupHash" type="text-medium">
+        <description><![CDATA[A one-way hash (SHA, etc) of the cardNumber
+            used for looking up a credit card by its number in a secure way.]]></description></field>
+    <field name="validFromDate" type="text-short">
+        <description><![CDATA[Not common but used in some parts of the world]]></description></field>
+    <field name="expireDate" type="text-short">
+        <description><![CDATA[String representing the date in the format: MM/yyyy]]></description></field>
+    <field name="issueNumber" type="text-short">
+        <description><![CDATA[Single digit number on some Switch and Maestro cards]]></description></field>
+    <field name="cardSecurityCode" type="text-medium" encrypt="true">
+        <description><![CDATA[CVV/etc number for card.
+            By PCI rules can only be recorded until authorization is complete, after that must be deleted.
+            Set the mantle.account.PaymentServices.authorize#SinglePayment service for where this is done.]]></description></field>
+    <field name="consecutiveFailedAuths" type="number-integer"/>
+    <field name="lastFailedAuthDate" type="date-time"/>
+    <field name="consecutiveFailedNsf" type="number-integer"/>
+    <field name="lastFailedNsfDate" type="date-time"/>
+    <relationship type="one" related="mantle.account.method.PaymentMethod"/>
+    <relationship type="one" title="CreditCardType" related="moqui.basic.Enumeration" short-alias="type">
+        <key-map field-name="creditCardTypeEnumId"/></relationship>
+    <index name="CC_NUMBER_LOOKUP">
+        <index-field name="cardNumberLookupHash"/></index>
+    <seed-data>
+        <moqui.basic.EnumerationType description="Credit Card Type" enumTypeId="CreditCardType"/>
+        <moqui.basic.Enumeration description="Visa" enumId="CctVisa" enumTypeId="CreditCardType"/>
+        <moqui.basic.Enumeration description="Master Card" enumId="CctMastercard" enumTypeId="CreditCardType"/>
+        <moqui.basic.Enumeration description="American Express" enumId="CctAmericanExpress" enumTypeId="CreditCardType"/>
+        <moqui.basic.Enumeration description="Discover" enumId="CctDiscover" enumTypeId="CreditCardType"/>
+    </seed-data>
+    <field name="lastUpdatedStamp" type="date-time"/>
+    <relationship related="mantle.account.payment.Payment" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="paymentMethodId" related="paymentMethodId"/></relationship>
+
+</entity>

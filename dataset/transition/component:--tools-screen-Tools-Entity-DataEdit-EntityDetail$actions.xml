@@ -1,0 +1,7 @@
+<!--Transition Screen Location component://tools/screen/Tools/Entity/DataEdit/EntityDetail.xml Transition Name actions--><transition name="actions"><parameter name="selectedEntity" required="true"/><parameter name="refresh" required="false"/><actions><!--always-actions at component://webroot/screen/webroot.xml--><set field="html_scripts" from="new LinkedHashSet()"/><set field="footer_scripts" from="new LinkedHashSet()"/><set field="html_stylesheets" from="new LinkedHashSet()"/><!--actions--><set field="entityDefinition" from="ec.entity.getEntityDefinition(selectedEntity)"/><set field="entityInfo" from="entityDefinition.entityInfo"/><set field="entityNode" from="entityDefinition.getEntityNode()"/><set field="fieldInfos" from="entityInfo.allFieldInfoArray"/><set field="relationshipInfoList" from="entityDefinition.getRelationshipsInfo(false)"/><set field="dependents" from="entityDefinition.getDependentsTree()"/><script><![CDATA[eecas = ec.entity.eecaRulesByEntityName.get(entityDefinition.fullEntityName)
+            secas = []
+            for (verb in org.moqui.impl.service.runner.EntityAutoServiceRunner.verbSet) {
+                serviceName = verb + entityDefinition.fullEntityName
+                rules = ec.service.secaRulesByServiceName.get(serviceName)
+                if (rules) secas.addAll(rules)
+            }]]></script><set field="entityDescription" from="entityNode.first('description')?.text"/></actions></transition>

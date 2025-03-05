@@ -1,0 +1,15 @@
+
+<!-- Entity Name: mantle.ledger.account.GlBudgetXref sql table: GL_BUDGET_XREF --><entity entity-name="GlBudgetXref" package="mantle.ledger.account">
+    <field name="glAccountId" type="id" is-pk="true"/>
+    <field name="budgetItemTypeEnumId" type="id" is-pk="true"/>
+    <field name="fromDate" type="date-time" is-pk="true"/>
+    <field name="thruDate" type="date-time"/>
+    <field name="allocationPercentage" type="number-decimal"/>
+    <relationship type="one" related="mantle.ledger.account.GlAccount"/>
+    <relationship type="one" related="moqui.basic.Enumeration">
+        <description><![CDATA[(enumTypeId = BUDGET_ITEM_TYPE)]]></description>
+        <key-map field-name="budgetItemTypeEnumId"/>
+    </relationship>
+    <field name="lastUpdatedStamp" type="date-time"/>
+
+</entity>

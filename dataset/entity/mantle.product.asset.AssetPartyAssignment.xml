@@ -1,0 +1,17 @@
+
+<!-- Entity Name: mantle.product.asset.AssetPartyAssignment sql table: ASSET_PARTY_ASSIGNMENT --><entity entity-name="AssetPartyAssignment" package="mantle.product.asset" cache="never">
+    <field name="assetId" type="id" is-pk="true"/>
+    <field name="partyId" type="id" is-pk="true"/>
+    <field name="roleTypeId" type="id" is-pk="true"/>
+    <field name="fromDate" type="date-time" is-pk="true"/>
+    <field name="thruDate" type="date-time"/>
+    <field name="allocatedDate" type="date-time"/>
+    <field name="statusId" type="id"/>
+    <field name="comments" type="text-medium"/>
+    <relationship type="one" related="mantle.party.Party"/>
+    <relationship type="one" related="mantle.party.RoleType"/>
+    <relationship type="one" related="mantle.product.asset.Asset"/>
+    <relationship type="one" related="moqui.basic.StatusItem"/>
+    <field name="lastUpdatedStamp" type="date-time"/>
+
+</entity>

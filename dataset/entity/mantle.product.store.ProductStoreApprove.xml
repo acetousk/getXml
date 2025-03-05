@@ -1,0 +1,20 @@
+
+<!-- Entity Name: mantle.product.store.ProductStoreApprove sql table: PRODUCT_STORE_APPROVE --><entity entity-name="ProductStoreApprove" package="mantle.product.store" use="configuration" cache="true">
+    <description><![CDATA[For per-store configurable pre-approve order validations]]></description>
+    <field name="storeApproveId" type="id" is-pk="true"/>
+    <field name="productStoreId" type="id"/>
+    <field name="serviceRegisterId" type="id" not-null="true">
+        <description><![CDATA[Registered Service of type OrderValidate that implements the
+            mantle.order.OrderInfoServices.validate#Order interface]]></description></field>
+    <field name="fromDate" type="date-time"/>
+    <field name="thruDate" type="date-time"/>
+    <field name="sequenceNum" type="number-integer"/>
+    <relationship type="one" related="mantle.product.store.ProductStore" short-alias="store"/>
+    <relationship type="one" related="moqui.service.ServiceRegister" short-alias="serviceRegister"/>
+    <relationship type="many" related="mantle.product.store.ProductStoreApproveParam" short-alias="parameters">
+        <key-map field-name="storeApproveId"/></relationship>
+    <seed-data>
+        <moqui.basic.Enumeration description="Order Approve Validate" enumId="OrderValidate" enumTypeId="ServiceRegisterType"/></seed-data>
+    <field name="lastUpdatedStamp" type="date-time"/>
+
+</entity>

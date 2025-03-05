@@ -1,0 +1,25 @@
+
+<!-- Entity Name: mantle.product.ProductParameterOption sql table: PRODUCT_PARAMETER_OPTION --><entity entity-name="ProductParameterOption" package="mantle.product" has-dependents="true">
+    <field name="productParameterOptionId" type="id" is-pk="true"/>
+    <field name="productParameterId" type="id" not-null="true"/>
+    <field name="productId" type="id">
+        <description><![CDATA[Optional, if null option applies to all products that use the ProductParameter]]></description></field>
+    <field name="marketSegmentId" type="id"/>
+    <field name="productStoreId" type="id"/>
+    <field name="productUomDimensionId" type="id">
+        <description><![CDATA[For options associated with a ProductUomDimension]]></description></field>
+    <field name="productOtherIdentId" type="id">
+        <description><![CDATA[For options associated with a ProductOtherIdentification]]></description></field>
+    <field name="parameterValue" type="text-medium"/>
+    <field name="sequenceNum" type="number-integer"/>
+    <relationship type="one" related="mantle.product.ProductParameter" short-alias="productParameter"/>
+    <relationship type="one" related="mantle.product.Product" short-alias="product"/>
+    <relationship type="one" related="mantle.marketing.segment.MarketSegment" short-alias="marketSegment"/>
+    <relationship type="one" related="mantle.product.store.ProductStore" short-alias="productStore"/>
+    <relationship type="one" related="mantle.product.ProductUomDimension" short-alias="productUomDimension"/>
+    <relationship type="one" related="mantle.product.ProductOtherIdentification" short-alias="productOtherIdent"/>
+    <field name="lastUpdatedStamp" type="date-time"/>
+    <relationship related="mantle.product.ProductParameterValue" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="productParameterOptionId" related="productParameterOptionId"/></relationship>
+
+</entity>

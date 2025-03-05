@@ -1,0 +1,11 @@
+
+<!-- Entity Name: mantle.facility.FacilityNote sql table: FACILITY_NOTE --><entity entity-name="FacilityNote" package="mantle.facility" cache="never">
+    <field name="facilityId" type="id" is-pk="true"/>
+    <field name="noteDate" type="date-time" is-pk="true"/>
+    <field name="userId" type="id"/>
+    <field name="noteText" type="text-very-long"/>
+    <relationship type="one" related="mantle.facility.Facility"/>
+    <relationship type="one" related="moqui.security.UserAccount"/>
+    <field name="lastUpdatedStamp" type="date-time"/>
+
+</entity>

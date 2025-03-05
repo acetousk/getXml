@@ -1,0 +1,9 @@
+
+<!-- Entity Name: mantle.product.store.ProductStorePromoCodeParty sql table: PRODUCT_STORE_PROMO_CODE_PARTY --><entity entity-name="ProductStorePromoCodeParty" package="mantle.product.store">
+    <field name="promoCodeId" type="id" is-pk="true"/>
+    <field name="partyId" type="id" is-pk="true"/>
+    <relationship type="one" related="mantle.product.store.ProductStorePromoCode" short-alias="storePromoCode"/>
+    <relationship type="one" related="mantle.party.Party" short-alias="party"/>
+    <field name="lastUpdatedStamp" type="date-time"/>
+
+</entity>

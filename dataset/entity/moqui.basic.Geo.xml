@@ -1,0 +1,91 @@
+
+<!-- Entity Name: moqui.basic.Geo sql table: GEO --><entity entity-name="Geo" package="moqui.basic" use="configuration" short-alias="geos" cache="true" has-dependents="true">
+    <field name="geoId" type="id" is-pk="true"/>
+    <field name="geoTypeEnumId" type="id"/>
+    <field name="geoName" type="text-medium"/>
+    <field name="geoNameLocal" type="text-medium"/>
+    <field name="geoCodeAlpha2" type="text-short"/>
+    <field name="geoCodeAlpha3" type="text-short"/>
+    <field name="geoCodeNumeric" type="text-short"/>
+    <field name="wellKnownText" type="text-very-long"/>
+    <relationship type="one" title="GeoType" related="moqui.basic.Enumeration" short-alias="type">
+        <key-map field-name="geoTypeEnumId"/></relationship>
+    <relationship type="many" related="moqui.basic.GeoAssoc" short-alias="assocs">
+        <key-map field-name="geoId"/></relationship>
+    <relationship type="many" related="moqui.basic.GeoAssoc" short-alias="toAssocs">
+        <key-map field-name="geoId" related="toGeoId"/></relationship>
+    <seed-data>
+        <moqui.basic.Geo geoId="_NA_" geoName="Not Applicable" geoCodeAlpha3="_NA" geoCodeAlpha2="_N"/>
+        <moqui.basic.EnumerationType description="Geo Type" enumTypeId="GeoType"/>
+        <moqui.basic.Enumeration description="Group" enumId="GEOT_GROUP" enumTypeId="GeoType"/>
+        <moqui.basic.Enumeration description="Region" enumId="GEOT_REGION" enumTypeId="GeoType"/>
+        <moqui.basic.Enumeration description="Sales Region" enumId="GEOT_SALES_REGION" enumTypeId="GeoType"/>
+        <moqui.basic.Enumeration description="Service Region" enumId="GEOT_SERVICE_REGION" enumTypeId="GeoType"/>
+        <moqui.basic.Enumeration description="City" enumId="GEOT_CITY" enumTypeId="GeoType"/>
+        <moqui.basic.Enumeration description="State" enumId="GEOT_STATE" enumTypeId="GeoType"/>
+        <moqui.basic.Enumeration description="Postal Code" enumId="GEOT_POSTAL_CODE" enumTypeId="GeoType"/>
+        <moqui.basic.Enumeration description="Country" enumId="GEOT_COUNTRY" enumTypeId="GeoType"/>
+        <moqui.basic.Enumeration description="County" enumId="GEOT_COUNTY" enumTypeId="GeoType"/>
+        <moqui.basic.Enumeration description="County-City" enumId="GEOT_COUNTY_CITY" enumTypeId="GeoType"/>
+        <moqui.basic.Enumeration description="Municipality" enumId="GEOT_MUNICIPALITY" enumTypeId="GeoType"/>
+        <moqui.basic.Enumeration description="Province" enumId="GEOT_PROVINCE" enumTypeId="GeoType"/>
+        <moqui.basic.Enumeration description="Territory" enumId="GEOT_TERRITORY" enumTypeId="GeoType"/>
+    </seed-data>
+    <master>
+        <detail relationship="type"/>
+        <detail relationship="assocs">
+            <detail relationship="toGeo"/>
+            <detail relationship="type"/>
+        </detail>
+        <detail relationship="toAssocs">
+            <detail relationship="geo"/>
+            <detail relationship="type"/>
+        </detail>
+    </master>
+    <field name="lastUpdatedStamp" type="date-time"/>
+    <relationship related="mantle.account.payment.PaymentApplication" type="many" is-auto-reverse="true" mutable="true" title="TaxAuth">
+        <key-map field-name="geoId" related="taxAuthGeoId"/></relationship>
+    <relationship related="mantle.facility.Facility" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="geoId" related="geoId"/></relationship>
+    <relationship related="mantle.facility.Facility" type="many" is-auto-reverse="true" mutable="true" title="County">
+        <key-map field-name="geoId" related="countyGeoId"/></relationship>
+    <relationship related="mantle.facility.Facility" type="many" is-auto-reverse="true" mutable="true" title="State">
+        <key-map field-name="geoId" related="stateGeoId"/></relationship>
+    <relationship related="mantle.humanres.employment.PayrollGarnishMinWage" type="many" is-auto-reverse="true" mutable="true" title="StateOrCountry">
+        <key-map field-name="geoId" related="stateOrCountryGeoId"/></relationship>
+    <relationship related="mantle.humanres.employment.WorkTypeRiskClass" type="many" is-auto-reverse="true" mutable="true" title="Geo">
+        <key-map field-name="geoId" related="geoId"/></relationship>
+    <relationship related="mantle.marketing.segment.MarketSegmentGeo" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="geoId" related="geoId"/></relationship>
+    <relationship related="mantle.other.tax.TaxAuthority" type="many" is-auto-reverse="true" mutable="true" title="TaxAuth">
+        <key-map field-name="geoId" related="taxAuthGeoId"/></relationship>
+    <relationship related="mantle.party.agreement.AgreementAssoc" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="geoId" related="geoId"/></relationship>
+    <relationship related="mantle.party.agreement.AgreementItemGeo" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="geoId" related="geoId"/></relationship>
+    <relationship related="mantle.party.contact.PostalAddress" type="many" is-auto-reverse="true" mutable="true" title="City">
+        <key-map field-name="geoId" related="cityGeoId"/></relationship>
+    <relationship related="mantle.party.contact.PostalAddress" type="many" is-auto-reverse="true" mutable="true" title="SchoolDistrict">
+        <key-map field-name="geoId" related="schoolDistrictGeoId"/></relationship>
+    <relationship related="mantle.party.contact.PostalAddress" type="many" is-auto-reverse="true" mutable="true" title="County">
+        <key-map field-name="geoId" related="countyGeoId"/></relationship>
+    <relationship related="mantle.party.contact.PostalAddress" type="many" is-auto-reverse="true" mutable="true" title="StateProvince">
+        <key-map field-name="geoId" related="stateProvinceGeoId"/></relationship>
+    <relationship related="mantle.party.contact.PostalAddress" type="many" is-auto-reverse="true" mutable="true" title="Country">
+        <key-map field-name="geoId" related="countryGeoId"/></relationship>
+    <relationship related="mantle.party.contact.PostalAddress" type="many" is-auto-reverse="true" mutable="true" title="PostalCode">
+        <key-map field-name="geoId" related="postalCodeGeoId"/></relationship>
+    <relationship related="mantle.product.Product" type="many" is-auto-reverse="true" mutable="true" title="Origin">
+        <key-map field-name="geoId" related="originGeoId"/></relationship>
+    <relationship related="mantle.product.ProductGeo" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="geoId" related="geoId"/></relationship>
+    <relationship related="moqui.basic.GeoAssoc" type="many" is-auto-reverse="true" mutable="true" title="Main">
+        <key-map field-name="geoId" related="geoId"/></relationship>
+    <relationship related="moqui.basic.GeoAssoc" type="many" is-auto-reverse="true" mutable="true" title="Assoc">
+        <key-map field-name="geoId" related="toGeoId"/></relationship>
+    <relationship related="moqui.server.Visit" type="many" is-auto-reverse="true" mutable="true" title="ClientIpStateProv">
+        <key-map field-name="geoId" related="clientIpStateProvGeoId"/></relationship>
+    <relationship related="moqui.server.Visit" type="many" is-auto-reverse="true" mutable="true" title="ClientIpCountry">
+        <key-map field-name="geoId" related="clientIpCountryGeoId"/></relationship>
+
+</entity>

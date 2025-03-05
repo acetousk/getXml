@@ -1,0 +1,27 @@
+
+<!-- Entity Name: mantle.order.OrderContent sql table: ORDER_CONTENT --><entity entity-name="OrderContent" package="mantle.order" cache="never">
+    <field name="orderContentId" type="id" is-pk="true"/>
+    <field name="orderContentTypeEnumId" type="id"/>
+    <field name="orderId" type="id"/>
+    <field name="orderItemSeqId" type="id"/>
+    <field name="partyId" type="id">
+        <description><![CDATA[The Party the content is for]]></description></field>
+    <field name="roleTypeId" type="id"/>
+    <field name="contentLocation" type="text-medium"/>
+    <field name="description" type="text-long"/>
+    <field name="contentDate" type="date-time" default="ec.user.nowTimestamp"/>
+    <field name="viewedDate" type="date-time" enable-audit-log="true"/>
+    <field name="userId" type="id" default="ec.user.userId"/>
+    <relationship type="one" title="OrderContentType" related="moqui.basic.Enumeration" short-alias="type">
+        <key-map field-name="orderContentTypeEnumId"/></relationship>
+    <relationship type="one" related="mantle.order.OrderHeader" short-alias="orderHeader"/>
+    <relationship type="one-nofk" related="mantle.order.OrderItem" short-alias="orderItem"/>
+    <relationship type="one" related="mantle.party.Party" short-alias="party"/>
+    <relationship type="one" related="mantle.party.RoleType" short-alias="roleType"/>
+    <relationship type="one" related="moqui.security.UserAccount"/>
+    <seed-data>
+        <moqui.basic.EnumerationType description="Order Content Type" enumTypeId="OrderContentType"/></seed-data>
+    <field name="lastUpdatedStamp" type="date-time"/>
+
+<!-- eeca org.moqui.impl.entity.EntityEcaRule@22cdef60-->
+</entity>

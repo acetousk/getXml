@@ -1,0 +1,10 @@
+
+<!-- Entity Name: mantle.sales.opportunity.SalesOpportunityTracking sql table: SALES_OPPORTUNITY_TRACKING --><entity entity-name="SalesOpportunityTracking" package="mantle.sales.opportunity">
+    <field name="salesOpportunityId" type="id" is-pk="true"/>
+    <field name="trackingCodeId" type="id" is-pk="true"/>
+    <field name="receivedDate" type="date-time"/>
+    <relationship type="one" related="mantle.sales.opportunity.SalesOpportunity"/>
+    <relationship type="one" related="mantle.marketing.tracking.TrackingCode"/>
+    <field name="lastUpdatedStamp" type="date-time"/>
+
+</entity>

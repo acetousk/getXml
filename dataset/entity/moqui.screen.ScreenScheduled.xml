@@ -1,0 +1,33 @@
+
+<!-- Entity Name: moqui.screen.ScreenScheduled sql table: SCREEN_SCHEDULED --><entity entity-name="ScreenScheduled" package="moqui.screen" use="configuration" has-dependents="true">
+    <description><![CDATA[For scheduled screen renders to send by email and/or write to a resource location. Primarily intended for use
+            on report screens with a form-list and saved-finds enabled, referencing the formListFindId for saved columns, parameters, etc.]]></description>
+    <field name="screenScheduledId" type="id" is-pk="true"/>
+    <field name="screenPath" type="text-medium"/>
+    <field name="formListFindId" type="id"/>
+    <field name="renderMode" type="text-short">
+        <description><![CDATA[Defaults to 'csv', can also use 'xsl-fo' with PDF rendering, 'xlsx' if moqui-poi component in place]]></description></field>
+    <field name="noResultsAbort" type="text-indicator">
+        <description><![CDATA[Set to Y to abort (not send or write) if there are no results in form-list on screen]]></description></field>
+    <field name="cronExpression" type="text-medium"/>
+    <field name="fromDate" type="date-time"/>
+    <field name="thruDate" type="date-time"/>
+    <field name="saveToLocation" type="text-long">
+        <description><![CDATA[Expandable String for resource location to save to, only save to location if specified]]></description></field>
+    <field name="emailTemplateId" type="id">
+        <description><![CDATA[EmailTemplate to use to send by email, generally of type EMT_SCREEN_RENDER,
+            for default use the Default Screen Render template (set to 'SCREEN_RENDER'); only sends email if specified]]></description></field>
+    <field name="emailSubject" type="text-long"/>
+    <field name="userId" type="id">
+        <description><![CDATA[Send email to UserAccount.emailAddress for the user]]></description></field>
+    <field name="userGroupId" type="id">
+        <description><![CDATA[Send email to UserAccount.emailAddress for each user in the group]]></description></field>
+    <relationship type="one" related="moqui.screen.form.FormListFind" short-alias="formListFind"/>
+    <relationship type="one" related="moqui.basic.email.EmailTemplate" short-alias="emailTemplate"/>
+    <relationship type="one" related="moqui.security.UserAccount" short-alias="user"/>
+    <relationship type="one" related="moqui.security.UserGroup" short-alias="userGroup"/>
+    <field name="lastUpdatedStamp" type="date-time"/>
+    <relationship related="moqui.screen.ScreenScheduledLock" type="one-nofk" is-auto-reverse="true" mutable="true">
+        <key-map field-name="screenScheduledId" related="screenScheduledId"/></relationship>
+
+</entity>

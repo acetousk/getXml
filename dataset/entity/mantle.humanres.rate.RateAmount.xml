@@ -1,0 +1,120 @@
+
+<!-- Entity Name: mantle.humanres.rate.RateAmount sql table: RATE_AMOUNT --><entity entity-name="RateAmount" package="mantle.humanres.rate" use="configuration" has-dependents="true">
+    <field name="rateAmountId" type="id" is-pk="true"/>
+    <field name="fromDate" type="date-time"/>
+    <field name="thruDate" type="date-time"/>
+    <field name="rateTypeEnumId" type="id"/>
+    <field name="ratePurposeEnumId" type="id"/>
+    <field name="rateCurrencyUomId" type="id"/>
+    <field name="timePeriodUomId" type="id"/>
+    <field name="workEffortId" type="id"/>
+    <field name="partyId" type="id"/>
+    <field name="workTypeEnumId" type="id"/>
+    <field name="payGradeId" type="id"/>
+    <field name="emplPositionClassId" type="id"/>
+    <field name="rateAmount" type="number-decimal"/>
+    <relationship type="one" title="RateType" related="moqui.basic.Enumeration" short-alias="type">
+        <key-map field-name="rateTypeEnumId"/></relationship>
+    <relationship type="one" title="RatePurpose" related="moqui.basic.Enumeration" short-alias="purpose">
+        <key-map field-name="ratePurposeEnumId"/></relationship>
+    <relationship type="one" title="RateCurrency" related="moqui.basic.Uom" short-alias="currencyUom">
+        <key-map field-name="rateCurrencyUomId"/></relationship>
+    <relationship type="one" title="TimePeriod" related="moqui.basic.Uom" short-alias="timePeriod">
+        <key-map field-name="timePeriodUomId"/></relationship>
+    <relationship type="one" related="mantle.work.effort.WorkEffort" short-alias="workEffort"/>
+    <relationship type="one" related="mantle.party.Party" short-alias="party"/>
+    <relationship type="one" related="mantle.humanres.rate.PayGrade" short-alias="payGrade"/>
+    <relationship type="one" related="mantle.humanres.position.EmplPositionClass" short-alias="positionClass"/>
+    <relationship type="one" title="WorkType" related="moqui.basic.Enumeration" short-alias="workType">
+        <key-map field-name="workTypeEnumId"/></relationship>
+    <seed-data>
+        <moqui.basic.EnumerationType description="Hourly Rate Type" enumTypeId="RateType"/>
+        <moqui.basic.EnumerationType description="Piece Rate Type" enumTypeId="PieceRateType"/>
+        <moqui.basic.Enumeration enumId="RatpStandard" description="Standard" enumTypeId="RateType"/>
+        <moqui.basic.Enumeration enumId="RatpPieceMinWageAdj" description="Min Wage Adj" enumTypeId="RateType" relatedEnumId="RatpStandard"/>
+        <moqui.basic.Enumeration enumId="RatpPaidBreakStd" description="Paid Break STD" enumTypeId="RateType" relatedEnumId="RatpStandard"/>
+        <moqui.basic.Enumeration enumId="RatpPaidBreakRrp" description="Paid Break RRP" enumTypeId="RateType" relatedEnumId="RatpStandard"/>
+        <moqui.basic.Enumeration enumId="RatpPaidNptStd" description="NPT - STD" enumTypeId="RateType" relatedEnumId="RatpStandard"/>
+        <moqui.basic.Enumeration enumId="RatpPaidNptRrp" description="NPT - RRP" enumTypeId="RateType" relatedEnumId="RatpStandard"/>
+        <moqui.basic.Enumeration enumId="RatpVacation" description="PTO - Vacation" enumTypeId="RateType"/>
+        <moqui.basic.Enumeration enumId="RatpHoliday" description="PTO - Holiday" enumTypeId="RateType"/>
+        <moqui.basic.Enumeration enumId="RatpSick" description="PTO - Sick" enumTypeId="RateType"/>
+        <moqui.basic.Enumeration enumId="RatpPtoOther" description="PTO - Other" enumTypeId="RateType"/>
+        <moqui.basic.Enumeration enumId="RatpPieceOrHour" description="Piece or Hourly" enumTypeId="PieceRateType" relatedEnumId="RatpStandard"/>
+        <moqui.basic.Enumeration enumId="RatpPieceOnly" description="Piece" enumTypeId="PieceRateType" relatedEnumId="RatpStandard"/>
+        <moqui.basic.Enumeration enumId="RatpPiecePlusHour" description="Piece plus Hourly" enumTypeId="PieceRateType" relatedEnumId="RatpStandard"/>
+        <moqui.basic.Enumeration enumId="RatpUnpaid" description="Unpaid" enumTypeId="RateType" relatedEnumId="RatpStandard"/>
+        <moqui.basic.Enumeration enumId="RatpNoCharge" description="No Charge" enumTypeId="RateType" relatedEnumId="RatpStandard"/>
+        <moqui.basic.Enumeration enumId="RatpDiscounted" description="Discounted" enumTypeId="RateType" relatedEnumId="RatpStandard"/>
+        <moqui.basic.Enumeration enumId="RatpOnsite" description="On-site" enumTypeId="RateType" relatedEnumId="RatpStandard"/>
+        <moqui.basic.Enumeration enumId="RatpEvening" description="Shift - Evening" enumTypeId="RateType" relatedEnumId="RatpStandard"/>
+        <moqui.basic.Enumeration enumId="RatpNight" description="Shift - Night" enumTypeId="RateType" relatedEnumId="RatpStandard"/>
+        <moqui.basic.Enumeration enumId="RatpWeekend" description="Shift - Weekend" enumTypeId="RateType" relatedEnumId="RatpStandard"/>
+        <moqui.basic.Enumeration enumId="RatpShHoliday" description="Shift - Holiday" enumTypeId="RateType" relatedEnumId="RatpStandard"/>
+        <moqui.basic.EnumerationType description="Pay Rate Modifier" enumTypeId="RateModifier"/>
+        <moqui.basic.Enumeration enumId="RatmRegular" description="Regular" enumTypeId="RateModifier"/>
+        <moqui.basic.Enumeration enumId="RatmOvertime" description="Overtime" enumTypeId="RateModifier"/>
+        <moqui.basic.Enumeration enumId="RatmDouble" description="Double Time" enumTypeId="RateModifier"/>
+        <moqui.basic.Enumeration description="Common Manual TimeEntry Rate Types" enumId="EngRateCommonEntry" enumTypeId="EnumGroup"/>
+        <moqui.basic.EnumGroupMember enumId="RatpStandard" sequenceNum="1" enumGroupEnumId="EngRateCommonEntry"/>
+        <moqui.basic.EnumGroupMember enumId="RatpPaidBreakStd" sequenceNum="5" enumGroupEnumId="EngRateCommonEntry"/>
+        <moqui.basic.EnumGroupMember enumId="RatpPaidBreakRrp" sequenceNum="6" enumGroupEnumId="EngRateCommonEntry"/>
+        <moqui.basic.EnumGroupMember enumId="RatpPaidNptStd" sequenceNum="7" enumGroupEnumId="EngRateCommonEntry"/>
+        <moqui.basic.EnumGroupMember enumId="RatpPaidNptRrp" sequenceNum="8" enumGroupEnumId="EngRateCommonEntry"/>
+        <moqui.basic.EnumGroupMember enumId="RatpVacation" sequenceNum="11" enumGroupEnumId="EngRateCommonEntry"/>
+        <moqui.basic.EnumGroupMember enumId="RatpHoliday" sequenceNum="12" enumGroupEnumId="EngRateCommonEntry"/>
+        <moqui.basic.EnumGroupMember enumId="RatpSick" sequenceNum="13" enumGroupEnumId="EngRateCommonEntry"/>
+        <moqui.basic.EnumGroupMember enumId="RatpPtoOther" sequenceNum="14" enumGroupEnumId="EngRateCommonEntry"/>
+        <moqui.basic.EnumGroupMember enumId="RatpEvening" sequenceNum="21" enumGroupEnumId="EngRateCommonEntry"/>
+        <moqui.basic.EnumGroupMember enumId="RatpNight" sequenceNum="22" enumGroupEnumId="EngRateCommonEntry"/>
+        <moqui.basic.EnumGroupMember enumId="RatpWeekend" sequenceNum="23" enumGroupEnumId="EngRateCommonEntry"/>
+        <moqui.basic.EnumGroupMember enumId="RatpShHoliday" sequenceNum="24" enumGroupEnumId="EngRateCommonEntry"/>
+        <moqui.basic.EnumGroupMember enumId="RatpOnsite" sequenceNum="25" enumGroupEnumId="EngRateCommonEntry"/>
+        <moqui.basic.Enumeration description="Common Configuration Rate Types" enumId="EngRateCommonConfig" enumTypeId="EnumGroup"/>
+        <moqui.basic.EnumGroupMember enumId="RatpStandard" sequenceNum="1" enumGroupEnumId="EngRateCommonConfig"/>
+        <moqui.basic.EnumGroupMember enumId="RatpPieceOnly" sequenceNum="4" enumGroupEnumId="EngRateCommonConfig"/>
+        <moqui.basic.EnumGroupMember enumId="RatpPieceOrHour" sequenceNum="5" enumGroupEnumId="EngRateCommonConfig"/>
+        <moqui.basic.EnumGroupMember enumId="RatpPiecePlusHour" sequenceNum="6" enumGroupEnumId="EngRateCommonConfig"/>
+        <moqui.basic.EnumGroupMember enumId="RatpEvening" sequenceNum="21" enumGroupEnumId="EngRateCommonConfig"/>
+        <moqui.basic.EnumGroupMember enumId="RatpNight" sequenceNum="22" enumGroupEnumId="EngRateCommonConfig"/>
+        <moqui.basic.EnumGroupMember enumId="RatpWeekend" sequenceNum="23" enumGroupEnumId="EngRateCommonConfig"/>
+        <moqui.basic.EnumGroupMember enumId="RatpShHoliday" sequenceNum="24" enumGroupEnumId="EngRateCommonConfig"/>
+        <moqui.basic.EnumGroupMember enumId="RatpOnsite" sequenceNum="25" enumGroupEnumId="EngRateCommonConfig"/>
+        <moqui.basic.Enumeration description="Hourly Rate Type" enumId="EngHourlyRateType" enumTypeId="EnumGroup"/>
+        <moqui.basic.EnumGroupMember enumId="RatpStandard" sequenceNum="1" enumGroupEnumId="EngHourlyRateType"/>
+        <moqui.basic.EnumGroupMember enumId="RatpEvening" enumGroupEnumId="EngHourlyRateType"/>
+        <moqui.basic.EnumGroupMember enumId="RatpNight" enumGroupEnumId="EngHourlyRateType"/>
+        <moqui.basic.EnumGroupMember enumId="RatpWeekend" enumGroupEnumId="EngHourlyRateType"/>
+        <moqui.basic.EnumGroupMember enumId="RatpShHoliday" enumGroupEnumId="EngHourlyRateType"/>
+        <moqui.basic.EnumGroupMember enumId="RatpPaidNptStd" enumGroupEnumId="EngHourlyRateType"/>
+        <moqui.basic.EnumGroupMember enumId="RatpPaidNptRrp" enumGroupEnumId="EngHourlyRateType"/>
+        <moqui.basic.EnumGroupMember enumId="RatpVacation" enumGroupEnumId="EngHourlyRateType"/>
+        <moqui.basic.EnumGroupMember enumId="RatpHoliday" enumGroupEnumId="EngHourlyRateType"/>
+        <moqui.basic.EnumGroupMember enumId="RatpSick" enumGroupEnumId="EngHourlyRateType"/>
+        <moqui.basic.EnumGroupMember enumId="RatpPtoOther" enumGroupEnumId="EngHourlyRateType"/>
+        <moqui.basic.Enumeration description="Piece Rate Type" enumId="EngPieceRateType" enumTypeId="EnumGroup"/>
+        <moqui.basic.EnumGroupMember enumId="RatpPieceOnly" sequenceNum="1" enumGroupEnumId="EngPieceRateType"/>
+        <moqui.basic.EnumGroupMember enumId="RatpPieceOrHour" sequenceNum="2" enumGroupEnumId="EngPieceRateType"/>
+        <moqui.basic.EnumGroupMember enumId="RatpPiecePlusHour" sequenceNum="3" enumGroupEnumId="EngPieceRateType"/>
+        <moqui.basic.EnumGroupMember enumId="RatpPieceMinWageAdj" sequenceNum="4" enumGroupEnumId="EngPieceRateType"/>
+        <moqui.basic.Enumeration description="Pay Rate Modifier Type" enumId="EngPayRateModifierType" enumTypeId="EnumGroup"/>
+        <moqui.basic.EnumGroupMember enumId="RatmRegular" sequenceNum="1" enumGroupEnumId="EngPayRateModifierType"/>
+        <moqui.basic.EnumGroupMember enumId="RatmOvertime" sequenceNum="2" enumGroupEnumId="EngPayRateModifierType"/>
+        <moqui.basic.EnumGroupMember enumId="RatmDouble" sequenceNum="3" enumGroupEnumId="EngPayRateModifierType"/>
+        <moqui.basic.EnumerationType description="Rate Purpose" enumTypeId="RatePurpose"/>
+        <moqui.basic.Enumeration enumId="RaprClient" description="Client Billing" enumTypeId="RatePurpose"/>
+        <moqui.basic.Enumeration enumId="RaprVendor" description="Worker/Vendor Payment" enumTypeId="RatePurpose"/>
+        <mantle.humanres.rate.RateAmount rateAmountId="NoChargeClient" rateTypeEnumId="RatpNoCharge" ratePurposeEnumId="RaprClient" timePeriodUomId="TF_hr" workEffortId="" partyId="" emplPositionClassId="" fromDate="1265184000000" thruDate="" rateAmount="0.00" rateCurrencyUomId=""/>
+        <mantle.humanres.rate.RateAmount rateAmountId="UnpaidVendor" rateTypeEnumId="RatpUnpaid" ratePurposeEnumId="RaprVendor" timePeriodUomId="TF_hr" workEffortId="" partyId="" emplPositionClassId="" fromDate="1265184000000" thruDate="" rateAmount="0.00" rateCurrencyUomId=""/>
+    </seed-data>
+    <field name="lastUpdatedStamp" type="date-time"/>
+    <relationship related="mantle.work.time.TimeEntry" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="rateAmountId" related="rateAmountId"/></relationship>
+    <relationship related="mantle.work.time.TimeEntry" type="many" is-auto-reverse="true" mutable="true" title="Vendor">
+        <key-map field-name="rateAmountId" related="vendorRateAmountId"/></relationship>
+    <relationship related="mantle.work.time.TimeEntry" type="many" is-auto-reverse="true" mutable="true" title="Piece">
+        <key-map field-name="rateAmountId" related="pieceRateAmountId"/></relationship>
+    <relationship related="mantle.work.time.TimeEntry" type="many" is-auto-reverse="true" mutable="true" title="VendorPiece">
+        <key-map field-name="rateAmountId" related="vendorPieceRateAmountId"/></relationship>
+
+</entity>

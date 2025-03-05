@@ -1,0 +1,1 @@
+<!-- Screen Location component://SimpleScreens/screen/SimpleScreens/Accounting/TimePeriod.xml --><screen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://moqui.org/xsd/xml-screen-3.xsd" default-menu-index="6"><subscreens default-item="FindTimePeriod"/><widgets><subscreens-panel id="TimePeriodPanel" type="tab"/></widgets></screen>

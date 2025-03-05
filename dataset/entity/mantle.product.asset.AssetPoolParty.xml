@@ -1,0 +1,11 @@
+
+<!-- Entity Name: mantle.product.asset.AssetPoolParty sql table: ASSET_POOL_PARTY --><entity entity-name="AssetPoolParty" package="mantle.product.asset">
+    <field name="assetPoolId" type="id" is-pk="true"/>
+    <field name="partyId" type="id" is-pk="true"/>
+    <field name="roleTypeId" type="id"/>
+    <relationship type="one" related="mantle.product.asset.AssetPool" short-alias="pool"/>
+    <relationship type="one" related="mantle.party.Party" short-alias="party"/>
+    <relationship type="one" related="mantle.party.RoleType" short-alias="roleType"/>
+    <field name="lastUpdatedStamp" type="date-time"/>
+
+</entity>

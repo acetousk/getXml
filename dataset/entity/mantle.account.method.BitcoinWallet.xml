@@ -1,0 +1,10 @@
+
+<!-- Entity Name: mantle.account.method.BitcoinWallet sql table: BITCOIN_WALLET --><entity entity-name="BitcoinWallet" package="mantle.account.method" cache="never">
+    <field name="paymentMethodId" type="id" is-pk="true"/>
+    <field name="walletAddress" type="text-medium"/>
+    <field name="description" type="text-medium"/>
+    <field name="onlineWalletUrl" type="text-medium"/>
+    <relationship type="one" related="mantle.account.method.PaymentMethod"/>
+    <field name="lastUpdatedStamp" type="date-time"/>
+
+</entity>

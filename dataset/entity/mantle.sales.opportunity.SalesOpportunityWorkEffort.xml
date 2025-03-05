@@ -1,0 +1,9 @@
+
+<!-- Entity Name: mantle.sales.opportunity.SalesOpportunityWorkEffort sql table: SALES_OPPORTUNITY_WORK_EFFORT --><entity entity-name="SalesOpportunityWorkEffort" package="mantle.sales.opportunity">
+    <field name="salesOpportunityId" type="id" is-pk="true"/>
+    <field name="workEffortId" type="id" is-pk="true"/>
+    <relationship type="one" related="mantle.sales.opportunity.SalesOpportunity"/>
+    <relationship type="one" related="mantle.work.effort.WorkEffort"/>
+    <field name="lastUpdatedStamp" type="date-time"/>
+
+</entity>

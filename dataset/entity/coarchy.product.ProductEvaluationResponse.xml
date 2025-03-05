@@ -1,0 +1,36 @@
+
+<!-- Entity Name: coarchy.product.ProductEvaluationResponse sql table: PRODUCT_EVALUATION_RESPONSE --><entity entity-name="ProductEvaluationResponse" package="coarchy.product">
+    <description><![CDATA[This entity represents the response of each party to a certain activity / statement, in a product evaluation.]]></description>
+    <field name="productEvaluationResponseId" type="id" is-pk="true"/>
+    <field name="productEvaluationId" type="id"/>
+    <field name="statementId" type="id"/>
+    <field name="activityId" type="id"/>
+    <field name="evaluationByEnumId" type="id"/>
+    <field name="implementationStatusEnumId" type="id"/>
+    <field name="rating" type="number-integer"/>
+    <field name="comments" type="text-long"/>
+    <field name="lastEditedByUserId" type="id" enable-audit-log="update"/>
+    <field name="organizationId" type="id"/>
+    <relationship type="one" related="coarchy.product.ProductEvaluation" short-alias="evaluation"/>
+    <relationship type="one" related="coarchy.Activity">
+        <key-map field-name="activityId"/></relationship>
+    <relationship type="one" related="coarchy.ValueStatement">
+        <key-map field-name="statementId" related="valueStatementId"/></relationship>
+    <relationship type="one" title="EvaluationBy" related="moqui.basic.Enumeration" short-alias="evaluationByEnum">
+        <key-map field-name="evaluationByEnumId" related="enumId"/></relationship>
+    <relationship type="one" title="ImplementationStatus" related="moqui.basic.Enumeration" short-alias="implementationStatusEnum">
+        <key-map field-name="implementationStatusEnumId" related="enumId"/></relationship>
+    <relationship type="one" related="mantle.party.Organization" short-alias="organization">
+        <key-map field-name="organizationId" related="partyId"/></relationship>
+    <seed-data>
+        <moqui.basic.EnumerationType description="Evaluation By" enumTypeId="EvaluationBy"/>
+        <moqui.basic.EnumerationType description="Implementation Status" enumTypeId="ImplementationStatus"/>
+        <moqui.basic.Enumeration description="Vendor" sequenceNum="1" enumTypeId="EvaluationBy" enumId="EbVendor"/>
+        <moqui.basic.Enumeration description="Internal" sequenceNum="2" enumTypeId="EvaluationBy" enumId="EbInternal"/>
+        <moqui.basic.Enumeration description="Full Gap" sequenceNum="1" enumTypeId="ImplementationStatus" enumId="IsFullGap"/>
+        <moqui.basic.Enumeration description="Partial Overlap" sequenceNum="2" enumTypeId="ImplementationStatus" enumId="IsPartialOverlap"/>
+        <moqui.basic.Enumeration description="Full Overlap" sequenceNum="3" enumTypeId="ImplementationStatus" enumId="IsFullOverlap"/>
+    </seed-data>
+    <field name="lastUpdatedStamp" type="date-time"/>
+
+</entity>

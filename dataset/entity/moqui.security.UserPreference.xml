@@ -1,0 +1,17 @@
+
+<!-- Entity Name: moqui.security.UserPreference sql table: USER_PREFERENCE --><entity entity-name="UserPreference" package="moqui.security" use="configuration">
+    <description><![CDATA[Use this entity for user-specific preferences (or properties). For default preferences use userId="_NA_".]]></description>
+    <field name="userId" type="id" is-pk="true"/>
+    <field name="preferenceKey" type="text-medium" is-pk="true"/>
+    <field name="preferenceValue" type="text-long"/>
+    <relationship type="one-nofk" related="moqui.security.UserAccount" short-alias="user">
+        <description><![CDATA[No FK in order to allow externally authenticated users.]]></description></relationship>
+    <relationship type="one-nofk" title="UserPreferenceKey" related="moqui.basic.Enumeration" short-alias="keyEnum">
+        <description><![CDATA[No FK because any key can be used whether or not there is an Enumeration record for it.]]></description>
+        <key-map field-name="preferenceKey"/>
+    </relationship>
+    <seed-data>
+        <moqui.basic.EnumerationType description="User Preference Key (optional)" enumTypeId="UserPreferenceKey"/></seed-data>
+    <field name="lastUpdatedStamp" type="date-time"/>
+
+</entity>

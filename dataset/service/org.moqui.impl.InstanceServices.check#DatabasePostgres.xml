@@ -1,0 +1,26 @@
+<!--Service Location org.moqui.impl.InstanceServices.check#DatabasePostgres--><service verb="check" noun="DatabasePostgres"><in-parameters><parameter name="appInstanceId" required="true"/></in-parameters><out-parameters><parameter name="dbConnectSuccess" type="Boolean"/><parameter name="databaseExists" type="Boolean"/><parameter name="dbUserExists" type="Boolean"/></out-parameters><actions><service-call name="org.moqui.impl.InstanceServices.get#AppInstanceEnv" in-map="context" out-map="[envMap:context.envMap,adminMap:context.adminMap]"/><if condition="!envMap"><return/></if><set field="adminMap.entity_ds_database" from="envMap.entity_ds_database"/><script><![CDATA[org.slf4j.Logger logger = org.slf4j.LoggerFactory.getLogger("checkDatabasePostgres")
+
+                dbConnectSuccess = false
+                databaseExists = false
+                dbUserExists = false
+
+                javax.sql.XAConnection testXaCon = null
+                java.sql.Connection testCon = null
+                try {
+                    testXaCon = ec.entity.getConfConnection(adminMap)
+                    testCon = testXaCon.getConnection()
+                    dbConnectSuccess = true
+                } catch (Exception e) {
+                    logger.warn("Test connection to Postgres failed", e)
+                } finally {
+                    if (testCon != null) testCon.close()
+                    if (testXaCon != null) testXaCon.close()
+                }
+
+                if (dbConnectSuccess) {
+                    long dbCount = ec.entity.runSqlCountConf("pg_database", "pg_database.datname='${envMap.entity_ds_database}'", adminMap)
+                    if (dbCount > 0L) databaseExists = true
+
+                    long userCount = ec.entity.runSqlCountConf("pg_catalog.pg_user", "usename='${envMap.entity_ds_user}'", adminMap)
+                    if (userCount > 0L) dbUserExists = true
+                }]]></script></actions></service>

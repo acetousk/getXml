@@ -1,0 +1,23 @@
+
+<!-- Entity Name: mantle.party.PartyBadge sql table: PARTY_BADGE --><entity entity-name="PartyBadge" package="mantle.party" has-dependents="true">
+    <field name="partyBadgeId" type="id" is-pk="true"/>
+    <field name="partyId" type="id"/>
+    <field name="organizationPartyId" type="id"/>
+    <field name="fromDate" type="date-time"/>
+    <field name="thruDate" type="date-time"/>
+    <field name="serialNumber" type="text-short"/>
+    <field name="storedValue" type="text-medium">
+        <description><![CDATA[For RFID this is the unique tracking identifier
+            (the TID can be tracked in the serialNumber field)]]></description></field>
+    <relationship type="one" related="mantle.party.Party"/>
+    <relationship type="one" title="Organization" related="mantle.party.Party">
+        <key-map field-name="organizationPartyId"/></relationship>
+    <index name="PartyBadgeSerial" unique="true">
+        <index-field name="serialNumber"/></index>
+    <index name="PartyBadgeStored" unique="true">
+        <index-field name="storedValue"/></index>
+    <field name="lastUpdatedStamp" type="date-time"/>
+    <relationship related="mantle.party.PartyBadgeScan" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="partyBadgeId" related="partyBadgeId"/></relationship>
+
+</entity>

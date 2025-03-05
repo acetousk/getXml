@@ -1,0 +1,18 @@
+
+<!-- Entity Name: mantle.marketing.tracking.TrackingCodeVisit sql table: TRACKING_CODE_VISIT --><entity entity-name="TrackingCodeVisit" package="mantle.marketing.tracking">
+    <field name="trackingCodeId" type="id" is-pk="true"/>
+    <field name="visitId" type="id" is-pk="true"/>
+    <field name="fromDate" type="date-time" is-pk="true"/>
+    <field name="sourceEnumId" type="id"/>
+    <relationship type="one" related="mantle.marketing.tracking.TrackingCode"/>
+    <relationship type="one" related="moqui.server.Visit"/>
+    <relationship type="one" title="TrackingCodeSource" related="moqui.basic.Enumeration">
+        <key-map field-name="sourceEnumId"/></relationship>
+    <seed-data>
+        <moqui.basic.EnumerationType description="Tracking Code Source" enumTypeId="TrackingCodeSource"/>
+        <moqui.basic.Enumeration description="Cookie" enumId="TKCDSRC_COOKIE" enumTypeId="TrackingCodeSource"/>
+        <moqui.basic.Enumeration description="URL Parameter" enumId="TKCDSRC_URL_PARAM" enumTypeId="TrackingCodeSource"/>
+    </seed-data>
+    <field name="lastUpdatedStamp" type="date-time"/>
+
+</entity>

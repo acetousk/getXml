@@ -1,0 +1,1 @@
+<!--Service Location wm.WikiServices.get#getAllAuthors--><service verb="get" noun="getAllAuthors"><in-parameters/><out-parameters><parameter name="authorList"/></out-parameters><actions><entity-find entity-name="moqui.resource.wiki.WikiBlog" list="authorList" distinct="true"><select-field field-name="author"/></entity-find></actions></service>

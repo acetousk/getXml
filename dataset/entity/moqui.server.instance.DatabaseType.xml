@@ -1,0 +1,17 @@
+
+<!-- Entity Name: moqui.server.instance.DatabaseType sql table: DATABASE_TYPE --><entity entity-name="DatabaseType" package="moqui.server.instance" use="configuration" has-dependents="true">
+    <field name="databaseTypeId" type="id" is-pk="true"/>
+    <field name="description" type="text-medium"/>
+    <field name="confName" type="text-short"/>
+    <field name="createService" type="text-medium"/>
+    <field name="checkService" type="text-medium"/>
+    <seed-data>
+        <moqui.server.instance.DatabaseType databaseTypeId="mysql" description="MySQL" confName="mysql" createService="org.moqui.impl.InstanceServices.create#DatabaseMySQL" checkService="org.moqui.impl.InstanceServices.check#DatabaseMySQL"/>
+        <moqui.server.instance.DatabaseType databaseTypeId="postgres" description="Postgres" confName="postgres" createService="org.moqui.impl.InstanceServices.create#DatabasePostgres" checkService="org.moqui.impl.InstanceServices.check#DatabasePostgres"/>
+        <moqui.server.instance.DatabaseHost databaseHostId="LocalMySQL" databaseTypeId="mysql" hostAddress="127.0.0.1" hostPort="3306" instanceAddress="moqui-database" adminUser="root" adminPassword="moquiroot"/>
+    </seed-data>
+    <field name="lastUpdatedStamp" type="date-time"/>
+    <relationship related="moqui.server.instance.DatabaseHost" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="databaseTypeId" related="databaseTypeId"/></relationship>
+
+</entity>

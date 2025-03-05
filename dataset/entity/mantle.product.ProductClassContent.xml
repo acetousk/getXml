@@ -1,0 +1,11 @@
+
+<!-- Entity Name: mantle.product.ProductClassContent sql table: PRODUCT_CLASS_CONTENT --><entity entity-name="ProductClassContent" package="mantle.product">
+    <field name="productClassEnumId" type="id" is-pk="true"/>
+    <field name="productContentTypeEnumId" type="id" is-pk="true"/>
+    <relationship type="one" title="ProductClass" related="moqui.basic.Enumeration">
+        <key-map field-name="productClassEnumId"/></relationship>
+    <relationship type="one" title="ProductContentType" related="moqui.basic.Enumeration">
+        <key-map field-name="productContentTypeEnumId"/></relationship>
+    <field name="lastUpdatedStamp" type="date-time"/>
+
+</entity>

@@ -1,0 +1,9 @@
+
+<!-- Entity Name: mantle.facility.FacilityBoxType sql table: FACILITY_BOX_TYPE --><entity entity-name="FacilityBoxType" package="mantle.facility" cache="true">
+    <field name="facilityId" type="id" is-pk="true"/>
+    <field name="shipmentBoxTypeId" type="id" is-pk="true"/>
+    <relationship type="one" related="mantle.facility.Facility" short-alias="facility"/>
+    <relationship type="one" related="mantle.shipment.ShipmentBoxType" short-alias="boxType"/>
+    <field name="lastUpdatedStamp" type="date-time"/>
+
+</entity>

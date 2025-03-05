@@ -1,0 +1,13 @@
+
+<!-- Entity Name: mantle.product.store.ProductStoreGroupParty sql table: PRODUCT_STORE_GROUP_PARTY --><entity entity-name="ProductStoreGroupParty" package="mantle.product.store">
+    <field name="productStoreGroupId" type="id" is-pk="true"/>
+    <field name="partyId" type="id" is-pk="true"/>
+    <field name="roleTypeId" type="id" is-pk="true"/>
+    <field name="fromDate" type="date-time" is-pk="true"/>
+    <field name="thruDate" type="date-time"/>
+    <relationship type="one" related="mantle.product.store.ProductStoreGroup"/>
+    <relationship type="one" related="mantle.party.Party"/>
+    <relationship type="one" related="mantle.party.RoleType"/>
+    <field name="lastUpdatedStamp" type="date-time"/>
+
+</entity>

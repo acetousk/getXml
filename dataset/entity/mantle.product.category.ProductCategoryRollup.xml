@@ -1,0 +1,15 @@
+
+<!-- Entity Name: mantle.product.category.ProductCategoryRollup sql table: PRODUCT_CATEGORY_ROLLUP --><entity entity-name="ProductCategoryRollup" package="mantle.product.category">
+    <field name="productCategoryId" type="id" is-pk="true"/>
+    <field name="parentProductCategoryId" type="id" is-pk="true"/>
+    <field name="fromDate" type="date-time" is-pk="true"/>
+    <field name="thruDate" type="date-time"/>
+    <field name="sequenceNum" type="number-integer"/>
+    <relationship type="one" related="mantle.product.category.ProductCategory" short-alias="category"/>
+    <relationship type="one" title="Parent" related="mantle.product.category.ProductCategory" short-alias="parent">
+        <key-map field-name="parentProductCategoryId"/></relationship>
+    <index name="PRDCR_PARPC">
+        <index-field name="parentProductCategoryId"/></index>
+    <field name="lastUpdatedStamp" type="date-time"/>
+
+</entity>

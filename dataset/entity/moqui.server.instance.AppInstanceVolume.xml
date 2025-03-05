@@ -1,0 +1,9 @@
+
+<!-- Entity Name: moqui.server.instance.AppInstanceVolume sql table: APP_INSTANCE_VOLUME --><entity entity-name="AppInstanceVolume" package="moqui.server.instance" use="configuration">
+    <field name="appInstanceId" type="id" is-pk="true"/>
+    <field name="mountPoint" type="text-medium" is-pk="true"/>
+    <field name="volumeName" type="text-medium"/>
+    <relationship type="one" related="moqui.server.instance.AppInstance"/>
+    <field name="lastUpdatedStamp" type="date-time"/>
+
+</entity>

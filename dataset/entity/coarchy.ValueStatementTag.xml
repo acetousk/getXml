@@ -1,0 +1,14 @@
+
+<!-- Entity Name: coarchy.ValueStatementTag sql table: VALUE_STATEMENT_TAG --><entity entity-name="ValueStatementTag" package="coarchy">
+    <field name="tagId" type="id" is-pk="true"/>
+    <field name="valueStatementId" type="id" is-pk="true"/>
+    <field name="fromDate" type="date-time" is-pk="true"/>
+    <field name="thruDate" type="date-time"/>
+    <field name="organizationId" type="id"/>
+    <relationship type="one" related="coarchy.Tag" short-alias="tag">
+        <key-map field-name="tagId"/></relationship>
+    <relationship type="one-nofk" related="coarchy.ValueStatement" short-alias="valueStatement">
+        <key-map field-name="valueStatementId"/></relationship>
+    <field name="lastUpdatedStamp" type="date-time"/>
+
+</entity>

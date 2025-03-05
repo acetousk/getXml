@@ -1,0 +1,33 @@
+<!--Service Location org.moqui.impl.PrintServices.print#ScreenDocument--><service verb="print" noun="ScreenDocument"><in-parameters><parameter name="networkPrinterId" required="true"/><parameter name="createdDate" type="Timestamp" default="ec.user.nowTimestamp"/><parameter name="username"/><parameter name="jobName"/><parameter name="copies" type="Integer" default="1"/><parameter name="duplex" default-value="N"/><parameter name="pageRanges"/><parameter name="screenLocation" required="true" entity-name="moqui.screen.ScreenDocument" field-name="screenLocation"/><parameter name="screenParameters" type="Map"/><parameter name="screenParametersStr"><description><![CDATA[Groovy expression that evaluates to a Map]]></description></parameter><parameter name="contentType" default-value="application/pdf"/><parameter name="webappName" default-value="webroot"/><parameter name="storeDocument" type="Boolean" default="true"/></in-parameters><out-parameters><parameter name="printJobId"/><parameter name="jobId" type="Integer"/></out-parameters><actions><script><![CDATA[import org.moqui.context.ExecutionContext
+                import org.moqui.impl.screen.ScreenDefinition
+                import javax.sql.rowset.serial.SerialBlob
+                import javax.xml.transform.stream.StreamSource
+
+                ExecutionContext ec = context.ec
+                ScreenDefinition screedDef = ec.getScreen().getScreenDefinition(screenLocation)
+                if (screedDef == null) {
+                    ec.message.addError(ec.resource.expand('Screen not found at [${screenLocation}]',''))
+                    return
+                }
+                Map parmMap = [:]
+                if (screenParameters) parmMap.putAll(screenParameters)
+                if (screenParametersStr) parmMap.putAll(ec.resource.expression(screenParametersStr, ""))
+                context.putAll(parmMap)
+                String xslFoText = ec.screen.makeRender().rootScreen(screenLocation).webappName(webappName).renderMode("xsl-fo").render()
+                ByteArrayOutputStream baos = new ByteArrayOutputStream()
+                ec.resource.xslFoTransform(new StreamSource(new StringReader(xslFoText)), null, baos, contentType)
+                serialBlob = new SerialBlob(baos.toByteArray())
+
+                if (!jobName) {
+                    StringBuilder jobNameSb = new StringBuilder()
+                    jobNameSb.append(screedDef.getScreenName())
+                    for (Map.Entry entry in parmMap) jobNameSb.append(" ").append(entry.getValue())
+                    jobName = jobNameSb.toString()
+                }
+
+                /* some test code to write a PDF to a file
+                File testFile = new File('test.pdf')
+                testFile.createNewFile()
+                FileOutputStream fos = new FileOutputStream(testFile)
+                org.apache.commons.io.IOUtils.write(baos.toByteArray(), fos)
+                */]]></script><service-call name="org.moqui.impl.PrintServices.print#Document" out-map="[printJobId:context.printJobId,jobId:context.jobId]" in-map="context"/></actions></service>

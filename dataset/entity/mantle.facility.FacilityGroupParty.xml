@@ -1,0 +1,11 @@
+
+<!-- Entity Name: mantle.facility.FacilityGroupParty sql table: FACILITY_GROUP_PARTY --><entity entity-name="FacilityGroupParty" package="mantle.facility">
+    <field name="facilityGroupId" type="id" is-pk="true"/>
+    <field name="partyId" type="id" is-pk="true"/>
+    <field name="roleTypeId" type="id" is-pk="true"/>
+    <relationship type="one" related="mantle.facility.FacilityGroup" short-alias="group"/>
+    <relationship type="one" related="mantle.party.Party" short-alias="party"/>
+    <relationship type="one" related="mantle.party.RoleType" short-alias="role"/>
+    <field name="lastUpdatedStamp" type="date-time"/>
+
+</entity>

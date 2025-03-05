@@ -1,0 +1,38 @@
+
+<!-- Entity Name: moqui.security.ArtifactGroupMember sql table: ARTIFACT_GROUP_MEMBER --><entity entity-name="ArtifactGroupMember" package="moqui.security" use="configuration">
+    <field name="artifactGroupId" type="id" is-pk="true"/>
+    <field name="artifactName" type="text-medium" is-pk="true">
+        <description><![CDATA[Full artifact location/name, or a pattern if nameIsPattern=Y.]]></description></field>
+    <field name="artifactTypeEnumId" type="id" is-pk="true"/>
+    <field name="nameIsPattern" type="text-indicator"/>
+    <field name="inheritAuthz" type="text-indicator">
+        <description><![CDATA[If Y then the user will have authorization for anything called by the artifact.
+                If N user will need to have authorization for anything else called by the artifact.
+
+                Note that in some cases (like in screen-sets) inheritance in the other direction is on by default, or
+                in other words permission to access an artifact implies permission to access everything needed to get
+                to that artifact.
+
+                Defaults to Y.]]></description></field>
+    <field name="filterMap" type="text-long">
+        <description><![CDATA[A Groovy expression that evaluates to a Map that
+            will be used to constrain if the member is part of the group based on fields/parameters for Entity
+            operations and Service calls.]]></description></field>
+    <relationship type="one" related="moqui.security.ArtifactGroup"/>
+    <relationship type="one" title="ArtifactType" related="moqui.basic.Enumeration">
+        <key-map field-name="artifactTypeEnumId"/></relationship>
+    <seed-data>
+        <moqui.basic.EnumerationType description="Artifact Types" enumTypeId="ArtifactType"/>
+        <moqui.basic.Enumeration description="Screen" enumId="AT_XML_SCREEN" enumTypeId="ArtifactType"/>
+        <moqui.basic.Enumeration description="Screen Transition" enumId="AT_XML_SCREEN_TRANS" enumTypeId="ArtifactType"/>
+        <moqui.basic.Enumeration description="Screen Content" enumId="AT_XML_SCREEN_CONTENT" enumTypeId="ArtifactType"/>
+        <moqui.basic.Enumeration description="Service" enumId="AT_SERVICE" enumTypeId="ArtifactType"/>
+        <moqui.basic.Enumeration description="Entity" enumId="AT_ENTITY" enumTypeId="ArtifactType"/>
+        <moqui.basic.Enumeration description="REST API Path" enumId="AT_REST_PATH" enumTypeId="ArtifactType"/>
+        <moqui.basic.Enumeration description="Other" enumId="AT_OTHER" enumTypeId="ArtifactType"/>
+    </seed-data>
+    <field name="lastUpdatedStamp" type="date-time"/>
+    <relationship related="moqui.security.ArtifactAuthz" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="artifactGroupId" related="artifactGroupId"/></relationship>
+
+</entity>

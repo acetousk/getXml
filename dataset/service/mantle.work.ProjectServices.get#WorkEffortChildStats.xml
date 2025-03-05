@@ -1,0 +1,66 @@
+<!--Service Location mantle.work.ProjectServices.get#WorkEffortChildStats--><service verb="get" noun="WorkEffortChildStats"><in-parameters><parameter name="workEffortId" required="true"/><parameter name="timePerDay" type="BigDecimal" default="8"/></in-parameters><out-parameters><parameter name="childStatsList" type="List"><parameter name="listEntry" type="Map"><parameter name="workEffortId"/><parameter name="workEffortName"/><parameter name="priority"/><parameter name="estimatedWorkTime" type="BigDecimal"/><parameter name="estimatedSetupTime" type="BigDecimal"/><parameter name="remainingWorkTime" type="BigDecimal"/><parameter name="actualWorkTime" type="BigDecimal"/><parameter name="actualSetupTime" type="BigDecimal"/><parameter name="totalTimeAllowed" type="BigDecimal"/><parameter name="estimatedWorkDays" type="BigDecimal"/><parameter name="remainingWorkDays" type="BigDecimal"/><parameter name="actualWorkDays" type="BigDecimal"/><parameter name="totalTimeAllowedDays" type="BigDecimal"/><parameter name="workTimePercentComplete" type="BigDecimal"><description><![CDATA[(estimatedWorkTime-remainingWorkTime)/estimatedWorkTime]]></description></parameter><parameter name="workRemainingPercent" type="BigDecimal"><description><![CDATA[remainingWorkTime/estimatedWorkTime]]></description></parameter><parameter name="workActualPercent" type="BigDecimal"><description><![CDATA[actualWorkTime/estimatedWorkTime]]></description></parameter><parameter name="workActRemPercent" type="BigDecimal"><description><![CDATA[(actualWorkTime+remainingWorkTime)/estimatedWorkTime]]></description></parameter><parameter name="budgetTimePercentComplete" type="BigDecimal"><description><![CDATA[(totalTimeAllowed-remainingWorkTime)/totalTimeAllowed]]></description></parameter><parameter name="budgetRemainingPercent" type="BigDecimal"><description><![CDATA[remainingWorkTime/totalTimeAllowed]]></description></parameter><parameter name="budgetActualPercent" type="BigDecimal"><description><![CDATA[actualWorkTime/totalTimeAllowed]]></description></parameter><parameter name="budgetActRemPercent" type="BigDecimal"><description><![CDATA[(actualWorkTime+remainingWorkTime)/totalTimeAllowed]]></description></parameter><parameter name="actualCost" type="BigDecimal"/><parameter name="actualClientCost" type="BigDecimal"/><parameter name="totalClientCostAllowed" type="BigDecimal"/></parameter></parameter></out-parameters><actions><set field="statsFields" from="['estimatedWorkTime', 'estimatedSetupTime', 'remainingWorkTime',                     'actualWorkTime', 'actualSetupTime', 'totalTimeAllowed', 'actualCost', 'actualClientCost',                     'totalClientCostAllowed']"/><entity-find-one entity-name="mantle.work.effort.WorkEffort" value-field="mainWorkEffort"/><if condition="!mainWorkEffort"><return error="true" message="Could not find WorkEffort with ID ${workEffortId}"/></if><if condition="mainWorkEffort.workEffortTypeEnumId == 'WetProject'"><then><set field="rootWorkEffortId" from="mainWorkEffort.workEffortId"/><entity-find entity-name="mantle.work.effort.WorkEffort" list="directChildren"><econdition field-name="rootWorkEffortId" from="workEffortId"/><econdition field-name="parentWorkEffortId" operator="is-null"/><econdition field-name="workEffortTypeEnumId" value="WetTask"/><econdition field-name="statusId" operator="not-equals" value="WeCancelled"/><order-by field-name="priority,workEffortName"/></entity-find></then><else><set field="rootWorkEffortId" from="mainWorkEffort.rootWorkEffortId"/><entity-find entity-name="mantle.work.effort.WorkEffort" list="directChildren"><econdition field-name="parentWorkEffortId" from="workEffortId"/><econdition field-name="statusId" operator="not-equals" value="WeCancelled"/><order-by field-name="priority,workEffortName"/></entity-find></else></if><entity-find entity-name="mantle.work.effort.WorkEffort" list="allUsedAsParent" distinct="true"><econdition field-name="rootWorkEffortId"/><econdition field-name="parentWorkEffortId" operator="is-not-null"/><select-field field-name="parentWorkEffortId"/></entity-find><set field="withChildrenIdSet" from="new HashSet(allUsedAsParent.parentWorkEffortId)"/><script><![CDATA[import org.moqui.entity.EntityList
+                import org.moqui.entity.EntityValue
+                import org.moqui.impl.context.ExecutionContextImpl
+
+                Map childStatsTotals = [workEffortId: 'Total', workEffortName: '', priority: '']
+                for (String statsField in statsFields) childStatsTotals.put(statsField, 0.0)
+
+                childStatsList = new ArrayList<>(directChildren.size())
+                for (EntityValue directChild in directChildren) {
+                    Map topLevelStats = [workEffortId: directChild.workEffortId, workEffortName: directChild.workEffortName,
+                            priority: directChild.priority]
+                    for (String statsField in statsFields) topLevelStats.put(statsField, 0.0)
+                    addChildStats(directChild, topLevelStats, ec)
+
+                    // calc derived values
+                    topLevelStats.estimatedWorkDays = topLevelStats.estimatedWorkTime / timePerDay
+                    topLevelStats.remainingWorkDays = topLevelStats.remainingWorkTime / timePerDay
+                    topLevelStats.actualWorkDays = topLevelStats.actualWorkTime / timePerDay
+                    topLevelStats.totalTimeAllowedDays = topLevelStats.totalTimeAllowed / timePerDay
+
+                    topLevelStats.workTimePercentComplete = topLevelStats.estimatedWorkTime ? ((topLevelStats.estimatedWorkTime - topLevelStats.remainingWorkTime) / topLevelStats.estimatedWorkTime) * 100 : 0.0
+                    topLevelStats.workRemainingPercent = topLevelStats.estimatedWorkTime ? (topLevelStats.remainingWorkTime / topLevelStats.estimatedWorkTime) * 100 : 0.0
+                    topLevelStats.workActualPercent = topLevelStats.estimatedWorkTime ? (topLevelStats.actualWorkTime / topLevelStats.estimatedWorkTime) * 100 : 0.0
+                    topLevelStats.workActRemPercent = topLevelStats.estimatedWorkTime ? ((topLevelStats.actualWorkTime + topLevelStats.remainingWorkTime) / topLevelStats.estimatedWorkTime) * 100 : 0.0
+
+                    topLevelStats.budgetTimePercentComplete = topLevelStats.totalTimeAllowed ? ((topLevelStats.totalTimeAllowed - topLevelStats.remainingWorkTime) / topLevelStats.totalTimeAllowed) * 100 : 0.0
+                    topLevelStats.budgetRemainingPercent = topLevelStats.totalTimeAllowed ? (topLevelStats.remainingWorkTime / topLevelStats.totalTimeAllowed) * 100 : 0.0
+                    topLevelStats.budgetActualPercent = topLevelStats.totalTimeAllowed ? (topLevelStats.actualWorkTime / topLevelStats.totalTimeAllowed) * 100 : 0.0
+                    topLevelStats.budgetActRemPercent = topLevelStats.totalTimeAllowed ? ((topLevelStats.actualWorkTime + topLevelStats.remainingWorkTime) / topLevelStats.totalTimeAllowed) * 100 : 0.0
+
+                    // add current values to stats totals
+                    for (String statsField in statsFields) childStatsTotals[statsField] += topLevelStats[statsField]
+
+                    // all done, add to the list
+                    childStatsList.add(topLevelStats)
+                }
+
+                // add the totals Map to the end of the list
+                childStatsTotals.estimatedWorkDays = childStatsTotals.estimatedWorkTime / timePerDay
+                childStatsTotals.remainingWorkDays = childStatsTotals.remainingWorkTime / timePerDay
+                childStatsTotals.actualWorkDays = childStatsTotals.actualWorkTime / timePerDay
+                childStatsTotals.totalTimeAllowedDays = childStatsTotals.totalTimeAllowed / timePerDay
+
+                childStatsTotals.workTimePercentComplete = childStatsTotals.estimatedWorkTime ? ((childStatsTotals.estimatedWorkTime - childStatsTotals.remainingWorkTime) / childStatsTotals.estimatedWorkTime) * 100 : 0.0
+                childStatsTotals.workRemainingPercent = childStatsTotals.estimatedWorkTime ? (childStatsTotals.remainingWorkTime / childStatsTotals.estimatedWorkTime) * 100 : 0.0
+                childStatsTotals.workActualPercent = childStatsTotals.estimatedWorkTime ? (childStatsTotals.actualWorkTime / childStatsTotals.estimatedWorkTime) * 100 : 0.0
+                childStatsTotals.workActRemPercent = childStatsTotals.estimatedWorkTime ? ((childStatsTotals.actualWorkTime + childStatsTotals.remainingWorkTime) / childStatsTotals.estimatedWorkTime) * 100 : 0.0
+
+                childStatsTotals.budgetTimePercentComplete = childStatsTotals.totalTimeAllowed ? ((childStatsTotals.totalTimeAllowed - childStatsTotals.remainingWorkTime) / childStatsTotals.totalTimeAllowed) * 100 : 0.0
+                childStatsTotals.budgetRemainingPercent = childStatsTotals.totalTimeAllowed ? (childStatsTotals.remainingWorkTime / childStatsTotals.totalTimeAllowed) * 100 : 0.0
+                childStatsTotals.budgetActualPercent = childStatsTotals.totalTimeAllowed ? (childStatsTotals.actualWorkTime / childStatsTotals.totalTimeAllowed) * 100 : 0.0
+                childStatsTotals.budgetActRemPercent = childStatsTotals.totalTimeAllowed ? ((childStatsTotals.actualWorkTime + childStatsTotals.remainingWorkTime) / childStatsTotals.totalTimeAllowed) * 100 : 0.0
+
+                childStatsList.add(childStatsTotals)
+
+                void addChildStats(EntityValue current, Map stats, ExecutionContextImpl ec) {
+                    if (current == null || current.statusId == "WeCancelled") return
+                    // add current values
+                    for (String statsField in statsFields) if (current[statsField]) stats[statsField] += current[statsField]
+
+                    // recurse for each child
+                    if (!withChildrenIdSet.contains(current.workEffortId)) return
+                    EntityList childList = ec.entity.find("mantle.work.effort.WorkEffort")
+                            .condition("parentWorkEffortId", current.workEffortId).list()
+                    if (childList) for (EntityValue child in childList) addChildStats(child, stats, ec)
+                }]]></script></actions></service>

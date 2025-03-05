@@ -1,0 +1,18 @@
+
+<!-- Entity Name: mantle.other.budget.BudgetItemDetail sql table: BUDGET_ITEM_DETAIL --><entity entity-name="BudgetItemDetail" package="mantle.other.budget" cache="never">
+    <field name="budgetItemDetailId" type="id" is-pk="true"/>
+    <field name="budgetId" type="id" not-null="true"/>
+    <field name="budgetItemSeqId" type="id" not-null="true"/>
+    <field name="facilityId" type="id"/>
+    <field name="assetId" type="id"/>
+    <field name="amount" type="currency-precise"/>
+    <field name="productId" type="id"/>
+    <field name="quantity" type="number-decimal"/>
+    <relationship type="one-nofk" related="mantle.other.budget.Budget" short-alias="budget"/>
+    <relationship type="one" related="mantle.other.budget.BudgetItem" short-alias="budgetItem"/>
+    <relationship type="one" related="mantle.facility.Facility" short-alias="facility"/>
+    <relationship type="one" related="mantle.product.asset.Asset" short-alias="asset"/>
+    <relationship type="one" related="mantle.product.Product" short-alias="product"/>
+    <field name="lastUpdatedStamp" type="date-time"/>
+
+</entity>

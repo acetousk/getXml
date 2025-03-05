@@ -1,0 +1,39 @@
+
+<!-- Entity Name: mantle.party.PartyContent sql table: PARTY_CONTENT --><entity entity-name="PartyContent" package="mantle.party">
+    <field name="partyContentId" type="id" is-pk="true"/>
+    <field name="partyId" type="id"/>
+    <field name="contentLocation" type="text-medium"/>
+    <field name="partyContentTypeEnumId" type="id"/>
+    <field name="description" type="text-long"/>
+    <field name="contentDate" type="date-time" default="ec.user.nowTimestamp"/>
+    <field name="viewedDate" type="date-time" enable-audit-log="true"/>
+    <field name="userId" type="id" default="ec.user.userId" enable-audit-log="true"/>
+    <field name="partyIdTypeEnumId" type="id"/>
+    <field name="originalPartyContentId" type="id">
+        <description><![CDATA[Set this when copying content from one Party to another, may have same or different contentLocation]]></description></field>
+    <relationship type="one" related="mantle.party.Party" short-alias="party"/>
+    <relationship type="one" title="PartyContentType" related="moqui.basic.Enumeration" short-alias="type">
+        <key-map field-name="partyContentTypeEnumId"/></relationship>
+    <relationship type="one" title="PartyIdType" related="moqui.basic.Enumeration" short-alias="partyIdTypeEnum">
+        <key-map field-name="partyIdTypeEnumId"/></relationship>
+    <relationship type="one" title="Original" related="mantle.party.PartyContent" short-alias="originalPartyContent">
+        <key-map field-name="originalPartyContentId"/></relationship>
+    <seed-data>
+        <moqui.basic.EnumerationType description="Party Content Type" enumTypeId="PartyContentType"/>
+        <moqui.basic.Enumeration description="Internal Content" enumId="PcntInternal" enumTypeId="PartyContentType"/>
+        <moqui.basic.Enumeration description="User Defined Content" enumId="PcntUserDefined" enumTypeId="PartyContentType"/>
+        <moqui.basic.Enumeration description="Primary Image" enumId="PcntPrimaryImage" enumTypeId="PartyContentType"/>
+        <moqui.basic.Enumeration description="Logo Image" enumId="PcntLogoImage" enumTypeId="PartyContentType"/>
+        <moqui.basic.Enumeration description="Face Image" enumId="PcntFaceImage" enumTypeId="PartyContentType"/>
+        <moqui.basic.Enumeration description="Vendor Shipping Info" enumId="PcntVendorShipping" enumTypeId="PartyContentType"/>
+        <moqui.basic.Enumeration description="Invoice Message - When From Party" enumId="PcntInvoiceMessageFrom" enumTypeId="PartyContentType"/>
+        <moqui.basic.Enumeration description="Invoice Message - When To Party" enumId="PcntInvoiceMessageTo" enumTypeId="PartyContentType"/>
+        <moqui.basic.Enumeration description="Payment Signature Primary" enumId="PcntPaymentSignaturePrimary" enumTypeId="PartyContentType"/>
+        <moqui.basic.Enumeration description="Payment Signature Secondary" enumId="PcntPaymentSignatureSecondary" enumTypeId="PartyContentType"/>
+        <moqui.basic.Enumeration description="Identity Document" enumId="PcntIdentityDocument" enumTypeId="PartyContentType"/>
+        <moqui.basic.Enumeration description="Employment Authorization Document" enumId="PcntEmplAuthzDocument" enumTypeId="PartyContentType"/>
+        <moqui.basic.Enumeration description="Bio" enumId="PcntBio" enumTypeId="PartyContentType"/>
+    </seed-data>
+    <field name="lastUpdatedStamp" type="date-time"/>
+
+</entity>

@@ -1,0 +1,58 @@
+<!--Transition Screen Location component://tools/screen/Tools/Service/ServiceLoadRunner.xml Transition Name getRunnerInfo--><transition name="getRunnerInfo"><actions><!--always-actions at component://webroot/screen/webroot.xml--><set field="html_scripts" from="new LinkedHashSet()"/><set field="footer_scripts" from="new LinkedHashSet()"/><set field="html_stylesheets" from="new LinkedHashSet()"/><!--transition actions--><script><![CDATA[import org.moqui.context.ExecutionContext
+            ExecutionContext ec = context.ec
+
+            def loadRunner = ec.service.getLoadRunner()
+            def serviceInfos = loadRunner.serviceInfos
+            def serviceInfoList = []
+            for (int i = 0; i < serviceInfos.size(); i++) {
+                def serviceInfo = serviceInfos.get(i)
+                def runsPerSecAvg = serviceInfo.totalTime ? serviceInfo.runCount / (serviceInfo.totalTime/1000) : 0
+                def timeSinceBegin = serviceInfo.lastRunTime - serviceInfo.beginTime
+                def runsPerSecTime = timeSinceBegin ? serviceInfo.runCount / (timeSinceBegin/1000) : 0
+
+                def timeBinList = serviceInfo.timeBinList?.collect({
+                    def findCountTotal = it.artifactTypeStats.entityFindOneCount + it.artifactTypeStats.entityFindListCount
+                            + it.artifactTypeStats.entityFindIteratorCount + it.artifactTypeStats.entityFindCountCount
+                    def findTimeTotal = it.artifactTypeStats.entityFindOneTime + it.artifactTypeStats.entityFindListTime
+                            + it.artifactTypeStats.entityFindIteratorTime + it.artifactTypeStats.entityFindCountTime
+                    def cudCountTotal = it.artifactTypeStats.entityCreateCount + it.artifactTypeStats.entityUpdateCount
+                            + it.artifactTypeStats.entityDeleteCount
+                    def cudTimeTotal = it.artifactTypeStats.entityCreateTime + it.artifactTypeStats.entityUpdateTime
+                            + it.artifactTypeStats.entityDeleteTime
+                    return [ runCount:it.runCount, totalTime:it.totalTime,
+                            timeAverage:(it.runCount ? it.totalTime / it.runCount : 0),
+                            runsPerSecAvg:(it.totalTime ? it.runCount / (it.totalTime/1000) : 0),
+                            entityFindsPerSec:(findTimeTotal ? findCountTotal / (findTimeTotal/1000000000) : 0),
+                            entityWritePerSec:(cudTimeTotal ? cudCountTotal / (cudTimeTotal/1000000000) : 0) ]
+                })
+                // remove the last time bin, is current and data can be weird until done
+                if (timeBinList) timeBinList.removeLast()
+
+                serviceInfoList.add([serviceName:serviceInfo.serviceName, parametersExpr:serviceInfo.parametersExpr,
+                        targetThreads:serviceInfo.targetThreads, currentThreads:serviceInfo.currentThreads.get(),
+                        runDelayMs:serviceInfo.runDelayMs, rampDelayMs:serviceInfo.rampDelayMs,
+                        timeBinLength:serviceInfo.timeBinLength, timeBinsKeep:serviceInfo.timeBinsKeep,
+                        runCount:serviceInfo.runCount, errorCount:serviceInfo.errorCount,
+                        lastResult:serviceInfo.lastResult, beginTime:serviceInfo.beginTime,
+                        lastRunTime:serviceInfo.lastRunTime, lastRunTimeStr:(new Timestamp(serviceInfo.lastRunTime).toString()),
+                        totalTime:serviceInfo.totalTime, totalSquaredTime:serviceInfo.totalSquaredTime,
+                        minTime:serviceInfo.minTime, maxTime:serviceInfo.maxTime,
+                        timeAverage:(serviceInfo.runCount ? serviceInfo.totalTime / serviceInfo.runCount : 0),
+                        timeStdDev:(serviceInfo.totalSquaredTime && serviceInfo.runCount > 1 ?
+                            Math.sqrt((serviceInfo.totalSquaredTime - ((serviceInfo.totalTime*serviceInfo.totalTime) / serviceInfo.runCount)).abs() / (serviceInfo.runCount - 1)) : null),
+                        runsPerSecAvg:runsPerSecAvg, runsPerSecTime:runsPerSecTime,
+                        busyPercent:(runsPerSecAvg ? 100*runsPerSecTime/runsPerSecAvg : 0),
+                        typeStats:objectToMap(serviceInfo.artifactTypeStats), timeBinList:timeBinList
+                ])
+            }
+
+            def executorInfo = [execIndex:loadRunner.execIndex.get(), totalThreads:loadRunner.scheduledExecutor?.getQueue()?.size(),
+                    activeThreads:loadRunner.scheduledExecutor?.getActiveCount(),
+                    executorExists:loadRunner.scheduledExecutor as boolean,
+                    running:loadRunner.scheduledExecutor && !loadRunner.scheduledExecutor.shutdown
+                            && !loadRunner.scheduledExecutor.terminated && !loadRunner.scheduledExecutor.terminating,
+                    shutdown:loadRunner.scheduledExecutor?.shutdown, terminated:loadRunner.scheduledExecutor?.terminated,
+                    terminating:loadRunner.scheduledExecutor?.terminating]
+
+            Map<String, Object> runnerInfo = [executorInfo:executorInfo, serviceInfos:serviceInfoList] as Map<String, Object>
+            ec.web.sendJsonResponse(runnerInfo)]]></script></actions></transition>

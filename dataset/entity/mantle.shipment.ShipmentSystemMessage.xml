@@ -1,0 +1,11 @@
+
+<!-- Entity Name: mantle.shipment.ShipmentSystemMessage sql table: SHIPMENT_SYSTEM_MESSAGE --><entity entity-name="ShipmentSystemMessage" package="mantle.shipment" cache="never">
+    <field name="shipmentId" type="id" is-pk="true"/>
+    <field name="systemMessageId" type="id" is-pk="true"/>
+    <field name="externalId" type="text-short"/>
+    <field name="originId" type="text-short"/>
+    <relationship type="one" related="mantle.shipment.Shipment"/>
+    <relationship type="one" related="moqui.service.message.SystemMessage"/>
+    <field name="lastUpdatedStamp" type="date-time"/>
+
+</entity>

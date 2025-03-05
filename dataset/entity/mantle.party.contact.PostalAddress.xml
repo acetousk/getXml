@@ -1,0 +1,83 @@
+
+<!-- Entity Name: mantle.party.contact.PostalAddress sql table: POSTAL_ADDRESS --><entity entity-name="PostalAddress" package="mantle.party.contact" use="nontransactional" cache="never" has-dependents="true">
+    <field name="contactMechId" type="id" is-pk="true"/>
+    <field name="toName" type="text-medium"/>
+    <field name="attnName" type="text-medium"/>
+    <field name="address1" type="text-medium"/>
+    <field name="address2" type="text-medium"/>
+    <field name="unitNumber" type="text-medium"/>
+    <field name="directions" type="text-long"/>
+    <field name="city" type="text-medium"/>
+    <field name="cityGeoId" type="id"/>
+    <field name="schoolDistrictGeoId" type="id"/>
+    <field name="countyGeoId" type="id"/>
+    <field name="stateProvinceGeoId" type="id"/>
+    <field name="countryGeoId" type="id"/>
+    <field name="postalCode" type="text-short"/>
+    <field name="postalCodeExt" type="text-short"/>
+    <field name="postalCodeGeoId" type="id"/>
+    <field name="geoPointId" type="id"/>
+    <field name="commercial" type="text-indicator"/>
+    <field name="accessCode" type="text-short"/>
+    <field name="telecomContactMechId" type="id"/>
+    <field name="emailContactMechId" type="id"/>
+    <field name="shipGatewayAddressId" type="text-medium"/>
+    <relationship type="one" related="mantle.party.contact.ContactMech"/>
+    <relationship type="one" title="City" related="moqui.basic.Geo" short-alias="cityGeo">
+        <key-map field-name="cityGeoId"/></relationship>
+    <relationship type="one" title="SchoolDistrict" related="moqui.basic.Geo">
+        <key-map field-name="schoolDistrictGeoId"/></relationship>
+    <relationship type="one" title="County" related="moqui.basic.Geo" short-alias="countyGeo">
+        <key-map field-name="countyGeoId"/></relationship>
+    <relationship type="one" title="StateProvince" related="moqui.basic.Geo" short-alias="stateProvinceGeo">
+        <key-map field-name="stateProvinceGeoId"/></relationship>
+    <relationship type="one" title="Country" related="moqui.basic.Geo" short-alias="countryGeo">
+        <key-map field-name="countryGeoId"/></relationship>
+    <relationship type="one" title="PostalCode" related="moqui.basic.Geo" short-alias="postalCodeGeo">
+        <key-map field-name="postalCodeGeoId"/></relationship>
+    <relationship type="one" related="GeoPoint" short-alias="geoPoint"/>
+    <relationship type="one-nofk" title="Telecom" related="mantle.party.contact.ContactMech" short-alias="telecomContactMech" mutable="true">
+        <key-map field-name="telecomContactMechId"/></relationship>
+    <relationship type="one" title="Telecom" related="mantle.party.contact.TelecomNumber" mutable="true">
+        <key-map field-name="telecomContactMechId"/></relationship>
+    <relationship type="one" title="Email" related="mantle.party.contact.ContactMech" short-alias="emailContactMech" mutable="true">
+        <key-map field-name="emailContactMechId"/></relationship>
+    <index name="CITY_IDX">
+        <index-field name="city"/></index>
+    <index name="POSTAL_CODE_IDX">
+        <index-field name="postalCode"/></index>
+    <field name="lastUpdatedStamp" type="date-time"/>
+    <relationship related="mantle.account.billing.BillingAccount" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="contactMechId" related="postalContactMechId"/></relationship>
+    <relationship related="mantle.account.invoice.InvoiceContactMech" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="contactMechId" related="contactMechId"/></relationship>
+    <relationship related="mantle.account.method.PaymentMethod" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="contactMechId" related="postalContactMechId"/></relationship>
+    <relationship related="mantle.facility.FacilityContactMech" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="contactMechId" related="contactMechId"/></relationship>
+    <relationship related="mantle.humanres.employment.Employee" type="many" is-auto-reverse="true" mutable="true" title="TaxHome">
+        <key-map field-name="contactMechId" related="taxHomeContactMechId"/></relationship>
+    <relationship related="mantle.humanres.employment.Employment" type="many" is-auto-reverse="true" mutable="true" title="TaxWork">
+        <key-map field-name="contactMechId" related="taxWorkContactMechId"/></relationship>
+    <relationship related="mantle.order.OrderPart" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="contactMechId" related="postalContactMechId"/></relationship>
+    <relationship related="mantle.order.OrderPartContactMech" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="contactMechId" related="contactMechId"/></relationship>
+    <relationship related="mantle.order.return.ReturnHeader" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="contactMechId" related="postalContactMechId"/></relationship>
+    <relationship related="mantle.party.agreement.AgreementContactMech" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="contactMechId" related="contactMechId"/></relationship>
+    <relationship related="mantle.party.contact.PartyContactMech" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="contactMechId" related="contactMechId"/></relationship>
+    <relationship related="mantle.product.store.ProductStore" type="many" is-auto-reverse="true" mutable="true" title="Return">
+        <key-map field-name="contactMechId" related="returnPostalContactMechId"/></relationship>
+    <relationship related="mantle.shipment.ShipmentRouteSegment" type="many" is-auto-reverse="true" mutable="true" title="Origin">
+        <key-map field-name="contactMechId" related="originPostalContactMechId"/></relationship>
+    <relationship related="mantle.shipment.ShipmentRouteSegment" type="many" is-auto-reverse="true" mutable="true" title="Return">
+        <key-map field-name="contactMechId" related="returnPostalContactMechId"/></relationship>
+    <relationship related="mantle.shipment.ShipmentRouteSegment" type="many" is-auto-reverse="true" mutable="true" title="Destination">
+        <key-map field-name="contactMechId" related="destPostalContactMechId"/></relationship>
+    <relationship related="mantle.work.effort.WorkEffortContactMech" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="contactMechId" related="contactMechId"/></relationship>
+
+</entity>

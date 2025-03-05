@@ -1,0 +1,1 @@
+<!-- Screen Location component://tools/screen/System/Security/UserAccount.xml --><screen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://moqui.org/xsd/xml-screen-3.xsd" default-menu-title="Users" default-menu-index="1"><subscreens default-item="UserAccountList"/><widgets><subscreens-active/></widgets></screen>

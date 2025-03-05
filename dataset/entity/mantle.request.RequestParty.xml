@@ -1,0 +1,25 @@
+
+<!-- Entity Name: mantle.request.RequestParty sql table: REQUEST_PARTY --><entity entity-name="RequestParty" package="mantle.request" cache="never">
+    <field name="requestId" type="id" is-pk="true"/>
+    <field name="partyId" type="id" is-pk="true"/>
+    <field name="roleTypeId" type="id" is-pk="true"/>
+    <field name="fromDate" type="date-time" is-pk="true"/>
+    <field name="thruDate" type="date-time"/>
+    <field name="receiveNotifications" type="text-indicator"/>
+    <relationship type="one" related="mantle.request.Request" short-alias="request"/>
+    <relationship type="one" related="mantle.party.Party" short-alias="party"/>
+    <relationship type="one" related="mantle.party.RoleType" short-alias="role"/>
+    <relationship type="one-nofk" related="mantle.party.Person" short-alias="person"/>
+    <relationship type="one-nofk" related="mantle.party.Organization" short-alias="organization"/>
+    <seed-data>
+        <moqui.basic.Enumeration description="Request" enumId="RgpRequest" enumTypeId="RoleGroup"/>
+        <mantle.party.RoleGroupMember roleGroupEnumId="RgpRequest" roleTypeId="Assignee"/>
+        <mantle.party.RoleGroupMember roleGroupEnumId="RgpRequest" roleTypeId="Manager"/>
+        <mantle.party.RoleGroupMember roleGroupEnumId="RgpRequest" roleTypeId="Reporter"/>
+        <mantle.party.RoleGroupMember roleGroupEnumId="RgpRequest" roleTypeId="Watcher"/>
+        <mantle.party.RoleGroupMember roleGroupEnumId="RgpRequest" roleTypeId="Customer"/>
+        <mantle.party.RoleGroupMember roleGroupEnumId="RgpRequest" roleTypeId="CustomerBillTo"/>
+    </seed-data>
+    <field name="lastUpdatedStamp" type="date-time"/>
+
+</entity>

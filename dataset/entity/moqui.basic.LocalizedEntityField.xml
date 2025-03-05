@@ -1,0 +1,10 @@
+
+<!-- Entity Name: moqui.basic.LocalizedEntityField sql table: LOCALIZED_ENTITY_FIELD --><entity entity-name="LocalizedEntityField" package="moqui.basic" use="configuration" authorize-skip="view" cache="true">
+    <field name="entityName" type="text-medium" is-pk="true"/>
+    <field name="fieldName" type="text-medium" is-pk="true"/>
+    <field name="pkValue" type="text-medium" is-pk="true"/>
+    <field name="locale" type="text-short" is-pk="true"/>
+    <field name="localized" type="text-long"/>
+    <field name="lastUpdatedStamp" type="date-time"/>
+
+</entity>

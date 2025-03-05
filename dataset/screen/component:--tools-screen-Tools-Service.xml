@@ -1,0 +1,1 @@
+<!-- Screen Location component://tools/screen/Tools/Service.xml --><screen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://moqui.org/xsd/xml-screen-3.xsd" default-menu-title="Service" default-menu-index="6"><subscreens default-item="ServiceReference"/><widgets><subscreens-panel id="service-panel" type="popup"/></widgets></screen>

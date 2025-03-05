@@ -1,0 +1,76 @@
+
+<!-- Entity Name: mantle.product.maintenance.AssetMaintenance sql table: ASSET_MAINTENANCE --><entity entity-name="AssetMaintenance" package="mantle.product.maintenance" cache="never" has-dependents="true">
+    <field name="assetMaintenanceId" type="id" is-pk="true"/>
+    <field name="assetId" type="id"/>
+    <field name="statusId" type="id" enable-audit-log="true"/>
+    <field name="maintenanceDate" type="date-time"/>
+    <field name="maintenanceTypeEnumId" type="id"/>
+    <field name="productMaintenanceId" type="id">
+        <description><![CDATA[Optional, though should be filled in to determine upcoming maintenance for all scheduled
+                maintenance]]></description></field>
+    <field name="taskWorkEffortId" type="id"/>
+    <field name="intervalQuantity" type="number-decimal"/>
+    <field name="intervalUomId" type="id">
+        <description><![CDATA[UOM for intervalQuantity; ignored if intervalProductMeterId is used]]></description></field>
+    <field name="intervalProductMeterId" type="id"/>
+    <field name="purchaseOrderId" type="id"/>
+    <field name="userId" type="id" default="ec.user.userId"/>
+    <field name="comments" type="text-long"/>
+    <relationship type="one" related="mantle.product.asset.Asset"/>
+    <relationship type="one" title="AssetMaintenance" related="moqui.basic.StatusItem"/>
+    <relationship type="one" title="MaintenanceType" related="moqui.basic.Enumeration">
+        <key-map field-name="maintenanceTypeEnumId"/></relationship>
+    <relationship type="one" related="mantle.product.maintenance.ProductMaintenance"/>
+    <relationship type="one" title="Task" related="mantle.work.effort.WorkEffort">
+        <key-map field-name="taskWorkEffortId"/></relationship>
+    <relationship type="one" title="Interval" related="moqui.basic.Uom">
+        <key-map field-name="intervalUomId"/></relationship>
+    <relationship type="one" title="Interval" related="mantle.product.maintenance.ProductMeter">
+        <key-map field-name="intervalProductMeterId"/></relationship>
+    <relationship type="one" title="Purchase" related="mantle.order.OrderHeader">
+        <key-map field-name="purchaseOrderId"/></relationship>
+    <relationship type="one" related="moqui.security.UserAccount"/>
+    <seed-data>
+        <moqui.basic.StatusType description="Asset Maintenance Status" statusTypeId="AssetMaintenance"/>
+        <moqui.basic.StatusItem description="Created" sequenceNum="1" statusId="AsMntCreated" statusTypeId="AssetMaintenance"/>
+        <moqui.basic.StatusItem description="Scheduled" sequenceNum="3" statusId="AsMntScheduled" statusTypeId="AssetMaintenance"/>
+        <moqui.basic.StatusItem description="In Process" sequenceNum="5" statusId="AsMntInProcess" statusTypeId="AssetMaintenance"/>
+        <moqui.basic.StatusItem description="Completed" sequenceNum="10" statusId="AsMntCompleted" statusTypeId="AssetMaintenance"/>
+        <moqui.basic.StatusItem description="Cancelled" sequenceNum="99" statusId="AsMntCancelled" statusTypeId="AssetMaintenance"/>
+        <moqui.basic.StatusFlowTransition statusFlowId="Default" statusId="AsMntCreated" toStatusId="AsMntScheduled" transitionName="Scheduled"/>
+        <moqui.basic.StatusFlowTransition statusFlowId="Default" statusId="AsMntCreated" toStatusId="AsMntInProcess" transitionName="In-Process"/>
+        <moqui.basic.StatusFlowTransition statusFlowId="Default" statusId="AsMntCreated" toStatusId="AsMntCancelled" transitionName="Cancel"/>
+        <moqui.basic.StatusFlowTransition statusFlowId="Default" statusId="AsMntScheduled" toStatusId="AsMntInProcess" transitionName="In-Process"/>
+        <moqui.basic.StatusFlowTransition statusFlowId="Default" statusId="AsMntScheduled" toStatusId="AsMntCancelled" transitionName="Cancel"/>
+        <moqui.basic.StatusFlowTransition statusFlowId="Default" statusId="AsMntInProcess" toStatusId="AsMntCompleted" transitionName="Complete"/>
+        <moqui.basic.EnumerationType description="Maintenance Type" enumTypeId="MaintenanceType"/>
+        <moqui.basic.Enumeration description="Vehicle Maintenance" enumId="MntTpVehicle" enumTypeId="MaintenanceType"/>
+        <moqui.basic.Enumeration description="Oil Change" enumId="MntTpOilChange" parentEnumId="MntTpVehicle" enumTypeId="MaintenanceType"/>
+        <moqui.basic.Enumeration description="Belt Replacement" enumId="MntTpBeltReplace" parentEnumId="MntTpVehicle" enumTypeId="MaintenanceType"/>
+        <moqui.basic.Enumeration description="Re-Fuel" enumId="MntTpRefuel" parentEnumId="MntTpVehicle" enumTypeId="MaintenanceType"/>
+        <moqui.basic.Enumeration description="Tune Up" enumId="MntTpTuneUp" parentEnumId="MntTpVehicle" enumTypeId="MaintenanceType"/>
+        <moqui.basic.Enumeration description="Battery Replace" enumId="MntTpBatteryReplace" parentEnumId="MntTpVehicle" enumTypeId="MaintenanceType"/>
+        <moqui.basic.Enumeration description="Battery Check" enumId="MntTpBatteryCheck" parentEnumId="MntTpVehicle" enumTypeId="MaintenanceType"/>
+        <moqui.basic.Enumeration description="Lubricate Chassis" enumId="MntTpLubeChassis" parentEnumId="MntTpVehicle" enumTypeId="MaintenanceType"/>
+        <moqui.basic.Enumeration description="Tires Rotate" enumId="MntTpTiresRotate" parentEnumId="MntTpVehicle" enumTypeId="MaintenanceType"/>
+        <moqui.basic.Enumeration description="Tire Replacement" enumId="MntTpTireReplacement" parentEnumId="MntTpVehicle" enumTypeId="MaintenanceType"/>
+        <moqui.basic.Enumeration description="HVAC Maintenance" enumId="MntTpHvac" enumTypeId="MaintenanceType"/>
+        <moqui.basic.Enumeration description="Air Filter Replace" enumId="MntTpAirFilterRepl" parentEnumId="MntTpHvac" enumTypeId="MaintenanceType"/>
+        <moqui.basic.Enumeration description="Refrigerant Check/Recharge" enumId="MntTpRefrChkChrg" parentEnumId="MntTpHvac" enumTypeId="MaintenanceType"/>
+        <moqui.basic.Enumeration description="Cleaning" enumId="MntTpCleaning" enumTypeId="MaintenanceType"/>
+    </seed-data>
+    <field name="lastUpdatedStamp" type="date-time"/>
+    <relationship related="mantle.product.asset.AssetDetail" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="assetMaintenanceId" related="assetMaintenanceId"/></relationship>
+    <relationship related="mantle.product.issuance.AssetIssuance" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="assetMaintenanceId" related="assetMaintenanceId"/></relationship>
+    <relationship related="mantle.product.maintenance.AssetMaintenanceContent" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="assetMaintenanceId" related="assetMaintenanceId"/></relationship>
+    <relationship related="mantle.product.maintenance.AssetMaintenanceOrderItem" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="assetMaintenanceId" related="assetMaintenanceId"/></relationship>
+    <relationship related="mantle.product.maintenance.AssetMeter" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="assetMaintenanceId" related="assetMaintenanceId"/></relationship>
+    <relationship related="mantle.work.measurement.Measurement" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="assetMaintenanceId" related="assetMaintenanceId"/></relationship>
+
+</entity>

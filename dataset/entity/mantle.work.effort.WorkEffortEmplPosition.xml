@@ -1,0 +1,9 @@
+
+<!-- Entity Name: mantle.work.effort.WorkEffortEmplPosition sql table: WORK_EFFORT_EMPL_POSITION --><entity entity-name="WorkEffortEmplPosition" package="mantle.work.effort" cache="never">
+    <field name="workEffortId" type="id" is-pk="true"/>
+    <field name="emplPositionId" type="id" is-pk="true"/>
+    <relationship type="one" related="mantle.work.effort.WorkEffort" short-alias="workEffort"/>
+    <relationship type="one" related="mantle.humanres.position.EmplPosition" short-alias="position"/>
+    <field name="lastUpdatedStamp" type="date-time"/>
+
+</entity>

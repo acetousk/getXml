@@ -1,0 +1,13 @@
+
+<!-- Entity Name: mantle.work.effort.WorkEffortSkillStandard sql table: WORK_EFFORT_SKILL_STANDARD --><entity entity-name="WorkEffortSkillStandard" package="mantle.work.effort" cache="never">
+    <field name="workEffortId" type="id" is-pk="true"/>
+    <field name="skillTypeEnumId" type="id" is-pk="true"/>
+    <field name="estimatedNumPeople" type="number-decimal"/>
+    <field name="estimatedDuration" type="number-decimal"/>
+    <field name="estimatedCost" type="currency-amount"/>
+    <relationship type="one" related="mantle.work.effort.WorkEffort"/>
+    <relationship type="one" title="SkillType" related="moqui.basic.Enumeration">
+        <key-map field-name="skillTypeEnumId"/></relationship>
+    <field name="lastUpdatedStamp" type="date-time"/>
+
+</entity>

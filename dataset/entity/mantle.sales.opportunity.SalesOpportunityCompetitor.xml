@@ -1,0 +1,11 @@
+
+<!-- Entity Name: mantle.sales.opportunity.SalesOpportunityCompetitor sql table: SALES_OPPORTUNITY_COMPETITOR --><entity entity-name="SalesOpportunityCompetitor" package="mantle.sales.opportunity">
+    <field name="salesOpportunityId" type="id" is-pk="true"/>
+    <field name="competitorPartyId" type="id" is-pk="true"/>
+    <field name="positionEnumId" type="id"/>
+    <field name="strengths" type="text-long"/>
+    <field name="weaknesses" type="text-long"/>
+    <relationship type="one" related="mantle.sales.opportunity.SalesOpportunity"/>
+    <field name="lastUpdatedStamp" type="date-time"/>
+
+</entity>

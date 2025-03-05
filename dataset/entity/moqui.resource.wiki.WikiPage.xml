@@ -1,0 +1,37 @@
+
+<!-- Entity Name: moqui.resource.wiki.WikiPage sql table: WIKI_PAGE --><entity entity-name="WikiPage" package="moqui.resource.wiki" use="nontransactional" has-dependents="true">
+    <field name="wikiPageId" type="id" is-pk="true"/>
+    <field name="wikiSpaceId" type="id"/>
+    <field name="pagePath" type="text-medium"/>
+    <field name="parentWikiPageId" type="id"/>
+    <field name="sequenceNum" type="number-integer"/>
+    <field name="createdByUserId" type="id"/>
+    <field name="publishedVersionName" type="text-short"/>
+    <field name="restrictView" type="text-indicator"/>
+    <field name="restrictUpdate" type="text-indicator"/>
+    <relationship type="one" related="moqui.resource.wiki.WikiSpace" short-alias="space"/>
+    <relationship type="one-nofk" related="moqui.security.UserAccount" short-alias="user">
+        <key-map field-name="createdByUserId" related="userId"/></relationship>
+    <relationship type="many" related="moqui.resource.wiki.WikiPageHistory" short-alias="histories">
+        <key-map field-name="wikiPageId"/></relationship>
+    <relationship type="many" related="moqui.resource.wiki.WikiPageCategoryMember" short-alias="categories">
+        <key-map field-name="wikiPageId"/></relationship>
+    <index name="WIKIPAGE_SPCPTH" unique="true">
+        <index-field name="wikiSpaceId"/>
+        <index-field name="pagePath"/>
+    </index>
+    <field name="lastUpdatedStamp" type="date-time"/>
+    <relationship related="mantle.party.communication.WikiPageCommunicationEvent" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="wikiPageId" related="wikiPageId"/></relationship>
+    <relationship related="mantle.request.WikiPageRequest" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="wikiPageId" related="wikiPageId"/></relationship>
+    <relationship related="mantle.work.effort.WikiPageWorkEffort" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="wikiPageId" related="wikiPageId"/></relationship>
+    <relationship related="moqui.resource.wiki.WikiBlog" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="wikiPageId" related="wikiPageId"/></relationship>
+    <relationship related="moqui.resource.wiki.WikiPageAlias" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="wikiPageId" related="wikiPageId"/></relationship>
+    <relationship related="moqui.resource.wiki.WikiPageUser" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="wikiPageId" related="wikiPageId"/></relationship>
+
+</entity>

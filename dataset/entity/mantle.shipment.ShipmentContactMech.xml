@@ -1,0 +1,11 @@
+
+<!-- Entity Name: mantle.shipment.ShipmentContactMech sql table: SHIPMENT_CONTACT_MECH --><entity entity-name="ShipmentContactMech" package="mantle.shipment" cache="never">
+    <field name="shipmentId" type="id" is-pk="true"/>
+    <field name="contactMechPurposeId" type="id" is-pk="true"/>
+    <field name="contactMechId" type="id"/>
+    <relationship type="one" related="mantle.shipment.Shipment"/>
+    <relationship type="one" related="mantle.party.contact.ContactMechPurpose"/>
+    <relationship type="one" related="mantle.party.contact.ContactMech"/>
+    <field name="lastUpdatedStamp" type="date-time"/>
+
+</entity>

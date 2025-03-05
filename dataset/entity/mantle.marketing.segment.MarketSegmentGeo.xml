@@ -1,0 +1,10 @@
+
+<!-- Entity Name: mantle.marketing.segment.MarketSegmentGeo sql table: MARKET_SEGMENT_GEO --><entity entity-name="MarketSegmentGeo" package="mantle.marketing.segment">
+    <description><![CDATA[Define the segment by geographic area]]></description>
+    <field name="marketSegmentId" type="id" is-pk="true"/>
+    <field name="geoId" type="id" is-pk="true"/>
+    <relationship type="one" related="mantle.marketing.segment.MarketSegment"/>
+    <relationship type="one" related="moqui.basic.Geo"/>
+    <field name="lastUpdatedStamp" type="date-time"/>
+
+</entity>

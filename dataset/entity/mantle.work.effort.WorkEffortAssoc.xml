@@ -1,0 +1,30 @@
+
+<!-- Entity Name: mantle.work.effort.WorkEffortAssoc sql table: WORK_EFFORT_ASSOC --><entity entity-name="WorkEffortAssoc" package="mantle.work.effort" cache="never">
+    <field name="workEffortId" type="id" is-pk="true"/>
+    <field name="toWorkEffortId" type="id" is-pk="true"/>
+    <field name="workEffortAssocTypeEnumId" type="id" is-pk="true"/>
+    <field name="fromDate" type="date-time" is-pk="true"/>
+    <field name="thruDate" type="date-time"/>
+    <field name="sequenceNum" type="number-integer"/>
+    <relationship type="one" related="mantle.work.effort.WorkEffort" short-alias="workEffort"/>
+    <relationship type="one" title="To" related="mantle.work.effort.WorkEffort" short-alias="toWorkEffort">
+        <key-map field-name="toWorkEffortId"/></relationship>
+    <relationship type="one" title="WorkEffortAssocType" related="moqui.basic.Enumeration" short-alias="type">
+        <key-map field-name="workEffortAssocTypeEnumId"/></relationship>
+    <seed-data>
+        <moqui.basic.EnumerationType description="Work Effort Association Type" enumTypeId="WorkEffortAssocType"/>
+        <moqui.basic.Enumeration description="Relates To" enumId="WeatRelatesTo" enumTypeId="WorkEffortAssocType"/>
+        <moqui.basic.Enumeration description="Depends On (Blocked By)" enumId="WeatDependsOn" parentEnumId="WeatRelatesTo" enumTypeId="WorkEffortAssocType"/>
+        <moqui.basic.Enumeration description="Duplicates" enumId="WeatDuplicates" parentEnumId="WeatRelatesTo" enumTypeId="WorkEffortAssocType"/>
+        <moqui.basic.Enumeration description="Based On" enumId="WeatBasedOn" parentEnumId="WeatRelatesTo" enumTypeId="WorkEffortAssocType"/>
+        <moqui.basic.Enumeration description="Clones" enumId="WeatClone" parentEnumId="WeatRelatesTo" enumTypeId="WorkEffortAssocType"/>
+        <moqui.basic.Enumeration description="Caused By" enumId="WeatCausedBy" parentEnumId="WeatRelatesTo" enumTypeId="WorkEffortAssocType"/>
+        <moqui.basic.Enumeration description="Independent Of (Concurrent)" enumId="WeatIndependentOf" parentEnumId="WeatRelatesTo" enumTypeId="WorkEffortAssocType"/>
+        <moqui.basic.Enumeration description="Routing Component" enumId="WeatRoutingComp" enumTypeId="WorkEffortAssocType"/>
+        <moqui.basic.Enumeration description="Milestone" enumId="WeatMilestone" enumTypeId="WorkEffortAssocType"/>
+        <moqui.basic.Enumeration description="Release" enumId="WeatRelease" enumTypeId="WorkEffortAssocType"/>
+        <moqui.basic.Enumeration description="Component" enumId="WeatComponent" enumTypeId="WorkEffortAssocType"/>
+    </seed-data>
+    <field name="lastUpdatedStamp" type="date-time"/>
+
+</entity>

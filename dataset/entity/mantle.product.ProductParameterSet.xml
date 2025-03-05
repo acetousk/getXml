@@ -1,0 +1,17 @@
+
+<!-- Entity Name: mantle.product.ProductParameterSet sql table: PRODUCT_PARAMETER_SET --><entity entity-name="ProductParameterSet" package="mantle.product" has-dependents="true">
+    <description><![CDATA[Used to group a set of parameter values for reference by single ID used on OrderItem, etc]]></description>
+    <field name="productParameterSetId" type="id" is-pk="true"/>
+    <field name="comments" type="text-medium"/>
+    <field name="productId" type="id"/>
+    <field name="customerPartyId" type="id"/>
+    <relationship type="one" related="mantle.product.Product"/>
+    <relationship type="one" title="Customer" related="mantle.party.Party" short-alias="customerParty">
+        <key-map field-name="customerPartyId"/></relationship>
+    <field name="lastUpdatedStamp" type="date-time"/>
+    <relationship related="mantle.order.OrderItem" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="productParameterSetId" related="productParameterSetId"/></relationship>
+    <relationship related="mantle.product.ProductParameterValue" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="productParameterSetId" related="productParameterSetId"/></relationship>
+
+</entity>

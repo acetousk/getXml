@@ -1,0 +1,9 @@
+
+<!-- Entity Name: mantle.work.effort.WorkEffortInvoice sql table: WORK_EFFORT_INVOICE --><entity entity-name="WorkEffortInvoice" package="mantle.work.effort" cache="never">
+    <field name="invoiceId" type="id" is-pk="true"/>
+    <field name="workEffortId" type="id" is-pk="true"/>
+    <relationship type="one" related="mantle.account.invoice.Invoice"/>
+    <relationship type="one" related="mantle.work.effort.WorkEffort"/>
+    <field name="lastUpdatedStamp" type="date-time"/>
+
+</entity>

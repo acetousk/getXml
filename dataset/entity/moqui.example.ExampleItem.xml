@@ -1,0 +1,14 @@
+
+<!-- Entity Name: moqui.example.ExampleItem sql table: EXAMPLE_ITEM --><entity entity-name="ExampleItem" package="moqui.example" short-alias="exampleItems">
+    <field name="exampleId" type="id" is-pk="true"/>
+    <field name="exampleItemSeqId" type="id" is-pk="true">
+        <description><![CDATA[secondary sequenced ID]]></description></field>
+    <field name="description" type="text-medium"/>
+    <field name="amount" type="number-float"/>
+    <field name="amountUomId" type="id"/>
+    <relationship type="one" title="Amount" related="moqui.basic.Uom">
+        <key-map field-name="amountUomId"/></relationship>
+    <relationship type="one" related="moqui.example.Example"/>
+    <field name="lastUpdatedStamp" type="date-time"/>
+
+</entity>

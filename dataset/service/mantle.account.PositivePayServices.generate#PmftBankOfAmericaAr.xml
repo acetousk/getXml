@@ -1,0 +1,98 @@
+<!--Service Location mantle.account.PositivePayServices.generate#PmftBankOfAmericaAr--><service verb="generate" noun="PmftBankOfAmericaAr"><in-parameters><parameter name="paymentMethodFileId" required="true"/><parameter name="bankAccount" type="Map" required="true"/><parameter name="paymentList" type="List" required="true"/><parameter name="thruDate" type="Timestamp" required="true"/><parameter name="fileDate" type="Timestamp" required="true"/><parameter name="entryCount" type="Long" required="true"/><parameter name="debitAmountTotal" type="BigDecimal" required="true"/><parameter name="debitAmountTotalWithCancels" type="BigDecimal" required="true"/><parameter name="checkNumberSum" type="Long" required="true"/></in-parameters><out-parameters><parameter name="fileText"/></out-parameters><actions><if condition="!bankAccount.posPayBankNumber || bankAccount.posPayBankNumber.length() != 3"><return error="true" message="Pos. Pay Bank Number must be set and 3 characters long (for bank account [${bankAccount.paymentMethodId}])"/></if><script><![CDATA[import org.moqui.context.ExecutionContext
+                import org.moqui.entity.EntityValue
+                ExecutionContext ec = context.ec
+
+                // Handy output checking lines, paste below to line up output
+                // 0        10        20        30        40        50        60        70        80
+                // 123456789+123456789+123456789+123456789+123456789+123456789+123456789+123456789+
+
+                String accountNumber =  bankAccount.accountNumber
+                if (accountNumber.length() > 12) accountNumber = accountNumber.substring(accountNumber.length() - 12, accountNumber.length())
+
+                List<StringBuilder> lines = []
+
+                // Header
+                StringBuilder fileHeader = new StringBuilder(80)
+                // 01-03: Record Type Code = 'DRS'
+                fileHeader.append('DRS')
+                // 04-06: Bank Number, assigned by bank
+                fileHeader.append(bankAccount.posPayBankNumber)
+                // 07-18: Account Number (12 digits, left 0 padded)
+                fileHeader.append(accountNumber.padLeft(12, '0'))
+                // 19-26: Processing date (yyyyMMdd)
+                fileHeader.append(ec.l10n.format(fileDate, 'yyyyMMdd'))
+                // 27-27: Blank (1 space)
+                fileHeader.append(' ')
+                // 28-35: Certification cutoff date (yyyyMMdd)
+                fileHeader.append(ec.l10n.format(thruDate, 'yyyyMMdd'))
+                // 36-36: Final Input Indicator (Y for last data through cutoff date, N otherwise; always use N)
+                fileHeader.append('N')
+                // 37-80: Filler, 44 spaces
+                fileHeader.append(" ".padRight(44, ' '))
+                lines.add(fileHeader)
+
+                // Account number in detail lines is only 10 chars
+                if (accountNumber.length() > 10) accountNumber = accountNumber.substring(accountNumber.length() - 10, accountNumber.length())
+
+                for (Map payment in paymentList) {
+                    // Get amount String (10 chars, last 2 are cents)
+                    String amountStr = payment.getBigDecimal("amount").movePointRight(2).longValue() as String
+
+                    boolean isVoid = payment.statusId == 'PmntVoid'
+                    boolean isCancel = payment.statusId == 'PmntCancelled'
+
+                    String payeeName = ""
+                    EntityValue otherParty = payment.toPartyId ? ec.entity.find("mantle.party.PartyDetail").condition("partyId", payment.toPartyId).one() : null
+                    if (otherParty) {
+                        payeeName = otherParty.firstName ? otherParty.firstName + " " + otherParty.lastName : otherParty.organizationName
+                        if (payeeName.length() > 43) payeeName = payeeName.substring(0, 43)
+                    }
+
+                    // Detail Line
+                    StringBuilder detailLine = new StringBuilder(80)
+                    // 01-10: Check number (10 digits, left 0 padded)
+                    detailLine.append(payment.paymentRefNum.padLeft(10, '0'))
+                    // 11-20: Check amount (10 digits, last 2 are cents, left 0 padded); for voids enter all 0s
+                    detailLine.append((isVoid ? '0' : amountStr).padLeft(10, '0'))
+                    // 21-30: Account number (same as header, but 10 digits)
+                    detailLine.append(accountNumber.padLeft(10, '0'))
+                    // 31-36: Actual date of issue (MMddyy)
+                    detailLine.append(ec.l10n.format(payment.effectiveDate, 'MMddyy'))
+                    // 37-37: Blank for issue record, '-' for cancel
+                    detailLine.append((isCancel ? '-' : ' '))
+                    // 38-80: Payee information (43 chars; pad right with spaces)
+                    detailLine.append(payeeName.padRight(43, ' '))
+
+                    lines.add(detailLine)
+                }
+
+                // Get amount String (10 chars, last 2 are cents)
+                String debitAmountTotalWithCancelsStr = debitAmountTotalWithCancels.movePointRight(2).longValue() as String
+
+                // Trailer
+                StringBuilder fileTrailer = new StringBuilder(80)
+                // 01-04: Trailer Constant = '1EOF'
+                fileTrailer.append('1EOF')
+                // 05-05: Blank
+                fileTrailer.append(' ')
+                // 06-10: Number of detail records (5 numbers, left 0 pad)
+                fileTrailer.append((entryCount as String).padLeft(5, '0'))
+                // 11-30: Blanks (20)
+                fileTrailer.append(' '.padRight(20, ' '))
+                // 31-40: "Hash total" (simple sum) of all check numbers (10 numbers, left 0 pad)
+                fileTrailer.append((checkNumberSum as String).padLeft(10, '0'))
+                // 41-50: Sum of check amounts (issues and cancels; 10 numbers, last 2 are cents, left 0 padded)
+                fileTrailer.append(debitAmountTotalWithCancelsStr.padLeft(10, '0'))
+                // 51-80: Blanks (30)
+                fileTrailer.append(" ".padRight(30, ' '))
+
+                lines.add(fileTrailer)
+
+                // combine the lines
+                StringBuilder ftSb = new StringBuilder(81 * lines.size())
+                for (StringBuilder line in lines) {
+                    if (line.length() != 80) ec.message.addError(ec.resource.expand('Generated line does not have exactly 80 chars: ${line}',''))
+                    ftSb.append(line).append('\n')
+                }
+                // get the String value
+                fileText = ftSb.toString()]]></script></actions></service>

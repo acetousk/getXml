@@ -1,0 +1,14 @@
+
+<!-- Entity Name: moqui.screen.form.FormConfigUserType sql table: FORM_CONFIG_USER_TYPE --><entity entity-name="FormConfigUserType" package="moqui.screen.form" use="configuration">
+    <description><![CDATA[Structured to have a single FormConfig per form and user.]]></description>
+    <field name="formLocation" type="text-medium" is-pk="true"/>
+    <field name="userId" type="id" is-pk="true"/>
+    <field name="configTypeEnumId" type="id" is-pk="true"/>
+    <field name="formConfigId" type="id"/>
+    <relationship type="one-nofk" related="moqui.security.UserAccount" short-alias="userAccount"/>
+    <relationship type="one" title="FormConfigType" related="moqui.basic.Enumeration">
+        <key-map field-name="configTypeEnumId"/></relationship>
+    <relationship type="one" related="moqui.screen.form.FormConfig" short-alias="formConfig"/>
+    <field name="lastUpdatedStamp" type="date-time"/>
+
+</entity>

@@ -1,0 +1,3 @@
+<!--Service Location org.moqui.EntityServices.add#ManualDocumentData--><service verb="add" noun="ManualDocumentData"><in-parameters><parameter name="dataDocumentId" type="String" required="true"/><parameter name="document" type="Map"><description><![CDATA[For details see document parameter in receive#DataFeed.]]></description></parameter></in-parameters><out-parameters><parameter name="document" type="Map"><description><![CDATA[For details see document parameter in receive#DataFeed.]]></description></parameter></out-parameters>
+    null
+</service>

@@ -1,0 +1,10 @@
+
+<!-- Entity Name: moqui.entity.document.DataDocumentUserGroup sql table: DATA_DOCUMENT_USER_GROUP --><entity entity-name="DataDocumentUserGroup" package="moqui.entity.document" use="configuration">
+    <description><![CDATA[Use this entity to allow a user group access to the DataDocument (for reports, etc). For all users use userGroupId="ALL_USERS".]]></description>
+    <field name="dataDocumentId" type="id" is-pk="true"/>
+    <field name="userGroupId" type="id" is-pk="true"/>
+    <relationship type="one" related="moqui.entity.document.DataDocument" short-alias="document"/>
+    <relationship type="one" related="moqui.security.UserGroup" short-alias="group"/>
+    <field name="lastUpdatedStamp" type="date-time"/>
+
+</entity>

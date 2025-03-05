@@ -1,0 +1,17 @@
+<!--Service Location mantle.other.BudgetServices.get#BudgetItemsAccountsSubPeriods--><service verb="get" noun="BudgetItemsAccountsSubPeriods"><in-parameters><parameter name="budgetId" required="true"/></in-parameters><out-parameters><parameter name="budget" type="Map"/><parameter name="timePeriod" type="Map"/><parameter name="partyAcctgPreference" type="Map"/><parameter name="accountCodeFormatter" type="javax.swing.text.MaskFormatter"/><parameter name="budgetItemList" type="List"><parameter name="budgetItem" type="Map"/></parameter><parameter name="budgetItemsByGlId" type="Map"/><parameter name="subTimePeriodList" type="List"><parameter name="subTimePeriod" type="Map"/></parameter><parameter name="subTimePeriodSize" type="Integer"/><parameter name="expenseClassEnumIds" type="Set"/></out-parameters><actions><entity-find-one entity-name="mantle.other.budget.Budget" value-field="budget"/><set field="timePeriod" from="budget.timePeriod"/><if condition="timePeriod?.partyId"><service-call name="mantle.ledger.LedgerServices.find#PartyAcctgPreference" out-map="[partyAcctgPreference:context.partyAcctgPreference]" in-map="[organizationPartyId:timePeriod.partyId]"/><if condition="partyAcctgPreference?.glAccountCodeMask"><set field="glAccountCodeMask" from="partyAcctgPreference?.glAccountCodeMask ?: ec.user.getPreference('GlAccountCodeMask')"/><set field="accountCodeFormatter" from="masker(glAccountCodeMask, '0')"/></if></if><entity-find entity-name="mantle.other.budget.BudgetItem" list="budgetItemList"><econdition field-name="budgetId"/></entity-find><if condition="budget.timePeriodId && budget.subTimePeriodTypeId"><service-call name="mantle.party.TimeServices.get#DescendantPeriods" out-map="[timePeriodList:subPeriodOut.timePeriodList]" in-map="[parentPeriodId:budget.timePeriodId, timePeriodTypeId:budget.subTimePeriodTypeId, createMissing:true]"/><set field="subTimePeriodList" from="subPeriodOut.timePeriodList"/><set field="subTimePeriodIds" from="new ArrayList(subTimePeriodList*.timePeriodId)"/></if><set field="subTimePeriodSize" from="subTimePeriodList?.size() ?: 0"/><service-call name="org.moqui.impl.BasicServices.find#EnumerationByParent" out-map="[enumerationList:expenseClassOut.enumerationList,enumIdSet:expenseClassOut.enumIdSet]" in-map="[parentEnumId:'EXPENSE', includeNested:true]"/><set field="expenseClassEnumIds" from="expenseClassOut.enumIdSet"/><script><![CDATA[budgetItemsByGlId = new HashMap<String, ArrayList>()
+                for (Map curBi in budgetItemList) {
+                    String glAccountId = curBi.glAccountId
+                    ArrayList curBiList = budgetItemsByGlId.get(glAccountId)
+                    if (curBiList == null) {
+                        curBiList = new ArrayList([null, null, null, null, null, null, null, null, null, null, null, null, null]) // 13 null entries
+                        budgetItemsByGlId.put(glAccountId, curBiList)
+                    }
+
+                    String subTimePeriodId = (String) curBi.subTimePeriodId
+                    if (subTimePeriodId == null) {
+                        curBiList.set(0, curBi)
+                    } else {
+                        int subPeriodIndex = subTimePeriodIds.indexOf(subTimePeriodId)
+                        if (subPeriodIndex >= 0) curBiList.set(subPeriodIndex + 1, curBi)
+                    }
+                }]]></script></actions></service>

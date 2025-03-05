@@ -1,0 +1,39 @@
+<!--Service Location coarchy.StripeServices.create#PaymentIntent--><service verb="create" noun="PaymentIntent"><in-parameters/><out-parameters><parameter name="clientSecret"/><parameter name="paymentId"/></out-parameters><actions><entity-find entity-name="mantle.order.OrderHeaderAndPart" list="existingOrderList" limit="2"><econdition field-name="statusId" value="OrderOpen"/><econdition field-name="customerPartyId" from="ec.user.userAccount.partyId"/><select-field field-name="orderId,orderPartSeqId,grandTotal,currencyUomId,productStoreId"/><order-by field-name="-entryDate"/></entity-find><if condition="existingOrderList.size() == 0"><log message="No order found for user."/><return error="true" public="true" type="danger" message="${ec.resource.expand('CoarchyInvalidOrder', null)}"/></if><if condition="existingOrderList.size() > 1"><log level="warn" message="Multiple open orders or parts found for user. This should not happen."/></if><set field="orderHeaderAndPart" from="existingOrderList.getFirst()"/><set field="orderId" from="orderHeaderAndPart.orderId"/><entity-find entity-name="mantle.product.store.ProductStorePaymentGateway" list="productStorePaymentGatewayList" limit="1"><econdition field-name="productStoreId" from="orderHeaderAndPart.productStoreId"/><econdition field-name="paymentInstrumentEnumId" value="PiStripe"/><econdition field-name="paymentGatewayConfigId" operator="is-not-null"/><select-field field-name="paymentGatewayConfigId"/><order-by field-name="-lastUpdatedStamp"/></entity-find><if condition="productStorePaymentGatewayList.size() == 0"><log level="warn" message="No payment gateway found for order."/><return error="true" public="true" type="danger" message="${ec.resource.expand('CoarchyOrgPaymentGatewayUnavailable', null)}"/></if><set field="paymentGatewayConfigId" from="productStorePaymentGatewayList.getFirst().paymentGatewayConfigId"/><entity-find entity-name="mantle.account.payment.Payment" list="existingPaymentList"><econdition field-name="orderId"/><econdition field-name="orderPartSeqId" from="orderHeaderAndPart.orderPartSeqId"/><econdition field-name="paymentGatewayConfigId"/><select-field field-name="paymentId,amountUomId,unappliedTotal,statusId"/><order-by field-name="-paymentDate"/></entity-find><iterate list="existingPaymentList" entry="existingPayment"><if condition="['PmntProposed','PmntPromised'].contains(existingPayment.statusId)"><then><service-call name="mantle.account.PaymentServices.cancel#PaymentAndInvoices" in-map="[paymentId:existingPayment.paymentId]"/></then><else-if condition="['PmntAuthorized','PmntDelivered'].contains(existingPayment.statusId)"><service-call name="mantle.account.PaymentServices.void#Payment" in-map="[paymentId:existingPayment.paymentId]"/></else-if></if></iterate><service-call name="mantle.order.OrderServices.add#OrderPartPayment" in-map="[orderId:orderHeaderAndPart.orderId,                 orderPartSeqId:orderHeaderAndPart.orderPartSeqId,settlementTermId:'Immediate', paymentInstrumentEnumId:'PiStripe',                 paymentGatewayConfigId:paymentGatewayConfigId,                 entryDate:ec.user.nowTimestamp]" out-map="[paymentId:context.paymentId]"/><entity-find-one entity-name="mantle.account.payment.Payment" value-field="payment" auto-field-map="[paymentId:paymentId]"/><set field="unappliedTotal" from="(payment.unappliedTotal * 100).toInteger()" type="Integer"/><set field="currencyUomId" from="payment.amountUomId"/><entity-find-one entity-name="mantle.account.method.PaymentGatewayConfig" value-field="paymentGateway" auto-field-map="[paymentGatewayConfigId:paymentGatewayConfigId]"/><set field="stripeRemote" from="paymentGateway.remote"/><script><![CDATA[party = ec.entity.find("mantle.party.Party").condition("partyId", ec.user.userAccount.partyId).one()]]></script><script><![CDATA[import org.moqui.util.RestClient]]></script><if condition="!party.externalId"><script><![CDATA[org.moqui.util.RestClient customerRestClient = ec.service.rest().method(org.moqui.util.RestClient.POST)
+                        .basicAuth(stripeRemote.privateKey,"")
+                        .addBodyParameter("email", (String) ec.user.userAccount.emailAddress)
+                def customerUriBuilder = customerRestClient.uri().protocol("https").host("api.stripe.com").port(443)
+                        .path("/v1/customers")
+                customerUriBuilder.build()
+
+                org.moqui.util.RestClient.RestResponse customerRestResponse = customerRestClient.call()
+                customerResponseMap = (Map) customerRestResponse.jsonObject()
+//                ec.logger.warn("customerResponseMap: ${customerResponseMap}")
+                if (customerRestResponse.statusCode < 200 || customerRestResponse.statusCode >= 300) {
+                    ec.logger.warn("Got status code ${customerRestResponse.statusCode} from Stripe on a create customers request for the parameter '${customerResponseMap.error.type}' and message '${customerResponseMap.error.message}'")
+                    ec.logger.warn("Could not create Customer")
+                    ec.message.addPublic(ec.resource.expand('CoarchyOrgPaymentFailed', null), "warning")
+                    return
+                }]]></script><set field="party.externalId" from="customerResponseMap.id"/><entity-update value-field="party"/></if><script><![CDATA[org.moqui.util.RestClient paymentIntentRestClient = ec.service.rest().method(org.moqui.util.RestClient.POST)
+                        .basicAuth(stripeRemote.privateKey,"")
+                        .addBodyParameter("customer", (String) party.externalId)
+                        .addBodyParameter("amount", (String) unappliedTotal)
+                        .addBodyParameter("currency", (String) currencyUomId)
+//                        .addBodyParameter("setup_future_usage", "off_session")
+//                        .addBodyParameter("confirm", (String) "true")
+//                        .addBodyParameter("return_url", (String) return_url)
+                if (paymentMethodId != null) {
+//                    ec.logger.warn("Adding paymentMethodId: ${paymentMethodId}")
+//                    paymentIntentRestClient.addBodyParameter("payment_method", (String) paymentMethodId)
+                }
+                def paymentIntentUriBuilder = paymentIntentRestClient.uri().protocol("https").host("api.stripe.com").port(443)
+                    .path("/v1/payment_intents")
+                paymentIntentUriBuilder.build()
+
+                org.moqui.util.RestClient.RestResponse paymentIntentRestResponse = paymentIntentRestClient.call()
+                paymentIntentResponseMap = (Map) paymentIntentRestResponse.jsonObject()
+//                 ec.logger.warn("paymentIntentResponseMap: ${paymentIntentResponseMap}")
+                if (paymentIntentRestResponse.statusCode < 200 || paymentIntentRestResponse.statusCode >= 300) {
+                    ec.logger.warn("Got status code ${paymentIntentRestResponse.statusCode} from Stripe on a create payment_intents request for the parameter '${paymentIntentResponseMap.error.param}' and message '${paymentIntentResponseMap.error.message}'")
+                    ec.logger.warn("Could not create Payment")
+                    ec.message.addPublic(ec.resource.expand('CoarchyOrgPaymentFailed', null), "warning")
+                }]]></script><service-call name="update#mantle.account.payment.Payment" in-map="[paymentId:payment.paymentId, paymentRefNum:paymentIntentResponseMap?.id]"/><set field="clientSecret" from="paymentIntentResponseMap.client_secret"/></actions></service>

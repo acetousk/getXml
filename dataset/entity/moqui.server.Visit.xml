@@ -1,0 +1,63 @@
+
+<!-- Entity Name: moqui.server.Visit sql table: VISIT --><entity entity-name="Visit" package="moqui.server" sequence-bank-size="100" use="nontransactional" cache="never" has-dependents="true">
+    <field name="visitId" type="id" is-pk="true"/>
+    <field name="visitorId" type="id"/>
+    <field name="userId" type="id"/>
+    <field name="userCreated" type="text-indicator"/>
+    <field name="sessionId" type="text-medium"/>
+    <field name="serverIpAddress" type="id"/>
+    <field name="serverHostName" type="text-medium"/>
+    <field name="webappName" type="text-medium"/>
+    <field name="initialLocale" type="text-short"/>
+    <field name="initialRequest" type="text-long"/>
+    <field name="initialReferrer" type="text-long"/>
+    <field name="initialUserAgent" type="text-medium"/>
+    <field name="clientIpAddress" type="text-short"/>
+    <field name="clientHostName" type="text-medium"/>
+    <field name="clientUser" type="text-medium"/>
+    <field name="clientIpIspName" type="text-short"/>
+    <field name="clientIpPostalCode" type="text-short"/>
+    <field name="clientIpCity" type="text-short"/>
+    <field name="clientIpMetroCode" type="text-short"/>
+    <field name="clientIpRegionCode" type="text-short"/>
+    <field name="clientIpRegionName" type="text-short"/>
+    <field name="clientIpStateProvGeoId" type="id"/>
+    <field name="clientIpCountryGeoId" type="id"/>
+    <field name="clientIpLatitude" type="text-short"/>
+    <field name="clientIpLongitude" type="text-short"/>
+    <field name="clientIpTimeZone" type="text-short"/>
+    <field name="fromDate" type="date-time"/>
+    <field name="thruDate" type="date-time"/>
+    <relationship type="one-nofk" related="moqui.server.Visitor"/>
+    <relationship type="one-nofk" related="moqui.security.UserAccount"/>
+    <relationship type="one-nofk" title="ClientIpStateProv" related="moqui.basic.Geo">
+        <key-map field-name="clientIpStateProvGeoId" related="geoId"/></relationship>
+    <relationship type="one-nofk" title="ClientIpCountry" related="moqui.basic.Geo">
+        <key-map field-name="clientIpCountryGeoId" related="geoId"/></relationship>
+    <index name="VISIT_USER_ACC">
+        <index-field name="userId"/></index>
+    <index name="VISIT_VISITOR">
+        <index-field name="visitorId"/></index>
+    <field name="lastUpdatedStamp" type="date-time"/>
+    <relationship related="mantle.account.payment.Payment" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="visitId" related="visitId"/></relationship>
+    <relationship related="mantle.account.payment.PaymentFraudEvidence" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="visitId" related="visitId"/></relationship>
+    <relationship related="mantle.marketing.tracking.TrackingCodeVisit" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="visitId" related="visitId"/></relationship>
+    <relationship related="mantle.order.OrderHeader" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="visitId" related="visitId"/></relationship>
+    <relationship related="mantle.order.return.ReturnHeader" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="visitId" related="visitId"/></relationship>
+    <relationship related="mantle.request.Request" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="visitId" related="visitId"/></relationship>
+    <relationship related="mantle.sales.need.PartyNeed" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="visitId" related="visitId"/></relationship>
+    <relationship related="moqui.security.UserLoginHistory" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="visitId" related="visitId"/></relationship>
+    <relationship related="moqui.server.ArtifactHit" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="visitId" related="visitId"/></relationship>
+    <relationship related="moqui.service.message.SystemMessage" type="many" is-auto-reverse="true" mutable="true" title="Trigger">
+        <key-map field-name="visitId" related="triggerVisitId"/></relationship>
+
+</entity>

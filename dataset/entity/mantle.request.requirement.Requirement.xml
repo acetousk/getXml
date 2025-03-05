@@ -1,0 +1,56 @@
+
+<!-- Entity Name: mantle.request.requirement.Requirement sql table: REQUIREMENT --><entity entity-name="Requirement" package="mantle.request.requirement" cache="never" has-dependents="true">
+    <field name="requirementId" type="id" is-pk="true"/>
+    <field name="requirementTypeEnumId" type="id"/>
+    <field name="statusId" type="id" enable-audit-log="true"/>
+    <field name="facilityId" type="id"/>
+    <field name="deliverableId" type="id"/>
+    <field name="assetId" type="id"/>
+    <field name="productId" type="id"/>
+    <field name="description" type="text-medium"/>
+    <field name="requirementStartDate" type="date-time"/>
+    <field name="requiredByDate" type="date-time"/>
+    <field name="estimatedBudget" type="currency-amount"/>
+    <field name="quantity" type="number-decimal"/>
+    <field name="useCase" type="text-very-long"/>
+    <field name="reason" type="text-long"/>
+    <relationship type="one" title="RequirementType" related="moqui.basic.Enumeration" short-alias="type">
+        <key-map field-name="requirementTypeEnumId"/></relationship>
+    <relationship type="one" title="Requirement" related="moqui.basic.StatusItem" short-alias="status"/>
+    <relationship type="one" related="mantle.facility.Facility" short-alias="facility"/>
+    <relationship type="one" related="mantle.work.effort.Deliverable" short-alias="deliverable"/>
+    <relationship type="one" related="mantle.product.asset.Asset" short-alias="asset"/>
+    <relationship type="one" related="mantle.product.Product" short-alias="product"/>
+    <seed-data>
+        <moqui.basic.EnumerationType description="Requirement Type" enumTypeId="RequirementType"/>
+        <moqui.basic.Enumeration description="Customer" enumId="RqTpCustomer" enumTypeId="RequirementType"/>
+        <moqui.basic.Enumeration description="Internal" enumId="RqTpInternal" enumTypeId="RequirementType"/>
+        <moqui.basic.Enumeration description="Product" enumId="RqTpProduct" enumTypeId="RequirementType"/>
+        <moqui.basic.Enumeration description="Inventory" enumId="RqTpInventory" enumTypeId="RequirementType"/>
+        <moqui.basic.Enumeration description="Work" enumId="RqTpWork" enumTypeId="RequirementType"/>
+        <moqui.basic.StatusType description="Requirement Status" statusTypeId="Requirement"/>
+        <moqui.basic.StatusItem description="Proposed" sequenceNum="1" statusId="RqmtStProposed" statusTypeId="Requirement"/>
+        <moqui.basic.StatusItem description="Created" sequenceNum="2" statusId="RqmtStCreated" statusTypeId="Requirement"/>
+        <moqui.basic.StatusItem description="Approved" sequenceNum="3" statusId="RqmtStApproved" statusTypeId="Requirement"/>
+        <moqui.basic.StatusItem description="Ordered" sequenceNum="4" statusId="RqmtStOrdered" statusTypeId="Requirement"/>
+        <moqui.basic.StatusItem description="Rejected" sequenceNum="9" statusId="RqmtStRejected" statusTypeId="Requirement"/>
+        <moqui.basic.StatusFlowTransition statusFlowId="Default" statusId="RqmtStProposed" toStatusId="RqmtStApproved" transitionName="Accept"/>
+        <moqui.basic.StatusFlowTransition statusFlowId="Default" statusId="RqmtStProposed" toStatusId="RqmtStRejected" transitionName="Reject"/>
+        <moqui.basic.StatusFlowTransition statusFlowId="Default" statusId="RqmtStCreated" toStatusId="RqmtStApproved" transitionName="Accept"/>
+        <moqui.basic.StatusFlowTransition statusFlowId="Default" statusId="RqmtStCreated" toStatusId="RqmtStRejected" transitionName="Reject"/>
+        <moqui.basic.StatusFlowTransition statusFlowId="Default" statusId="RqmtStApproved" toStatusId="RqmtStOrdered" transitionName="Order"/>
+        <moqui.basic.StatusFlowTransition statusFlowId="Default" statusId="RqmtStApproved" toStatusId="RqmtStRejected" transitionName="Reject"/>
+    </seed-data>
+    <field name="lastUpdatedStamp" type="date-time"/>
+    <relationship related="mantle.request.requirement.RequirementBudgetAllocation" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="requirementId" related="requirementId"/></relationship>
+    <relationship related="mantle.request.requirement.RequirementOrderItem" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="requirementId" related="requirementId"/></relationship>
+    <relationship related="mantle.request.requirement.RequirementParty" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="requirementId" related="requirementId"/></relationship>
+    <relationship related="mantle.request.requirement.RequirementRequestItem" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="requirementId" related="requirementId"/></relationship>
+    <relationship related="mantle.request.requirement.WorkRequirementFulfillment" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="requirementId" related="requirementId"/></relationship>
+
+</entity>

@@ -1,0 +1,9 @@
+
+<!-- Entity Name: mantle.humanres.position.EmplPositionClassDimension sql table: EMPL_POSITION_CLASS_DIMENSION --><entity entity-name="EmplPositionClassDimension" package="mantle.humanres.position" use="configuration">
+    <field name="emplPositionClassId" type="id" is-pk="true"/>
+    <field name="uomDimensionTypeId" type="id" is-pk="true"/>
+    <relationship type="one" related="mantle.humanres.position.EmplPositionClass"/>
+    <relationship type="one" related="moqui.basic.UomDimensionType" short-alias="type"/>
+    <field name="lastUpdatedStamp" type="date-time"/>
+
+</entity>

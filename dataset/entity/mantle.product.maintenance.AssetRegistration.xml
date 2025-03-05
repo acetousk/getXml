@@ -1,0 +1,16 @@
+
+<!-- Entity Name: mantle.product.maintenance.AssetRegistration sql table: ASSET_REGISTRATION --><entity entity-name="AssetRegistration" package="mantle.product.maintenance" cache="never">
+    <field name="assetId" type="id" is-pk="true"/>
+    <field name="assetRegSeqId" type="id" is-pk="true"/>
+    <field name="fromDate" type="date-time"/>
+    <field name="thruDate" type="date-time"/>
+    <field name="registrationDate" type="date-time"/>
+    <field name="govAgencyPartyId" type="id"/>
+    <field name="registrationNumber" type="text-medium"/>
+    <field name="licenseNumber" type="text-medium"/>
+    <relationship type="one" related="mantle.product.asset.Asset"/>
+    <relationship type="one" title="GovAgency" related="mantle.party.Party">
+        <key-map field-name="govAgencyPartyId"/></relationship>
+    <field name="lastUpdatedStamp" type="date-time"/>
+
+</entity>

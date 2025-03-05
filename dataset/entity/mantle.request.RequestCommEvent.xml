@@ -1,0 +1,9 @@
+
+<!-- Entity Name: mantle.request.RequestCommEvent sql table: REQUEST_COMM_EVENT --><entity entity-name="RequestCommEvent" package="mantle.request" cache="never">
+    <field name="requestId" type="id" is-pk="true"/>
+    <field name="communicationEventId" type="id" is-pk="true"/>
+    <relationship type="one" related="mantle.request.Request" short-alias="request"/>
+    <relationship type="one" related="mantle.party.communication.CommunicationEvent" short-alias="communicationEvent"/>
+    <field name="lastUpdatedStamp" type="date-time"/>
+
+</entity>

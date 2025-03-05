@@ -1,0 +1,12 @@
+
+<!-- Entity Name: moqui.resource.wiki.WikiBlogCategory sql table: WIKI_BLOG_CATEGORY --><entity entity-name="WikiBlogCategory" package="moqui.resource.wiki" use="nontransactional">
+    <field name="wikiPageCategoryId" type="id" is-pk="true"/>
+    <field name="wikiBlogId" type="id" is-pk="true"/>
+    <field name="sentDate" type="date-time">
+        <description><![CDATA[The date/time a blog post within a category was sent by email or other means.]]></description></field>
+    <relationship type="one" related="moqui.resource.wiki.WikiPageCategory" short-alias="category"/>
+    <relationship type="one" related="moqui.resource.wiki.WikiBlog" short-alias="blog"/>
+    <field name="lastUpdatedStamp" type="date-time"/>
+    <relationship related="mantle.marketing.contact.ContactListEmail" type="many" is-auto-reverse="true" mutable="true"/>
+
+</entity>

@@ -1,0 +1,15 @@
+
+<!-- Entity Name: mantle.humanres.employment.PayrollGarnishMinWage sql table: PAYROLL_GARNISH_MIN_WAGE --><entity entity-name="PayrollGarnishMinWage" package="mantle.humanres.employment" use="configuration">
+    <field name="stateOrCountryGeoId" type="id" is-pk="true"/>
+    <field name="timePeriodTypeId" type="id" is-pk="true"/>
+    <field name="fromDate" type="date-time" is-pk="true"/>
+    <field name="thruDate" type="date-time"/>
+    <field name="minimumWage" type="number-decimal"/>
+    <field name="rangeLow" type="number-decimal"/>
+    <field name="rangeHigh" type="number-decimal"/>
+    <relationship type="one" title="StateOrCountry" related="moqui.basic.Geo">
+        <key-map field-name="stateOrCountryGeoId"/></relationship>
+    <relationship type="one" related="mantle.party.time.TimePeriodType"/>
+    <field name="lastUpdatedStamp" type="date-time"/>
+
+</entity>

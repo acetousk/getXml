@@ -1,0 +1,60 @@
+
+<!-- Entity Name: mantle.party.PartySettingType sql table: PARTY_SETTING_TYPE --><entity entity-name="PartySettingType" package="mantle.party" use="configuration" cache="true" has-dependents="true">
+    <field name="partySettingTypeId" type="id" is-pk="true"/>
+    <field name="description" type="text-medium"/>
+    <field name="validRegexp" type="text-medium">
+        <description><![CDATA[For non-enum settings, regexp to validate]]></description></field>
+    <field name="enumTypeId" type="id"/>
+    <field name="defaultValue" type="text-medium"/>
+    <relationship type="one" related="moqui.basic.EnumerationType" short-alias="type"/>
+    <relationship type="many" related="mantle.party.PartySettingTypeRole" short-alias="roles">
+        <key-map field-name="partySettingTypeId"/></relationship>
+    <seed-data>
+        <moqui.basic.EnumerationType description="Signature Required" enumTypeId="SignatureRequired"/>
+        <moqui.basic.Enumeration enumCode="" description="None" enumId="PsrNone" sequenceNum="1" enumTypeId="SignatureRequired"/>
+        <moqui.basic.Enumeration enumCode="STANDARD" description="Standard" enumId="PsrStandard" sequenceNum="2" enumTypeId="SignatureRequired"/>
+        <moqui.basic.Enumeration enumCode="ADULT" description="Adult" enumId="PsrAdult" sequenceNum="3" enumTypeId="SignatureRequired"/>
+        <moqui.basic.Enumeration enumCode="CERTIFIED" description="Certified (USPS)" enumId="PsrCertified" sequenceNum="4" enumTypeId="SignatureRequired"/>
+        <moqui.basic.Enumeration enumCode="INDIRECT" description="Indirect (FedEx)" enumId="PsrIndirect" sequenceNum="5" enumTypeId="SignatureRequired"/>
+        <mantle.party.PartySettingType partySettingTypeId="CustomerSingleLot" description="Single Lot per Order" enumTypeId="BooleanYN" defaultValue="BlN">
+            <roles roleTypeId="Customer"/></mantle.party.PartySettingType>
+        <mantle.party.PartySettingType partySettingTypeId="CustomerNewerInventory" description="Newer Inventory each Order" enumTypeId="BooleanYN" defaultValue="BlN">
+            <roles roleTypeId="Customer"/></mantle.party.PartySettingType>
+        <mantle.party.PartySettingType partySettingTypeId="CustomerRequireSign" description="Require Signature" enumTypeId="SignatureRequired" defaultValue="PsrNone">
+            <roles roleTypeId="Customer"/></mantle.party.PartySettingType>
+        <mantle.party.PartySettingType partySettingTypeId="OrgInvoiceProductStoreId" description="Default Invoice Product Store ID">
+            <roles roleTypeId="OrgInternal"/></mantle.party.PartySettingType>
+        <mantle.party.PartySettingType partySettingTypeId="ValidateAddressGatewayConfigId" description="Validate Address Gateway Config ID">
+            <roles roleTypeId="OrgInternal"/></mantle.party.PartySettingType>
+        <mantle.party.PartySettingType partySettingTypeId="DefaultShipmentGatewayConfigId" description="Default Shipment Gateway Config ID">
+            <roles roleTypeId="OrgInternal"/></mantle.party.PartySettingType>
+        <mantle.party.PartySettingType partySettingTypeId="VaultPaymentGatewayConfigId" description="Vault Payment Gateway Config ID">
+            <roles roleTypeId="OrgInternal"/></mantle.party.PartySettingType>
+        <mantle.party.PartySettingType partySettingTypeId="OrgTemplateShipmentInsert" description="Template Location Shipment Insert">
+            <roles roleTypeId="OrgInternal"/></mantle.party.PartySettingType>
+        <mantle.party.PartySettingType partySettingTypeId="OrgTemplateShipmentPick" description="Template Location Shipment Pick Sheet">
+            <roles roleTypeId="OrgInternal"/></mantle.party.PartySettingType>
+        <mantle.party.PartySettingType partySettingTypeId="OrgTemplateShipmentPack" description="Template Location Shipment Pack Sheet">
+            <roles roleTypeId="OrgInternal"/></mantle.party.PartySettingType>
+        <mantle.party.PartySettingType partySettingTypeId="OrgTemplateShipmentByPackage" description="Template Location Shipment By Package">
+            <roles roleTypeId="OrgInternal"/></mantle.party.PartySettingType>
+        <mantle.party.PartySettingType partySettingTypeId="OrgTemplateInvoicePrint" description="Template Location Invoice Print">
+            <roles roleTypeId="OrgInternal"/></mantle.party.PartySettingType>
+        <mantle.party.PartySettingType partySettingTypeId="OrgTemplateOrderPrint" description="Template Location Order Print">
+            <roles roleTypeId="OrgInternal"/></mantle.party.PartySettingType>
+        <mantle.party.PartySettingType partySettingTypeId="OrgTemplatePaymentCheck" description="Template Location Payment Check">
+            <roles roleTypeId="OrgInternal"/></mantle.party.PartySettingType>
+        <mantle.party.PartySettingType partySettingTypeId="OrgTemplatePaymentDetail" description="Template Location Payment Detail">
+            <roles roleTypeId="OrgInternal"/></mantle.party.PartySettingType>
+        <mantle.party.PartySettingType partySettingTypeId="OrgTemplateReceivableStatement" description="Template Location Receivable Statement">
+            <roles roleTypeId="OrgInternal"/></mantle.party.PartySettingType>
+        <mantle.party.PartySettingType partySettingTypeId="OrgTemplateFinancialAccountStatement" description="Template Location Financial Account Statement">
+            <roles roleTypeId="OrgInternal"/></mantle.party.PartySettingType>
+    </seed-data>
+    <field name="lastUpdatedStamp" type="date-time"/>
+    <relationship related="mantle.party.PartyRelationshipSetting" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="partySettingTypeId" related="partySettingTypeId"/></relationship>
+    <relationship related="mantle.party.PartySetting" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="partySettingTypeId" related="partySettingTypeId"/></relationship>
+
+</entity>

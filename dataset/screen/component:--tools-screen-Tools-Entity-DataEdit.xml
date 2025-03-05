@@ -1,0 +1,1 @@
+<!-- Screen Location component://tools/screen/Tools/Entity/DataEdit.xml --><screen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://moqui.org/xsd/xml-screen-3.xsd" default-menu-title="Entities"><subscreens default-item="EntityList"/><widgets><subscreens-active/></widgets></screen>

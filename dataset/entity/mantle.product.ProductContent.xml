@@ -1,0 +1,63 @@
+
+<!-- Entity Name: mantle.product.ProductContent sql table: PRODUCT_CONTENT --><entity entity-name="ProductContent" package="mantle.product">
+    <field name="productContentId" type="id" is-pk="true"/>
+    <field name="productId" type="id" not-null="true"/>
+    <field name="contentLocation" type="text-medium"/>
+    <field name="productContentTypeEnumId" type="id"/>
+    <field name="locale" type="text-short"/>
+    <field name="productFeatureId" type="id">
+        <description><![CDATA[For virtual products to limit images/etc displayed by selectable feature, if null always display]]></description></field>
+    <field name="productStoreId" type="id">
+        <description><![CDATA[For content limited to a specific store]]></description></field>
+    <field name="fromDate" type="date-time" default="ec.user.nowTimestamp"/>
+    <field name="thruDate" type="date-time"/>
+    <field name="description" type="text-long"/>
+    <field name="sequenceNum" type="number-integer"/>
+    <field name="userId" type="id" default="ec.user.userId"/>
+    <relationship type="one" related="mantle.product.Product"/>
+    <relationship type="one" title="ProductContentType" related="moqui.basic.Enumeration">
+        <key-map field-name="productContentTypeEnumId"/></relationship>
+    <relationship type="one" related="mantle.product.feature.ProductFeature" short-alias="feature"/>
+    <relationship type="one" related="mantle.product.store.ProductStore" short-alias="store"/>
+    <seed-data>
+        <moqui.basic.EnumerationType description="Product Content Type" enumTypeId="ProductContentType"/>
+        <moqui.basic.Enumeration description="Product Name" enumId="PcntProductName" enumTypeId="ProductContentType"/>
+        <moqui.basic.Enumeration description="Description" enumId="PcntDescription" enumTypeId="ProductContentType"/>
+        <moqui.basic.Enumeration description="Description - Long" enumId="PcntDescriptionLong" enumTypeId="ProductContentType"/>
+        <moqui.basic.Enumeration description="Delivery Info" enumId="PcntDeliveryInfo" enumTypeId="ProductContentType"/>
+        <moqui.basic.Enumeration description="Digital Download" enumId="PcntDownload" enumTypeId="ProductContentType"/>
+        <moqui.basic.Enumeration description="Directions" enumId="PcntDirections" enumTypeId="ProductContentType"/>
+        <moqui.basic.Enumeration description="Fulfillment Email" enumId="PcntEmail" enumTypeId="ProductContentType"/>
+        <moqui.basic.Enumeration description="Frequently Asked Questions" enumId="PcntFAQ" enumTypeId="ProductContentType"/>
+        <moqui.basic.Enumeration description="Ingredients" enumId="PcntIngredients" enumTypeId="ProductContentType"/>
+        <moqui.basic.Enumeration description="Ingredients - Unique" enumId="PcntUniqueIngred" enumTypeId="ProductContentType"/>
+        <moqui.basic.Enumeration description="Installation" enumId="PcntInstallation" enumTypeId="ProductContentType"/>
+        <moqui.basic.Enumeration description="Label Image" enumId="PcntLabelImage" enumTypeId="ProductContentType"/>
+        <moqui.basic.Enumeration description="Label Text" enumId="PcntLabelText" enumTypeId="ProductContentType"/>
+        <moqui.basic.Enumeration description="Online Access" enumId="PcntOnline" enumTypeId="ProductContentType"/>
+        <moqui.basic.Enumeration description="Price Detail Text" enumId="PcntPriceDetail" enumTypeId="ProductContentType"/>
+        <moqui.basic.Enumeration description="Short Sales Pitch" enumId="PcntShortSalesPitch" enumTypeId="ProductContentType"/>
+        <moqui.basic.Enumeration description="Special Instructions" enumId="PcntSpecialInstr" enumTypeId="ProductContentType"/>
+        <moqui.basic.Enumeration description="Specification" enumId="PcntSpecification" enumTypeId="ProductContentType"/>
+        <moqui.basic.Enumeration description="Terms and Conditions" enumId="PcntTermsConditions" enumTypeId="ProductContentType"/>
+        <moqui.basic.Enumeration description="Testimonials" enumId="PcntTestimonials" enumTypeId="ProductContentType"/>
+        <moqui.basic.Enumeration description="Warnings" enumId="PcntWarnings" enumTypeId="ProductContentType"/>
+        <moqui.basic.Enumeration description="Warranty" enumId="PcntWarranty" enumTypeId="ProductContentType"/>
+        <moqui.basic.Enumeration description="Image - Small" enumId="PcntImageSmall" enumTypeId="ProductContentType"/>
+        <moqui.basic.Enumeration description="Image - Medium" enumId="PcntImageMedium" enumTypeId="ProductContentType"/>
+        <moqui.basic.Enumeration description="Image - Large" enumId="PcntImageLarge" enumTypeId="ProductContentType"/>
+        <moqui.basic.Enumeration description="Image - Detail" enumId="PcntImageDetail" enumTypeId="ProductContentType"/>
+        <moqui.basic.Enumeration description="Image - Original" enumId="PcntImageOriginal" enumTypeId="ProductContentType"/>
+        <moqui.basic.Enumeration description="Image URL - Small" enumId="PcntImageUrlSmall" enumTypeId="ProductContentType"/>
+        <moqui.basic.Enumeration description="Image URL - Medium" enumId="PcntImageUrlMedium" enumTypeId="ProductContentType"/>
+        <moqui.basic.Enumeration description="Image URL - Large" enumId="PcntImageUrlLarge" enumTypeId="ProductContentType"/>
+        <moqui.basic.Enumeration description="Image URL - Detail" enumId="PcntImageUrlDetail" enumTypeId="ProductContentType"/>
+        <moqui.basic.Enumeration description="Image URL - Original" enumId="PcntImageUrlOriginal" enumTypeId="ProductContentType"/>
+        <moqui.basic.Enumeration description="Add To Cart Label" enumId="PcntAddToCartLabel" enumTypeId="ProductContentType"/>
+        <moqui.basic.Enumeration description="Add To Cart Image" enumId="PcntAddToCartImage" enumTypeId="ProductContentType"/>
+        <moqui.basic.Enumeration description="Meta-Keywords" enumId="PcntMetaKeywords" enumTypeId="ProductContentType"/>
+        <moqui.basic.Enumeration description="Meta-Description" enumId="PcntMetaDescription" enumTypeId="ProductContentType"/>
+    </seed-data>
+    <field name="lastUpdatedStamp" type="date-time"/>
+
+</entity>

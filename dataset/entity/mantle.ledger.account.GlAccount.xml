@@ -1,0 +1,144 @@
+
+<!-- Entity Name: mantle.ledger.account.GlAccount sql table: GL_ACCOUNT --><entity entity-name="GlAccount" package="mantle.ledger.account" use="configuration" cache="true" has-dependents="true">
+    <field name="glAccountId" type="id" is-pk="true"/>
+    <field name="parentGlAccountId" type="id"/>
+    <field name="glAccountTypeEnumId" type="id">
+        <description><![CDATA[Optional. The 'type' of account, used in posting (GL mapping) configuration]]></description></field>
+    <field name="glAccountClassEnumId" type="id">
+        <description><![CDATA[Required. The account classification such as Revenue, Expense, Asset, etc.
+            Used for report structure and to determine if account is a debit or credit account.]]></description></field>
+    <field name="isDebit" type="text-indicator">
+        <description><![CDATA[Y if account class is a Debit class, otherwise a Credit;
+            determined automatically by class and saved here]]></description></field>
+    <field name="isTemporary" type="text-indicator">
+        <description><![CDATA[Y if account is a temporary (income statement) account,
+            determined automatically by class and saved here]]></description></field>
+    <field name="glResourceTypeEnumId" type="id"/>
+    <field name="glXbrlClassEnumId" type="id"/>
+    <field name="accountCode" type="text-medium" default="glAccountId"/>
+    <field name="accountName" type="text-medium"/>
+    <field name="description" type="text-medium"/>
+    <field name="externalId" type="id">
+        <description><![CDATA[ID of the account in an external system where the accounts are imported/exported]]></description></field>
+    <field name="disallowPosting" type="text-indicator"/>
+    <relationship type="one" title="Parent" related="mantle.ledger.account.GlAccount" short-alias="parent">
+        <key-map field-name="parentGlAccountId" related="glAccountId"/></relationship>
+    <relationship type="one" title="GlAccountType" related="moqui.basic.Enumeration" short-alias="typeEnum">
+        <key-map field-name="glAccountTypeEnumId"/></relationship>
+    <relationship type="one" title="GlAccountClass" related="moqui.basic.Enumeration" short-alias="classEnum">
+        <key-map field-name="glAccountClassEnumId"/></relationship>
+    <relationship type="one" title="GlResourceType" related="moqui.basic.Enumeration" short-alias="resourceTypeEnum">
+        <key-map field-name="glResourceTypeEnumId"/></relationship>
+    <relationship type="one" title="GlXbrlClass" related="moqui.basic.Enumeration">
+        <key-map field-name="glXbrlClassEnumId"/></relationship>
+    <index name="GLACCT_UNQCD" unique="true">
+        <index-field name="accountCode"/></index>
+    <seed-data>
+        <moqui.basic.EnumerationType description="GL Account Class" enumTypeId="GlAccountClass"/>
+        <moqui.basic.Enumeration description="Resource" enumId="RESOURCE" enumTypeId="GlAccountClass"/>
+        <moqui.basic.Enumeration description="Non-Posting" enumId="NON_POSTING" parentEnumId="DEBIT" enumTypeId="GlAccountClass"/>
+        <moqui.basic.Enumeration description="Debit" enumId="DEBIT" enumTypeId="GlAccountClass"/>
+        <moqui.basic.Enumeration description="Credit" enumId="CREDIT" enumTypeId="GlAccountClass"/>
+        <moqui.basic.Enumeration description="GL Account Class Groups" enumId="EngGlClassGroups" enumTypeId="EnumGroup"/>
+        <moqui.basic.EnumerationType description="GL Account Type" enumTypeId="GlAccountType"/>
+        <moqui.basic.EnumerationType description="GL Resource Type" enumTypeId="GlResourceType"/>
+        <moqui.basic.Enumeration description="Money" enumId="GlrtMoney" enumTypeId="GlResourceType"/>
+        <moqui.basic.Enumeration description="Raw Material" enumId="GlrtRawMaterial" enumTypeId="GlResourceType"/>
+        <moqui.basic.Enumeration description="Labor" enumId="GlrtLabor" enumTypeId="GlResourceType"/>
+        <moqui.basic.Enumeration description="Service" enumId="GlrtService" enumTypeId="GlResourceType"/>
+        <moqui.basic.Enumeration description="Finished Good" enumId="GlrtFinishedGood" enumTypeId="GlResourceType"/>
+        <moqui.basic.Enumeration description="Delivered Good" enumId="GlrtDeliveredGood" enumTypeId="GlResourceType"/>
+        <moqui.basic.EnumerationType description="GL XBRL Class" enumTypeId="GlXbrlClass"/>
+        <moqui.basic.Enumeration description="US GAAP" enumId="US_GAAP" enumTypeId="GlXbrlClass"/>
+        <moqui.basic.Enumeration description="IAS" enumId="IAS" enumTypeId="GlXbrlClass"/>
+    </seed-data>
+    <field name="lastUpdatedStamp" type="date-time"/>
+    <relationship related="mantle.account.financial.FinancialAccount" type="many" is-auto-reverse="true" mutable="true" title="PostTo">
+        <key-map field-name="glAccountId" related="postToGlAccountId"/></relationship>
+    <relationship related="mantle.account.invoice.InvoiceItem" type="many" is-auto-reverse="true" mutable="true" title="Override">
+        <key-map field-name="glAccountId" related="overrideGlAccountId"/></relationship>
+    <relationship related="mantle.account.method.PaymentMethod" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="glAccountId" related="glAccountId"/></relationship>
+    <relationship related="mantle.account.payment.Payment" type="many" is-auto-reverse="true" mutable="true" title="Override">
+        <key-map field-name="glAccountId" related="overrideGlAccountId"/></relationship>
+    <relationship related="mantle.account.payment.PaymentApplication" type="many" is-auto-reverse="true" mutable="true" title="Override">
+        <key-map field-name="glAccountId" related="overrideGlAccountId"/></relationship>
+    <relationship related="mantle.facility.FacilityGlAppl" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="glAccountId" related="glAccountId"/></relationship>
+    <relationship related="mantle.humanres.employment.PayrollAdjustment" type="many" is-auto-reverse="true" mutable="true" title="Override">
+        <key-map field-name="glAccountId" related="overrideGlAccountId"/></relationship>
+    <relationship related="mantle.humanres.employment.WorkTypeGlOverride" type="many" is-auto-reverse="true" mutable="true" title="Override">
+        <key-map field-name="glAccountId" related="overrideGlAccountId"/></relationship>
+    <relationship related="mantle.ledger.account.GlAccountCategoryMember" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="glAccountId" related="glAccountId"/></relationship>
+    <relationship related="mantle.ledger.account.GlAccountEnumAppl" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="glAccountId" related="glAccountId"/></relationship>
+    <relationship related="mantle.ledger.account.GlAccountGroupMember" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="glAccountId" related="glAccountId"/></relationship>
+    <relationship related="mantle.ledger.account.GlAccountOrgTimePeriod" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="glAccountId" related="glAccountId"/></relationship>
+    <relationship related="mantle.ledger.account.GlAccountOrganization" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="glAccountId" related="glAccountId"/></relationship>
+    <relationship related="mantle.ledger.account.GlAccountParty" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="glAccountId" related="glAccountId"/></relationship>
+    <relationship related="mantle.ledger.account.GlBudgetXref" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="glAccountId" related="glAccountId"/></relationship>
+    <relationship related="mantle.ledger.config.AssetTypeGlAccount" type="many" is-auto-reverse="true" mutable="true" title="Asset">
+        <key-map field-name="glAccountId" related="assetGlAccountId"/></relationship>
+    <relationship related="mantle.ledger.config.AssetTypeGlAccount" type="many" is-auto-reverse="true" mutable="true" title="WipAsset">
+        <key-map field-name="glAccountId" related="wipAssetGlAccountId"/></relationship>
+    <relationship related="mantle.ledger.config.AssetTypeGlAccount" type="many" is-auto-reverse="true" mutable="true" title="Receipt">
+        <key-map field-name="glAccountId" related="receiptGlAccountId"/></relationship>
+    <relationship related="mantle.ledger.config.AssetTypeGlAccount" type="many" is-auto-reverse="true" mutable="true" title="Issuance">
+        <key-map field-name="glAccountId" related="issuanceGlAccountId"/></relationship>
+    <relationship related="mantle.ledger.config.AssetTypeGlAccount" type="many" is-auto-reverse="true" mutable="true" title="Depreciation">
+        <key-map field-name="glAccountId" related="depreciationGlAccountId"/></relationship>
+    <relationship related="mantle.ledger.config.AssetTypeGlAccount" type="many" is-auto-reverse="true" mutable="true" title="Profit">
+        <key-map field-name="glAccountId" related="profitGlAccountId"/></relationship>
+    <relationship related="mantle.ledger.config.AssetTypeGlAccount" type="many" is-auto-reverse="true" mutable="true" title="Loss">
+        <key-map field-name="glAccountId" related="lossGlAccountId"/></relationship>
+    <relationship related="mantle.ledger.config.AssetTypeGlAccount" type="many" is-auto-reverse="true" mutable="true" title="Shrinkage">
+        <key-map field-name="glAccountId" related="shrinkageGlAccountId"/></relationship>
+    <relationship related="mantle.ledger.config.AssetTypeGlAccount" type="many" is-auto-reverse="true" mutable="true" title="Found">
+        <key-map field-name="glAccountId" related="foundGlAccountId"/></relationship>
+    <relationship related="mantle.ledger.config.CreditCardTypeGlAccount" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="glAccountId" related="glAccountId"/></relationship>
+    <relationship related="mantle.ledger.config.FinancialAccountReasonGlAccount" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="glAccountId" related="glAccountId"/></relationship>
+    <relationship related="mantle.ledger.config.FinancialAccountTypeGlAccount" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="glAccountId" related="glAccountId"/></relationship>
+    <relationship related="mantle.ledger.config.GlAccountTypeDefault" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="glAccountId" related="glAccountId"/></relationship>
+    <relationship related="mantle.ledger.config.GlAccountTypePartyDefault" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="glAccountId" related="glAccountId"/></relationship>
+    <relationship related="mantle.ledger.config.InvoiceTypeTransType" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="glAccountId" related="glAccountId"/></relationship>
+    <relationship related="mantle.ledger.config.ItemTypeGlAccount" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="glAccountId" related="glAccountId"/></relationship>
+    <relationship related="mantle.ledger.config.PaymentInstrumentGlAccount" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="glAccountId" related="glAccountId"/></relationship>
+    <relationship related="mantle.ledger.config.PaymentTypeGlAccount" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="glAccountId" related="glAccountId"/></relationship>
+    <relationship related="mantle.ledger.config.ProductCategoryGlAccount" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="glAccountId" related="glAccountId"/></relationship>
+    <relationship related="mantle.ledger.config.ProductGlAccount" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="glAccountId" related="glAccountId"/></relationship>
+    <relationship related="mantle.ledger.config.TaxAuthorityGlAccount" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="glAccountId" related="glAccountId"/></relationship>
+    <relationship related="mantle.ledger.config.VarianceReasonGlAccount" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="glAccountId" related="glAccountId"/></relationship>
+    <relationship related="mantle.ledger.reconciliation.GlReconciliation" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="glAccountId" related="glAccountId"/></relationship>
+    <relationship related="mantle.ledger.transaction.AcctgTransEntry" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="glAccountId" related="glAccountId"/></relationship>
+    <relationship related="mantle.order.OrderItem" type="many" is-auto-reverse="true" mutable="true" title="Override">
+        <key-map field-name="glAccountId" related="overrideGlAccountId"/></relationship>
+    <relationship related="mantle.other.budget.BudgetItem" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="glAccountId" related="glAccountId"/></relationship>
+    <relationship related="mantle.product.ProductGlAppl" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="glAccountId" related="glAccountId"/></relationship>
+    <relationship related="mantle.product.asset.AssetGlAppl" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="glAccountId" related="glAccountId"/></relationship>
+
+<!-- eeca org.moqui.impl.entity.EntityEcaRule@10801a07-->
+</entity>

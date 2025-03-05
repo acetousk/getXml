@@ -1,0 +1,10 @@
+
+<!-- Entity Name: mantle.party.PartyActivation sql table: PARTY_ACTIVATION --><entity entity-name="PartyActivation" package="mantle.party">
+    <field name="partyId" type="id" is-pk="true"/>
+    <field name="fromDate" type="date-time" is-pk="true"/>
+    <field name="thruDate" type="date-time"/>
+    <relationship type="one" title="Party" related="mantle.party.Party" short-alias="party">
+        <key-map field-name="partyId"/></relationship>
+    <field name="lastUpdatedStamp" type="date-time"/>
+
+</entity>

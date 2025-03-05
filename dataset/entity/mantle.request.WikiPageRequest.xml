@@ -1,0 +1,9 @@
+
+<!-- Entity Name: mantle.request.WikiPageRequest sql table: WIKI_PAGE_REQUEST --><entity entity-name="WikiPageRequest" package="mantle.request" cache="never">
+    <field name="wikiPageId" type="id" is-pk="true"/>
+    <field name="requestId" type="id" is-pk="true"/>
+    <relationship type="one" related="moqui.resource.wiki.WikiPage"/>
+    <relationship type="one" related="mantle.request.Request"/>
+    <field name="lastUpdatedStamp" type="date-time"/>
+
+</entity>

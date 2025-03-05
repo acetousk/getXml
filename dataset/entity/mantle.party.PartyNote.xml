@@ -1,0 +1,12 @@
+
+<!-- Entity Name: mantle.party.PartyNote sql table: PARTY_NOTE --><entity entity-name="PartyNote" package="mantle.party">
+    <field name="partyId" type="id" is-pk="true"/>
+    <field name="noteDate" type="date-time" is-pk="true" default="ec.user.nowTimestamp"/>
+    <field name="noteText" type="text-long" enable-audit-log="true"/>
+    <field name="internalNote" type="text-indicator"/>
+    <field name="userId" type="id" default="ec.user.userId"/>
+    <relationship type="one" related="mantle.party.Party"/>
+    <relationship type="one" related="moqui.security.UserAccount"/>
+    <field name="lastUpdatedStamp" type="date-time"/>
+
+</entity>

@@ -1,0 +1,1 @@
+<!--Service Location wm.WikiServices.get#getAllCategories--><service verb="get" noun="getAllCategories"><in-parameters/><out-parameters><parameter name="categoryList"/></out-parameters><actions><entity-find entity-name="moqui.resource.wiki.WikiPageCategory" list="categoryList"><order-by field-name="categoryName"/></entity-find></actions></service>

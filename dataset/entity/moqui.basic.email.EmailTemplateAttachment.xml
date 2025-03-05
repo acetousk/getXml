@@ -1,0 +1,25 @@
+
+<!-- Entity Name: moqui.basic.email.EmailTemplateAttachment sql table: EMAIL_TEMPLATE_ATTACHMENT --><entity entity-name="EmailTemplateAttachment" package="moqui.basic.email" use="configuration" cache="true">
+    <field name="emailTemplateId" type="id" is-pk="true"/>
+    <field name="fileName" type="text-medium" is-pk="true"/>
+    <field name="attachmentLocation" type="text-medium">
+        <description><![CDATA[ResourceFacade location for attachment content or screen (if screenRenderMode specified)]]></description></field>
+    <field name="screenPath" type="text-medium">
+        <description><![CDATA[Alternative to attachmentLocation as a location for the screen rendered on its own. If specified is used to
+            determine the screen by path from the root screen looked up using the webappName and webHostName values from EmailTemplate.]]></description></field>
+    <field name="screenRenderMode" type="text-short">
+        <description><![CDATA[Used to determine the MIME/content type, and which screen render template to use. Can be used to generate
+            XSL:FO that is transformed to a PDF and attached to the email with screenRenderMode=xsl-fo.
+
+            If empty the content at attachmentLocation will be sent over without rendering and its MIME type will be based on its extension.]]></description></field>
+    <field name="forEachIn" type="text-medium">
+        <description><![CDATA[A Groovy expression that evaluates to a Collection in the context to iterate over and add an attachment for each.
+            If entries are Map objects puts all entries in context for each (pushed/isolated context), otherwise puts Collection entry in 'forEachEntry' field.
+            Only applicable if screenRenderMode is specified so that there is a render of the attachment.]]></description></field>
+    <field name="attachmentCondition" type="text-medium">
+        <description><![CDATA[Optional Groovy expression evaluated as a boolean,
+            if specified and evaluates to false attachment will be skipped.]]></description></field>
+    <relationship type="one" related="moqui.basic.email.EmailTemplate"/>
+    <field name="lastUpdatedStamp" type="date-time"/>
+
+</entity>

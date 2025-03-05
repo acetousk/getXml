@@ -1,0 +1,18 @@
+
+<!-- Entity Name: moqui.resource.wiki.WikiBlog sql table: WIKI_BLOG --><entity entity-name="WikiBlog" package="moqui.resource.wiki" use="nontransactional">
+    <description><![CDATA[Each record represents a single blog article, grouped as needed by categories (WikiBlogCategory)]]></description>
+    <field name="wikiBlogId" type="id" is-pk="true"/>
+    <field name="wikiPageId" type="id"/>
+    <field name="title" type="text-medium"/>
+    <field name="author" type="text-medium"/>
+    <field name="summary" type="text-long"/>
+    <field name="publishDate" type="date-time"/>
+    <field name="metaKeywords" type="text-long"/>
+    <field name="metaDescription" type="text-long"/>
+    <field name="smallImageLocation" type="text-medium"/>
+    <relationship type="one" related="moqui.resource.wiki.WikiPage" short-alias="page"/>
+    <relationship type="many" related="moqui.resource.wiki.WikiBlogCategory" short-alias="categories">
+        <key-map field-name="wikiBlogId"/></relationship>
+    <field name="lastUpdatedStamp" type="date-time"/>
+
+</entity>

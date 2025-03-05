@@ -1,0 +1,20 @@
+
+<!-- Entity Name: mantle.other.tax.TaxAuthorityAssoc sql table: TAX_AUTHORITY_ASSOC --><entity entity-name="TaxAuthorityAssoc" package="mantle.other.tax">
+    <field name="taxAuthorityId" type="id" is-pk="true"/>
+    <field name="toTaxAuthorityId" type="id" is-pk="true"/>
+    <field name="fromDate" type="date-time" is-pk="true"/>
+    <field name="thruDate" type="date-time"/>
+    <field name="assocTypeEnumId" type="id"/>
+    <relationship type="one" related="mantle.other.tax.TaxAuthority"/>
+    <relationship type="one" title="To" related="mantle.other.tax.TaxAuthority">
+        <key-map field-name="toTaxAuthorityId"/></relationship>
+    <relationship type="one" title="TaxAuthorityAssocType" related="moqui.basic.Enumeration">
+        <key-map field-name="assocTypeEnumId"/></relationship>
+    <seed-data>
+        <moqui.basic.EnumerationType description="Tax Authority Assoc Type" enumTypeId="TaxAuthorityAssocType"/>
+        <moqui.basic.Enumeration enumId="TaatExemption" description="Exemption Inheritance" enumTypeId="TaxAuthorityAssocType"/>
+        <moqui.basic.Enumeration enumId="TaatCollAgent" description="Collection Agent" enumTypeId="TaxAuthorityAssocType"/>
+    </seed-data>
+    <field name="lastUpdatedStamp" type="date-time"/>
+
+</entity>

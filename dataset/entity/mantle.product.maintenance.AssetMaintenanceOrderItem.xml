@@ -1,0 +1,14 @@
+
+<!-- Entity Name: mantle.product.maintenance.AssetMaintenanceOrderItem sql table: ASSET_MAINTENANCE_ORDER_ITEM --><entity entity-name="AssetMaintenanceOrderItem" package="mantle.product.maintenance" cache="never">
+    <field name="assetMaintenanceId" type="id" is-pk="true"/>
+    <field name="orderId" type="id" is-pk="true"/>
+    <field name="orderItemSeqId" type="id" is-pk="true"/>
+    <relationship type="one" related="mantle.product.maintenance.AssetMaintenance"/>
+    <relationship type="one" related="mantle.order.OrderHeader"/>
+    <relationship type="one-nofk" related="mantle.order.OrderItem">
+        <key-map field-name="orderId"/>
+        <key-map field-name="orderItemSeqId"/>
+    </relationship>
+    <field name="lastUpdatedStamp" type="date-time"/>
+
+</entity>

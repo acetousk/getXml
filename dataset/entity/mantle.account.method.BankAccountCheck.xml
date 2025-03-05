@@ -1,0 +1,11 @@
+
+<!-- Entity Name: mantle.account.method.BankAccountCheck sql table: BANK_ACCOUNT_CHECK --><entity entity-name="BankAccountCheck" package="mantle.account.method" cache="never">
+    <description><![CDATA[A simple check register (for Checking type BankAccount) with details on the Payment entity]]></description>
+    <field name="paymentMethodId" type="id" is-pk="true"/>
+    <field name="checkNumber" type="number-integer" is-pk="true"/>
+    <field name="paymentId" type="id"/>
+    <relationship type="one" related="mantle.account.method.PaymentMethod"/>
+    <relationship type="one" related="mantle.account.payment.Payment"/>
+    <field name="lastUpdatedStamp" type="date-time"/>
+
+</entity>

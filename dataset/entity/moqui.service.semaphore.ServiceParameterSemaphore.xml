@@ -1,0 +1,10 @@
+
+<!-- Entity Name: moqui.service.semaphore.ServiceParameterSemaphore sql table: SERVICE_PARAMETER_SEMAPHORE --><entity entity-name="ServiceParameterSemaphore" package="moqui.service.semaphore" use="transactional" cache="never">
+    <field name="serviceName" type="text-medium" is-pk="true">
+        <description><![CDATA[May be semaphore-name if that attribute is used, otherwise is service name]]></description></field>
+    <field name="parameterValue" type="text-medium" is-pk="true"/>
+    <field name="lockThread" type="text-medium"/>
+    <field name="lockTime" type="date-time"/>
+    <field name="lastUpdatedStamp" type="date-time"/>
+
+</entity>

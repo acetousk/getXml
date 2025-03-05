@@ -1,0 +1,16 @@
+<!--Transition Screen Location component://SimpleScreens/screen/SimpleScreens/Wiki/wiki.xml Transition Name actions--><transition name="actions"><parameter name="wikiSpaceId"/><parameter name="pagePath"/><parameter name="wikiPageId"/><parameter name="versionName"/><parameter name="wikiSpaceId"/><parameter name="term"/><parameter name="currentPagePath"/><parameter name="valueUsePath"/><parameter name="includeRoot"/><actions><!--always-actions at component://webroot/screen/webroot.xml--><set field="html_scripts" from="new LinkedHashSet()"/><set field="footer_scripts" from="new LinkedHashSet()"/><set field="html_stylesheets" from="new LinkedHashSet()"/><!--pre-actions--><if condition="sri.screenUrlInfo.fullPathNameList && sri.screenUrlInfo.fullPathNameList[0] == 'menuData'"><return/></if><set field="extraPathNameList" from="sri.screenUrlInfo.extraPathNameList"/><service-call name="org.moqui.impl.WikiServices.get#WikiPageInfo" in-map="context" out-map="context"/><script><![CDATA[import org.moqui.impl.screen.ScreenRenderImpl
+            import org.moqui.impl.screen.ScreenUrlInfo
+
+            // ec.logger.warn("========== before redirect context=${context}")
+            if (!pageReference?.exists) {
+                ec.logger.info("Page at ${pageReference} does not exist, forwarding to create")
+                ScreenRenderImpl sri = context.sri
+                // NOTE: have to do a little more work here because of the extra path that messes up the relative screen loc
+                ScreenUrlInfo.UrlInstance editWikiUrl = sri.buildUrl(sri.getRootScreenDef(),
+                        sri.getScreenUrlInfo().getPreTransitionPathNameList(), "../EditWikiPage")
+                editWikiUrl.addParameter("wikiSpaceId", wikiSpaceId)
+                editWikiUrl.addParameter("parentPath", parentPath)
+                editWikiUrl.addParameter("pageName", pageName)
+                editWikiUrl.addParameter("isCreate", "true")
+                sri.sendRedirectAndStopRender(editWikiUrl.getPathWithParams())
+            }]]></script><!--actions--><set field="basePath" from="sri.getCurrentScreenUrl().getScreenOnlyPath()"/><set field="baseLinkPath" from="basePath + '/' + wikiSpaceId"/><set field="baseLinkUrl" from="sri.getCurrentScreenUrl().getScreenPathUrl() + '/' + wikiSpaceId"/><set field="childPageList" from="pageReference.getChildren()"/><entity-find entity-name="mantle.party.communication.WikiPageCommEventDetail" list="commEventDetailList"><econdition field-name="wikiPageId"/><order-by field-name="entryDate"/></entity-find><entity-find entity-name="moqui.resource.wiki.WikiPageCategory" list="wikiPageCategories"><order-by field-name="categoryName"/></entity-find></actions></transition>

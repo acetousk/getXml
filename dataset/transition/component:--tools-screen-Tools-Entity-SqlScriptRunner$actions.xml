@@ -1,0 +1,53 @@
+<!--Transition Screen Location component://tools/screen/Tools/Entity/SqlScriptRunner.xml Transition Name actions--><transition name="actions"><actions><!--always-actions at component://webroot/screen/webroot.xml--><set field="html_scripts" from="new LinkedHashSet()"/><set field="footer_scripts" from="new LinkedHashSet()"/><set field="html_stylesheets" from="new LinkedHashSet()"/><!--actions--><if condition="!ec.user.hasPermission('SQL_RUNNER_WEB')"><return error="true" message="User does not have permission to use the SQL Runner"/></if><if condition="!sri.getScreenUrlInfo().isPermitted(ec, null, org.moqui.context.ArtifactExecutionInfo.AUTHZA_ALL)"><return error="true" message="User must be authorized for all actions on this screen"/></if><script><![CDATA[import java.sql.Connection
+            import java.sql.ResultSet
+            import java.sql.SQLWarning
+            import org.moqui.context.ExecutionContext
+
+            ExecutionContext ec = context.ec
+
+            def rs = null
+            int limitInt = 1
+
+            // make sure SQL comes in secure parameter (body, etc no URL)
+            String sqlScript = ec.web.secureRequestParameters.get("sql")
+            if (sqlScript && groupName) {
+                sqlList = sqlScript.split(';')
+                messageList = []
+                Connection con = ec.entity.getConnection(groupName)
+                try {
+                    for (sql in sqlList) {
+                        try {
+                            stmt = con.createStatement()
+
+                            boolean isResultSet = stmt.execute(sql as String)
+
+                            SQLWarning w = stmt.getWarnings()
+                            for (int j = 0; j < 100 && w != null; j++) {
+                                ec.logger.warn(w.getMessage() as String)
+                                w = w.getNextWarning()
+                            }
+                            stmt.clearWarnings()
+
+                            if (isResultSet) {
+                                rs = stmt.getResultSet()
+                                try {
+                                    // do stuff with result set (like displaying it see SqlRunner.xml)
+                                } finally {
+                                    rs.close()
+                                }
+                            } else if ((rowsAffected = stmt.getUpdateCount()) != -1){
+                                messageList.add(ec.resource.expand('Query altered ${rowsAffected} rows.',''))
+                            }
+
+                        } catch (Exception e) {
+                            messageList.add(e.toString())
+                            ec.logger.log(200, "Error running SQL query in SqlRunner", e)
+                        } finally {
+                            if (stmt != null) { try { stmt.close() } catch (Exception e) { /* Ignore */ } }
+                        }
+                    }
+                } finally {
+                    if (con != null) { try { con.close() } catch (Exception e) { /* Ignore */ } }
+                }
+
+            }]]></script></actions></transition>

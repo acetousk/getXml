@@ -1,0 +1,433 @@
+
+<!-- Entity Name: mantle.party.Party sql table: PARTY --><entity entity-name="Party" package="mantle.party" short-alias="parties" has-dependents="true">
+    <field name="partyId" type="id" is-pk="true"/>
+    <field name="pseudoId" type="text-short" default="partyId"/>
+    <field name="partyTypeEnumId" type="id"/>
+    <field name="disabled" type="text-indicator" enable-audit-log="true" default="'N'"/>
+    <field name="customerStatusId" type="id"/>
+    <field name="ownerPartyId" type="id" enable-audit-log="update" default="'_NA_'">
+        <description><![CDATA[If applicable, such as for customer records, the other Party that 'owns' the data for this Party.]]></description></field>
+    <field name="externalId" type="id"/>
+    <field name="dataSourceId" type="id"/>
+    <field name="gatewayCimId" type="text-short" enable-audit-log="update"/>
+    <field name="comments" type="text-long"/>
+    <field name="shippingInstructions" type="text-long"/>
+    <field name="hasDuplicates" type="text-indicator"/>
+    <field name="lastDupCheckDate" type="date-time"/>
+    <field name="mergedToPartyId" type="id"/>
+    <relationship type="one" title="PartyType" related="moqui.basic.Enumeration" short-alias="type">
+        <key-map field-name="partyTypeEnumId"/></relationship>
+    <relationship type="one" title="CustomerStatus" related="moqui.basic.StatusItem">
+        <key-map field-name="customerStatusId" related="statusId"/></relationship>
+    <relationship type="one" title="Owner" related="mantle.party.Party" short-alias="owner">
+        <key-map field-name="ownerPartyId"/></relationship>
+    <relationship type="one" related="moqui.basic.DataSource"/>
+    <relationship type="one-nofk" related="mantle.party.Organization" short-alias="organization" mutable="true"/>
+    <relationship type="one-nofk" related="mantle.party.Person" short-alias="person" mutable="true"/>
+    <relationship type="many" related="mantle.party.PartyBadge" short-alias="badges">
+        <key-map field-name="partyId"/></relationship>
+    <relationship type="many" related="mantle.party.PartyClassificationAppl" short-alias="classifications">
+        <key-map field-name="partyId"/></relationship>
+    <relationship type="many" related="mantle.party.PartyContent" short-alias="contents">
+        <key-map field-name="partyId"/></relationship>
+    <relationship type="many" related="mantle.party.PartyIdentification" short-alias="identifications">
+        <key-map field-name="partyId"/></relationship>
+    <relationship type="many" related="mantle.party.PartyNote" short-alias="notes">
+        <key-map field-name="partyId"/></relationship>
+    <relationship type="many" related="mantle.party.PartyRole" short-alias="roles">
+        <key-map field-name="partyId"/></relationship>
+    <relationship type="many" related="mantle.party.PartySetting" short-alias="settings">
+        <key-map field-name="partyId"/></relationship>
+    <relationship type="many" title="From" related="mantle.party.PartyRelationship" short-alias="fromRelationships">
+        <key-map field-name="partyId" related="fromPartyId"/></relationship>
+    <relationship type="many" title="To" related="mantle.party.PartyRelationship" short-alias="toRelationships">
+        <key-map field-name="partyId" related="toPartyId"/></relationship>
+    <relationship type="many" related="mantle.party.contact.PartyContactMech" short-alias="contactMechs">
+        <key-map field-name="partyId"/></relationship>
+    <relationship type="many" related="mantle.account.financial.FinancialAccount" short-alias="financialAccounts">
+        <key-map field-name="partyId" related="ownerPartyId"/></relationship>
+    <relationship type="many" related="mantle.account.method.PaymentMethod" short-alias="paymentMethods">
+        <key-map field-name="partyId" related="ownerPartyId"/></relationship>
+    <relationship type="many" related="moqui.security.UserAccount" short-alias="userAccounts">
+        <key-map field-name="partyId"/></relationship>
+    <index name="PARTY_ID_PSEUDO" unique="true">
+        <index-field name="pseudoId"/>
+        <index-field name="ownerPartyId"/>
+    </index>
+    <index name="PARTY_ID_EXT">
+        <index-field name="externalId"/></index>
+    <index name="PARTY_ID_MERGETO">
+        <index-field name="mergedToPartyId"/></index>
+    <seed-data>
+        <moqui.basic.EnumerationType description="Party Type" enumTypeId="PartyType"/>
+        <moqui.basic.Enumeration description="Automated Agent" enumId="PtyAutomatedAgent" enumTypeId="PartyType"/>
+        <moqui.basic.Enumeration description="Person" enumId="PtyPerson" enumTypeId="PartyType"/>
+        <moqui.basic.Enumeration description="Organization" enumId="PtyOrganization" enumTypeId="PartyType"/>
+        <Party partyId="_NA_" partyTypeEnumId="PtyPerson"/>
+        <Person partyId="_NA_" firstName="Not" lastName="Applicable"/>
+    </seed-data>
+    <master name="default">
+        <detail relationship="type"/>
+        <detail relationship="organization"/>
+        <detail relationship="person"/>
+        <detail relationship="badges"/>
+        <detail relationship="classifications">
+            <detail relationship="classification">
+                <detail relationship="type"/></detail></detail>
+        <detail relationship="contents">
+            <detail relationship="type"/></detail>
+        <detail relationship="identifications">
+            <detail relationship="type"/></detail>
+        <detail relationship="notes"/>
+        <detail relationship="roles">
+            <detail relationship="role"/></detail>
+        <detail relationship="fromRelationships">
+            <detail relationship="fromRole"/>
+            <detail relationship="toParty">
+                <detail relationship="organization"/>
+                <detail relationship="person"/>
+            </detail>
+            <detail relationship="toRole"/>
+            <detail relationship="status"/>
+            <detail relationship="type"/>
+        </detail>
+        <detail relationship="toRelationships">
+            <detail relationship="fromParty">
+                <detail relationship="organization"/>
+                <detail relationship="person"/>
+            </detail>
+            <detail relationship="fromRole"/>
+            <detail relationship="toRole"/>
+            <detail relationship="status"/>
+            <detail relationship="type"/>
+        </detail>
+        <detail relationship="contactMechs">
+            <detail relationship="contactMech" use-master="default"/>
+            <detail relationship="purpose"/>
+        </detail>
+    </master>
+    <master name="contact">
+        <detail relationship="type"/>
+        <detail relationship="organization"/>
+        <detail relationship="person"/>
+        <detail relationship="identifications">
+            <detail relationship="type"/></detail>
+        <detail relationship="contactMechs">
+            <detail relationship="contactMech" use-master="default"/>
+            <detail relationship="purpose"/>
+        </detail>
+    </master>
+    <master name="basic">
+        <detail relationship="organization"/>
+        <detail relationship="person"/>
+        <detail relationship="identifications">
+            <detail relationship="type"/></detail>
+    </master>
+    <field name="visibilityEnumId" type="id"/>
+    <relationship type="one" title="PartyVisibility" related="moqui.basic.Enumeration" short-alias="visibility">
+        <key-map field-name="visibilityEnumId"/></relationship>
+    <field name="lastUpdatedStamp" type="date-time"/>
+    <relationship related="coarchy.ActorParty" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="partyId" related="partyId"/></relationship>
+    <relationship related="coarchy.ClipboardEntry" type="many" is-auto-reverse="true" mutable="true" title="Party">
+        <key-map field-name="partyId" related="partyId"/></relationship>
+    <relationship related="mantle.account.billing.BillingAccount" type="many" is-auto-reverse="true" mutable="true" title="BillTo">
+        <key-map field-name="partyId" related="billToPartyId"/></relationship>
+    <relationship related="mantle.account.billing.BillingAccountParty" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="partyId" related="partyId"/></relationship>
+    <relationship related="mantle.account.financial.FinancialAccount" type="many" is-auto-reverse="true" mutable="true" title="Organization">
+        <key-map field-name="partyId" related="organizationPartyId"/></relationship>
+    <relationship related="mantle.account.financial.FinancialAccount" type="many" is-auto-reverse="true" mutable="true" title="Owner">
+        <key-map field-name="partyId" related="ownerPartyId"/></relationship>
+    <relationship related="mantle.account.financial.FinancialAccountParty" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="partyId" related="partyId"/></relationship>
+    <relationship related="mantle.account.financial.FinancialAccountTrans" type="many" is-auto-reverse="true" mutable="true" title="From">
+        <key-map field-name="partyId" related="fromPartyId"/></relationship>
+    <relationship related="mantle.account.financial.FinancialAccountTrans" type="many" is-auto-reverse="true" mutable="true" title="To">
+        <key-map field-name="partyId" related="toPartyId"/></relationship>
+    <relationship related="mantle.account.invoice.Invoice" type="many" is-auto-reverse="true" mutable="true" title="From">
+        <key-map field-name="partyId" related="fromPartyId"/></relationship>
+    <relationship related="mantle.account.invoice.Invoice" type="many" is-auto-reverse="true" mutable="true" title="To">
+        <key-map field-name="partyId" related="toPartyId"/></relationship>
+    <relationship related="mantle.account.invoice.Invoice" type="many" is-auto-reverse="true" mutable="true" title="OverrideOrg">
+        <key-map field-name="partyId" related="overrideOrgPartyId"/></relationship>
+    <relationship related="mantle.account.invoice.InvoiceItemAssoc" type="many" is-auto-reverse="true" mutable="true" title="From">
+        <key-map field-name="partyId" related="fromPartyId"/></relationship>
+    <relationship related="mantle.account.invoice.InvoiceItemAssoc" type="many" is-auto-reverse="true" mutable="true" title="To">
+        <key-map field-name="partyId" related="toPartyId"/></relationship>
+    <relationship related="mantle.account.invoice.InvoiceItemDetail" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="partyId" related="partyId"/></relationship>
+    <relationship related="mantle.account.invoice.InvoiceParty" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="partyId" related="partyId"/></relationship>
+    <relationship related="mantle.account.method.BankAccount" type="many" is-auto-reverse="true" mutable="true" title="Bank">
+        <key-map field-name="partyId" related="bankPartyId"/></relationship>
+    <relationship related="mantle.account.method.GiftCardFulfillment" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="partyId" related="partyId"/></relationship>
+    <relationship related="mantle.account.method.PaymentMethod" type="many" is-auto-reverse="true" mutable="true" title="Owner">
+        <key-map field-name="partyId" related="ownerPartyId"/></relationship>
+    <relationship related="mantle.account.payment.Payment" type="many" is-auto-reverse="true" mutable="true" title="From">
+        <key-map field-name="partyId" related="fromPartyId"/></relationship>
+    <relationship related="mantle.account.payment.Payment" type="many" is-auto-reverse="true" mutable="true" title="To">
+        <key-map field-name="partyId" related="toPartyId"/></relationship>
+    <relationship related="mantle.account.payment.Payment" type="many" is-auto-reverse="true" mutable="true" title="OverrideOrg">
+        <key-map field-name="partyId" related="overrideOrgPartyId"/></relationship>
+    <relationship related="mantle.account.payment.PaymentFraudEvidence" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="partyId" related="partyId"/></relationship>
+    <relationship related="mantle.facility.Facility" type="many" is-auto-reverse="true" mutable="true" title="Owner">
+        <key-map field-name="partyId" related="ownerPartyId"/></relationship>
+    <relationship related="mantle.facility.FacilityCertification" type="many" is-auto-reverse="true" mutable="true" title="Contact">
+        <key-map field-name="partyId" related="contactPartyId"/></relationship>
+    <relationship related="mantle.facility.FacilityCertification" type="many" is-auto-reverse="true" mutable="true" title="Auditor">
+        <key-map field-name="partyId" related="auditorPartyId"/></relationship>
+    <relationship related="mantle.facility.FacilityCertification" type="many" is-auto-reverse="true" mutable="true" title="AuditorOrg">
+        <key-map field-name="partyId" related="auditorOrgPartyId"/></relationship>
+    <relationship related="mantle.facility.FacilityGroupParty" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="partyId" related="partyId"/></relationship>
+    <relationship related="mantle.facility.FacilityParty" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="partyId" related="partyId"/></relationship>
+    <relationship related="mantle.humanres.ability.PartySkill" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="partyId" related="partyId"/></relationship>
+    <relationship related="mantle.humanres.employment.Employee" type="one-nofk" is-auto-reverse="true" mutable="true">
+        <key-map field-name="partyId" related="partyId"/></relationship>
+    <relationship related="mantle.humanres.employment.EmploymentApplication" type="many" is-auto-reverse="true" mutable="true" title="Applying">
+        <key-map field-name="partyId" related="applyingPartyId"/></relationship>
+    <relationship related="mantle.humanres.employment.EmploymentApplication" type="many" is-auto-reverse="true" mutable="true" title="ReferredBy">
+        <key-map field-name="partyId" related="referredByPartyId"/></relationship>
+    <relationship related="mantle.humanres.employment.EmploymentApplication" type="many" is-auto-reverse="true" mutable="true" title="Approver">
+        <key-map field-name="partyId" related="approverPartyId"/></relationship>
+    <relationship related="mantle.humanres.employment.EmploymentLeave" type="many" is-auto-reverse="true" mutable="true" title="Approver">
+        <key-map field-name="partyId" related="approverPartyId"/></relationship>
+    <relationship related="mantle.humanres.employment.EmploymentPayDetail" type="many" is-auto-reverse="true" mutable="true" title="Garnish">
+        <key-map field-name="partyId" related="payeePartyId"/></relationship>
+    <relationship related="mantle.humanres.employment.PayrollAdjustment" type="many" is-auto-reverse="true" mutable="true" title="Organization">
+        <key-map field-name="partyId" related="organizationPartyId"/></relationship>
+    <relationship related="mantle.humanres.employment.PayrollAdjustment" type="many" is-auto-reverse="true" mutable="true" title="Payee">
+        <key-map field-name="partyId" related="payeePartyId"/></relationship>
+    <relationship related="mantle.humanres.employment.WorkTypeGlOverride" type="many" is-auto-reverse="true" mutable="true" title="Organization">
+        <key-map field-name="partyId" related="organizationPartyId"/></relationship>
+    <relationship related="mantle.humanres.position.EmplPosition" type="many" is-auto-reverse="true" mutable="true" title="Organization">
+        <key-map field-name="partyId" related="organizationPartyId"/></relationship>
+    <relationship related="mantle.humanres.position.EmplPositionClassParty" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="partyId" related="partyId"/></relationship>
+    <relationship related="mantle.humanres.position.EmplPositionParty" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="partyId" related="partyId"/></relationship>
+    <relationship related="mantle.humanres.rate.RateAmount" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="partyId" related="partyId"/></relationship>
+    <relationship related="mantle.ledger.account.GlAccountOrgTimePeriod" type="many" is-auto-reverse="true" mutable="true" title="Organization">
+        <key-map field-name="partyId" related="organizationPartyId"/></relationship>
+    <relationship related="mantle.ledger.account.GlAccountOrganization" type="many" is-auto-reverse="true" mutable="true" title="Organization">
+        <key-map field-name="partyId" related="organizationPartyId"/></relationship>
+    <relationship related="mantle.ledger.account.GlAccountParty" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="partyId" related="partyId"/></relationship>
+    <relationship related="mantle.ledger.config.AssetTypeGlAccount" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="partyId" related="organizationPartyId"/></relationship>
+    <relationship related="mantle.ledger.config.CreditCardTypeGlAccount" type="many" is-auto-reverse="true" mutable="true" title="Organization">
+        <key-map field-name="partyId" related="organizationPartyId"/></relationship>
+    <relationship related="mantle.ledger.config.FinancialAccountReasonGlAccount" type="many" is-auto-reverse="true" mutable="true" title="Organization">
+        <key-map field-name="partyId" related="organizationPartyId"/></relationship>
+    <relationship related="mantle.ledger.config.FinancialAccountTypeGlAccount" type="many" is-auto-reverse="true" mutable="true" title="Organization">
+        <key-map field-name="partyId" related="organizationPartyId"/></relationship>
+    <relationship related="mantle.ledger.config.GlAccountTypeDefault" type="many" is-auto-reverse="true" mutable="true" title="Organization">
+        <key-map field-name="partyId" related="organizationPartyId"/></relationship>
+    <relationship related="mantle.ledger.config.GlAccountTypePartyDefault" type="many" is-auto-reverse="true" mutable="true" title="Organization">
+        <key-map field-name="partyId" related="organizationPartyId"/></relationship>
+    <relationship related="mantle.ledger.config.GlAccountTypePartyDefault" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="partyId" related="partyId"/></relationship>
+    <relationship related="mantle.ledger.config.InvoiceTypeTransType" type="many" is-auto-reverse="true" mutable="true" title="Organization">
+        <key-map field-name="partyId" related="organizationPartyId"/></relationship>
+    <relationship related="mantle.ledger.config.ItemTypeGlAccount" type="many" is-auto-reverse="true" mutable="true" title="Organization">
+        <key-map field-name="partyId" related="organizationPartyId"/></relationship>
+    <relationship related="mantle.ledger.config.PartyAcctgPreference" type="many" is-auto-reverse="true" mutable="true" title="Organization">
+        <key-map field-name="partyId" related="organizationPartyId"/></relationship>
+    <relationship related="mantle.ledger.config.PaymentInstrumentGlAccount" type="many" is-auto-reverse="true" mutable="true" title="Organization">
+        <key-map field-name="partyId" related="organizationPartyId"/></relationship>
+    <relationship related="mantle.ledger.config.PaymentTypeGlAccount" type="many" is-auto-reverse="true" mutable="true" title="Organization">
+        <key-map field-name="partyId" related="organizationPartyId"/></relationship>
+    <relationship related="mantle.ledger.config.ProductCategoryGlAccount" type="many" is-auto-reverse="true" mutable="true" title="Organization">
+        <key-map field-name="partyId" related="organizationPartyId"/></relationship>
+    <relationship related="mantle.ledger.config.ProductGlAccount" type="many" is-auto-reverse="true" mutable="true" title="Organization">
+        <key-map field-name="partyId" related="organizationPartyId"/></relationship>
+    <relationship related="mantle.ledger.config.TaxAuthorityGlAccount" type="many" is-auto-reverse="true" mutable="true" title="Organization">
+        <key-map field-name="partyId" related="organizationPartyId"/></relationship>
+    <relationship related="mantle.ledger.config.VarianceReasonGlAccount" type="many" is-auto-reverse="true" mutable="true" title="Organization">
+        <key-map field-name="partyId" related="organizationPartyId"/></relationship>
+    <relationship related="mantle.ledger.reconciliation.GlReconciliation" type="many" is-auto-reverse="true" mutable="true" title="Organization">
+        <key-map field-name="partyId" related="organizationPartyId"/></relationship>
+    <relationship related="mantle.ledger.transaction.AcctgTrans" type="many" is-auto-reverse="true" mutable="true" title="Organization">
+        <key-map field-name="partyId" related="organizationPartyId"/></relationship>
+    <relationship related="mantle.ledger.transaction.AcctgTrans" type="many" is-auto-reverse="true" mutable="true" title="Other">
+        <key-map field-name="partyId" related="otherPartyId"/></relationship>
+    <relationship related="mantle.ledger.transaction.GlJournal" type="many" is-auto-reverse="true" mutable="true" title="Organization">
+        <key-map field-name="partyId" related="organizationPartyId"/></relationship>
+    <relationship related="mantle.marketing.campaign.MarketingCampaignParty" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="partyId" related="partyId"/></relationship>
+    <relationship related="mantle.marketing.contact.ContactList" type="many" is-auto-reverse="true" mutable="true" title="Owner">
+        <key-map field-name="partyId" related="ownerPartyId"/></relationship>
+    <relationship related="mantle.marketing.contact.ContactListCommStatus" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="partyId" related="partyId"/></relationship>
+    <relationship related="mantle.marketing.contact.ContactListParty" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="partyId" related="partyId"/></relationship>
+    <relationship related="mantle.marketing.segment.MarketSegment" type="many" is-auto-reverse="true" mutable="true" title="Owner">
+        <key-map field-name="partyId" related="ownerPartyId"/></relationship>
+    <relationship related="mantle.marketing.segment.MarketSegmentParty" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="partyId" related="partyId"/></relationship>
+    <relationship related="mantle.order.OrderContent" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="partyId" related="partyId"/></relationship>
+    <relationship related="mantle.order.OrderDecision" type="many" is-auto-reverse="true" mutable="true" title="DecisionBy">
+        <key-map field-name="partyId" related="decisionByPartyId"/></relationship>
+    <relationship related="mantle.order.OrderEmailMessage" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="partyId" related="partyId"/></relationship>
+    <relationship related="mantle.order.OrderHeader" type="many" is-auto-reverse="true" mutable="true" title="EnteredBy">
+        <key-map field-name="partyId" related="enteredByPartyId"/></relationship>
+    <relationship related="mantle.order.OrderItemFormResponse" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="partyId" related="partyId"/></relationship>
+    <relationship related="mantle.order.OrderItemParty" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="partyId" related="partyId"/></relationship>
+    <relationship related="mantle.order.OrderPart" type="many" is-auto-reverse="true" mutable="true" title="Vendor">
+        <key-map field-name="partyId" related="vendorPartyId"/></relationship>
+    <relationship related="mantle.order.OrderPart" type="many" is-auto-reverse="true" mutable="true" title="Customer">
+        <key-map field-name="partyId" related="customerPartyId"/></relationship>
+    <relationship related="mantle.order.OrderPart" type="many" is-auto-reverse="true" mutable="true" title="Carrier">
+        <key-map field-name="partyId" related="carrierPartyId"/></relationship>
+    <relationship related="mantle.order.OrderPartParty" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="partyId" related="partyId"/></relationship>
+    <relationship related="mantle.order.return.ReturnHeader" type="many" is-auto-reverse="true" mutable="true" title="Customer">
+        <key-map field-name="partyId" related="customerPartyId"/></relationship>
+    <relationship related="mantle.order.return.ReturnHeader" type="many" is-auto-reverse="true" mutable="true" title="Vendor">
+        <key-map field-name="partyId" related="vendorPartyId"/></relationship>
+    <relationship related="mantle.order.return.ReturnHeader" type="many" is-auto-reverse="true" mutable="true" title="Carrier">
+        <key-map field-name="partyId" related="carrierPartyId"/></relationship>
+    <relationship related="mantle.other.budget.BudgetParty" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="partyId" related="partyId"/></relationship>
+    <relationship related="mantle.other.budget.BudgetReview" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="partyId" related="partyId"/></relationship>
+    <relationship related="mantle.other.tax.TaxAuthority" type="many" is-auto-reverse="true" mutable="true" title="TaxAuth">
+        <key-map field-name="partyId" related="taxAuthPartyId"/></relationship>
+    <relationship related="mantle.other.tax.TaxAuthorityParty" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="partyId" related="partyId"/></relationship>
+    <relationship related="mantle.party.PartyActivation" type="many" is-auto-reverse="true" mutable="true" title="Party">
+        <key-map field-name="partyId" related="partyId"/></relationship>
+    <relationship related="mantle.party.PartyBadge" type="many" is-auto-reverse="true" mutable="true" title="Organization">
+        <key-map field-name="partyId" related="organizationPartyId"/></relationship>
+    <relationship related="mantle.party.PartyDimension" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="partyId" related="partyId"/></relationship>
+    <relationship related="mantle.party.PartyGeoPoint" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="partyId" related="partyId"/></relationship>
+    <relationship related="mantle.party.PartyIdentification" type="many" is-auto-reverse="true" mutable="true" title="IssuedBy">
+        <key-map field-name="partyId" related="issuedByPartyId"/></relationship>
+    <relationship related="mantle.party.PartySystemMessage" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="partyId" related="partyId"/></relationship>
+    <relationship related="mantle.party.agreement.Agreement" type="many" is-auto-reverse="true" mutable="true" title="Organization">
+        <key-map field-name="partyId" related="organizationPartyId"/></relationship>
+    <relationship related="mantle.party.agreement.Agreement" type="many" is-auto-reverse="true" mutable="true" title="Other">
+        <key-map field-name="partyId" related="otherPartyId"/></relationship>
+    <relationship related="mantle.party.agreement.AgreementItemParty" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="partyId" related="partyId"/></relationship>
+    <relationship related="mantle.party.agreement.AgreementParty" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="partyId" related="partyId"/></relationship>
+    <relationship related="mantle.party.communication.CommunicationEvent" type="many" is-auto-reverse="true" mutable="true" title="From">
+        <key-map field-name="partyId" related="fromPartyId"/></relationship>
+    <relationship related="mantle.party.communication.CommunicationEvent" type="many" is-auto-reverse="true" mutable="true" title="To">
+        <key-map field-name="partyId" related="toPartyId"/></relationship>
+    <relationship related="mantle.party.communication.CommunicationEventParty" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="partyId" related="partyId"/></relationship>
+    <relationship related="mantle.product.Product" type="many" is-auto-reverse="true" mutable="true" title="Owner">
+        <key-map field-name="partyId" related="ownerPartyId"/></relationship>
+    <relationship related="mantle.product.ProductParameterSet" type="many" is-auto-reverse="true" mutable="true" title="Customer">
+        <key-map field-name="partyId" related="customerPartyId"/></relationship>
+    <relationship related="mantle.product.ProductParty" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="partyId" related="partyId"/></relationship>
+    <relationship related="mantle.product.asset.Asset" type="many" is-auto-reverse="true" mutable="true" title="Owner">
+        <key-map field-name="partyId" related="ownerPartyId"/></relationship>
+    <relationship related="mantle.product.asset.AssetPartyAssignment" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="partyId" related="partyId"/></relationship>
+    <relationship related="mantle.product.asset.AssetPoolParty" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="partyId" related="partyId"/></relationship>
+    <relationship related="mantle.product.asset.Lot" type="many" is-auto-reverse="true" mutable="true" title="Mfg">
+        <key-map field-name="partyId" related="mfgPartyId"/></relationship>
+    <relationship related="mantle.product.asset.PhysicalInventory" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="partyId" related="partyId"/></relationship>
+    <relationship related="mantle.product.category.ProductCategory" type="many" is-auto-reverse="true" mutable="true" title="Owner">
+        <key-map field-name="partyId" related="ownerPartyId"/></relationship>
+    <relationship related="mantle.product.category.ProductCategoryParty" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="partyId" related="partyId"/></relationship>
+    <relationship related="mantle.product.feature.ProductFeature" type="many" is-auto-reverse="true" mutable="true" title="Owner">
+        <key-map field-name="partyId" related="ownerPartyId"/></relationship>
+    <relationship related="mantle.product.issuance.AssetIssuanceParty" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="partyId" related="partyId"/></relationship>
+    <relationship related="mantle.product.maintenance.AssetRegistration" type="many" is-auto-reverse="true" mutable="true" title="GovAgency">
+        <key-map field-name="partyId" related="govAgencyPartyId"/></relationship>
+    <relationship related="mantle.product.store.ProductStore" type="many" is-auto-reverse="true" mutable="true" title="Organization">
+        <key-map field-name="partyId" related="organizationPartyId"/></relationship>
+    <relationship related="mantle.product.store.ProductStoreGroupParty" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="partyId" related="partyId"/></relationship>
+    <relationship related="mantle.product.store.ProductStoreParty" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="partyId" related="partyId"/></relationship>
+    <relationship related="mantle.product.store.ProductStorePromoCodeParty" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="partyId" related="partyId"/></relationship>
+    <relationship related="mantle.product.store.ProductStoreShipOption" type="many" is-auto-reverse="true" mutable="true" title="Carrier">
+        <key-map field-name="partyId" related="carrierPartyId"/></relationship>
+    <relationship related="mantle.product.store.ProductStoreShippingGateway" type="many" is-auto-reverse="true" mutable="true" title="Carrier">
+        <key-map field-name="partyId" related="carrierPartyId"/></relationship>
+    <relationship related="mantle.product.subscription.Subscription" type="many" is-auto-reverse="true" mutable="true" title="Subscriber">
+        <key-map field-name="partyId" related="subscriberPartyId"/></relationship>
+    <relationship related="mantle.request.Request" type="many" is-auto-reverse="true" mutable="true" title="FiledBy">
+        <key-map field-name="partyId" related="filedByPartyId"/></relationship>
+    <relationship related="mantle.request.RequestCategory" type="many" is-auto-reverse="true" mutable="true" title="Responsible">
+        <key-map field-name="partyId" related="responsiblePartyId"/></relationship>
+    <relationship related="mantle.request.RequestItem" type="many" is-auto-reverse="true" mutable="true" title="Supplier">
+        <key-map field-name="partyId" related="supplierPartyId"/></relationship>
+    <relationship related="mantle.request.RequestParty" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="partyId" related="partyId"/></relationship>
+    <relationship related="mantle.request.requirement.RequirementParty" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="partyId" related="partyId"/></relationship>
+    <relationship related="mantle.sales.forecast.SalesForecast" type="many" is-auto-reverse="true" mutable="true" title="Organization">
+        <key-map field-name="partyId" related="organizationPartyId"/></relationship>
+    <relationship related="mantle.sales.forecast.SalesForecast" type="many" is-auto-reverse="true" mutable="true" title="Internal">
+        <key-map field-name="partyId" related="internalPartyId"/></relationship>
+    <relationship related="mantle.sales.need.PartyNeed" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="partyId" related="partyId"/></relationship>
+    <relationship related="mantle.sales.opportunity.SalesOpportunity" type="many" is-auto-reverse="true" mutable="true" title="Account">
+        <key-map field-name="partyId" related="accountPartyId"/></relationship>
+    <relationship related="mantle.sales.opportunity.SalesOpportunityParty" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="partyId" related="partyId"/></relationship>
+    <relationship related="mantle.shipment.Shipment" type="many" is-auto-reverse="true" mutable="true" title="From">
+        <key-map field-name="partyId" related="fromPartyId"/></relationship>
+    <relationship related="mantle.shipment.Shipment" type="many" is-auto-reverse="true" mutable="true" title="To">
+        <key-map field-name="partyId" related="toPartyId"/></relationship>
+    <relationship related="mantle.shipment.ShipmentParty" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="partyId" related="partyId"/></relationship>
+    <relationship related="mantle.shipment.ShipmentRouteSegment" type="many" is-auto-reverse="true" mutable="true" title="Carrier">
+        <key-map field-name="partyId" related="carrierPartyId"/></relationship>
+    <relationship related="mantle.shipment.carrier.CarrierShipmentBoxType" type="many" is-auto-reverse="true" mutable="true" title="Carrier">
+        <key-map field-name="partyId" related="carrierPartyId"/></relationship>
+    <relationship related="mantle.shipment.carrier.CarrierShipmentMethod" type="many" is-auto-reverse="true" mutable="true" title="Carrier">
+        <key-map field-name="partyId" related="carrierPartyId"/></relationship>
+    <relationship related="mantle.shipment.carrier.PartyCarrierAccount" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="partyId" related="partyId"/></relationship>
+    <relationship related="mantle.shipment.carrier.PartyCarrierAccount" type="many" is-auto-reverse="true" mutable="true" title="Carrier">
+        <key-map field-name="partyId" related="carrierPartyId"/></relationship>
+    <relationship related="mantle.shipment.carrier.ShippingGatewayCarrier" type="many" is-auto-reverse="true" mutable="true" title="Carrier">
+        <key-map field-name="partyId" related="carrierPartyId"/></relationship>
+    <relationship related="mantle.shipment.carrier.ShippingGatewayMethod" type="many" is-auto-reverse="true" mutable="true" title="Carrier">
+        <key-map field-name="partyId" related="carrierPartyId"/></relationship>
+    <relationship related="mantle.work.effort.WorkEffort" type="many" is-auto-reverse="true" mutable="true" title="Owner">
+        <key-map field-name="partyId" related="ownerPartyId"/></relationship>
+    <relationship related="mantle.work.effort.WorkEffortCategory" type="many" is-auto-reverse="true" mutable="true" title="Owner">
+        <key-map field-name="partyId" related="ownerPartyId"/></relationship>
+    <relationship related="mantle.work.effort.WorkEffortParty" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="partyId" related="partyId"/></relationship>
+    <relationship related="mantle.work.time.TimeEntry" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="partyId" related="partyId"/></relationship>
+    <relationship related="mantle.work.time.TimeEntry" type="many" is-auto-reverse="true" mutable="true" title="Team">
+        <key-map field-name="partyId" related="teamPartyId"/></relationship>
+    <relationship related="mantle.work.time.TimeEntry" type="many" is-auto-reverse="true" mutable="true" title="Client">
+        <key-map field-name="partyId" related="clientPartyId"/></relationship>
+    <relationship related="mantle.work.time.Timesheet" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="partyId" related="partyId"/></relationship>
+    <relationship related="mantle.work.time.Timesheet" type="many" is-auto-reverse="true" mutable="true" title="Client">
+        <key-map field-name="partyId" related="clientPartyId"/></relationship>
+    <relationship related="mantle.work.time.TimesheetParty" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="partyId" related="partyId"/></relationship>
+
+</entity>

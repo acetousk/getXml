@@ -1,0 +1,10 @@
+<!--Transition Screen Location component://tools/screen/Tools/Service/ServiceRun.xml Transition Name run--><transition name="run"><parameter name="serviceName"/><actions><!--always-actions at component://webroot/screen/webroot.xml--><set field="html_scripts" from="new LinkedHashSet()"/><set field="footer_scripts" from="new LinkedHashSet()"/><set field="html_stylesheets" from="new LinkedHashSet()"/><!--transition actions--><script><![CDATA[org.moqui.context.ExecutionContext ec = context.ec
+                serviceResults = ec.service.sync().name(serviceName).parameters(context).call()
+                if (serviceResults) {
+                    StringBuilder sb = new StringBuilder("Service Run Results:\n")
+                    for (def resultEntry in serviceResults) sb.append("==> ${resultEntry.key}: ${resultEntry.value?.toString()}\n")
+                    ec.logger.info(sb.toString())
+
+                    // save the results to display on the screen in the next request (after the transition redirect)
+                    ec.webImpl?.saveParametersToSession(serviceResults)
+                }]]></script></actions></transition>

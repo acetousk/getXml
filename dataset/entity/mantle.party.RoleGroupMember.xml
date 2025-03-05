@@ -1,0 +1,12 @@
+
+<!-- Entity Name: mantle.party.RoleGroupMember sql table: ROLE_GROUP_MEMBER --><entity entity-name="RoleGroupMember" package="mantle.party">
+    <field name="roleGroupEnumId" type="id" is-pk="true"/>
+    <field name="roleTypeId" type="id" is-pk="true"/>
+    <relationship type="one" title="RoleGroup" related="moqui.basic.Enumeration">
+        <key-map field-name="roleGroupEnumId"/></relationship>
+    <relationship type="one" related="mantle.party.RoleType"/>
+    <seed-data>
+        <moqui.basic.EnumerationType description="Role Group" enumTypeId="RoleGroup"/></seed-data>
+    <field name="lastUpdatedStamp" type="date-time"/>
+
+</entity>

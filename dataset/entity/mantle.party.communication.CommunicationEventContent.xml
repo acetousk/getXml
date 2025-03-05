@@ -1,0 +1,24 @@
+
+<!-- Entity Name: mantle.party.communication.CommunicationEventContent sql table: COMMUNICATION_EVENT_CONTENT --><entity entity-name="CommunicationEventContent" package="mantle.party.communication" cache="never">
+    <field name="communicationEventContentId" type="id" is-pk="true"/>
+    <field name="communicationEventId" type="id"/>
+    <field name="contentLocation" type="text-medium"/>
+    <field name="contentTypeEnumId" type="id"/>
+    <field name="description" type="text-long"/>
+    <field name="contentDate" type="date-time" default="ec.user.nowTimestamp"/>
+    <field name="userId" type="id" default="ec.user.userId"/>
+    <field name="sequenceNum" type="number-integer"/>
+    <relationship type="one" related="moqui.security.UserAccount"/>
+    <relationship type="one" title="CommunicationContentType" related="moqui.basic.Enumeration">
+        <key-map field-name="contentTypeEnumId"/></relationship>
+    <seed-data>
+        <moqui.basic.EnumerationType description="Communication Content Type" enumTypeId="CommunicationContentType"/>
+        <moqui.basic.Enumeration description="Plain Text" enumId="CmctPlainText" enumTypeId="CommunicationContentType"/>
+        <moqui.basic.Enumeration description="HTML Text" enumId="CmctHtmlText" enumTypeId="CommunicationContentType"/>
+        <moqui.basic.Enumeration description="Attachment" enumId="CmctAttachment" enumTypeId="CommunicationContentType"/>
+    </seed-data>
+    <field name="lastUpdatedStamp" type="date-time"/>
+    <relationship related="mantle.party.communication.CommunicationEvent" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="communicationEventId" related="communicationEventId"/></relationship>
+
+</entity>

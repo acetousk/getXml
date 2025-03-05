@@ -1,0 +1,14 @@
+
+<!-- Entity Name: mantle.sales.opportunity.SalesOpportunityParty sql table: SALES_OPPORTUNITY_PARTY --><entity entity-name="SalesOpportunityParty" package="mantle.sales.opportunity">
+    <field name="salesOpportunityId" type="id" is-pk="true"/>
+    <field name="partyId" type="id" is-pk="true"/>
+    <field name="roleTypeId" type="id" is-pk="true"/>
+    <field name="fromDate" type="date-time" is-pk="true"/>
+    <field name="thruDate" type="date-time"/>
+    <relationship type="one" related="mantle.sales.opportunity.SalesOpportunity">
+        <key-map field-name="salesOpportunityId"/></relationship>
+    <relationship type="one" related="mantle.party.Party"/>
+    <relationship type="one" related="mantle.party.RoleType"/>
+    <field name="lastUpdatedStamp" type="date-time"/>
+
+</entity>

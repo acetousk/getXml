@@ -1,0 +1,26 @@
+
+<!-- Entity Name: moqui.server.instance.AppInstance sql table: APP_INSTANCE --><entity entity-name="AppInstance" package="moqui.server.instance" use="configuration">
+    <field name="appInstanceId" type="id" is-pk="true"/>
+    <field name="instanceImageId" type="id"/>
+    <field name="instanceHostId" type="id"/>
+    <field name="databaseHostId" type="id"/>
+    <field name="hostName" type="text-medium"/>
+    <field name="instanceName" type="text-medium"/>
+    <field name="instanceUuid" type="text-medium"/>
+    <field name="initCommand" type="text-medium"/>
+    <field name="jsonConfig" type="text-long"/>
+    <field name="networkMode" type="text-short"/>
+    <relationship type="one" related="moqui.server.instance.InstanceImage" short-alias="image"/>
+    <relationship type="one" related="moqui.server.instance.InstanceHost" short-alias="instanceHost"/>
+    <relationship type="one" related="moqui.server.instance.DatabaseHost" short-alias="database"/>
+    <relationship type="many" related="moqui.server.instance.AppInstanceEnv" short-alias="envs">
+        <key-map field-name="appInstanceId"/></relationship>
+    <relationship type="many" related="moqui.server.instance.AppInstanceLink" short-alias="links">
+        <key-map field-name="appInstanceId"/></relationship>
+    <relationship type="many" related="moqui.server.instance.AppInstanceVolume" short-alias="vols">
+        <key-map field-name="appInstanceId"/></relationship>
+    <relationship type="many" related="moqui.server.instance.AppInstanceHostConfig" short-alias="hostConfigs">
+        <key-map field-name="appInstanceId"/></relationship>
+    <field name="lastUpdatedStamp" type="date-time"/>
+
+</entity>

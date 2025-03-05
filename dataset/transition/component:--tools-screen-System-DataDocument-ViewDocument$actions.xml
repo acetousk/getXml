@@ -1,0 +1,8 @@
+<!--Transition Screen Location component://tools/screen/System/DataDocument/ViewDocument.xml Transition Name actions--><transition name="actions"><parameter name="_index" required="true"/><parameter name="_id" required="true"/><actions><!--always-actions at component://webroot/screen/webroot.xml--><set field="html_scripts" from="new LinkedHashSet()"/><set field="footer_scripts" from="new LinkedHashSet()"/><set field="html_stylesheets" from="new LinkedHashSet()"/><!--actions--><script><![CDATA[import groovy.json.JsonOutput
+        import org.moqui.context.ExecutionContext
+
+        ExecutionContext ec = context.ec
+        def elasticClient = ec.factory.elastic.getDefault()
+        sourceMap = elasticClient.get((String) _index, (String) _id)?._source
+        documentString = JsonOutput.prettyPrint(elasticClient.objectToJson(sourceMap))
+        flattenedDocumentMap = flattenNestedMap(sourceMap)]]></script></actions></transition>

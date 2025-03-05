@@ -1,0 +1,15 @@
+
+<!-- Entity Name: mantle.order.return.ReturnItemBilling sql table: RETURN_ITEM_BILLING --><entity entity-name="ReturnItemBilling" package="mantle.order.return" cache="never">
+    <field name="returnId" type="id" is-pk="true"/>
+    <field name="returnItemSeqId" type="id" is-pk="true"/>
+    <field name="invoiceId" type="id" is-pk="true"/>
+    <field name="invoiceItemSeqId" type="id" is-pk="true"/>
+    <field name="assetReceiptId" type="id"/>
+    <field name="quantity" type="number-decimal"/>
+    <field name="amount" type="currency-amount"/>
+    <relationship type="one" related="mantle.order.return.ReturnItem"/>
+    <relationship type="one" related="mantle.account.invoice.InvoiceItem"/>
+    <relationship type="one" related="mantle.product.receipt.AssetReceipt"/>
+    <field name="lastUpdatedStamp" type="date-time"/>
+
+</entity>

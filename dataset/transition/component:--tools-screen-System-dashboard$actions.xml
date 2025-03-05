@@ -1,0 +1,12 @@
+<!--Transition Screen Location component://tools/screen/System/dashboard.xml Transition Name actions--><transition name="actions"><actions><!--always-actions at component://webroot/screen/webroot.xml--><set field="html_scripts" from="new LinkedHashSet()"/><set field="footer_scripts" from="new LinkedHashSet()"/><set field="html_stylesheets" from="new LinkedHashSet()"/><!--actions--><set field="smap" from="ec.factory.getStatusMap(true)"/><set field="loadPercent" from="(smap.Utilization.LoadPercent as BigDecimal).setScale(1, BigDecimal.ROUND_HALF_UP)"/><set field="heapPercent" from="(smap.Utilization.HeapPercent as BigDecimal).setScale(1, BigDecimal.ROUND_HALF_UP)"/><set field="diskPercent" from="(smap.Utilization.DiskPercent as BigDecimal).setScale(1, BigDecimal.ROUND_HALF_UP)"/><set field="componentInfoList" from="orderMapList(ec.factory.getComponentInfoList(), ['^name'])"/><set field="runtimeVersionMap" from="ec.factory.versionMap"/><set field="workerPool" from="ec.factory.workerPool"/><set field="jobWorkerPool" from="ec.service.jobWorkerPool"/><set field="esClientList" from="ec.elastic.getClientList()"/><set field="esServerInfoList" from="[]"/><iterate list="esClientList" entry="esClient"><script><![CDATA[try {
+                    esServerInfo = esClient.getServerInfo()
+                    if (esServerInfo) {
+                        esServerInfo.clientClusterName = esClient.getClusterName()
+                        esServerInfo.clusterLocation = esClient.getClusterLocation()
+                        esServerInfoList.add(esServerInfo)
+                    }
+                } catch (Throwable t) {
+                    ec.logger.error("Error getting info for Elastic Client", t)
+                    esServerInfoList.add([clientClusterName:esClient.getClusterName(),
+                        clusterLocation:esClient.getClusterLocation(), name:t.toString(), cluster_name:'ERROR'])
+                }]]></script></iterate></actions></transition>

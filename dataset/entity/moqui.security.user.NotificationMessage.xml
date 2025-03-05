@@ -1,0 +1,19 @@
+
+<!-- Entity Name: moqui.security.user.NotificationMessage sql table: NOTIFICATION_MESSAGE --><entity entity-name="NotificationMessage" package="moqui.security.user" use="nontransactional" cache="never">
+    <field name="notificationMessageId" type="id" is-pk="true"/>
+    <field name="topic" type="text-medium"/>
+    <field name="subTopic" type="text-medium"/>
+    <field name="userGroupId" type="id"/>
+    <field name="sentDate" type="date-time"/>
+    <field name="messageJson" type="text-very-long"/>
+    <field name="titleText" type="text-long"/>
+    <field name="linkText" type="text-long"/>
+    <field name="typeString" type="text-short"/>
+    <field name="showAlert" type="text-indicator"/>
+    <relationship type="one-nofk" related="moqui.security.user.NotificationTopic" short-alias="notificationTopic"/>
+    <relationship type="one" related="moqui.security.UserGroup" short-alias="userGroup"/>
+    <relationship type="many" related="moqui.security.user.NotificationMessageUser" short-alias="users">
+        <key-map field-name="notificationMessageId"/></relationship>
+    <field name="lastUpdatedStamp" type="date-time"/>
+
+</entity>

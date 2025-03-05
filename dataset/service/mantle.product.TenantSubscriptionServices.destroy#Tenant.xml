@@ -1,0 +1,1 @@
+<!--Service Location mantle.product.TenantSubscriptionServices.destroy#Tenant--><service verb="destroy" noun="Tenant"><in-parameters><parameter name="subscriptionId" required="true"/></in-parameters><out-parameters/><actions/></service>

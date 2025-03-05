@@ -1,0 +1,92 @@
+
+<!-- Entity Name: mantle.humanres.employment.Employment sql table: EMPLOYMENT --><entity entity-name="Employment" package="mantle.humanres.employment" use="nontransactional" has-dependents="true">
+    <description><![CDATA[This is a type of PartyRelationship so shares the ID with the related PartyRelationship record
+            between employee (fromPartyId) and internal organization (toPartyId) with relationshipTypeEnumId=PrtEmployee.]]></description>
+    <field name="partyRelationshipId" type="id" is-pk="true"/>
+    <field name="emplPositionId" type="id"/>
+    <field name="terminationReasonEnumId" type="id" enable-audit-log="update"/>
+    <field name="terminationTypeEnumId" type="id" enable-audit-log="update"/>
+    <field name="identityTypeEnumId" type="id"/>
+    <field name="emplAuthzTypeEnumId" type="id"/>
+    <field name="timePeriodTypeId" type="id">
+        <description><![CDATA[Payroll time period]]></description></field>
+    <field name="taxWorkContactMechId" type="id"/>
+    <field name="taxFederalAllowances" type="number-integer" enable-audit-log="update"/>
+    <field name="taxStateAllowances" type="number-integer" enable-audit-log="update"/>
+    <field name="taxFormId" type="id"/>
+    <field name="taxClassificationEnumId" type="id"/>
+    <relationship type="one" related="mantle.party.PartyRelationship" short-alias="partyRel"/>
+    <relationship type="one" related="mantle.humanres.position.EmplPosition" short-alias="position"/>
+    <relationship type="one" title="TerminationReason" related="moqui.basic.Enumeration">
+        <key-map field-name="terminationReasonEnumId"/></relationship>
+    <relationship type="one" title="TerminationType" related="moqui.basic.Enumeration">
+        <key-map field-name="terminationTypeEnumId"/></relationship>
+    <relationship type="one" title="IdentityType" related="moqui.basic.Enumeration">
+        <key-map field-name="identityTypeEnumId"/></relationship>
+    <relationship type="one" title="EmplAuthzType" related="moqui.basic.Enumeration">
+        <key-map field-name="emplAuthzTypeEnumId"/></relationship>
+    <relationship type="one" related="mantle.party.time.TimePeriodType"/>
+    <relationship type="one" title="TaxWork" related="mantle.party.contact.PostalAddress" short-alias="taxWorkContactMech">
+        <key-map field-name="taxWorkContactMechId"/></relationship>
+    <seed-data>
+        <moqui.basic.EnumerationType description="Termination Type" enumTypeId="TerminationType"/>
+        <moqui.basic.Enumeration description="Resigned" enumId="TtResigned" enumTypeId="TerminationType"/>
+        <moqui.basic.Enumeration description="Fired" enumId="TtFired" enumTypeId="TerminationType"/>
+        <moqui.basic.Enumeration description="Layoff" enumId="TtLayoff" enumTypeId="TerminationType"/>
+        <moqui.basic.Enumeration description="Retired" enumId="TtRetired" enumTypeId="TerminationType"/>
+        <moqui.basic.EnumerationType description="Termination Reason" enumTypeId="TerminationReason"/>
+        <moqui.basic.EnumerationType description="Identity Type" enumTypeId="IdentityType"/>
+        <moqui.basic.Enumeration description="Local Passport" enumId="IdTpLocalPassport" enumTypeId="IdentityType"/>
+        <moqui.basic.Enumeration description="Foreign Passport" enumId="IdTpForeignPassport" enumTypeId="IdentityType"/>
+        <moqui.basic.Enumeration description="Permanent Resident Card" enumId="IdTpResidentCard" enumTypeId="IdentityType"/>
+        <moqui.basic.Enumeration description="Alien Registration Receipt Card" enumId="IdTpAlienCard" enumTypeId="IdentityType"/>
+        <moqui.basic.Enumeration description="Employment Authorization Document" enumId="IdTpEmplAuthzDoc" enumTypeId="IdentityType"/>
+        <moqui.basic.Enumeration description="Local Driver License" enumId="IdTpLclDriverLicense" enumTypeId="IdentityType"/>
+        <moqui.basic.Enumeration description="Foreign Driver License" enumId="IdTpFrnDriverLicense" enumTypeId="IdentityType"/>
+        <moqui.basic.Enumeration description="Government ID Card" enumId="IdTpGovtIdCard" enumTypeId="IdentityType"/>
+        <moqui.basic.Enumeration description="School ID Card" enumId="IdTpSchoolIdCard" enumTypeId="IdentityType"/>
+        <moqui.basic.Enumeration description="Voter Registration" enumId="IdTpVoterReg" enumTypeId="IdentityType"/>
+        <moqui.basic.Enumeration description="Military ID" enumId="IdTpMilitaryId" enumTypeId="IdentityType"/>
+        <moqui.basic.Enumeration description="Military Dependent ID" enumId="IdTpMilDepId" enumTypeId="IdentityType"/>
+        <moqui.basic.Enumeration description="Merchant Mariner Card" enumId="IdTpMerchMarCard" enumTypeId="IdentityType"/>
+        <moqui.basic.Enumeration description="Native Tribal Document" enumId="IdTpNativeDoc" enumTypeId="IdentityType"/>
+        <moqui.basic.Enumeration description="School Record" enumId="IdTpSchoolRecord" enumTypeId="IdentityType"/>
+        <moqui.basic.Enumeration description="Medical Record" enumId="IdTpMedicalRecord" enumTypeId="IdentityType"/>
+        <moqui.basic.Enumeration description="Daycare Record" enumId="IdTpDaycareRecord" enumTypeId="IdentityType"/>
+        <moqui.basic.EnumerationType description="Employment Authorization Type" enumTypeId="EmplAuthzType"/>
+        <moqui.basic.Enumeration description="Local Passport" enumId="EatLocalPassport" enumTypeId="EmplAuthzType"/>
+        <moqui.basic.Enumeration description="Foreign Passport plus Visa" enumId="EatForeignPassportVisa" enumTypeId="EmplAuthzType"/>
+        <moqui.basic.Enumeration description="Permanent Resident Card" enumId="EatResidentCard" enumTypeId="EmplAuthzType"/>
+        <moqui.basic.Enumeration description="Alien Registration Receipt Card" enumId="EatAlienCard" enumTypeId="EmplAuthzType"/>
+        <moqui.basic.Enumeration description="Employment Authorization Document" enumId="EatEmplAuthzDoc" enumTypeId="EmplAuthzType"/>
+        <moqui.basic.Enumeration description="Social Security Card" enumId="EatSocSecCard" enumTypeId="EmplAuthzType"/>
+        <moqui.basic.Enumeration description="Certification of Birth Abroad" enumId="EatCertBirthAbroad" enumTypeId="EmplAuthzType"/>
+        <moqui.basic.Enumeration description="Certification of Report of Birth" enumId="EatCertRepOfBirth" enumTypeId="EmplAuthzType"/>
+        <moqui.basic.Enumeration description="Birth Certificate" enumId="EatBirthCert" enumTypeId="EmplAuthzType"/>
+        <moqui.basic.Enumeration description="Native Tribal Document" enumId="EatNativeDoc" enumTypeId="EmplAuthzType"/>
+        <moqui.basic.Enumeration description="Citizen ID Card" enumId="EatCitizenId" enumTypeId="EmplAuthzType"/>
+        <moqui.basic.Enumeration description="Resident Citizen ID Card" enumId="EatResCitizenId" enumTypeId="EmplAuthzType"/>
+    </seed-data>
+    <field name="lastUpdatedStamp" type="date-time"/>
+    <relationship related="mantle.account.invoice.Invoice" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="partyRelationshipId" related="partyRelationshipId"/></relationship>
+    <relationship related="mantle.account.payment.Payment" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="partyRelationshipId" related="partyRelationshipId"/></relationship>
+    <relationship related="mantle.humanres.employment.EmploymentBenefit" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="partyRelationshipId" related="partyRelationshipId"/></relationship>
+    <relationship related="mantle.humanres.employment.EmploymentLeave" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="partyRelationshipId" related="partyRelationshipId"/></relationship>
+    <relationship related="mantle.humanres.employment.EmploymentPayHistory" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="partyRelationshipId" related="partyRelationshipId"/></relationship>
+    <relationship related="mantle.humanres.employment.EmploymentSalary" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="partyRelationshipId" related="partyRelationshipId"/></relationship>
+    <relationship related="mantle.humanres.employment.PayrollAdjustment" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="partyRelationshipId" related="partyRelationshipId"/></relationship>
+    <relationship related="mantle.humanres.employment.UnemploymentClaim" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="partyRelationshipId" related="partyRelationshipId"/></relationship>
+    <relationship related="mantle.other.tax.TaxStatement" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="partyRelationshipId" related="partyRelationshipId"/></relationship>
+    <relationship related="mantle.party.agreement.AgreementItemEmployment" type="many" is-auto-reverse="true" mutable="true">
+        <key-map field-name="partyRelationshipId" related="partyRelationshipId"/></relationship>
+
+</entity>
