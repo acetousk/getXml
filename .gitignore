@@ -45,6 +45,7 @@ Desktop.ini
 
 # Linux auto files
 *~
+/dataset
 #/allEntities.txt
 #/allEntities.xml
 #/allScreens.txt

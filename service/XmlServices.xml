@@ -125,6 +125,21 @@ along with this software (see the LICENSE.md file). If not, see
             </if>
 
             <set field="knownServiceNames" from="ec.service.knownServiceNames"/>
+            <!-- Create auto-services for all entities -->
+            <set field="autoServiceNames" from="[]"/>
+            <set field="entityNames" from="ec.entity.getAllEntityNames()"/>
+            
+            <!-- Standard CRUD verbs to generate auto-services for -->
+            <iterate list="entityNames" entry="entityName">
+                <iterate list="org.moqui.impl.service.runner.EntityAutoServiceRunner.verbSet" entry="verb">
+
+                    <set field="autoServiceName" value="${verb}#${entityName}"/>
+                    <script>autoServiceNames.add(autoServiceName)</script>
+                </iterate>
+            </iterate>
+            
+            <!-- Add all auto-services to the known service names -->
+            <script>knownServiceNames.addAll(autoServiceNames)</script>
             <script>
                 if (filterServiceName) {
                     Iterator theIterator = knownServiceNames.iterator()
@@ -142,7 +157,82 @@ along with this software (see the LICENSE.md file). If not, see
             </if>
 <!--            <log level="warn" message="knownServiceNames: ${knownServiceNames}"/>-->
             <iterate list="knownServiceNames" entry="inService">
+                <set field="inParameters" from="null"/>
+                <set field="outParameters" from="null"/>
+                <set field="actions" from="null"/>
+                <set field="sd" from="null"/>
+                <set field="serviceVerb" from="null"/>
+                <set field="serviceNoun" from="null"/>
+                <set field="entityName" from="null"/>
+                <set field="entityDefinition" from="null"/>
+                <set field="entityInfo" from="null"/>
+                <set field="fieldInfos" from="null"/>
+                <set field="relationshipInfoList" from="null"/>
+                <set field="dependents" from="null"/>
+                <set field="xml" from="null"/>
+                <set field="serviceNode" from="null"/>
+                <set field="serviceDescriptionNode" from="null"/>
+                <set field="inParameterNode" from="null"/>
+                <set field="inParameterNodes" from="null"/>
+                <set field="inParameterDescriptionNodes" from="null"/>
+                <set field="outParameterNode" from="null"/>
+                <set field="outParameterNodes" from="null"/>
+                <set field="outParameterDescriptionNodes" from="null"/>
+                <set field="actionsNode" from="null"/>
+                <set field="secas" from="null"/>
+                <set field="eecas" from="null"/>
+                
                 <set field="sd" from="ec.service.getServiceDefinition(inService)"/>
+                <if condition="sd == null &amp;&amp; !inService.contains('${')">
+                    <set field="serviceVerb" from="inService.split('#')[0]"/>
+                    <set field="serviceNoun" from="inService.split('#')[1]"/>
+                    <set field="entityName" from="serviceNoun"/>
+                    <set field="entityDefinition" from="ec.entity.getEntityDefinition(entityName)"/>
+                    <set field="entityInfo" from="entityDefinition.entityInfo"/>
+                    <set field="pkFieldInfos" from="entityInfo.pkFieldInfoArray"/>
+                    <set field="nonPkFieldInfos" from="entityInfo.nonPkFieldInfoArray"/>
+                    <set field="allFieldInfos" from="entityInfo.allFieldInfoArray"/>
+                    <set field="fieldList" from="[]"/>
+                    <set field="pkFieldList" from="[]"/>
+                    <iterate list="allFieldInfos" entry="fieldInfo">
+                        <if condition="!fieldInfo.isLastUpdatedStamp">
+                            <if condition="serviceVerb == 'delete'">
+                                <if condition="fieldInfo.isPk">
+                                    <set field="fieldList" from="fieldList+[name:fieldInfo.name,type:ec.entity.getJavaType(fieldInfo.type),required:fieldInfo.isPk?'true':'false']"/>
+                                    <set field="pkFieldList" from="pkFieldList+[name:fieldInfo.name,type:ec.entity.getJavaType(fieldInfo.type),required:fieldInfo.isPk?'true':'false']"/>
+                                </if>
+                            <else>
+                                <set field="fieldList" from="fieldList+[name:fieldInfo.name,type:ec.entity.getJavaType(fieldInfo.type),required:fieldInfo.isPk?'true':'false']"/>
+                                <if condition="fieldInfo.isPk">
+                                    <set field="pkFieldList" from="pkFieldList+[name:fieldInfo.name,type:ec.entity.getJavaType(fieldInfo.type),required:fieldInfo.isPk?'true':'false']"/>
+                                </if>
+                            </else>
+                            </if>
+                        </if>
+                    </iterate>
+                    <set field="fieldInfos" from="entityInfo.allFieldInfoArray"/>
+                    <set field="relationshipInfoList" from="entityDefinition.getRelationshipsInfo(false)"/>
+                    <set field="dependents" from="entityDefinition.getDependentsTree()"/>
+
+                    <log level="warn" message="serviceVerb: ${serviceVerb} serviceNoun: ${serviceNoun} entityName: ${entityName} entityDefinition: ${entityDefinition} entityInfo: ${entityInfo} pkFieldInfos: ${pkFieldInfos} nonPkFieldInfos: ${nonPkFieldInfos} allFieldInfos: ${allFieldInfos} fieldInfos: ${fieldInfos} relationshipInfoList: ${relationshipInfoList} dependents: ${dependents}"/>
+                    <log level="warn" message="fieldList: ${fieldList}"/>
+
+                    <set field="xml" from="ec.resource.template('component://getXml/template/autoServiceRender.xml.ftl', '.ftl')"/>
+                    <log level="warn" message="xml: ${xml}"/>
+    
+                    <set field="xml" from="xml.replaceAll('&gt;\\s+&lt;', '&gt;&lt;').trim()"/>
+                    <if condition="outputFile">
+                        <set field="serviceXml" from="serviceXml+'\n'+xml"/>
+                    </if>
+                    <if condition="outputFilesToFolder">
+                        <script><![CDATA[
+                            outputFolder.makeFile(inService + '.xml').putText(xml)
+                            ]]></script>
+                    </if>
+    <!--                <log level="warn" message="inService: ${inService}"/>-->
+                    <set field="serviceList" from="serviceList+[name:inService,xml:xml]"/>
+                    <continue/>
+                </if>
                 <set field="serviceNode" from="sd.serviceNode"/>
                 <set field="serviceDescriptionNode" from="serviceNode.first('description')"/>
                 <set field="inParameterNode" from="serviceNode.first('in-parameters')"/>
@@ -200,9 +290,6 @@ along with this software (see the LICENSE.md file). If not, see
                 <set field="xml" from="ec.resource.template('component://getXml/template/serviceRender.xml.ftl', '.ftl')"/>
 <!--                <log level="warn" message="xml: ${xml}"/>-->
 
-                <if condition="inService.contains('OrderBillingShippingInfo')">
-<!--                    <log level="warn" message="xml after: ${xml}"/>-->
-                </if>
                 <set field="xml" from="xml.replaceAll('&gt;\\s+&lt;', '&gt;&lt;').trim()"/>
                 <if condition="outputFile">
                     <set field="serviceXml" from="serviceXml+'\n'+xml"/>
@@ -476,6 +563,7 @@ along with this software (see the LICENSE.md file). If not, see
                         </if>
 
                         <set field="actionsList" from="transitionNode.children('actions')"/>
+                        <set field="actionsList" from="transitionNode.children('actions')"/>
                         <if condition="actionsList.size() &gt; 0">
                             <script><![CDATA[actionList += ["""<!--transition actions-->"""]+actionsList.get(0).children*.toString()]]></script>
                         </if>
@@ -492,7 +580,7 @@ along with this software (see the LICENSE.md file). If not, see
 
                     <if condition="outputFilesToFolder">
                         <script><![CDATA[
-                            outputFolder.makeFile((inScreen+'$'+transitionName).replaceAll('/', '-')).putText(xml)
+                            outputFolder.makeFile((inScreen-'.xml'+'$'+transitionName+'.xml').replaceAll('/', '-')).putText(xml)
                             ]]></script>
                     </if>
 
@@ -513,7 +601,6 @@ along with this software (see the LICENSE.md file). If not, see
 <!--                            .replaceAll(">\\s+<", "><")-->
 <!--                            .trim();-->
 <!--                    ]]></script>-->
-
 
 <!--                <set field="screenList" from="screenList+[name:inScreen,prettyName:sd.defaultMenuName,xml:minified]"/>-->
             </iterate>
@@ -747,10 +834,44 @@ along with this software (see the LICENSE.md file). If not, see
         <actions>
 <!--            <log level="warn" message="json: ${json}"/>-->
             <set field="inputOutputList" from="[]"/>
-            <iterate entry="node" list="json.services">
+            <set field="isActions" from="false"/>
+            <set field="nodeList" from="json.services"/>
+            <if condition="!nodeList"><set field="isActions" from="true"/><set field="nodeList" from="json.actions"/></if>
+
+            <iterate entry="node" list="nodeList">
                 <!-- Find the service call name -->
-                <set field="inputOutputList" from="inputOutputList+[type:'service-call',name:node.name,inMapList:node.in_map,outMapList:node.out_map]"/>
+                <!-- <log level="warn" message="node: ${node}"/> -->
+                <set field="inputOutputList" from="inputOutputList+[type:'service-call',name:isActions?node.service_name:node.name,inMapList:node.in_map,outMapList:node.out_map]"/>
             </iterate>
+            <service-call name="XmlServices.evaluate#InputOutputList" in-map="[inputOutputList:inputOutputList]" out-map="context"/>
+
+<!--            <log level="warn" message="inputOutputList: ${inputOutputList}"/>-->
+
+            <set field="nodeList" from="inputOutputList"/>
+
+            <!-- Call ftl renderer for component://getXml/template/serviceDeinition.xml.ftl -->
+            <set field="xml" from="ec.resource.template('component://getXml/template/nodeList.xml.ftl', '.ftl')"/>
+            <log level="warn" message="xml: ${xml}"/>
+        </actions>
+    </service>
+
+    <service verb="render" noun="OneServiceCallJsonToXml">
+        <in-parameters>
+            <parameter name="json" required="true" type="Map"/>
+        </in-parameters>
+        <out-parameters>
+            <parameter name="xml"/>
+        </out-parameters>
+        <actions>
+<!--            <log level="warn" message="json: ${json}"/>-->
+            <set field="inputOutputList" from="[]"/>
+            <set field="isActions" from="false"/>
+            <set field="node" from="json.services"/>
+            <if condition="!node"><set field="isActions" from="true"/><set field="node" from="json.actions"/></if>
+
+            <log level="warn" message="node: ${node}"/>
+            <!-- Find the service call name -->
+            <set field="inputOutputList" from="inputOutputList+[type:'service-call',name:node.name,inMapList:node.in_map,outMapList:node.out_map]"/>
             <service-call name="XmlServices.evaluate#InputOutputList" in-map="[inputOutputList:inputOutputList]" out-map="context"/>
 
 <!--            <log level="warn" message="inputOutputList: ${inputOutputList}"/>-->
