@@ -841,7 +841,7 @@ along with this software (see the LICENSE.md file). If not, see
             <iterate entry="node" list="nodeList">
                 <!-- Find the service call name -->
                 <!-- <log level="warn" message="node: ${node}"/> -->
-                <set field="inputOutputList" from="inputOutputList+[type:'service-call',name:isActions?node.service_name:node.name,inMapList:node.in_map,outMapList:node.out_map]"/>
+                <set field="inputOutputList" from="inputOutputList+[type:'service-call',name:isActions?node.service_name:(node.service_name?:node.name),inMapList:node.in_map,outMapList:node.out_map]"/>
             </iterate>
             <service-call name="XmlServices.evaluate#InputOutputList" in-map="[inputOutputList:inputOutputList]" out-map="context"/>
 
