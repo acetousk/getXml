@@ -942,7 +942,23 @@ along with this software (see the LICENSE.md file). If not, see
         </actions>
     </service>
 
-    <service verb="evaluate" noun="InputOutputList">
+    <service verb="evaluate" noun="WebsocketInputOutputList" authenticate="anonymous-view">
+        <implements service="XmlServices.evaluate#InputOutputList" />
+        <actions>
+            <set field="inInputOutputList" from="inputOutputList"/>
+            <set field="inputOutputList" from="[]"/>
+            <iterate list="inInputOutputList" entry="inputOutput">
+                <if condition="inputOutput?.type == null">
+                    <set field="inputOutput.type" value="service-call"/>
+                </if>
+                <set field="inputOutput.inMapList" from="inputOutput.in_map"/>
+                <set field="inputOutput.outMapList" from="inputOutput.out_map"/>
+                <set field="inputOutputList" from="inputOutputList+inputOutput"/>
+            </iterate>
+            <service-call name="XmlServices.evaluate#InputOutputList" in-map="context" out-map="context"/>
+        </actions>
+    </service>
+    <service verb="evaluate" noun="InputOutputList" authenticate="anonymous-view">
         <in-parameters>
             <parameter name="inputOutputList" type="List">
                 <parameter name="type" required="true"/>
@@ -950,14 +966,16 @@ along with this software (see the LICENSE.md file). If not, see
         </in-parameters>
         <out-parameters>
             <parameter name="inputOutputList" type="List"/>
+            <parameter name="messageList" type="List"/>
         </out-parameters>
         <actions>
             <set field="knownServiceNames" from="ec.service.knownServiceNames"/>
+            <set field="messageList" from="[]"/>
             <iterate list="inputOutputList" entry="inputOutput">
-<!--                <log level="warn" message="inputOutput.toString(): ${inputOutput.toString()}"/>-->
+                <!-- <log level="warn" message="inputOutput.toString(): ${inputOutput.toString()}"/> -->
                 <set field="type" from="inputOutput.type"/>
                 <if condition="type == 'service-call'"><then>
-                    <set field="filterServiceName" from="inputOutput.name"/>
+                    <set field="filterServiceName" from="inputOutput.service_name"/>
                     <set field="knownServiceNamesCopy" from="knownServiceNames.collect()"/>
                     <script>
                         if (filterServiceName) {
@@ -971,12 +989,16 @@ along with this software (see the LICENSE.md file). If not, see
                     <set field="inService" from="knownServiceNamesCopy[0]"/>
                     <!-- TODO: Do better validation on services and try to find it even if the text is fucked up -->
                     <if condition="!inService">
-                        <log level="warn" message="No service found for name ${inputOutput.name}"/>
+                        <set field="message" value="No service found for name ${inputOutput.service_name}"/>
+                        <log level="warn" message="${message}"/>
+                        <set field="messageList" from="messageList+message"/>
                         <continue/>
                     </if>
                     <set field="sd" from="ec.service.getServiceDefinition(inService)"/>
                     <if condition="!sd">
-                        <log level="warn" message="No service definition found for name ${inService}"/>
+                        <set field="message" value="No service definition found for name ${inService}"/>
+                        <log level="warn" message="${message}"/>
+                        <set field="messageList" from="messageList+message"/>
                         <continue/>
                     </if>
 
@@ -984,12 +1006,13 @@ along with this software (see the LICENSE.md file). If not, see
                     <set field="validatePreviousOutMap" from="inputOutput_index != 0"/>
                     <iterate list="inputOutput.inMapList" entry="inMap">
                         <if condition="!sd.inParameterNames.contains(inMap.key)"><then>
-                            <set field="inMap.error" value="in_map ${inMap.key} does not exist for service ${inputOutput.name}!"/>
-                            <log level="warn" message="${inMap.error}"/>
+                            <set field="message" value="in_map ${inMap.key} does not exist for service ${inputOutput.service_name}!"/>
+                            <log level="warn" message="${message}"/>
+                            <set field="messageList" from="messageList+message"/>
+                            <set field="inMap.error" from="message"/>
                         </then><else-if condition="validatePreviousOutMap">
                             <set field="previousInputOutput" from="inputOutputList[inputOutput_index-1]"/>
                             <set field="previousOutMapList" from="previousInputOutput.outMapList"/>
-
                         </else-if></if>
                     </iterate>
 
@@ -1001,8 +1024,10 @@ along with this software (see the LICENSE.md file). If not, see
 <!--                    <log level="warn" message="inputOutput.outMapList.getClass().getName() == 'java.lang.String' ? true : false ${inputOutput.outMapList.getClass().getName() == 'java.lang.String' ? true : false}"/>-->
 <!--                    <log level="warn" message="inputOutput.outMapList.getClass().getName() == 'java.lang.String' ? [inputOutput.outMapList] : inputOutput.outMapList*.key ${inputOutput.outMapList.getClass().getName() == 'java.lang.String' ? [inputOutput.outMapList] : inputOutput.outMapList}"/>-->
 
-                    <if condition="inputOutput.outMapList.size() == 0 &amp;&amp; _inputOutputIterator.hasNext()">
-                        <log level="warn" message="Must have an out_map for service ${inputOutput.name} when there is another node!"/>
+                    <if condition="(!inputOutput?.outMapList || inputOutput?.outMapList?.size() == 0) &amp;&amp; _inputOutputIterator.hasNext()">
+                        <set field="message" value="Must have an out_map for service ${inputOutput.service_name} when there is another node!"/>
+                        <log level="warn" message="${message}"/>
+                        <set field="messageList" from="messageList+message"/>
                     </if>
                     <iterate list="inputOutput.outMapList" entry="outMap">
 <!--                        <log level="warn" message="outMap: ${outMap}"/>-->
@@ -1011,16 +1036,20 @@ along with this software (see the LICENSE.md file). If not, see
                             <set field="outMap" from="[key:outMapKey,value:outMapKey]"/>
                         </if>
                         <if condition="!sd.outParameterNames.contains(outMap.key)">
-                            <set field="outMap.error" value="out_map ${outMap.key} does not exist for service ${inputOutput.name}!"/>
-                            <log level="warn" message="${outMap.error}"/>
+                            <set field="message" value="out_map ${outMap.key} does not exist for service ${inputOutput.service_name}!"/>
+                            <log level="warn" message="${message}"/>
+                            <set field="outMap.error" from="message"/>
+                            <set field="messageList" from="messageList+message"/>
                         </if>
                     </iterate>
 <!--                    <log level="warn" message="outParameterIntersectionList: ${outParameterIntersectionList} sd.outParameterNames: ${sd.outParameterNames} inputOutput.outMapList: ${inputOutput.outMapList}"/>-->
                 </then><else-if condition="type == 'entity-find'">
-
+                    <log level="warn" message="no entity-find for ${inputOutput.service_name}"/>
                 </else-if><else-if condition="type == 'service'">
-
-                </else-if></if>
+                    <log level="warn" message="no service for ${inputOutput.service_name}"/>
+                </else-if><else>
+                    <log level="warn" message="no type for ${inputOutput.service_name}"/>
+                </else></if>
             </iterate>
         </actions>
     </service>
