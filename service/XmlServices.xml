@@ -951,8 +951,8 @@ along with this software (see the LICENSE.md file). If not, see
                 <if condition="inputOutput?.type == null">
                     <set field="inputOutput.type" value="service-call"/>
                 </if>
-                <set field="inputOutput.inMapList" from="inputOutput.in_map"/>
-                <set field="inputOutput.outMapList" from="inputOutput.out_map"/>
+                <!-- <set field="inputOutput.inMapList" from="inputOutput.in_map"/>
+                <set field="inputOutput.outMapList" from="inputOutput.out_map"/> -->
                 <set field="inputOutputList" from="inputOutputList+inputOutput"/>
             </iterate>
             <service-call name="XmlServices.evaluate#InputOutputList" in-map="context" out-map="context"/>
@@ -966,15 +966,41 @@ along with this software (see the LICENSE.md file). If not, see
         </in-parameters>
         <out-parameters>
             <parameter name="inputOutputList" type="List"/>
-            <parameter name="messageList" type="List"/>
+            <parameter name="evaluateList" type="List"/>
         </out-parameters>
         <actions>
             <set field="knownServiceNames" from="ec.service.knownServiceNames"/>
-            <set field="messageList" from="[]"/>
+            <!-- Add all auto-services to the known service names -->
+            <set field="entityNames" from="ec.entity.getAllEntityNames()"/>
+            <set field="autoServiceNames" from="[]"/>
+
+            <!-- Standard CRUD verbs to generate auto-services for -->
+            <iterate list="entityNames" entry="entityName">
+                <iterate list="org.moqui.impl.service.runner.EntityAutoServiceRunner.verbSet" entry="verb">
+                    <set field="autoServiceName" value="${verb}#${entityName}"/>
+                    <script>knownServiceNames.add(autoServiceName)</script>
+                    <script>autoServiceNames.add(autoServiceName)</script>
+                </iterate>
+            </iterate>
+
+            <!-- Check for duplicate unique_out_map_name values -->
+            <set field="uniqueOutMapNameList" from="[]"/>
+
+            <set field="evaluateList" from="[]"/>
             <iterate list="inputOutputList" entry="inputOutput">
                 <!-- <log level="warn" message="inputOutput.toString(): ${inputOutput.toString()}"/> -->
                 <set field="type" from="inputOutput.type"/>
                 <if condition="type == 'service-call'"><then>
+                    <set field="inputOutput.errorList" from="[]"/>
+                    <if condition="inputOutput.unique_out_map_name">
+                        <if condition="uniqueOutMapNameList.contains(inputOutput.unique_out_map_name)">
+                            <set field="message" value="Duplicate unique_out_map_name '${inputOutput.unique_out_map_name}' found"/>
+                            <log level="warn" message="${message}"/>
+                            <set field="inputOutput.errorList" from="inputOutput.errorList+message"/>
+                        </if>
+                        <script>uniqueOutMapNameList.add(inputOutput.unique_out_map_name)</script>
+                    </if>
+
                     <set field="filterServiceName" from="inputOutput.service_name"/>
                     <set field="knownServiceNamesCopy" from="knownServiceNames.collect()"/>
                     <script>
@@ -986,63 +1012,137 @@ along with this software (see the LICENSE.md file). If not, see
                             }
                         }
                     </script>
+                    <!-- <log level="info" message="knownServiceNamesCopy: ${knownServiceNamesCopy} for ${inputOutput.service_name}"/> -->
                     <set field="inService" from="knownServiceNamesCopy[0]"/>
                     <!-- TODO: Do better validation on services and try to find it even if the text is fucked up -->
                     <if condition="!inService">
                         <set field="message" value="No service found for name ${inputOutput.service_name}"/>
                         <log level="warn" message="${message}"/>
-                        <set field="messageList" from="messageList+message"/>
+                        <if condition="!evaluateList.contains(message)">
+                            <set field="evaluateList" from="evaluateList+message"/>
+                        </if>
+                        <set field="inputOutput.errorList" from="inputOutput.errorList+message"/>
                         <continue/>
                     </if>
+                    <set field="isAutoService" from="autoServiceNames.contains(inService)"/>
                     <set field="sd" from="ec.service.getServiceDefinition(inService)"/>
-                    <if condition="!sd">
+                    <if condition="!sd &amp;&amp; !isAutoService">
                         <set field="message" value="No service definition found for name ${inService}"/>
                         <log level="warn" message="${message}"/>
-                        <set field="messageList" from="messageList+message"/>
+                        <if condition="!evaluateList.contains(message)">
+                            <set field="evaluateList" from="evaluateList+message"/>
+                        </if>
+                        <set field="inputOutput.errorList" from="inputOutput.errorList+message"/>
                         <continue/>
                     </if>
+                    <if condition="isAutoService">
+                        <set field="entityName" from="inService.split('#')[1]"/>
+                        <set field="entityDefinition" from="ec.entity.getEntityDefinition(entityName)"/>
+                        <set field="sd" from="[inParameterNames:entityDefinition.allFieldNames,outParameterNames:entityDefinition.pkFieldNames]"/>
+                        <log level="warn" message="sd: ${sd}"/>
+                    </if>
 
-<!--                    <log level="warn" message="inputOutput.inMapList: ${inputOutput.inMapList}"/>-->
+<!--                    <log level="warn" message="inputOutput.in_map: ${inputOutput.in_map}"/>-->
                     <set field="validatePreviousOutMap" from="inputOutput_index != 0"/>
-                    <iterate list="inputOutput.inMapList" entry="inMap">
+                    <iterate list="inputOutput.in_map" entry="inMap">
+                        <set field="inMap.errorList" from="[]"/>
                         <if condition="!sd.inParameterNames.contains(inMap.key)"><then>
-                            <set field="message" value="in_map ${inMap.key} does not exist for service ${inputOutput.service_name}!"/>
+                            <set field="message" value="in_map ${inMap.key} does not exist for service ${inputOutput.service_name}"/>
                             <log level="warn" message="${message}"/>
-                            <set field="messageList" from="messageList+message"/>
-                            <set field="inMap.error" from="message"/>
+                            <if condition="!evaluateList.contains(message)">
+                                <set field="evaluateList" from="evaluateList+message"/>
+                            </if>
+                            <set field="inMap.errorList" from="inMap.errorList+message"/>
                         </then><else-if condition="validatePreviousOutMap">
-                            <set field="previousInputOutput" from="inputOutputList[inputOutput_index-1]"/>
-                            <set field="previousOutMapList" from="previousInputOutput.outMapList"/>
+                            <if condition="!inMap.value?.contains('.')">
+                                <if condition="inMap.value != inMap.key">
+                                    <set field="message" value="in_map value ${inMap.value} must = the key ${inMap.key} for service ${inputOutput.service_name} OR have a valid unique_out_map_name${uniqueOutMapNameList ? ' like '+uniqueOutMapNameList.join(', ') : ''} for in_map key ${inMap.key} value ${inMap.value}"/>
+                                    <log level="warn" message="${message}"/>
+                                    <if condition="!evaluateList.contains(message)">
+                                        <set field="evaluateList" from="evaluateList+message"/>
+                                    </if>
+                                    <set field="inMap.errorList" from="inMap.errorList + message"/>
+                                </if>
+                            <else>
+                                <set field="currentInParamOutMapName" from="inMap.value.substring(0, inMap.value.indexOf('.'))"/>
+                                <set field="currentInParamName" from="inMap.value.substring(inMap.value.indexOf('.')+1)"/>
+                                
+                                <set field="inParamInputOutputMap" from="inputOutputList.find({ it.unique_out_map_name == currentInParamOutMapName })"/>
+                                <!-- <log level="warn" message="inputOutputList*.unique_out_map_name: ${inputOutputList*.unique_out_map_name}"/> -->
+                                <if condition="!inParamInputOutputMap">
+                                    <set field="message" value="No unique_out_map_name found for ${currentInParamOutMapName}"/>
+                                    <log level="warn" message="${message}"/>
+                                    <if condition="!evaluateList.contains(message)">
+                                        <set field="evaluateList" from="evaluateList+message"/>
+                                    </if>
+                                    <set field="inMap.errorList" from="inMap.errorList + message"/>
+                                </if>
+                                <if condition="!uniqueOutMapNameList.contains(currentInParamOutMapName)">
+                                    <if condition="!inParamInputOutputMap">
+                                        <set field="message" value="Service ${inputOutput.service_name} references output from ${currentInParamOutMapName} but that service hasn't been run yet. Please reorder the services so ${currentInParamOutMapName} runs first."/>
+                                        <log level="warn" message="${message}"/>
+                                        <if condition="!evaluateList.contains(message)">
+                                            <set field="evaluateList" from="evaluateList+message"/>
+                                        </if>
+                                        <set field="inMap.errorList" from="inMap.errorList + message"/>
+                                    </if>
+                                </if>
+                                <if condition="!inParamInputOutputMap">
+                                    <continue/>
+                                </if>
+                                <if condition="!inParamInputOutputMap.out_map*.key.contains(currentInParamName)">
+                                    <set field="message" value="Service ${inputOutput.service_name} references output parameter ${currentInParamName} from ${currentInParamOutMapName} but that service doesn't output that parameter"/>
+                                    <log level="warn" message="${message}"/>
+                                    <if condition="!evaluateList.contains(message)">
+                                        <set field="evaluateList" from="evaluateList+message"/>
+                                    </if>
+                                    <set field="inMap.errorList" from="inMap.errorList + message"/>
+                                </if>
+                            </else>
+                            </if>
                         </else-if></if>
                     </iterate>
 
-<!--                    <log level="warn" message="inParameterIntersectionList: ${inParameterIntersectionList} sd.inParameterNames: ${sd.inParameterNames} inputOutput.inMapList: ${inputOutput.inMapList}"/>-->
 
-<!--                    <log level="warn" message="inputOutput.outMapList: ${inputOutput.outMapList}"/>-->
-                    <!-- If typeof inputOutput.outMapList is a string convert it to a list -->
-<!--                    <log level="warn" message="typeof inputOutput.outMapList: ${inputOutput.outMapList.getClass().getName()}"/>-->
-<!--                    <log level="warn" message="inputOutput.outMapList.getClass().getName() == 'java.lang.String' ? true : false ${inputOutput.outMapList.getClass().getName() == 'java.lang.String' ? true : false}"/>-->
-<!--                    <log level="warn" message="inputOutput.outMapList.getClass().getName() == 'java.lang.String' ? [inputOutput.outMapList] : inputOutput.outMapList*.key ${inputOutput.outMapList.getClass().getName() == 'java.lang.String' ? [inputOutput.outMapList] : inputOutput.outMapList}"/>-->
+<!--                    <log level="warn" message="inParameterIntersectionList: ${inParameterIntersectionList} sd.inParameterNames: ${sd.inParameterNames} inputOutput.in_map: ${inputOutput.in_map}"/>-->
 
-                    <if condition="(!inputOutput?.outMapList || inputOutput?.outMapList?.size() == 0) &amp;&amp; _inputOutputIterator.hasNext()">
-                        <set field="message" value="Must have an out_map for service ${inputOutput.service_name} when there is another node!"/>
-                        <log level="warn" message="${message}"/>
-                        <set field="messageList" from="messageList+message"/>
-                    </if>
-                    <iterate list="inputOutput.outMapList" entry="outMap">
+<!--                    <log level="warn" message="inputOutput.out_map: ${inputOutput.out_map}"/>-->
+                    <!-- If typeof inputOutput.out_map is a string convert it to a list -->
+<!--                    <log level="warn" message="typeof inputOutput.out_map: ${inputOutput.out_map.getClass().getName()}"/>-->
+<!--                    <log level="warn" message="inputOutput.out_map.getClass().getName() == 'java.lang.String' ? true : false ${inputOutput.out_map.getClass().getName() == 'java.lang.String' ? true : false}"/>-->
+<!--                    <log level="warn" message="inputOutput.out_map.getClass().getName() == 'java.lang.String' ? [inputOutput.out_map] : inputOutput.out_map*.key ${inputOutput.out_map.getClass().getName() == 'java.lang.String' ? [inputOutput.out_map] : inputOutput.out_map}"/>-->
+
+                    <iterate list="inputOutput.out_map" entry="outMap">
+                        <set field="outMap.errorList" from="[]"/>
 <!--                        <log level="warn" message="outMap: ${outMap}"/>-->
                         <if condition="outMap.getClass().getName() == 'java.lang.String'">
                             <set field="outMapKey" from="outMap"/>
                             <set field="outMap" from="[key:outMapKey,value:outMapKey]"/>
                         </if>
                         <if condition="!sd.outParameterNames.contains(outMap.key)">
-                            <set field="message" value="out_map ${outMap.key} does not exist for service ${inputOutput.service_name}!"/>
+                            <set field="message" value="out_map ${outMap.key} does not exist for service ${inputOutput.service_name}"/>
                             <log level="warn" message="${message}"/>
-                            <set field="outMap.error" from="message"/>
-                            <set field="messageList" from="messageList+message"/>
+                            <set field="outMap.errorList" from="outMap.errorList+message"/>
+                            <if condition="!evaluateList.contains(message)">
+                                <set field="evaluateList" from="evaluateList+message"/>
+                            </if>
+                            <set field="inputOutput.errorList" from="inputOutput.errorList+message"/>
                         </if>
                     </iterate>
-<!--                    <log level="warn" message="outParameterIntersectionList: ${outParameterIntersectionList} sd.outParameterNames: ${sd.outParameterNames} inputOutput.outMapList: ${inputOutput.outMapList}"/>-->
+                    <if condition="inputOutput.errorList.size() == 0">
+                        <script>inputOutput.remove('errorList')</script>
+                    </if>
+                    <iterate list="inputOutput.in_map" entry="inMap">
+                        <if condition="inMap.errorList?.size() == 0">
+                            <script>inMap.remove('errorList')</script>
+                        </if>
+                    </iterate>
+                    <iterate list="inputOutput.out_map" entry="outMap">
+                        <if condition="outMap.errorList?.size() == 0">
+                            <script>outMap.remove('errorList')</script>
+                        </if>
+                    </iterate>
+<!--                    <log level="warn" message="outParameterIntersectionList: ${outParameterIntersectionList} sd.outParameterNames: ${sd.outParameterNames} inputOutput.out_map: ${inputOutput.out_map}"/>-->
                 </then><else-if condition="type == 'entity-find'">
                     <log level="warn" message="no entity-find for ${inputOutput.service_name}"/>
                 </else-if><else-if condition="type == 'service'">
@@ -1051,6 +1151,137 @@ along with this software (see the LICENSE.md file). If not, see
                     <log level="warn" message="no type for ${inputOutput.service_name}"/>
                 </else></if>
             </iterate>
+            <log level="warn" message="evaluateList: ${evaluateList}"/>
+        </actions>
+    </service>
+
+    <service verb="generate" noun="JsonSchema" authenticate="anonymous-view">
+        <in-parameters>
+            <parameter name="rag_list" type="List"/>
+        </in-parameters>
+        <out-parameters>
+            <parameter name="jsonSchema" type="String"/>
+        </out-parameters>
+        <actions>
+            <!-- <log level="warn" message="context.toString(): ${context.toString()}"/> -->
+            <log level="warn" message="rag_list: ${rag_list}"/>
+            <log level="warn" message="rag_list.size(): ${rag_list.size()}"/>
+            <log level="warn" message="rag_list: ${rag_list.collect{[name:it.name, type:it.type]}}"/>
+
+            <set field="typeEnumMap" from="[
+                'String': 'string',
+                'java.lang.String': 'string',
+                'Integer': 'integer', 
+                'java.lang.Integer': 'integer',
+                'Long': 'number',
+                'java.lang.Long': 'number',
+                'Float': 'number',
+                'java.lang.Float': 'number',
+                'Double': 'number',
+                'java.lang.Double': 'number',
+                'BigDecimal': 'number',
+                'java.math.BigDecimal': 'number',
+                'BigInteger': 'number',
+                'java.math.BigInteger': 'number',
+                'Boolean': 'boolean',
+                'java.lang.Boolean': 'boolean',
+                'Map': 'object',
+                'java.util.Map': 'object',
+                'List': 'array',
+                'java.util.List': 'array',
+                'Collection': 'array',
+                'java.util.Collection': 'array',
+                'Set': 'array',
+                'java.util.Set': 'array',
+                'Timestamp': 'string',
+                'java.sql.Timestamp': 'string',
+                'Date': 'string',
+                'java.util.Date': 'string',
+                'java.sql.Date': 'string'
+            ]"/>
+
+            <set field="schemaList" from="[]"/>
+            <iterate list="rag_list" entry="rag">
+                <set field="nodeName" from="rag.name - '.xml'"/>
+                <set field="in_map" from="[]"/>
+                <set field="in_map_name_list" from="[]"/>
+                <set field="out_map" from="[]"/>
+                <set field="out_map_name_list" from="[]"/>
+
+                <set field="sd" from="ec.service.getServiceDefinition(nodeName)"/>
+
+                <if condition="sd"><then>
+                    <log level="warn" message="service rag.name: ${rag.name}"/>
+                    <iterate list="sd.inParameterInfoMap" entry="inParameterInfoMap">
+                        <log level="warn" message="inParameterInfoMap serviceName: ${sd.serviceName}, name: ${inParameterInfoMap.value.name}, type: ${inParameterInfoMap.value.type} format: ${inParameterInfoMap.value.format} entityName: ${inParameterInfoMap.value.entityName} fieldName: ${inParameterInfoMap.value.fieldName} defaultStr: ${inParameterInfoMap.value.defaultStr} defaultValue: ${inParameterInfoMap.value.defaultValue} required: ${inParameterInfoMap.value.required} disabled: ${inParameterInfoMap.value.disabled} allowSafe: ${inParameterInfoMap.value.allowSafe} allowHtml: ${inParameterInfoMap.value.allowHtml}"/>
+                        <if condition="inParameterInfoMap.value.disabled">
+                            <log level="warn" message="In service ${nodeName} field ${inParameterInfoMap.value.fieldName} disabled = ${inParameterInfoMap.value.disabled}"/>
+                            <continue/>
+                        </if>
+                        <set field="in_map_map" from="[key:inParameterInfoMap.value.name, type:typeEnumMap[inParameterInfoMap.value.type], entityName:inParameterInfoMap.value.entityName, required:inParameterInfoMap.value.required]"/>
+                        <if condition="!in_map_map.type">
+                            <log level="warn" message="No type for ${inParameterInfoMap.value.name} ${inParameterInfoMap.value.type} ${in_map_map.type} in service ${nodeName}"/>
+                        </if>
+                        <if condition="inParameterInfoMap.value.hasDefault">
+                            <set field="val" from="inParameterInfoMap.value.defaultStr ?: inParameterInfoMap.value.defaultValue"/>
+                            <set field="in_map_map" from="in_map_map+[value:val]"/>
+                        </if>
+                        <log level="warn" message="in_map_map: ${in_map_map}"/>
+                        <set field="in_map" from="in_map+in_map_map"/>
+                    </iterate>
+                    <iterate list="sd.outParameterInfoMap" entry="outParameterInfoMap">
+                        <set field="out_map_map" from="[key:outParameterInfoMap.value.fieldName, type:typeEnumMap[outParameterInfoMap.value.type], entityName:outParameterInfoMap.value.entityName, required:outParameterInfoMap.value.required]"/>
+                        <if condition="outParameterInfoMap.value.hasDefault">
+                            <set field="val" from="outParameterInfoMap.value.defaultStr ?: outParameterInfoMap.value.defaultValue"/>
+                            <set field="out_map_map" from="out_map_map+[value:val]"/>
+                        </if>
+                        <log level="warn" message="out_map_map: ${out_map_map}"/>
+                        <set field="out_map" from="out_map+out_map_map"/>
+                    </iterate>
+
+                    <set field="in_map_name_list" from="in_map*.key"/>
+                    <set field="out_map_name_list" from="out_map*.key"/>
+                </then><else>
+                    <set field="in_map" from="[]"/>
+                    <set field="out_map" from="[]"/>
+                    
+                    <set field="autoServiceType" from="nodeName.split('#')[0]"/>
+                    <set field="entityName" from="nodeName.split('#')[1]"/>
+                    <set field="entityDefinition" from="ec.entity.getEntityDefinition(entityName)"/>
+                    <if condition="entityDefinition">
+                        <iterate list="entityDefinition.allFieldNames" entry="fieldName">
+                            <set field="fieldNode" from="entityDefinition.getFieldInfo(fieldName)"/> 
+                            <log level="warn" message="Field ${fieldName}: name=${fieldNode.name}, type=${fieldNode.type}, columnName=${fieldNode.columnName}, defaultStr=${fieldNode.defaultStr}, javaType=${fieldNode.javaType}, enableAuditLog=${fieldNode.enableAuditLog}, isPk=${fieldNode.isPk}, isTextVeryLong=${fieldNode.isTextVeryLong}, encrypt=${fieldNode.encrypt}, isSimple=${fieldNode.isSimple}, enableLocalization=${fieldNode.enableLocalization}, createOnly=${fieldNode.createOnly}, isLastUpdatedStamp=${fieldNode.isLastUpdatedStamp}"/>
+                            <set field="type" from="fieldNode.javaType"/>
+                            <if condition="fieldNode.isLastUpdatedStamp">
+                                <continue/>
+                            </if>
+                            <set field="required" from="fieldNode.isPk"/>
+                            <if condition="autoServiceType?.toLowerCase()?.contains('create')">
+                                <set field="required" from="false"/>
+                            </if>
+                            <set field="in_map_map" from="[key:fieldName, type:typeEnumMap[type], entityName:fieldNode.entityName, required:required]"/>
+                            <if condition="fieldNode.defaultStr">
+                                <set field="in_map_map" from="in_map_map+[value:fieldNode.defaultStr]"/>
+                            </if>
+                            <set field="in_map" from="in_map+in_map_map"/>
+                        </iterate>
+                        <iterate list="entityDefinition.pkFieldNames" entry="fieldName">
+                            <set field="fieldNode" from="entityDefinition.getFieldInfo(fieldName)"/>
+                            <set field="type" from="fieldNode.javaType"/>
+                            <set field="out_map_map" from="[key:fieldName, type:typeEnumMap[type], entityName:fieldNode.entityName, required:true]"/>
+                            <set field="out_map" from="out_map+out_map_map"/>
+                        </iterate>
+                    </if>
+
+                    <set field="in_map_name_list" from="in_map*.key"/>
+                    <set field="out_map_name_list" from="out_map*.key"/>
+                    <set field="schemaList" from="schemaList+[nodeName:nodeName, in_map:in_map, out_map:out_map, in_map_name_list:in_map_name_list, out_map_name_list:out_map_name_list]"/>
+                </else></if>
+            </iterate>
+
+            <set field="jsonSchema" from="ec.resource.template('component://getXml/template/schema.json.ftl', '.ftl')"/>
+            <log level="warn" message="jsonSchema: ${jsonSchema}"/>
         </actions>
     </service>
 </services>
