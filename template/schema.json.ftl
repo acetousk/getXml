@@ -9,7 +9,7 @@
           "anyOf": [
             <#list schemaList as schema>
             {
-              "type": "object", 
+              "type": "object",
               "properties": {
                 "service_name": {
                   "type": "string",
@@ -19,37 +19,53 @@
                   "type": "string"
                 },
                 "description": {
-                  "type": "string"  
+                  "type": "string"
                 },
                 "unique_out_map_name": {
                   "type": "string"
                 },
-                "in_map": { "type": "array",
-                  "items": {
-                    "type": "object",
-                    "properties": {
-                      <#list schema.in_map as input>
-                        "${input.key}": {
-                          "type": "${input.type}"<#if input.type == "string" || input.type == "array">,</#if>
-                          <#if input.value?has_content && input.type == "string">
-                          "enum": ["${input.value}"]
-                          <#elseif input.type == "string">
-                          "enum": ["${input.key}"]
-                          </#if>
-                          <#if input.type == "array">
-                            "items": {
-                              "type": "string"
-                            }
-                          </#if>
-                        }<#sep>,</#sep>
-                      </#list>
-                    },
-                    "required": [<#list schema.in_map_name_list as name>"${name}"<#sep>, </#sep></#list>],
-                    "additionalProperties": false
-                  }
+                "in_map": {
+                  "type": "object",
+                  "properties": {
+                    <#list schema.in_map as input>
+                      "${input.key}": {
+                        "type": "${input.type}"<#if (input.value?has_content && input.type == "string") || input.type == "array">,</#if>
+                        <#if input.value?has_content && input.type == "string">
+                        "enum": ["${input.value}"]
+                        </#if>
+                        <#if input.type == "array">
+                        "items": {
+                          "type": "string"
+                        }
+                        </#if>
+                      }<#sep>,</#sep>
+                    </#list>
+                  },
+                  "required": [<#list schema.in_map_name_list as name>"${name}"<#sep>, </#sep></#list>],
+                  "additionalProperties": false
                 }
               },
-              "required": ["service_name", "name", "description", "unique_out_map_name", "in_map"],
+              "out_map": {
+                "type": "object",
+                "properties": {
+                  <#list schema.out_map as output>
+                    "${output.key}": {
+                      "type": "${output.type}"<#if (output.value?has_content && output.type == "string") || output.type == "array">,</#if>
+                      <#if output.value?has_content && output.type == "string">
+                      "enum": ["${output.value}"]
+                      </#if>
+                      <#if output.type == "array">
+                      "items": {
+                        "type": "string"
+                      }
+                      </#if>
+                    }<#sep>,</#sep>
+                  </#list>
+                },
+                "required": [<#list schema.out_map_name_list as name>"${name}"<#sep>, </#sep></#list>],
+                "additionalProperties": false
+              },
+              "required": ["service_name", "name", "description", "unique_out_map_name", "in_map", "out_map"],
               "additionalProperties": false
             }<#sep>,</#sep>
             </#list>

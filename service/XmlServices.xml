@@ -1158,15 +1158,50 @@ along with this software (see the LICENSE.md file). If not, see
     <service verb="generate" noun="JsonSchema" authenticate="anonymous-view">
         <in-parameters>
             <parameter name="rag_list" type="List"/>
+            <parameter name="output_list" type="List"/>
+            <parameter name="index" type="Integer"/>
         </in-parameters>
         <out-parameters>
             <parameter name="jsonSchema" type="String"/>
+            <parameter name="evaluateList" type="List"/>
         </out-parameters>
         <actions>
+            <if condition="index &gt; 0">
+                <!-- <log level="warn" message="ec.web.getRequestParameters(): ${ec.web.getRequestParameters()}"/> -->
+                <log level="warn" message="output_list12345: ${output_list}"/>
+    
+                <!-- <if condition="!output_list">
+                    <set field="output_list" from="ec.web.getRequestParameters().output_list"/>
+                    <log level="warn" message="new output_list123: ${output_list}"/>
+                </if> -->
+                
+                <set field="allPreviousOutputParameters" from="[]"/>
+                <iterate list="output_list" entry="outputObject">
+                    <set field="serviceList" from="ec.elastic.jsonToObject(outputObject.json_output)"/>
+                    <!-- <log level="warn" message="typeof serviceList: ${serviceList.getClass().getName()}"/> -->
+                    <iterate list="serviceList.services" entry="service">
+                        <!-- <log level="warn" message="typeof service: ${service.getClass().getName()}"/>
+                        <log level="warn" message="service: ${service}"/> -->
+                        <if condition="service.uniqueOutMapName">
+                            <iterate list="service.out_map" entry="outParam">
+                                <!-- <log level="warn" message="outParam: ${outParam}"/> -->
+                                <if condition="allPreviousOutputParameters.contains(service.uniqueOutMapName+'.'+outParam.key)">
+                                    <script>evaluateList.add("Duplicate output parameter: ${service.uniqueOutMapName+'.'+outParam.key}")</script>
+                                </if>
+                                <set field="allPreviousOutputParameters" from="allPreviousOutputParameters+[service.uniqueOutMapName+'.'+outParam.key]"/>
+                            </iterate>
+                        </if>
+                    </iterate>
+                </iterate>
+                <log level="warn" message="allPreviousOutputParameters: ${allPreviousOutputParameters}"/>
+            </if>
+
             <!-- <log level="warn" message="context.toString(): ${context.toString()}"/> -->
-            <log level="warn" message="rag_list: ${rag_list}"/>
+            <!-- <log level="warn" message="rag_list: ${rag_list}"/>
             <log level="warn" message="rag_list.size(): ${rag_list.size()}"/>
-            <log level="warn" message="rag_list: ${rag_list.collect{[name:it.name, type:it.type]}}"/>
+            <log level="warn" message="rag_list: ${rag_list.collect{[name:it.name, type:it.type]}}"/> -->
+
+            <!-- <log level="warn" message="output_list123 ${index}: ${output_list}"/> -->
 
             <set field="typeEnumMap" from="[
                 'String': 'string',
@@ -1211,22 +1246,29 @@ along with this software (see the LICENSE.md file). If not, see
                 <set field="sd" from="ec.service.getServiceDefinition(nodeName)"/>
 
                 <if condition="sd"><then>
-                    <log level="warn" message="service rag.name: ${rag.name}"/>
+                    <!-- <log level="warn" message="service rag.name: ${rag.name}"/> -->
                     <iterate list="sd.inParameterInfoMap" entry="inParameterInfoMap">
-                        <log level="warn" message="inParameterInfoMap serviceName: ${sd.serviceName}, name: ${inParameterInfoMap.value.name}, type: ${inParameterInfoMap.value.type} format: ${inParameterInfoMap.value.format} entityName: ${inParameterInfoMap.value.entityName} fieldName: ${inParameterInfoMap.value.fieldName} defaultStr: ${inParameterInfoMap.value.defaultStr} defaultValue: ${inParameterInfoMap.value.defaultValue} required: ${inParameterInfoMap.value.required} disabled: ${inParameterInfoMap.value.disabled} allowSafe: ${inParameterInfoMap.value.allowSafe} allowHtml: ${inParameterInfoMap.value.allowHtml}"/>
+                        <!-- <log level="warn" message="inParameterInfoMap serviceName: ${sd.serviceName}, name: ${inParameterInfoMap.value.name}, type: ${inParameterInfoMap.value.type} format: ${inParameterInfoMap.value.format} entityName: ${inParameterInfoMap.value.entityName} fieldName: ${inParameterInfoMap.value.fieldName} defaultStr: ${inParameterInfoMap.value.defaultStr} defaultValue: ${inParameterInfoMap.value.defaultValue} required: ${inParameterInfoMap.value.required} disabled: ${inParameterInfoMap.value.disabled} allowSafe: ${inParameterInfoMap.value.allowSafe} allowHtml: ${inParameterInfoMap.value.allowHtml}"/> -->
                         <if condition="inParameterInfoMap.value.disabled">
-                            <log level="warn" message="In service ${nodeName} field ${inParameterInfoMap.value.fieldName} disabled = ${inParameterInfoMap.value.disabled}"/>
+                            <!-- <log level="warn" message="In service ${nodeName} field ${inParameterInfoMap.value.fieldName} disabled = ${inParameterInfoMap.value.disabled}"/> -->
                             <continue/>
                         </if>
                         <set field="in_map_map" from="[key:inParameterInfoMap.value.name, type:typeEnumMap[inParameterInfoMap.value.type], entityName:inParameterInfoMap.value.entityName, required:inParameterInfoMap.value.required]"/>
                         <if condition="!in_map_map.type">
-                            <log level="warn" message="No type for ${inParameterInfoMap.value.name} ${inParameterInfoMap.value.type} ${in_map_map.type} in service ${nodeName}"/>
+                            <!-- <log level="warn" message="No type for ${inParameterInfoMap.value.name} ${inParameterInfoMap.value.type} ${in_map_map.type} in service ${nodeName}"/> -->
                         </if>
+                        <set field="in_map_map.enumList" from="[]"/>
                         <if condition="inParameterInfoMap.value.hasDefault">
                             <set field="val" from="inParameterInfoMap.value.defaultStr ?: inParameterInfoMap.value.defaultValue"/>
                             <set field="in_map_map" from="in_map_map+[value:val]"/>
+                            <set field="in_map_map.enumList" from="in_map_map.enumList+[val]"/>
+                        <else>
+                            <set field="in_map_map.enumList" from="in_map_map.enumList+[inParameterInfoMap.value.name]"/>
+                        </else></if>
+                        <if condition="allPreviousOutputParameters">
+                            <set field="in_map_map.enumList" from="in_map_map.enumList+allPreviousOutputParameters"/>
                         </if>
-                        <log level="warn" message="in_map_map: ${in_map_map}"/>
+                        <!-- <log level="warn" message="in_map_map: ${in_map_map}"/> -->
                         <set field="in_map" from="in_map+in_map_map"/>
                     </iterate>
                     <iterate list="sd.outParameterInfoMap" entry="outParameterInfoMap">
@@ -1235,7 +1277,7 @@ along with this software (see the LICENSE.md file). If not, see
                             <set field="val" from="outParameterInfoMap.value.defaultStr ?: outParameterInfoMap.value.defaultValue"/>
                             <set field="out_map_map" from="out_map_map+[value:val]"/>
                         </if>
-                        <log level="warn" message="out_map_map: ${out_map_map}"/>
+                        <!-- <log level="warn" message="out_map_map: ${out_map_map}"/> -->
                         <set field="out_map" from="out_map+out_map_map"/>
                     </iterate>
 
@@ -1251,7 +1293,7 @@ along with this software (see the LICENSE.md file). If not, see
                     <if condition="entityDefinition">
                         <iterate list="entityDefinition.allFieldNames" entry="fieldName">
                             <set field="fieldNode" from="entityDefinition.getFieldInfo(fieldName)"/> 
-                            <log level="warn" message="Field ${fieldName}: name=${fieldNode.name}, type=${fieldNode.type}, columnName=${fieldNode.columnName}, defaultStr=${fieldNode.defaultStr}, javaType=${fieldNode.javaType}, enableAuditLog=${fieldNode.enableAuditLog}, isPk=${fieldNode.isPk}, isTextVeryLong=${fieldNode.isTextVeryLong}, encrypt=${fieldNode.encrypt}, isSimple=${fieldNode.isSimple}, enableLocalization=${fieldNode.enableLocalization}, createOnly=${fieldNode.createOnly}, isLastUpdatedStamp=${fieldNode.isLastUpdatedStamp}"/>
+                            <!-- <log level="warn" message="Field ${fieldName}: name=${fieldNode.name}, type=${fieldNode.type}, columnName=${fieldNode.columnName}, defaultStr=${fieldNode.defaultStr}, javaType=${fieldNode.javaType}, enableAuditLog=${fieldNode.enableAuditLog}, isPk=${fieldNode.isPk}, isTextVeryLong=${fieldNode.isTextVeryLong}, encrypt=${fieldNode.encrypt}, isSimple=${fieldNode.isSimple}, enableLocalization=${fieldNode.enableLocalization}, createOnly=${fieldNode.createOnly}, isLastUpdatedStamp=${fieldNode.isLastUpdatedStamp}"/> -->
                             <set field="type" from="fieldNode.javaType"/>
                             <if condition="fieldNode.isLastUpdatedStamp">
                                 <continue/>
@@ -1261,9 +1303,17 @@ along with this software (see the LICENSE.md file). If not, see
                                 <set field="required" from="false"/>
                             </if>
                             <set field="in_map_map" from="[key:fieldName, type:typeEnumMap[type], entityName:fieldNode.entityName, required:required]"/>
+                            <set field="in_map_map.enumList" from="[]"/>
                             <if condition="fieldNode.defaultStr">
                                 <set field="in_map_map" from="in_map_map+[value:fieldNode.defaultStr]"/>
+                                <set field="in_map_map.enumList" from="in_map_map.enumList+[fieldNode.defaultStr]"/>
+                            <else>
+                                <set field="in_map_map.enumList" from="in_map_map.enumList+[fieldName]"/>
+                            </else></if>
+                            <if condition="allPreviousOutputParameters">
+                                <set field="in_map_map.enumList" from="in_map_map.enumList+allPreviousOutputParameters"/>
                             </if>
+
                             <set field="in_map" from="in_map+in_map_map"/>
                         </iterate>
                         <iterate list="entityDefinition.pkFieldNames" entry="fieldName">
@@ -1280,7 +1330,63 @@ along with this software (see the LICENSE.md file). If not, see
                 </else></if>
             </iterate>
 
-            <set field="jsonSchema" from="ec.resource.template('component://getXml/template/schema.json.ftl', '.ftl')"/>
+            <set field="schemaMap" from="[
+                name: 'service_schema',
+                schema: [
+                    type: 'object',
+                    properties: [
+                        services: [
+                            type: 'array',
+                            items: [
+                                anyOf: schemaList.collect { schema -> [
+                                    type: 'object',
+                                    properties: [
+                                        service_name: [
+                                            type: 'string',
+                                            enum: [schema.nodeName]
+                                        ],
+                                        name: [type: 'string'],
+                                        description: [type: 'string'],
+                                        uniqueOutMapName: [type: 'string'],
+                                        in_map: [
+                                            type: 'object',
+                                            properties: schema.in_map.collectEntries { input -> [
+                                                (input.key): [
+                                                    type: input.type,
+                                                    *:((input.enumList) &amp;&amp; input.type == 'string' ? [enum: input.enumList] : [:]),
+                                                    *:(input.type == 'array' ? [items: [type: 'string']] : [:])
+                                                ]
+                                            ]},
+                                            required: schema.in_map_name_list,
+                                            additionalProperties: false
+                                        ],
+                                        out_map: [
+                                            type: 'object',
+                                            properties: schema.out_map.collectEntries { output -> [
+                                                (output.key): [
+                                                    type: output.type,
+                                                    *:((output.value?:output.key) &amp;&amp; output.type == 'string' ? [enum: [output.value?:output.key]] : [:]),
+                                                    *:(output.type == 'array' ? [items: [type: 'string']] : [:])
+                                                ]
+                                            ]},
+                                            required: schema.out_map_name_list,
+                                            additionalProperties: false
+                                        ]
+                                    ],
+                                    required: ['service_name', 'name', 'description', 'uniqueOutMapName', 'in_map', 'out_map'],
+                                    additionalProperties: false
+                                ]}
+                            ]
+                        ]
+                    ],
+                    required: ['services'],
+                    additionalProperties: false
+                ],
+                strict: true
+            ]"/>
+
+            <!-- <set field="jsonSchema" from="ec.resource.template('component://getXml/template/schema.json.ftl', '.ftl')"/> -->
+            <set field="jsonSchema" from="ec.elastic.objectToJson(schemaMap)"/>
             <log level="warn" message="jsonSchema: ${jsonSchema}"/>
         </actions>
     </service>
