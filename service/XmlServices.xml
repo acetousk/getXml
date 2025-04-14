@@ -1236,6 +1236,7 @@ along with this software (see the LICENSE.md file). If not, see
             ]"/>
 
             <set field="schemaList" from="[]"/>
+            <set field="hasAddedService" from="false"/>
             <iterate list="rag_list" entry="rag">
                 <set field="nodeName" from="rag.name - '.xml'"/>
                 <set field="in_map" from="[]"/>
@@ -1272,7 +1273,7 @@ along with this software (see the LICENSE.md file). If not, see
                         <set field="in_map" from="in_map+in_map_map"/>
                     </iterate>
                     <iterate list="sd.outParameterInfoMap" entry="outParameterInfoMap">
-                        <set field="out_map_map" from="[key:outParameterInfoMap.value.fieldName, type:typeEnumMap[outParameterInfoMap.value.type], entityName:outParameterInfoMap.value.entityName, required:outParameterInfoMap.value.required]"/>
+                        <set field="out_map_map" from="[key:outParameterInfoMap.key, type:typeEnumMap[outParameterInfoMap.value.type], entityName:outParameterInfoMap.value.entityName, required:outParameterInfoMap.value.required]"/>
                         <if condition="outParameterInfoMap.value.hasDefault">
                             <set field="val" from="outParameterInfoMap.value.defaultStr ?: outParameterInfoMap.value.defaultValue"/>
                             <set field="out_map_map" from="out_map_map+[value:val]"/>
@@ -1280,13 +1281,7 @@ along with this software (see the LICENSE.md file). If not, see
                         <!-- <log level="warn" message="out_map_map: ${out_map_map}"/> -->
                         <set field="out_map" from="out_map+out_map_map"/>
                     </iterate>
-
-                    <set field="in_map_name_list" from="in_map*.key"/>
-                    <set field="out_map_name_list" from="out_map*.key"/>
                 </then><else>
-                    <set field="in_map" from="[]"/>
-                    <set field="out_map" from="[]"/>
-                    
                     <set field="autoServiceType" from="nodeName.split('#')[0]"/>
                     <set field="entityName" from="nodeName.split('#')[1]"/>
                     <set field="entityDefinition" from="ec.entity.getEntityDefinition(entityName)"/>
@@ -1323,12 +1318,33 @@ along with this software (see the LICENSE.md file). If not, see
                             <set field="out_map" from="out_map+out_map_map"/>
                         </iterate>
                     </if>
-
-                    <set field="in_map_name_list" from="in_map*.key"/>
-                    <set field="out_map_name_list" from="out_map*.key"/>
-                    <set field="schemaList" from="schemaList+[nodeName:nodeName, in_map:in_map, out_map:out_map, in_map_name_list:in_map_name_list, out_map_name_list:out_map_name_list]"/>
                 </else></if>
+
+                <set field="in_map_name_list" from="in_map*.key"/>
+                <set field="out_map_name_list" from="out_map*.key"/>
+                
+                <!-- Count the amount of required properties by adding the service service_name, name, description, uniqueOutMapName, in_map_name_list, out_map_name_list -->
+                <!-- This is the wrong count. See if enums count towards the limit -->
+                <set field="inMapNameListSize" from="in_map_name_list.size()?:0"/>
+                <set field="outMapNameListSize" from="out_map_name_list.size()?:0"/>
+                <set field="serviceListNameSize" from="6"/>
+                <if condition="!hasAddedService">
+                    <set field="serviceListNameSize" from="7"/>
+                    <set field="hasAddedService" from="true"/>
+                </if>
+                <log level="warn" message="paramcount ${nodeName} inMapNameListSize: ${inMapNameListSize} inMapEnumListSize: ${inMapEnumListSize} outMapNameListSize: ${outMapNameListSize} outMapEnumListSize: ${outMapEnumListSize} serviceNameSize: ${serviceListNameSize}"/>
+                <set field="paramCount" from="(inMapNameListSize ?: 0) + (outMapNameListSize ?: 0) + (serviceListNameSize ?: 0)"/>
+                <if condition="(schemaList.sum { it.paramCount }?:0) + paramCount &gt; 100">
+                    <log level="warn" message="Not adding service ${nodeName} because it has too many parameters ${paramCount} for the current parameter limit of 100 would be total ${(schemaList.sum { it.paramCount }?:0) + paramCount}"/>
+                    <continue/>
+                <else>
+                    <log level="warn" message="Adding service ${nodeName} with ${paramCount} parameters when current total is ${schemaList.sum { it.paramCount }?:0} would be total is ${(schemaList.sum { it.paramCount }?:0) + paramCount} and max is 100"/>
+                </else>
+                </if>
+                <set field="schemaList" from="schemaList+[nodeName:nodeName, in_map:in_map, out_map:out_map, in_map_name_list:in_map_name_list, out_map_name_list:out_map_name_list, paramCount:paramCount]"/>
             </iterate>
+
+            <log level="warn" message="schemaList*.nodeName: ${schemaList*.nodeName}"/>
 
             <set field="schemaMap" from="[
                 name: 'service_schema',
@@ -1362,7 +1378,7 @@ along with this software (see the LICENSE.md file). If not, see
                                         ],
                                         out_map: [
                                             type: 'object',
-                                            properties: schema.out_map.collectEntries { output -> [
+                                            properties: schema.out_map.findAll{it.key != null}.collectEntries { output -> [
                                                 (output.key): [
                                                     type: output.type,
                                                     *:((output.value?:output.key) &amp;&amp; output.type == 'string' ? [enum: [output.value?:output.key]] : [:]),
