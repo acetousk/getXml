@@ -1168,7 +1168,7 @@ along with this software (see the LICENSE.md file). If not, see
         <actions>
             <if condition="index &gt; 0">
                 <!-- <log level="warn" message="ec.web.getRequestParameters(): ${ec.web.getRequestParameters()}"/> -->
-                <log level="warn" message="output_list12345: ${output_list}"/>
+                <!-- <log level="warn" message="output_list12345: ${output_list}"/> -->
     
                 <!-- <if condition="!output_list">
                     <set field="output_list" from="ec.web.getRequestParameters().output_list"/>
@@ -1234,6 +1234,8 @@ along with this software (see the LICENSE.md file). If not, see
                 'java.util.Date': 'string',
                 'java.sql.Date': 'string'
             ]"/>
+
+            <log level="warn" message="creating schema for files ${rag_list*.name} with count of ${rag_list.size()}"/>
 
             <set field="schemaList" from="[]"/>
             <set field="hasAddedService" from="false"/>
@@ -1332,7 +1334,7 @@ along with this software (see the LICENSE.md file). If not, see
                     <set field="serviceListNameSize" from="7"/>
                     <set field="hasAddedService" from="true"/>
                 </if>
-                <log level="warn" message="paramcount ${nodeName} inMapNameListSize: ${inMapNameListSize} inMapEnumListSize: ${inMapEnumListSize} outMapNameListSize: ${outMapNameListSize} outMapEnumListSize: ${outMapEnumListSize} serviceNameSize: ${serviceListNameSize}"/>
+                <!-- <log level="warn" message="paramcount ${nodeName} inMapNameListSize: ${inMapNameListSize} inMapEnumListSize: ${inMapEnumListSize} outMapNameListSize: ${outMapNameListSize} outMapEnumListSize: ${outMapEnumListSize} serviceNameSize: ${serviceListNameSize}"/> -->
                 <set field="paramCount" from="(inMapNameListSize ?: 0) + (outMapNameListSize ?: 0) + (serviceListNameSize ?: 0)"/>
                 <if condition="(schemaList.sum { it.paramCount }?:0) + paramCount &gt; 100">
                     <log level="warn" message="Not adding service ${nodeName} because it has too many parameters ${paramCount} for the current parameter limit of 100 would be total ${(schemaList.sum { it.paramCount }?:0) + paramCount}"/>
