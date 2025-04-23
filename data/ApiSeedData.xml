@@ -17,7 +17,7 @@ along with this software (see the LICENSE.md file). If not, see
     <!-- Artifact group for all of the getXml REST API via the getXml resource (the root resource) -->
     <moqui.security.ArtifactGroup artifactGroupId="getXml_API" description="getXml REST API (via root resource)"/>
     <moqui.security.ArtifactGroupMember artifactGroupId="getXml_API" artifactTypeEnumId="AT_REST_PATH"
-            inheritAuthz="Y" artifactName="/getXml"/>
+            inheritAuthz="Y" artifactName="/xml"/>
     <!-- Full permissions for the ADMIN user group -->
     <moqui.security.ArtifactAuthz artifactAuthzId="getXmlAPI_AUTHZ_ALL" userGroupId="ADMIN" artifactGroupId="getXml_API"
             authzTypeEnumId="AUTHZT_ALWAYS" authzActionEnumId="AUTHZA_ALL"/>
