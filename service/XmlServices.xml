@@ -1045,7 +1045,7 @@ along with this software (see the LICENSE.md file). If not, see
 <!--                    <log level="warn" message="inputOutput.in_map: ${inputOutput.in_map}"/>-->
                     <set field="validatePreviousOutMap" from="inputOutput_index != 0"/>
                     <iterate list="inputOutput.in_map" entry="inMap">
-                        <set field="inMap.errorList" from="[]"/>
+                        <script>inMap.put("errorList", [])</script>
                         <if condition="!sd.inParameterNames.contains(inMap.key)"><then>
                             <set field="message" value="in_map ${inMap.key} does not exist for service ${inputOutput.service_name}"/>
                             <log level="warn" message="${message}"/>
