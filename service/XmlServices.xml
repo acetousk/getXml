@@ -1044,6 +1044,9 @@ along with this software (see the LICENSE.md file). If not, see
 
 <!--                    <log level="warn" message="inputOutput.in_map: ${inputOutput.in_map}"/>-->
                     <set field="validatePreviousOutMap" from="inputOutput_index != 0"/>
+                    <if condition="inputOutput.in_map instanceof Map">
+                        <script>inputOutput.in_map = [inputOutput.in_map]</script>
+                    </if>
                     <iterate list="inputOutput.in_map" entry="inMap">
                         <script>inMap.putAt("errorList", [])</script>
                         <if condition="!sd.inParameterNames.contains(inMap.key)"><then>
@@ -1112,6 +1115,9 @@ along with this software (see the LICENSE.md file). If not, see
 <!--                    <log level="warn" message="inputOutput.out_map.getClass().getName() == 'java.lang.String' ? true : false ${inputOutput.out_map.getClass().getName() == 'java.lang.String' ? true : false}"/>-->
 <!--                    <log level="warn" message="inputOutput.out_map.getClass().getName() == 'java.lang.String' ? [inputOutput.out_map] : inputOutput.out_map*.key ${inputOutput.out_map.getClass().getName() == 'java.lang.String' ? [inputOutput.out_map] : inputOutput.out_map}"/>-->
 
+                    <if condition="inputOutput.out_map instanceof Map">
+                        <script>inputOutput.out_map = [inputOutput.out_map]</script>
+                    </if>
                     <iterate list="inputOutput.out_map" entry="outMap">
                         <set field="outMap.errorList" from="[]"/>
 <!--                        <log level="warn" message="outMap: ${outMap}"/>-->
