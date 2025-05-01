@@ -314,14 +314,20 @@ along with this software (see the LICENSE.md file). If not, see
         <in-parameters>
             <parameter name="filterServiceName"/>
 
+            <!-- <parameter name="outputFile" type="Boolean" required="true" default="false"/> -->
             <parameter name="outputFilesToFolder" type="Boolean" required="true" default="false"/>
             <parameter name="outputFolder" default-value="component://getXml/dataset/service-parameter"/>
         </in-parameters>
         <out-parameters>
 <!--            <parameter name="serviceXml"/>-->
-           <parameter name="serviceParameterList" type="List"/>
+<!--            <parameter name="serviceList" type="List"/>-->
         </out-parameters>
         <actions>
+            <set field="serviceXml" value=""/>
+            <!-- <if condition="outputFile">
+                <script><![CDATA[serviceXml+="""<services xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://moqui.org/xsd/service-definition-3.xsd">"""]]></script>
+            </if> -->
+
             <set field="knownServiceNames" from="ec.service.knownServiceNames"/>
             <!-- Create auto-services for all entities -->
             <set field="autoServiceNames" from="[]"/>
@@ -348,7 +354,7 @@ along with this software (see the LICENSE.md file). If not, see
                 }
             </script>
 
-            <set field="serviceParameterList" from="[]"/>
+            <set field="serviceList" from="[]"/>
 
             <if condition="outputFilesToFolder">
                 <set field="outputFolder" from="ec.resource.getLocationReference(outputFolder)"/>
@@ -415,41 +421,40 @@ along with this software (see the LICENSE.md file). If not, see
                     <!-- <log level="warn" message="serviceVerb: ${serviceVerb} serviceNoun: ${serviceNoun} entityName: ${entityName} entityDefinition: ${entityDefinition} entityInfo: ${entityInfo} pkFieldInfos: ${pkFieldInfos} nonPkFieldInfos: ${nonPkFieldInfos} allFieldInfos: ${allFieldInfos} fieldInfos: ${fieldInfos} relationshipInfoList: ${relationshipInfoList} dependents: ${dependents}"/>
                     <log level="warn" message="fieldList: ${fieldList}"/> -->
 
-                    <iterate list="fieldList" entry="field">
-                        <set field="parameterName" from="field.name"/>
-                        <set field="inParameter" value="${inService}!${parameterName}"/>
-                        <set field="type" from="field.type"/>
-                        <set field="required" from="field.required"/>
-                        <set field="xml" from="ec.resource.template('component://getXml/template/serviceRender.xml.ftl', '.ftl')"/>
-                        <log level="warn" message="xml: ${xml}"/>
-        
-                        <set field="xml" from="xml.replaceAll('&gt;\\s+&lt;', '&gt;&lt;').trim()"/>
-                        <if condition="outputFilesToFolder">
-                            <script><![CDATA[
-                                outputFolder.makeFile(inParameter + '.xml').putText(xml)
-                                ]]></script>
+                    <set field="xml" from="ec.resource.template('component://getXml/template/autoServiceRender.xml.ftl', '.ftl')"/>
+                    <!-- <log level="warn" message="xml: ${xml}"/> -->
+    
+                    <set field="xml" from="xml.replaceAll('&gt;\\s+&lt;', '&gt;&lt;').trim()"/>
+                    <!-- <if condition="outputFile">
+                        <set field="serviceXml" from="serviceXml+'\n'+xml"/>
+                    </if> -->
+                    <if condition="outputFilesToFolder">
+                        <if condition="fieldList">
+                            <iterate list="fieldList" entry="field">
+                                <set field="parameterName" from="field.name"/>
+                                <if condition="parameterName">
+                                    <script><![CDATA[
+                                        outputFolder.makeFile(inService + '!' + parameterName + '.xml').putText(xml)
+                                    ]]></script>
+                                </if>
+                            </iterate>
                         </if>
-                        <set field="serviceParameterList" from="serviceParameterList+[name:inParameter,xml:xml]"/>    
-                    </iterate>
-                    <iterate list="pkFieldList" entry="pkField">
-                        <set field="parameterName" from="pkField.name"/>
-                        <set field="outParameter" value="${inService}@${parameterName}"/>
-                        <set field="type" from="pkField.type"/>
-                        <set field="required" from="pkField.required"/>
-                        <set field="xml" from="ec.resource.template('component://getXml/template/serviceRender.xml.ftl', '.ftl')"/>
-                        <log level="warn" message="xml: ${xml}"/>
-
-                        <set field="xml" from="xml.replaceAll('&gt;\\s+&lt;', '&gt;&lt;').trim()"/>
-                        <if condition="outputFilesToFolder">
-                            <script><![CDATA[
-                                outputFolder.makeFile(outParameter + '.xml').putText(xml)
-                                ]]></script>
+                        
+                        <if condition="pkFieldList">
+                            <iterate list="pkFieldList" entry="pkField">
+                                <set field="parameterName" from="pkField.name"/>
+                                <if condition="parameterName">
+                                    <script><![CDATA[
+                                        outputFolder.makeFile(inService + '@' + parameterName + '.xml').putText(xml)
+                                    ]]></script>
+                                </if>
+                            </iterate>
                         </if>
-                        <set field="serviceParameterList" from="serviceParameterList+[name:outParameter,xml:xml]"/>
-                    </iterate>
+                    </if>
+    <!--                <log level="warn" message="inService: ${inService}"/>-->
+                    <set field="serviceList" from="serviceList+[name:inService,xml:xml]"/>
                     <continue/>
                 </if>
-                <continue/>
                 <set field="serviceNode" from="sd.serviceNode"/>
                 <set field="serviceDescriptionNode" from="serviceNode.first('description')"/>
                 <set field="inParameterNode" from="serviceNode.first('in-parameters')"/>
@@ -504,20 +509,59 @@ along with this software (see the LICENSE.md file). If not, see
 <!--                    <log level="warn" message="action: ${action}"/>-->
 <!--                </iterate>-->
 
-                <!-- <set field="xml" from="ec.resource.template('component://getXml/template/serviceRender.xml.ftl', '.ftl')"/> -->
+                <set field="xml" from="ec.resource.template('component://getXml/template/serviceRender.xml.ftl', '.ftl')"/>
 <!--                <log level="warn" message="xml: ${xml}"/>-->
 
-                <!-- <set field="xml" from="xml.replaceAll('&gt;\\s+&lt;', '&gt;&lt;').trim()"/>
-                <if condition="outputFilesToFolder">
-                    <script><![CDATA[
-                        outputFolder.makeFile(inService + '.xml').putText(xml)
-                        ]]></script>
+                <set field="xml" from="xml.replaceAll('&gt;\\s+&lt;', '&gt;&lt;').trim()"/>
+                <!-- <if condition="outputFile">
+                    <set field="serviceXml" from="serviceXml+'\n'+xml"/>
                 </if> -->
+                <if condition="outputFilesToFolder">
+                    <if condition="inParameterNodes">
+                        <iterate list="inParameterNodes" entry="inParameter">
+                            <set field="parameterName" from="inParameter.attribute('name')"/>
+                            <if condition="parameterName">
+                                <!-- <set field="type" from="inParameter.attribute('type')"/>
+                                <set field="required" from="inParameter.attribute('required')"/>
+                                <set field="default" from="inParameter.attribute('default')"/>
+                                <set field="default_value" from="inParameter.attribute('default-value')"/>
+                                <set field="description" from="inParameter.first('description')?.text"/>
+                                <set field="parameterXml" from="ec.resource.template('component://getXml/template/serviceParameterRender.xml.ftl', '')"/> -->
+                                <script><![CDATA[
+                                    outputFolder.makeFile(inService + '!' + parameterName + '.xml').putText(xml)
+                                ]]></script>
+                            </if>
+                        </iterate>
+                    </if>
+
+                    <if condition="outParameterNodes">
+                        <iterate list="outParameterNodes" entry="outParameter">
+                            <set field="parameterName" from="outParameter.attribute('name')"/>
+                            <if condition="parameterName">
+                                <!-- <set field="type" from="outParameter.attribute('type')"/>
+                                <set field="required" from="outParameter.attribute('required')"/>
+                                <set field="default" from="outParameter.attribute('default')"/>
+                                <set field="default_value" from="outParameter.attribute('default-value')"/>
+                                <set field="description" from="outParameter.first('description')?.text"/>
+                                <set field="parameterXml" from="ec.resource.template('component://getXml/template/serviceParameterRender.xml.ftl', '')"/> -->
+                                <script><![CDATA[
+                                    outputFolder.makeFile(inService + '@' + parameterName + '.xml').putText(xml)
+                                ]]></script>
+                            </if>
+                        </iterate>
+                    </if>
+                </if>
 <!--                <log level="warn" message="inService: ${inService}"/>-->
-                <!-- <set field="serviceParameterList" from="serviceParameterList+[name:inService,xml:xml,description:serviceDescriptionNode?.first('description')?.text,inParameterDescriptionNodes:inParameterDescriptionNodes,outParameterDescriptionNodes:outParameterDescriptionNodes]"/> -->
+                <set field="serviceList" from="serviceList+[name:inService,xml:xml,description:serviceDescriptionNode?.first('description')?.text,inParameterDescriptionNodes:inParameterDescriptionNodes,outParameterDescriptionNodes:outParameterDescriptionNodes]"/>
             </iterate>
+            <!-- <if condition="outputFile">
+                <script><![CDATA[serviceXml=serviceXml+"</services>"]]></script>
+                <script>ec.resource.getLocationReference('component://getXml/dataset/allServices.xml').putText(serviceXml)</script>
+                <script>ec.resource.getLocationReference('component://getXml/dataset/allServices.txt').putText(serviceXml)</script>
+            </if> -->
         </actions>
     </service>
+
     <!-- Screens -->
     <!-- TODO: Use ScreenInfo instead of ScreenDefinition here -->
     <service verb="walk" noun="ScreenTree">
@@ -1588,6 +1632,275 @@ along with this software (see the LICENSE.md file). If not, see
                                                 (input.key): [
                                                     type: input.type,
                                                     *:((input.enumList) &amp;&amp; input.type == 'string' ? [enum: input.enumList] : [:]),
+                                                    *:(input.type == 'array' ? [items: [type: 'string']] : [:])
+                                                ]
+                                            ]},
+                                            required: schema.in_map_name_list,
+                                            additionalProperties: false
+                                        ],
+                                        out_map: [
+                                            type: 'object',
+                                            properties: schema.out_map.findAll{it.key != null}.collectEntries { output -> [
+                                                (output.key): [
+                                                    type: output.type,
+                                                    *:((output.value?:output.key) &amp;&amp; output.type == 'string' ? [enum: [output.value?:output.key]] : [:]),
+                                                    *:(output.type == 'array' ? [items: [type: 'string']] : [:])
+                                                ]
+                                            ]},
+                                            required: schema.out_map_name_list,
+                                            additionalProperties: false
+                                        ]
+                                    ],
+                                    required: ['service_name', 'name', 'description', 'uniqueOutMapName', 'in_map', 'out_map'],
+                                    additionalProperties: false
+                                ]}
+                            ]
+                        ]
+                    ],
+                    required: ['services'],
+                    additionalProperties: false
+                ],
+                strict: true
+            ]"/>
+
+            <!-- <set field="jsonSchema" from="ec.resource.template('component://getXml/template/schema.json.ftl', '.ftl')"/> -->
+            <set field="jsonSchema" from="ec.elastic.objectToJson(schemaMap)"/>
+            <log level="warn" message="jsonSchema: ${jsonSchema}"/>
+        </actions>
+    </service>
+
+    <service verb="generate" noun="JsonSchemaWithParameters" authenticate="anonymous-view">
+        <in-parameters>
+            <parameter name="rag_list" type="List"/>
+        </in-parameters>
+        <out-parameters>
+            <parameter name="jsonSchema" type="String"/>
+            <parameter name="evaluateList" type="List"/>
+        </out-parameters>
+        <actions>
+            <if condition="index &gt; 0">
+                <!-- <log level="warn" message="ec.web.getRequestParameters(): ${ec.web.getRequestParameters()}"/> -->
+                <!-- <log level="warn" message="output_list12345: ${output_list}"/> -->
+
+                <!-- <if condition="!output_list">
+                    <set field="output_list" from="ec.web.getRequestParameters().output_list"/>
+                    <log level="warn" message="new output_list123: ${output_list}"/>
+                </if> -->
+                <set field="evaluateList" from="[]"/>
+                
+                <set field="allPreviousOutputParameters" from="[]"/>
+                <iterate list="output_list" entry="outputObject">
+                    <set field="serviceList" from="ec.elastic.jsonToObject(outputObject.json_output)"/>
+                    <!-- <log level="warn" message="typeof serviceList: ${serviceList.getClass().getName()}"/> -->
+                    <iterate list="serviceList.services" entry="service">
+                        <!-- <log level="warn" message="typeof service: ${service.getClass().getName()}"/>
+                        <log level="warn" message="service: ${service}"/> -->
+                        <if condition="service.uniqueOutMapName">
+                            <iterate list="service.out_map" entry="outParam">
+                                <!-- <log level="warn" message="outParam: ${outParam}"/> -->
+                                <if condition="allPreviousOutputParameters.contains(service.uniqueOutMapName+'.'+outParam.key)">
+                                    <script>evaluateList.add("Duplicate output parameter: ${service.uniqueOutMapName+'.'+outParam.key}")</script>
+                                </if>
+                                <set field="allPreviousOutputParameters" from="allPreviousOutputParameters+[service.uniqueOutMapName+'.'+outParam.key]"/>
+                            </iterate>
+                        </if>
+                    </iterate>
+                </iterate>
+                <log level="warn" message="allPreviousOutputParameters: ${allPreviousOutputParameters}"/>
+            </if>
+
+            <!-- <log level="warn" message="context.toString(): ${context.toString()}"/> -->
+            <!-- <log level="warn" message="rag_list: ${rag_list}"/>
+            <log level="warn" message="rag_list.size(): ${rag_list.size()}"/>
+            <log level="warn" message="rag_list: ${rag_list.collect{[name:it.name, type:it.type]}}"/> -->
+
+            <!-- <log level="warn" message="output_list123 ${index}: ${output_list}"/> -->
+
+            <set field="typeEnumMap" from="[
+                'String': 'string',
+                'java.lang.String': 'string',
+                'Integer': 'integer', 
+                'java.lang.Integer': 'integer',
+                'Long': 'number',
+                'java.lang.Long': 'number',
+                'Float': 'number',
+                'java.lang.Float': 'number',
+                'Double': 'number',
+                'java.lang.Double': 'number',
+                'BigDecimal': 'number',
+                'java.math.BigDecimal': 'number',
+                'BigInteger': 'number',
+                'java.math.BigInteger': 'number',
+                'Boolean': 'boolean',
+                'java.lang.Boolean': 'boolean',
+                'Map': 'object',
+                'java.util.Map': 'object',
+                'List': 'array',
+                'java.util.List': 'array',
+                'Collection': 'array',
+                'java.util.Collection': 'array',
+                'Set': 'array',
+                'java.util.Set': 'array',
+                'Timestamp': 'string',
+                'java.sql.Timestamp': 'string',
+                'Date': 'string',
+                'java.util.Date': 'string',
+                'java.sql.Date': 'string'
+            ]"/>
+
+            <log level="warn" message="creating schema for files ${rag_list*.name} with count of ${rag_list.size()}"/>
+
+            <set field="schemaList" from="[]"/>
+            <set field="hasAddedService" from="false"/>
+
+            <set field="serviceParameterMapList" from="rag_list.groupBy { it.service_name }
+                  .collect { svc, items -> [
+                      service_name: svc,
+                      in_parameter_names: items.findAll{it.parameter_type == 'in'}*.parameter_name,
+                      out_parameter_names: items.findAll{it.parameter_type == 'out'}*.parameter_name
+                  ] }"/>
+            <log level="warn" message="serviceParameterMapList: ${serviceParameterMapList}"/>
+            <iterate list="serviceParameterMapList" entry="rag">
+                <set field="nodeName" from="rag.service_name - '.xml'"/>
+                <set field="in_map" from="[]"/>
+                <set field="in_map_name_list" from="[]"/>
+                <set field="out_map" from="[]"/>
+                <set field="out_map_name_list" from="[]"/>
+
+                <set field="sd" from="ec.service.getServiceDefinition(nodeName)"/>
+
+                <if condition="sd"><then>
+                    <!-- <log level="warn" message="service rag.name: ${rag.name}"/> -->
+                    <iterate list="sd.inParameterInfoMap" entry="inParameterInfoMap">
+                        <if condition="!rag.in_parameter_names.contains(inParameterInfoMap.value.name) &amp;&amp; !inParameterInfoMap.value.required">
+                            <continue/>
+                        </if>
+                        <if condition="inParameterInfoMap.value.disabled">
+                            <!-- <log level="warn" message="In service ${nodeName} field ${inParameterInfoMap.value.fieldName} disabled = ${inParameterInfoMap.value.disabled}"/> -->
+                            <continue/>
+                        </if>
+                        <set field="in_map_map" from="[key:inParameterInfoMap.value.name, type:typeEnumMap[inParameterInfoMap.value.type], entityName:inParameterInfoMap.value.entityName, required:inParameterInfoMap.value.required]"/>
+                        <if condition="!in_map_map.type">
+                            <!-- <log level="warn" message="No type for ${inParameterInfoMap.value.name} ${inParameterInfoMap.value.type} ${in_map_map.type} in service ${nodeName}"/> -->
+                        </if>
+                        <set field="in_map_map.enumList" from="[]"/>
+                        <if condition="inParameterInfoMap.value.hasDefault">
+                            <set field="val" from="inParameterInfoMap.value.defaultStr ?: inParameterInfoMap.value.defaultValue"/>
+                            <set field="in_map_map" from="in_map_map+[value:val]"/>
+                            <set field="in_map_map.enumList" from="in_map_map.enumList+[val]"/>
+                        <else>
+                            <set field="in_map_map.enumList" from="in_map_map.enumList+[inParameterInfoMap.value.name]"/>
+                        </else></if>
+                        <if condition="allPreviousOutputParameters">
+                            <set field="in_map_map.enumList" from="in_map_map.enumList+allPreviousOutputParameters"/>
+                        </if>
+                        <!-- <log level="warn" message="in_map_map: ${in_map_map}"/> -->
+                        <set field="in_map" from="in_map+in_map_map"/>
+                    </iterate>
+                    <iterate list="sd.outParameterInfoMap" entry="outParameterInfoMap">
+                        <if condition="!rag.out_parameter_names.contains(outParameterInfoMap.value.name) &amp;&amp; !outParameterInfoMap.value.required">
+                            <continue/>
+                        </if>
+                        <set field="out_map_map" from="[key:outParameterInfoMap.key, type:typeEnumMap[outParameterInfoMap.value.type], entityName:outParameterInfoMap.value.entityName, required:outParameterInfoMap.value.required]"/>
+                        <if condition="outParameterInfoMap.value.hasDefault">
+                            <set field="val" from="outParameterInfoMap.value.defaultStr ?: outParameterInfoMap.value.defaultValue"/>
+                            <set field="out_map_map" from="out_map_map+[value:val]"/>
+                        </if>
+                        <!-- <log level="warn" message="out_map_map: ${out_map_map}"/> -->
+                        <set field="out_map" from="out_map+out_map_map"/>
+                    </iterate>
+                </then><else>
+                    <set field="autoServiceType" from="nodeName.split('#')[0]"/>
+                    <set field="entityName" from="nodeName.split('#')[1]"/>
+                    <set field="entityDefinition" from="ec.entity.getEntityDefinition(entityName)"/>
+                    <if condition="entityDefinition">
+                        <iterate list="entityDefinition.allFieldNames" entry="fieldName">
+                            <set field="fieldNode" from="entityDefinition.getFieldInfo(fieldName)"/> 
+                            <!-- <log level="warn" message="Field ${fieldName}: name=${fieldNode.name}, type=${fieldNode.type}, columnName=${fieldNode.columnName}, defaultStr=${fieldNode.defaultStr}, javaType=${fieldNode.javaType}, enableAuditLog=${fieldNode.enableAuditLog}, isPk=${fieldNode.isPk}, isTextVeryLong=${fieldNode.isTextVeryLong}, encrypt=${fieldNode.encrypt}, isSimple=${fieldNode.isSimple}, enableLocalization=${fieldNode.enableLocalization}, createOnly=${fieldNode.createOnly}, isLastUpdatedStamp=${fieldNode.isLastUpdatedStamp}"/> -->
+                            <set field="type" from="fieldNode.javaType"/>
+                            <if condition="fieldNode.isLastUpdatedStamp">
+                                <continue/>
+                            </if>
+                            <set field="required" from="fieldNode.isPk"/>
+                            <if condition="autoServiceType?.toLowerCase()?.contains('create')">
+                                <set field="required" from="false"/>
+                            </if>
+                            <if condition="!rag.in_parameter_names.contains(fieldName) &amp;&amp; !required">
+                                <continue/>
+                            </if>
+                            <set field="in_map_map" from="[key:fieldName, type:typeEnumMap[type], entityName:fieldNode.entityName, required:required]"/>
+                            <set field="in_map_map.enumList" from="[]"/>
+                            <if condition="fieldNode.defaultStr">
+                                <set field="in_map_map" from="in_map_map+[value:fieldNode.defaultStr]"/>
+                                <set field="in_map_map.enumList" from="in_map_map.enumList+[fieldNode.defaultStr]"/>
+                            <else>
+                                <set field="in_map_map.enumList" from="in_map_map.enumList+[fieldName]"/>
+                            </else></if>
+                            <if condition="allPreviousOutputParameters">
+                                <set field="in_map_map.enumList" from="in_map_map.enumList+allPreviousOutputParameters"/>
+                            </if>
+
+                            <set field="in_map" from="in_map+in_map_map"/>
+                        </iterate>
+                        <iterate list="entityDefinition.pkFieldNames" entry="fieldName">
+                            <set field="fieldNode" from="entityDefinition.getFieldInfo(fieldName)"/>
+                            <set field="type" from="fieldNode.javaType"/>
+                            <set field="out_map_map" from="[key:fieldName, type:typeEnumMap[type], entityName:fieldNode.entityName, required:true]"/>
+                            <set field="out_map" from="out_map+out_map_map"/>
+                        </iterate>
+                    </if>
+                </else></if>
+
+                <set field="in_map_name_list" from="in_map*.key"/>
+                <set field="out_map_name_list" from="out_map*.key"/>
+                
+                <!-- Count the amount of required properties by adding the service service_name, name, description, uniqueOutMapName, in_map_name_list, out_map_name_list -->
+                <!-- This is the wrong count. See if enums count towards the limit -->
+                <set field="inMapNameListSize" from="in_map_name_list.size()?:0"/>
+                <set field="outMapNameListSize" from="out_map_name_list.size()?:0"/>
+                <set field="serviceListNameSize" from="6"/>
+                <if condition="!hasAddedService">
+                    <set field="serviceListNameSize" from="7"/>
+                    <set field="hasAddedService" from="true"/>
+                </if>
+                <!-- <log level="warn" message="paramcount ${nodeName} inMapNameListSize: ${inMapNameListSize} inMapEnumListSize: ${inMapEnumListSize} outMapNameListSize: ${outMapNameListSize} outMapEnumListSize: ${outMapEnumListSize} serviceNameSize: ${serviceListNameSize}"/> -->
+                <set field="paramCount" from="(inMapNameListSize ?: 0) + (outMapNameListSize ?: 0) + (serviceListNameSize ?: 0)"/>
+                <if condition="(schemaList.sum { it.paramCount }?:0) + paramCount &gt; 100">
+                    <log level="warn" message="Not adding service ${nodeName} because it has too many parameters ${paramCount} for the current parameter limit of 100 would be total ${(schemaList.sum { it.paramCount }?:0) + paramCount}"/>
+                    <continue/>
+                <else>
+                    <log level="warn" message="Adding service ${nodeName} with ${paramCount} parameters when current total is ${schemaList.sum { it.paramCount }?:0} would be total is ${(schemaList.sum { it.paramCount }?:0) + paramCount} and max is 100"/>
+                </else>
+                </if>
+                <set field="schemaList" from="schemaList+[nodeName:nodeName, in_map:in_map, out_map:out_map, in_map_name_list:in_map_name_list, out_map_name_list:out_map_name_list, paramCount:paramCount]"/>
+            </iterate>
+
+            <log level="warn" message="schemaList*.nodeName: ${schemaList*.nodeName}"/>
+
+            <set field="schemaMap" from="[
+                name: 'service_schema',
+                schema: [
+                    type: 'object',
+                    properties: [
+                        services: [
+                            type: 'array',
+                            items: [
+                                anyOf: schemaList.collect { schema -> [
+                                    type: 'object',
+                                    properties: [
+                                        service_name: [
+                                            type: 'string',
+                                            enum: [schema.nodeName]
+                                        ],
+                                        name: [type: 'string'],
+                                        description: [type: 'string'],
+                                        uniqueOutMapName: [type: 'string'],
+                                        in_map: [
+                                            type: 'object',
+                                            properties: schema.in_map.collectEntries { input -> [
+                                                (input.key): [
+                                                    type: input.type == 'string' ? ['string', 'null'] : input.type,
+                                                    *:((input.enumList) &amp;&amp; input.type == 'string' ? [enum: input.enumList + [null]] : [:]),
                                                     *:(input.type == 'array' ? [items: [type: 'string']] : [:])
                                                 ]
                                             ]},

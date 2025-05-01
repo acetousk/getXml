@@ -13,13 +13,12 @@ along with this software (see the LICENSE.md file). If not, see
 <http://creativecommons.org/publicdomain/zero/1.0/>.
 -->
 <entity-facade-xml type="seed">
-
     <!-- Artifact group for all of the getXml REST API via the getXml resource (the root resource) -->
     <moqui.security.ArtifactGroup artifactGroupId="getXml_API" description="getXml REST API (via root resource)"/>
     <moqui.security.ArtifactGroupMember artifactGroupId="getXml_API" artifactTypeEnumId="AT_REST_PATH"
             inheritAuthz="Y" artifactName="/xml"/>
     <!-- Full permissions for the ADMIN user group -->
-    <moqui.security.ArtifactAuthz artifactAuthzId="getXmlAPI_AUTHZ_ALL" userGroupId="ADMIN" artifactGroupId="getXml_API"
+    <moqui.security.ArtifactAuthz artifactAuthzId="getXmlAPI_AUTHZ_ALL_ADMIN" userGroupId="ADMIN" artifactGroupId="getXml_API"
             authzTypeEnumId="AUTHZT_ALWAYS" authzActionEnumId="AUTHZA_ALL"/>
 
     <userGroups userGroupId="GET_XML_USERS" description="Get Xml Users"/>

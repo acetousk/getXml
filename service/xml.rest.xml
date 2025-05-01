@@ -21,5 +21,8 @@ along with this software (see the LICENSE.md file). If not, see
     <resource name="jsonSchema">
         <method type="get"><service name="XmlServices.generate#JsonSchema" /></method>
     </resource>
+    <resource name="jsonSchemaWithParameters">
+        <method type="get"><service name="XmlServices.generate#JsonSchemaWithParameters" /></method>
+    </resource>
 
 </resource>
