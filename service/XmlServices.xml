@@ -1824,6 +1824,16 @@ along with this software (see the LICENSE.md file). If not, see
                 <set field="out_map_name_list" from="[]"/>
 
                 <set field="sd" from="ec.service.getServiceDefinition(nodeName)"/>
+                <set field="entityDefinition" from="null"/>
+                <set field="autoServiceType" from="null"/>
+                <set field="entityName" from="null"/>
+                <if condition="!sd">
+                    <set field="autoServiceType" from="nodeName.split('#')[0]"/>
+                    <set field="entityName" from="nodeName.split('#')[1]"/>
+                    <if condition="autoServiceType?.startsWith('create') || autoServiceType?.startsWith('update') || autoServiceType?.startsWith('delete') || autoServiceType?.startsWith('store')">
+                        <set field="entityDefinition" from="ec.entity.getEntityDefinition(entityName)"/>
+                    </if>
+                </if>
 
                 <if condition="sd"><then>
                     <!-- <log level="warn" message="service rag.name: ${rag.name}"/> -->
@@ -1877,10 +1887,7 @@ along with this software (see the LICENSE.md file). If not, see
                         <!-- <log level="warn" message="out_map_map: ${out_map_map}"/> -->
                         <set field="out_map" from="out_map+out_map_map"/>
                     </iterate>
-                </then><else>
-                    <set field="autoServiceType" from="nodeName.split('#')[0]"/>
-                    <set field="entityName" from="nodeName.split('#')[1]"/>
-                    <set field="entityDefinition" from="ec.entity.getEntityDefinition(entityName)"/>
+                </then><else-if condition="entityDefinition">
                     <if condition="entityDefinition">
                         <iterate list="entityDefinition.allFieldNames" entry="fieldName">
                             <set field="fieldNode" from="entityDefinition.getFieldInfo(fieldName)"/> 
@@ -1919,6 +1926,8 @@ along with this software (see the LICENSE.md file). If not, see
                             <set field="out_map" from="out_map+out_map_map"/>
                         </iterate>
                     </if>
+                </else-if><else>
+                    <log level="warn" message="No service definition or entity definition found for ${nodeName}"/>
                 </else></if>
 
                 <set field="in_map_name_list" from="in_map*.key"/>
