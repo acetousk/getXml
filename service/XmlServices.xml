@@ -1606,7 +1606,7 @@ along with this software (see the LICENSE.md file). If not, see
                 <set field="schemaList" from="schemaList+[nodeName:nodeName, in_map:in_map, out_map:out_map, in_map_name_list:in_map_name_list, out_map_name_list:out_map_name_list, paramCount:paramCount]"/>
             </iterate>
 
-            <log level="warn" message="schemaList*.nodeName: ${schemaList*.nodeName}"/>
+            <!-- <log level="warn" message="schemaList*.nodeName: ${schemaList*.nodeName}"/> -->
 
             <set field="schemaMap" from="[
                 name: 'service_schema',
@@ -1709,6 +1709,8 @@ along with this software (see the LICENSE.md file). If not, see
                 <log level="warn" message="allPreviousOutputParameters: ${allPreviousOutputParameters}"/>
             </if>
 
+            <!-- <log level="warn" message="rag_list*.score: ${rag_list*.score}"/> -->
+
             <!-- <log level="warn" message="context.toString(): ${context.toString()}"/> -->
             <!-- <log level="warn" message="rag_list: ${rag_list}"/>
             <log level="warn" message="rag_list.size(): ${rag_list.size()}"/>
@@ -1751,15 +1753,69 @@ along with this software (see the LICENSE.md file). If not, see
             <log level="warn" message="creating schema for files ${rag_list*.name} with count of ${rag_list.size()}"/>
 
             <set field="schemaList" from="[]"/>
-            <set field="hasAddedService" from="false"/>
 
-            <set field="serviceParameterMapList" from="rag_list.groupBy { it.service_name }
-                  .collect { svc, items -> [
-                      service_name: svc,
-                      in_parameter_names: items.findAll{it.parameter_type == 'in'}*.parameter_name,
-                      out_parameter_names: items.findAll{it.parameter_type == 'out'}*.parameter_name
-                  ] }"/>
-            <log level="warn" message="serviceParameterMapList: ${serviceParameterMapList}"/>
+            <!-- Sort rag_list by score -->
+            <set field="rag_list" from="rag_list.sort { -it.score }"/>
+            
+            <!-- Initialize empty serviceParameterMapList and currentCount -->
+            <set field="serviceParameterMapList" from="[]"/>
+            <set field="currentParamCount" from="1"/>
+            <!-- Process each parameter in rag_list -->
+            <iterate list="rag_list" entry="rag">
+                <set field="nodeName" from="rag.service_name - '.xml'"/>
+                <set field="wouldAddParamCount" from="0"/>
+                <set field="serviceMap" from="serviceParameterMapList.find { it.service_name == rag.service_name }"/>
+
+                <!-- Calculate parameter count for this service -->
+                <set field="serviceListNameSize" from="6"/>
+                
+                <if condition="serviceMap">
+                    <set field="paramCount" from="1"/>
+                    <if condition="currentParamCount + paramCount &gt; 100">
+                        <log level="warn" message="Not adding service ${nodeName} - would exceed parameter limit. Current: ${currentParamCount}, Adding: ${paramCount}"/>
+                        <continue/>
+                    </if>
+
+                    <!-- Update existing service parameters -->
+                    <if condition="rag.parameter_type == 'in'">
+                        <if condition="!serviceMap.in_parameter_names.contains(rag.parameter_name)">
+                            <script>serviceMap.in_parameter_names.add(rag.parameter_name)</script>
+                            <set field="currentParamCount" from="currentParamCount + 1"/>
+                            <log level="warn" message="Added input parameter ${rag.parameter_name} to service ${nodeName}. Current total: ${currentParamCount}"/>
+                        </if>
+                    <else>
+                        <if condition="!serviceMap.out_parameter_names.contains(rag.parameter_name)">
+                            <script>serviceMap.out_parameter_names.add(rag.parameter_name)</script>
+                            <set field="currentParamCount" from="currentParamCount + 1"/>
+                            <log level="warn" message="Added output parameter ${rag.parameter_name} to service ${nodeName}. Current total: ${currentParamCount}"/>
+                        </if>
+                    </else></if>
+                <else>
+                    <!-- New service to add -->
+                    <set field="paramCount" from="1 + serviceListNameSize"/> <!-- 1 for the parameter + base service properties -->
+                    
+                    <!-- Check if adding would exceed limit -->
+                    <if condition="currentParamCount + paramCount &gt; 100">
+                        <log level="warn" message="Not adding service ${nodeName} - would exceed parameter limit. Current: ${currentParamCount}, Adding: ${paramCount}"/>
+                        <continue/>
+                    </if>
+
+                    <!-- Add to serviceParameterMapList -->
+                    <set field="newServiceMap" from="[
+                        service_name: rag.service_name,
+                        in_parameter_names: rag.parameter_type == 'in' ? [rag.parameter_name] : [],
+                        out_parameter_names: rag.parameter_type == 'out' ? [rag.parameter_name] : []
+                    ]"/>
+                    <script>serviceParameterMapList.add(newServiceMap)</script>
+
+                    <!-- Update running count -->
+                    <set field="currentParamCount" from="currentParamCount + paramCount"/>
+
+                    <log level="warn" message="Added service ${nodeName} with ${paramCount} parameters. Current total: ${currentParamCount}"/>
+                </else></if>
+            </iterate>
+
+            <log level="warn" message="serviceParameterMapList: ${serviceParameterMapList} currentParamCount: ${currentParamCount}"/>
             <iterate list="serviceParameterMapList" entry="rag">
                 <set field="nodeName" from="rag.service_name - '.xml'"/>
                 <set field="in_map" from="[]"/>
@@ -1785,7 +1841,13 @@ along with this software (see the LICENSE.md file). If not, see
                         </if>
                         <set field="in_map_map.enumList" from="[]"/>
                         <if condition="inParameterInfoMap.value.hasDefault">
-                            <set field="val" from="inParameterInfoMap.value.defaultStr ?: inParameterInfoMap.value.defaultValue"/>
+                            <set field="val" from="null"/>
+                            <if condition="inParameterInfoMap.value.defaultStr">
+                                <set field="val" from="inParameterInfoMap.value.defaultStr"/>
+                            </if>
+                            <if condition="inParameterInfoMap.value.defaultValue">
+                                <set field="val" value="'${inParameterInfoMap.value.defaultValue}'"/>
+                            </if>
                             <set field="in_map_map" from="in_map_map+[value:val]"/>
                             <set field="in_map_map.enumList" from="in_map_map.enumList+[val]"/>
                         <else>
@@ -1801,9 +1863,15 @@ along with this software (see the LICENSE.md file). If not, see
                         <if condition="!rag.out_parameter_names.contains(outParameterInfoMap.value.name) &amp;&amp; !outParameterInfoMap.value.required">
                             <continue/>
                         </if>
-                        <set field="out_map_map" from="[key:outParameterInfoMap.key, type:typeEnumMap[outParameterInfoMap.value.type], entityName:outParameterInfoMap.value.entityName, required:outParameterInfoMap.value.required]"/>
+                        <set field="out_map_map" from="[key:outParameterInfoMap.key, type:typeEnumMap[outParameterInfoMap.value.type], entityName:outParameterInfoMap.value.entityName, required:outParameterInfoMap.value.required, value:outParameterInfoMap.value.name]"/>
                         <if condition="outParameterInfoMap.value.hasDefault">
-                            <set field="val" from="outParameterInfoMap.value.defaultStr ?: outParameterInfoMap.value.defaultValue"/>
+                            <set field="val" from="null"/>
+                            <if condition="outParameterInfoMap.value.defaultStr">
+                                <set field="val" from="outParameterInfoMap.value.defaultStr"/>
+                            </if>
+                            <if condition="outParameterInfoMap.value.defaultValue">
+                                <set field="val" value="'${outParameterInfoMap.value.defaultValue}'"/>
+                            </if>
                             <set field="out_map_map" from="out_map_map+[value:val]"/>
                         </if>
                         <!-- <log level="warn" message="out_map_map: ${out_map_map}"/> -->
@@ -1831,8 +1899,10 @@ along with this software (see the LICENSE.md file). If not, see
                             <set field="in_map_map" from="[key:fieldName, type:typeEnumMap[type], entityName:fieldNode.entityName, required:required]"/>
                             <set field="in_map_map.enumList" from="[]"/>
                             <if condition="fieldNode.defaultStr">
-                                <set field="in_map_map" from="in_map_map+[value:fieldNode.defaultStr]"/>
-                                <set field="in_map_map.enumList" from="in_map_map.enumList+[fieldNode.defaultStr]"/>
+                                <!-- <log level="warn" message="fieldNode.defaultStr: ${fieldNode.defaultStr}"/> -->
+                                <set field="val" value="'${fieldNode.defaultStr}'"/>
+                                <set field="in_map_map" from="in_map_map+[value:val]"/>
+                                <set field="in_map_map.enumList" from="in_map_map.enumList+[val]"/>
                             <else>
                                 <set field="in_map_map.enumList" from="in_map_map.enumList+[fieldName]"/>
                             </else></if>
@@ -1845,7 +1915,7 @@ along with this software (see the LICENSE.md file). If not, see
                         <iterate list="entityDefinition.pkFieldNames" entry="fieldName">
                             <set field="fieldNode" from="entityDefinition.getFieldInfo(fieldName)"/>
                             <set field="type" from="fieldNode.javaType"/>
-                            <set field="out_map_map" from="[key:fieldName, type:typeEnumMap[type], entityName:fieldNode.entityName, required:true]"/>
+                            <set field="out_map_map" from="[key:fieldName, type:typeEnumMap[type], entityName:fieldNode.entityName, required:true, value:fieldName]"/>
                             <set field="out_map" from="out_map+out_map_map"/>
                         </iterate>
                     </if>
@@ -1853,7 +1923,7 @@ along with this software (see the LICENSE.md file). If not, see
 
                 <set field="in_map_name_list" from="in_map*.key"/>
                 <set field="out_map_name_list" from="out_map*.key"/>
-                
+
                 <!-- Count the amount of required properties by adding the service service_name, name, description, uniqueOutMapName, in_map_name_list, out_map_name_list -->
                 <!-- This is the wrong count. See if enums count towards the limit -->
                 <set field="inMapNameListSize" from="in_map_name_list.size()?:0"/>
@@ -1875,60 +1945,123 @@ along with this software (see the LICENSE.md file). If not, see
                 <set field="schemaList" from="schemaList+[nodeName:nodeName, in_map:in_map, out_map:out_map, in_map_name_list:in_map_name_list, out_map_name_list:out_map_name_list, paramCount:paramCount]"/>
             </iterate>
 
-            <log level="warn" message="schemaList*.nodeName: ${schemaList*.nodeName}"/>
+            <!-- <log level="warn" message="schemaList*.nodeName: ${schemaList*.nodeName}"/> -->
+
+            <set field="serviceSchemaProperties" from="[
+                type: 'object',
+                properties: [
+                    services: [
+                        type: 'array',
+                        items: [
+                            anyOf: []
+                        ]
+                    ]
+                ],
+                required: ['services'],
+                additionalProperties: false
+            ]"/>
+
+            <iterate list="schemaList" entry="schema">
+                <set field="serviceProperties" from="[
+                    type: 'object',
+                    properties: [
+                        service_name: [
+                            type: 'string',
+                            enum: [schema.nodeName]
+                        ],
+                        name: [type: 'string'],
+                        description: [type: 'string', description: 'A human-readable description of the service. Use proper spacing and punctuation to ensure clarity.'],
+                        uniqueOutMapName: [type: 'string', description: 'A unique camel case name for the output map.'],
+                        in_map: [
+                            type: 'object',
+                            properties: [:],
+                            required: schema.in_map_name_list,
+                            additionalProperties: false
+                        ],
+                        out_map: [
+                            type: 'object', 
+                            properties: [:],
+                            required: schema.out_map_name_list,
+                            additionalProperties: false
+                        ]
+                    ],
+                    required: ['service_name', 'name', 'description', 'uniqueOutMapName', 'in_map', 'out_map'],
+                    additionalProperties: false
+                ]"/>
+
+                <iterate list="schema.in_map" entry="input">
+                    <if condition="input.key">
+                        <set field="inputType" from="input.type"/>
+                        <if condition="input.type == 'string' &amp;&amp; !input.required">
+                            <set field="inputType" from="['string', 'null']"/>
+                        <else-if condition="(input.type == 'number' || input.type == 'integer') &amp;&amp; !input.required">
+                            <set field="inputType" from="[input.type, 'null']"/>
+                        </else-if></if>
+
+                        <set field="inputEnum" from="[:]"/>
+                        <if condition="input.enumList &amp;&amp; input.type == 'string'">
+                            <set field="enumValues" from="input.enumList"/>
+                            <if condition="!input.required">
+                                <set field="enumValues" from="enumValues + [null]"/>
+                            </if>
+                            <set field="inputEnum" from="[enum: enumValues]"/>
+                        <else-if condition="(input.type == 'number' || input.type == 'integer') &amp;&amp; !input.required">
+                            <if condition="input.value">
+                                <set field="inputEnum" from="[anyOf: [[enum: [input.value, null]]]]"/>
+                            <else>
+                                <set field="inputEnum" from="[anyOf: [[enum: [null]], [type: 'string']]]"/>
+                            </else></if>
+                        </else-if></if>
+
+                        <set field="inputItems" from="[:]"/>
+                        <if condition="input.type == 'array'">
+                            <set field="inputItems" from="[items: [type: 'string']]"/>
+                        </if>
+
+                        <set field="inputProps" from="[type: inputType] + inputEnum + inputItems"/>
+                        <script>serviceProperties.properties.in_map.properties[input.key] = inputProps</script>
+                    </if>
+                </iterate>
+
+                <iterate list="schema.out_map" entry="output">
+                    <if condition="output.key">
+                        <set field="outputType" from="output.type"/>
+                        <if condition="output.type == 'string' &amp;&amp; !output.required">
+                            <set field="outputType" from="['string', 'null']"/>
+                        <else-if condition="output.type == 'number' || output.type == 'integer'">
+                            <set field="outputType" from="[output.type, 'null']"/>
+                        </else-if></if>
+
+                        <set field="outputEnum" from="[:]"/>
+                        <if condition="output.value">
+                            <if condition="output.type == 'string'">
+                                <set field="enumValues" from="[output.value]"/>
+                                <if condition="!output.required">
+                                    <set field="enumValues" from="enumValues + [null]"/>
+                                </if>
+                                <set field="outputEnum" from="[enum: enumValues]"/>
+                            <else-if condition="output.type == 'number' || output.type == 'integer'">
+                                <log level="warn" message="output.value: ${output.value}"/>
+                                <set field="outputEnum" from="[enum: [output.value, null]]"/>
+                            </else-if></if>
+                        </if>
+
+                        <set field="outputItems" from="[:]"/>
+                        <if condition="output.type == 'array'">
+                            <set field="outputItems" from="[items: [type: 'string']]"/>
+                        </if>
+
+                        <set field="outputProps" from="[type: outputType] + outputEnum + outputItems"/>
+                        <script>serviceProperties.properties.out_map.properties[output.key] = outputProps</script>
+                    </if>
+                </iterate>
+
+                <script>serviceSchemaProperties.properties.services.items.anyOf.add(serviceProperties)</script>
+            </iterate>
 
             <set field="schemaMap" from="[
                 name: 'service_schema',
-                schema: [
-                    type: 'object',
-                    properties: [
-                        services: [
-                            type: 'array',
-                            items: [
-                                anyOf: schemaList.collect { schema -> [
-                                    type: 'object',
-                                    properties: [
-                                        service_name: [
-                                            type: 'string',
-                                            enum: [schema.nodeName]
-                                        ],
-                                        name: [type: 'string'],
-                                        description: [type: 'string'],
-                                        uniqueOutMapName: [type: 'string'],
-                                        in_map: [
-                                            type: 'object',
-                                            properties: schema.in_map.collectEntries { input -> [
-                                                (input.key): [
-                                                    type: input.type == 'string' ? ['string', 'null'] : input.type,
-                                                    *:((input.enumList) &amp;&amp; input.type == 'string' ? [enum: input.enumList + [null]] : [:]),
-                                                    *:(input.type == 'array' ? [items: [type: 'string']] : [:])
-                                                ]
-                                            ]},
-                                            required: schema.in_map_name_list,
-                                            additionalProperties: false
-                                        ],
-                                        out_map: [
-                                            type: 'object',
-                                            properties: schema.out_map.findAll{it.key != null}.collectEntries { output -> [
-                                                (output.key): [
-                                                    type: output.type,
-                                                    *:((output.value?:output.key) &amp;&amp; output.type == 'string' ? [enum: [output.value?:output.key]] : [:]),
-                                                    *:(output.type == 'array' ? [items: [type: 'string']] : [:])
-                                                ]
-                                            ]},
-                                            required: schema.out_map_name_list,
-                                            additionalProperties: false
-                                        ]
-                                    ],
-                                    required: ['service_name', 'name', 'description', 'uniqueOutMapName', 'in_map', 'out_map'],
-                                    additionalProperties: false
-                                ]}
-                            ]
-                        ]
-                    ],
-                    required: ['services'],
-                    additionalProperties: false
-                ],
+                schema: serviceSchemaProperties,
                 strict: true
             ]"/>
 
