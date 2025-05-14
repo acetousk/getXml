@@ -1884,8 +1884,12 @@ along with this software (see the LICENSE.md file). If not, see
                             </if>
                             <set field="out_map_map" from="out_map_map+[value:val]"/>
                         </if>
-                        <!-- <log level="warn" message="out_map_map: ${out_map_map}"/> -->
-                        <set field="out_map" from="out_map+out_map_map"/>
+                        <if condition="out_map_map.type != 'object'">
+                            <!-- <log level="warn" message="out_map_map: ${out_map_map}"/> -->
+                            <set field="out_map" from="out_map+out_map_map"/>
+                        <else>
+                            <log level="warn" message="Skipping output ${outParameterInfoMap.key} for ${nodeName} because type is 'object'"/>
+                        </else></if>
                     </iterate>
                 </then><else-if condition="entityDefinition">
                     <if condition="entityDefinition">
@@ -1923,7 +1927,12 @@ along with this software (see the LICENSE.md file). If not, see
                             <set field="fieldNode" from="entityDefinition.getFieldInfo(fieldName)"/>
                             <set field="type" from="fieldNode.javaType"/>
                             <set field="out_map_map" from="[key:fieldName, type:typeEnumMap[type], entityName:fieldNode.entityName, required:true, value:fieldName]"/>
-                            <set field="out_map" from="out_map+out_map_map"/>
+                            <if condition="out_map_map.type != 'object'">
+                                <set field="out_map" from="out_map+out_map_map"/>
+                            <else>
+                                <log level="warn" message="Skipping PK field ${fieldName} for ${nodeName} because type is 'object'"/>
+                            </else>
+                            </if>
                         </iterate>
                     </if>
                 </else-if><else>
@@ -2050,7 +2059,6 @@ along with this software (see the LICENSE.md file). If not, see
                                 </if>
                                 <set field="outputEnum" from="[enum: enumValues]"/>
                             <else-if condition="output.type == 'number' || output.type == 'integer'">
-                                <log level="warn" message="output.value: ${output.value}"/>
                                 <set field="outputEnum" from="[enum: [output.value, null]]"/>
                             </else-if></if>
                         </if>
